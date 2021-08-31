@@ -1,0 +1,19 @@
+{
+  "name": "drive-player",
+  "version": "0.1.0",
+  "description": "music files in google drive play on browser",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikiymk/drive-player.git"
+  },
+  "author": "mikiymk",
+  "license": "MIT License",
+  "bugs": {
+    "url": "https://github.com/mikiymk/drive-player/issues"
+  },
+  "homepage": "https://github.com/mikiymk/drive-player#readme"
+}
