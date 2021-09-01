@@ -99,4 +99,5 @@ function listFiles() {
         }
     });
 }
+handleClientLoad();
 //# sourceMappingURL=index.js.map
