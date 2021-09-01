@@ -28,7 +28,11 @@ jobs:
         with:
           node-version: '14'
       - run: npm install
+      - run: node -v
+      - run: npm -v
+      - run: npm list
 
-      # Runs a single command using the runners shell
+      - run: ls -l
       - name: Run a one-line script
         run: npx tsc
+      - run: ls -l
