@@ -105,3 +105,5 @@ function listFiles() {
         }
     });
 }
+
+handleClientLoad();
