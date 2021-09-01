@@ -28,15 +28,16 @@ jobs:
         with:
           node-version: '14'
       - run: npm install
-      - run: |
-        node -v
-        npm -v
-        npm list
+      - name: node versions
+        run: |
+          node -v
+          npm -v
+          npm list
 
       - name: compile
         run: npx tsc
 
-      - name: Commit files
+      - name: commit
         run: |
           git add -n .
           git commit -m "Add csv" -a
