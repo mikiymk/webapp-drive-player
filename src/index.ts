@@ -1,17 +1,17 @@
 
 // Client ID and API key from the Developer Console
-var CLIENT_ID = '820614082295-6sqmb2cr2pgs2j7l1mjh00bv7rbc2t2c.apps.googleusercontent.com';
-var API_KEY = 'AIzaSyAg5BcUDni6Srv8AwwCVYXrRIHcj8E9_0E';
+const CLIENT_ID = '820614082295-6sqmb2cr2pgs2j7l1mjh00bv7rbc2t2c.apps.googleusercontent.com';
+const API_KEY = 'AIzaSyAg5BcUDni6Srv8AwwCVYXrRIHcj8E9_0E';
 
 // Array of API discovery doc URLs for APIs used by the quickstart
-var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-var SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
+const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
 
-var authorizeButton = document.getElementById('authorize_button');
-var signoutButton = document.getElementById('signout_button');
+const authorizeButton = document.getElementById('authorize_button')!;
+const signoutButton = document.getElementById('signout_button')!;
 
 /**
  *  On load, called to load the auth2 library and API client library.
@@ -80,9 +80,9 @@ function handleSignoutClick(event: MouseEvent) {
  * @param {string} message Text to be placed in pre element.
  */
 function appendPre(message: string) {
-    var pre = document.getElementById('content');
-    var textContent = document.createTextNode(message + '\n');
-    pre?.appendChild(textContent);
+    const pre = document.getElementById('content')!;
+    const textContent = document.createTextNode(message + '\n');
+    pre.appendChild(textContent);
 }
 
 /**
@@ -94,10 +94,10 @@ function listFiles() {
         'fields': "nextPageToken, files(id, name)"
     }).then(function (response) {
         appendPre('Files:');
-        var files = response.result.files;
+        const files = response.result.files;
         if (files && files.length > 0) {
             for (var i = 0; i < files.length; i++) {
-                var file = files[i];
+                const file = files[i];
                 appendPre(file.name + ' (' + file.id + ')');
             }
         } else {
