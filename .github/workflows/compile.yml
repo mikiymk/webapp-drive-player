@@ -54,3 +54,4 @@ jobs:
           git add -n .
           git commit -m "compile typescript" -a
           git pull
+          git push origin main
