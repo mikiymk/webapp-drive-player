@@ -6,11 +6,11 @@ name: compile typescript
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
-    paths: 'src/**'
+    paths:
+      - "src/**"
   pull_request:
-    branches: [ main ]
-    paths: 'src/**'
+    paths:
+      - "src/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,7 +28,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
       - run: npm install
       - name: node versions
         run: |
@@ -47,6 +47,6 @@ jobs:
       - name: git commit
         run: |
           git add -n .
-          git commit -m "Add csv" -a
+          git commit -m "compile typescript" -a
           git pull
-          
+          git remote
