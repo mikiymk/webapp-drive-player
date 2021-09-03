@@ -102,22 +102,27 @@ function appendMusic(name, id) {
  */
 async function listFiles() {
     appendPre('Files:');
-    let response = await gapi.client.drive.files.list({
-        'fields': "*"
-    });
-    console.log(response.result);
-    let files = response.result.files || [];
-    while (response.result.nextPageToken) {
-        response = await gapi.client.drive.files.list({
-            'fields': "*",
-            'pageToken': response.result.nextPageToken,
-        });
+    const request = {
+        'fields': "*",
+        'q': "mimeType contains 'audio/'",
+        'pageToken': undefined,
+    };
+    let files = [];
+    let hasNextPage = true;
+    while (hasNextPage) {
+        const response = await gapi.client.drive.files.list(request);
         console.log(response.result);
         if (response.result.files) {
             files = files.concat(response.result.files);
         }
+        if (response.result.nextPageToken) {
+            request.pageToken = response.result.nextPageToken;
+            hasNextPage = true;
+        }
+        else {
+            hasNextPage = false;
+        }
     }
-    files = files.filter((value) => value.mimeType?.startsWith("audio"));
     if (files && files.length > 0) {
         for (var i = 0; i < files.length; i++) {
             const file = files[i];
