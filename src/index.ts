@@ -97,6 +97,9 @@ function appendMusic(name: string, id: string) {
             'fileId': id,
             'fields': '*',
         });
+        fetch(file.result.webContentLink ?? "")
+            .then(response => response.blob())
+            .then(data => console.log(data));
     });
 
     li.appendChild(document.createTextNode(`${name} (${id})`));
