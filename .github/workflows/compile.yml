@@ -30,19 +30,9 @@ jobs:
         with:
           node-version: "14"
       - run: npm install
-      - name: node versions
-        run: |
-          node -v
-          npm -v
-          npm list
 
       - name: compile
         run: npx tsc
-      
-      - name: git branch and remote
-        run: |
-          git branch
-          git remote
 
       - name: git config
         run: |
@@ -54,4 +44,4 @@ jobs:
           git add -n .
           git commit -m "compile typescript" -a
           git pull
-          git push origin main
+          git push origin pages
