@@ -1,3 +1,4 @@
+import { resourceLimits } from "worker_threads";
 
 // Client ID and API key from the Developer Console
 const CLIENT_ID = '820614082295-6sqmb2cr2pgs2j7l1mjh00bv7rbc2t2c.apps.googleusercontent.com';
@@ -90,14 +91,25 @@ function appendPre(message: string) {
  * Print files.
  */
 async function listFiles() {
+    appendPre('Files:');
+
     let response = await gapi.client.drive.files.list({
-        // 'pageSize': 10,
         'fields': "*"
     });
-
-    appendPre('Files:');
-    const files = response.result.files;
     console.log(response.result);
+    let files = response.result.files || [];
+
+    while (response.result.nextPageToken) {
+        response = await gapi.client.drive.files.list({
+            'fields': "*",
+            'pageToken': response.result.nextPageToken,
+        });
+        console.log(response.result);
+        if (response.result.files) {
+            files = files.concat(response.result.files);
+        }
+    }
+
     if (files && files.length > 0) {
         for (var i = 0; i < files.length; i++) {
             const file = files[i];
