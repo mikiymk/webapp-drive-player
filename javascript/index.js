@@ -88,7 +88,7 @@ function appendMusic(name, id) {
             'fileId': id,
             'alt': 'media',
         });
-        console.log(responce.result);
+        console.log(responce.body);
     });
     li.appendChild(document.createTextNode(`${name} (${id})`));
     li.appendChild(button);
