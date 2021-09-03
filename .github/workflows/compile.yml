@@ -52,7 +52,8 @@ jobs:
 
       - name: git commit
         run: |
+          git checkout -b pages
           git add -n .
           git commit -m "compile typescript" -a
           git pull
-          git push origin HEAD:pages
+          git push origin pages
