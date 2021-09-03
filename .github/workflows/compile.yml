@@ -43,6 +43,7 @@ jobs:
       - name: git branch and remote
         run: |
           git branch
+          git branch -r
           git remote
 
       - name: git config
@@ -55,5 +56,5 @@ jobs:
           git checkout -b pages
           git add -n .
           git commit -m "compile typescript" -a
-          git pull
+          git pull origin main:pages
           git push origin pages
