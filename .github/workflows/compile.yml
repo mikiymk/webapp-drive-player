@@ -52,7 +52,7 @@ jobs:
           git config --global user.name "mikiymk"
 
       - run: git fetch
-      - run: git checkout -b pages
+      - run: git branch pages
       - run: git add -n .
       - run: git commit -m "compile typescript" -a
       - run: git pull origin main:pages
