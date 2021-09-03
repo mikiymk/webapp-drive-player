@@ -81,8 +81,8 @@ function appendPre(message) {
  */
 async function listFiles() {
     let response = await gapi.client.drive.files.list({
-        'pageSize': 10,
-        'fields': "nextPageToken, files(id, name)"
+        // 'pageSize': 10,
+        'fields': "*"
     });
     appendPre('Files:');
     const files = response.result.files;
