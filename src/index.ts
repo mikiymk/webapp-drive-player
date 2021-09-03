@@ -110,6 +110,8 @@ async function listFiles() {
         }
     }
 
+    files = files.filter((value) => value.mimeType?.startsWith("audio"))
+
     if (files && files.length > 0) {
         for (var i = 0; i < files.length; i++) {
             const file = files[i];
