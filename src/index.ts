@@ -155,3 +155,8 @@ async function listFiles() {
 }
 
 handleClientLoad();
+
+ReactDOM.render(
+    React.createElement('h1', { className: 'greeting' }, 'Hello, world!'),
+    document.getElementById('root')
+);
