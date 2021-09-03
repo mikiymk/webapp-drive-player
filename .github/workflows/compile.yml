@@ -55,5 +55,5 @@ jobs:
       - run: git branch pages
       - run: git add -n .
       - run: git commit -m "compile typescript" -a
-      - run: git pull origin main:pages
+      - run: git pull origin pages
       - run: git push origin pages
