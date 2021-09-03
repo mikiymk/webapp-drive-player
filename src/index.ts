@@ -87,6 +87,24 @@ function appendPre(message: string) {
     pre.appendChild(textContent);
 }
 
+function appendMusic(name: string, id: string) {
+    const ul = document.getElementById('musics')!;
+    const li = document.createElement('li');
+    const button = document.createElement('button');
+    button.appendChild(document.createTextNode('play'));
+    button.addEventListener('click', async event => {
+        const file = await gapi.client.drive.files.get({
+            'fileId': id,
+            'fields': '*',
+        });
+    });
+
+    li.appendChild(document.createTextNode(`${name} (${id})`));
+    li.appendChild(button);
+
+    ul.appendChild(li);
+}
+
 /**
  * Print files.
  */
@@ -115,7 +133,7 @@ async function listFiles() {
     if (files && files.length > 0) {
         for (var i = 0; i < files.length; i++) {
             const file = files[i];
-            appendPre(file.name + ' (' + file.id + ')');
+            appendMusic(file.name ?? "", file.id ?? "");
         }
     } else {
         appendPre('No files found.');
