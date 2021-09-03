@@ -83,11 +83,9 @@ function appendMusic(name, id) {
     button.addEventListener('click', async (event) => {
         const file = await gapi.client.drive.files.get({
             'fileId': id,
-            'fields': '*',
+            'alt': 'media',
         });
-        fetch(file.result.webContentLink ?? "")
-            .then(response => response.blob())
-            .then(data => console.log(data));
+        console.log(file);
     });
     li.appendChild(document.createTextNode(`${name} (${id})`));
     li.appendChild(button);
