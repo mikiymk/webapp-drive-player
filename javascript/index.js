@@ -19,32 +19,30 @@ function handleClientLoad() {
  *  Initializes the API client library and sets up sign-in state
  *  listeners.
  */
-function initClient() {
-    gapi.client.init({
-        apiKey: API_KEY,
-        clientId: CLIENT_ID,
-        discoveryDocs: DISCOVERY_DOCS,
-        scope: SCOPES
-    }).then(function () {
+async function initClient() {
+    try {
+        await gapi.client.init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: DISCOVERY_DOCS,
+            scope: SCOPES
+        });
         // Listen for sign-in state changes.
         gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
         // Handle the initial sign-in state.
         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-        if (authorizeButton)
-            authorizeButton.onclick = handleAuthClick;
-        if (signoutButton)
-            signoutButton.onclick = handleSignoutClick;
-    }, function (error) {
+        authorizeButton.onclick = handleAuthClick;
+        signoutButton.onclick = handleSignoutClick;
+    }
+    catch (error) {
         appendPre(JSON.stringify(error, null, 2));
-    });
+    }
 }
 /**
  *  Called when the signed in status changes, to update the UI
  *  appropriately. After a sign-in, the API is called.
  */
 function updateSigninStatus(isSignedIn) {
-    if (!authorizeButton || !signoutButton)
-        return;
     if (isSignedIn) {
         authorizeButton.style.display = 'none';
         signoutButton.style.display = 'block';
@@ -81,23 +79,22 @@ function appendPre(message) {
 /**
  * Print files.
  */
-function listFiles() {
-    gapi.client.drive.files.list({
+async function listFiles() {
+    let response = await gapi.client.drive.files.list({
         'pageSize': 10,
         'fields': "nextPageToken, files(id, name)"
-    }).then(function (response) {
-        appendPre('Files:');
-        const files = response.result.files;
-        if (files && files.length > 0) {
-            for (var i = 0; i < files.length; i++) {
-                const file = files[i];
-                appendPre(file.name + ' (' + file.id + ')');
-            }
-        }
-        else {
-            appendPre('No files found.');
-        }
     });
+    appendPre('Files:');
+    const files = response.result.files;
+    if (files && files.length > 0) {
+        for (var i = 0; i < files.length; i++) {
+            const file = files[i];
+            appendPre(file.name + ' (' + file.id + ')');
+        }
+    }
+    else {
+        appendPre('No files found.');
+    }
 }
 handleClientLoad();
 //# sourceMappingURL=index.js.map
