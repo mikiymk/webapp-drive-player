@@ -1,3 +1,4 @@
+import { fstat } from "fs";
 import { resourceLimits } from "worker_threads";
 
 // Client ID and API key from the Developer Console
@@ -96,11 +97,14 @@ function appendMusic(name: string, id: string) {
     const button = document.createElement('button');
     button.appendChild(document.createTextNode('play'));
     button.addEventListener('click', async event => {
+        console.log(`playing ${name}`);
         const responce = await gapi.client.drive.files.get({
             'fileId': id,
-            'alt': 'media',
+            'fields': '*',
         });
-        console.log(responce.body);
+        console.log(responce.result.webContentLink);
+        let audio = new Audio(responce.result.webContentLink);
+        audio.play();
     });
 
     li.appendChild(document.createTextNode(`${name} (${id})`));
