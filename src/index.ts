@@ -9,7 +9,10 @@ const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/r
 
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
-const SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
+const SCOPES = [
+    'https://www.googleapis.com/auth/drive.readonly',
+    'https://www.googleapis.com/auth/drive.metadata.readonly',
+].join(' ');
 
 const authorizeButton = document.getElementById('authorize_button')!;
 const signoutButton = document.getElementById('signout_button')!;
@@ -93,11 +96,11 @@ function appendMusic(name: string, id: string) {
     const button = document.createElement('button');
     button.appendChild(document.createTextNode('play'));
     button.addEventListener('click', async event => {
-        const file = await gapi.client.drive.files.get({
+        const responce = await gapi.client.drive.files.get({
             'fileId': id,
             'alt': 'media',
         });
-        console.log(file);
+        console.log(responce.result);
     });
 
     li.appendChild(document.createTextNode(`${name} (${id})`));
