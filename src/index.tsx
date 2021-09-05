@@ -158,39 +158,49 @@ async function listFiles() {
     }
 }
 
-class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { name: string, id: string, link: string }[] }> {
+class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { name: string, id: string, link: string }[], preText: string }> {
     constructor(props: {}) {
         super(props);
         this.state = {
             isSignedIn: false,
             files: [],
+            preText: "",
         }
 
         this.initClient();
     }
 
     async initClient() {
-        await gapi.client.init({
-            apiKey: API_KEY,
-            clientId: CLIENT_ID,
-            discoveryDocs: DISCOVERY_DOCS,
-            scope: SCOPES
-        });
+        try {
+            await gapi.client.init({
+                apiKey: API_KEY,
+                clientId: CLIENT_ID,
+                discoveryDocs: DISCOVERY_DOCS,
+                scope: SCOPES
+            });
 
-        // Listen for sign-in state changes.
-        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-        // Handle the initial sign-in state.
-        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+            // Listen for sign-in state changes.
+            gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+            // Handle the initial sign-in state.
+            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+        } catch (error) {
+            appendPre(JSON.stringify(error, null, 2));
+        }
     }
 
     updateSigninStatus(isSignedIn: boolean) {
         this.setState({ isSignedIn });
     }
 
+    appendPre(message: string) {
+        this.setState({ preText: this.state.preText + message + '\n' });
+    }
+
     render() {
         return <div>
             <AuthButton isSignedIn={this.state.isSignedIn} />
             <MusicList files={this.state.files} />
+            <pre>{this.state.preText}</pre>
         </div>
     }
 }
