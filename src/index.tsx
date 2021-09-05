@@ -156,6 +156,12 @@ async function listFiles() {
     }
 }
 
+const MusicList: React.FunctionComponent<{ files: { name: string, id: string, link: string }[] }> = (props) => {
+    const listitems = props.files.map(
+        ({ name, id, link }) => <MusicListItem name={name} id={id} link={link} />);
+    return <ul>{listitems}</ul>
+}
+
 const MusicListItem: React.FunctionComponent<{ name: string, id: string, link: string }> = (props) => {
     const playing: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         console.log(props.link);
