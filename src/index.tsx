@@ -113,12 +113,7 @@ function appendMusic(name: string, id: string) {
     ul.appendChild(li);
 }
 
-/**
- * Print files.
- */
-async function listFiles() {
-    appendPre('Files:');
-
+async function getFiles() {
     const request: {
         fields: string,
         q: string,
@@ -145,6 +140,16 @@ async function listFiles() {
             hasNextPage = false;
         }
     }
+    return files;
+}
+
+/**
+ * Print files.
+ */
+async function listFiles() {
+    appendPre('Files:');
+
+    const files = await getFiles();
 
     if (files && files.length > 0) {
         for (var i = 0; i < files.length; i++) {
