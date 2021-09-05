@@ -159,9 +159,15 @@ async function listFiles() {
 }
 
 const MusicList: React.FunctionComponent<{ files: { name: string, id: string, link: string }[] }> = (props) => {
+    if (props.files.length == 0) {
+        return <div>No files</div>
+    }
     const listitems = props.files.map(
         ({ name, id, link }) => <MusicListItem name={name} id={id} link={link} />);
-    return <ul>{listitems}</ul>
+    return <div>
+        Files:
+        <ul>{listitems}</ul>
+    </div>;
 }
 
 const MusicListItem: React.FunctionComponent<{ name: string, id: string, link: string }> = (props) => {
