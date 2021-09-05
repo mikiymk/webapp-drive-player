@@ -40,7 +40,7 @@ jobs:
 
       - name: git branch and remote
         run: |
-          git state
+          git status
           git branch -a
           git remote
 
