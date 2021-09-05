@@ -40,6 +40,7 @@ jobs:
 
       - name: git branch and remote
         run: |
+          git state
           git branch -a
           git remote
 
@@ -56,5 +57,4 @@ jobs:
       - run: git checkout -b pages-build
       - run: git add .
       - run: git commit -m "compile typescript"
-      - run: git pull
       - run: git push -f origin pages-build
