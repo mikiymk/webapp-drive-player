@@ -1,3 +1,5 @@
+import React from "react";
+import ReactDOM from "react-dom";
 
 // Client ID and API key from the Developer Console
 const CLIENT_ID = '820614082295-6sqmb2cr2pgs2j7l1mjh00bv7rbc2t2c.apps.googleusercontent.com';
@@ -152,6 +154,18 @@ async function listFiles() {
     } else {
         appendPre('No files found.');
     }
+}
+
+const MusicListItem: React.FunctionComponent<{ name: string, id: string, link: string }> = (props) => {
+    const playing: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+        console.log(props.link);
+        let audio = new Audio(props.link);
+        audio.play();
+    };
+    return <li>
+        {props.name}({props.id})
+        <button onClick={playing}>play</button>
+    </li>;
 }
 
 handleClientLoad();
