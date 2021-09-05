@@ -165,6 +165,26 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { na
             isSignedIn: false,
             files: [],
         }
+
+        this.initClient();
+    }
+
+    async initClient() {
+        await gapi.client.init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: DISCOVERY_DOCS,
+            scope: SCOPES
+        });
+
+        // Listen for sign-in state changes.
+        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+        // Handle the initial sign-in state.
+        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+    }
+
+    updateSigninStatus(isSignedIn: boolean) {
+        this.setState({ isSignedIn });
     }
 
     render() {
