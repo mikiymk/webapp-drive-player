@@ -158,6 +158,23 @@ async function listFiles() {
     }
 }
 
+class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { name: string, id: string, link: string }[] }> {
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+            isSignedIn: false,
+            files: [],
+        }
+    }
+
+    render() {
+        return <div>
+            <AuthButton isSignedIn={this.state.isSignedIn} />
+            <MusicList files={this.state.files} />
+        </div>
+    }
+}
+
 const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => {
     if (props.isSignedIn) {
         return <button onClick={() => gapi.auth2.getAuthInstance().signIn()}>Authorize</button>;
