@@ -52,7 +52,7 @@ jobs:
       - run: npm ci
 
       - name: compile
-        run: npx tsc
+        run: npm run build
 
       - run: git checkout -b pages-build
       - run: git add .
