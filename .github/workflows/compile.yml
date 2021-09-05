@@ -54,7 +54,7 @@ jobs:
         run: npx tsc
 
       - run: git checkout -b pages-build
-      - run: git add -n .
-      - run: git commit -m "compile typescript" -a
+      - run: git add .
+      - run: git commit -m "compile typescript"
       - run: git pull
       - run: git push -f origin pages-build
