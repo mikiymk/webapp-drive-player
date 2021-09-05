@@ -158,6 +158,14 @@ async function listFiles() {
     }
 }
 
+const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => {
+    if (props.isSignedIn) {
+        return <button onClick={() => gapi.auth2.getAuthInstance().signIn()}>Authorize</button>;
+    } else {
+        return <button onClick={() => gapi.auth2.getAuthInstance().signOut()}>Sign Out</button>;
+    }
+}
+
 const MusicList: React.FunctionComponent<{ files: { name: string, id: string, link: string }[] }> = (props) => {
     if (props.files.length == 0) {
         return <div>No files</div>
