@@ -166,7 +166,9 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { na
             files: [],
             preText: "",
         }
+    }
 
+    componentDidMount() {
         this.initClient();
     }
 
