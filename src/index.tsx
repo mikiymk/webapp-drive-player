@@ -169,7 +169,7 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { na
     }
 
     componentDidMount() {
-        this.initClient();
+        gapi.load('client:auth2', this.initClient);
     }
 
     async initClient() {
@@ -182,9 +182,9 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { na
             });
 
             // Listen for sign-in state changes.
-            gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+            gapi.auth2.getAuthInstance().isSignedIn.listen(this.updateSigninStatus);
             // Handle the initial sign-in state.
-            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+            this.updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
         } catch (error) {
             this.appendPre(JSON.stringify(error, null, 2));
         }
