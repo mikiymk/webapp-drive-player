@@ -184,7 +184,7 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { na
             // Handle the initial sign-in state.
             updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
         } catch (error) {
-            appendPre(JSON.stringify(error, null, 2));
+            this.appendPre(JSON.stringify(error, null, 2));
         }
     }
 
@@ -239,7 +239,4 @@ const MusicListItem: React.FunctionComponent<{ name: string, id: string, link: s
 
 handleClientLoad();
 
-ReactDOM.render(
-    <h1 className="greeting">Hello, world!</h1>,
-    document.getElementById('root')
-);
+ReactDOM.render(<MusicPlayer />, document.getElementById('root'));
