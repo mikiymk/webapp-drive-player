@@ -192,6 +192,14 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { na
 
     updateSigninStatus(isSignedIn: boolean) {
         this.setState({ isSignedIn });
+        getFiles().then((value) => {
+            const files = value.map((file) => ({
+                name: file.name ?? '',
+                id: file.id ?? '',
+                link: file.webContentLink ?? '',
+            }));
+            this.setState({ files })
+        })
     }
 
     appendPre(message: string) {
