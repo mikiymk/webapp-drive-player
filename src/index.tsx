@@ -82,11 +82,20 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { na
 
     render() {
         return <div>
+            <PlayingInfo name={""} audio={new Audio()} />
             <AuthButton isSignedIn={this.state.isSignedIn} />
             <MusicList files={this.state.files} />
             <pre>{this.state.preText}</pre>
         </div>
     }
+}
+
+const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioElement }> = (props) => {
+    const duration = props.audio.duration;
+    return <div>
+        {props.name}
+        {Math.floor(duration / 3600)}:{Math.floor(duration % 3600 / 60)}:{Math.floor(duration % 60)}.{Math.round(duration % 1 * 100)}
+    </div>;
 }
 
 const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => {
