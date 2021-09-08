@@ -2,6 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { API_KEY, CLIENT_ID, DISCOVERY_DOCS, SCOPES } from "./api";
 
+/**
+ * get file list from google drive using gapi
+ * @returns list of files
+ */
 async function getFiles() {
     const request: {
         fields: string,
