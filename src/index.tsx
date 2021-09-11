@@ -10,7 +10,7 @@ async function getFiles() {
     const request: {
         fields: string,
         q: string,
-        pageToken: undefined | string
+        pageToken: undefined | string,
     } = {
         'fields': '*',
         'q': "mimeType contains 'audio/'",
@@ -36,6 +36,9 @@ async function getFiles() {
     return files;
 }
 
+/**
+ * react component root.
+ */
 class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { name: string, id: string, link: string }[], preText: string }> {
     constructor(props: {}) {
         super(props);
@@ -94,6 +97,11 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { na
     }
 }
 
+/**
+ * now playing audio info view
+ * @param props compontnt props
+ * @returns react render
+ */
 const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioElement }> = (props) => {
     const duration = props.audio.duration;
     return <div>
@@ -102,6 +110,11 @@ const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioEleme
     </div>;
 }
 
+/**
+ * authorize or sign out button
+ * @param props compontnt props
+ * @returns react render
+ */
 const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => {
     if (props.isSignedIn) {
         return <button onClick={() => gapi.auth2.getAuthInstance().signOut()}>Sign Out</button>;
