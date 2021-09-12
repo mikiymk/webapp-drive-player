@@ -6,6 +6,7 @@ const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 const isProduction = process.env.NODE_ENV == "production";
 
 const config = {
+  mode: "development",
   entry: "./src/index.tsx",
   output: {
     filename: 'bundle.js',
@@ -43,8 +44,6 @@ module.exports = () => {
     config.mode = "production";
 
     config.plugins.push(new WorkboxWebpackPlugin.GenerateSW());
-  } else {
-    config.mode = "development";
   }
   return config;
 };
