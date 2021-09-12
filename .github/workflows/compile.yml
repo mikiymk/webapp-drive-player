@@ -53,6 +53,14 @@ jobs:
 
       - run: git checkout -b pages-build origin/pages-build
       - run: git merge --no-ff --allow-unrelated-histories main
+        id: git_merge_main
+
+      - name: fix conflict
+        if: failure() && steps.git_merge_main.outcome == 'failure'
+        run: |
+          git checkout -theirs .
+          git add .
+          git commit
 
       - run: git status
 

@@ -53,9 +53,9 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { na
         gapi.load('client:auth2', () => this.initClient());
     }
 
-/**
- * initialize gapi client and if succeed update status
- */
+    /**
+     * initialize gapi client and if succeed update status
+     */
     async initClient() {
         try {
             await gapi.client.init({
@@ -74,6 +74,10 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { na
         }
     }
 
+    /**
+     * of sign in status, 
+     * @param isSignedIn if google signed in
+     */
     updateSigninStatus(isSignedIn: boolean) {
         this.setState({ isSignedIn });
         getFiles().then((value) => {
