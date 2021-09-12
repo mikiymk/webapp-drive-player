@@ -116,10 +116,14 @@ const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioEleme
  * @returns react render
  */
 const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => {
+
+    const onClickAuthorize = () => { gapi.auth2.getAuthInstance().signIn(); };
+    const onClickSignOut = () => { gapi.auth2.getAuthInstance().signOut(); };
+
     if (props.isSignedIn) {
-        return <button onClick={() => gapi.auth2.getAuthInstance().signOut()}>Sign Out</button>;
+        return <button onClick={onClickSignOut}>Sign Out</button>;
     } else {
-        return <button onClick={() => gapi.auth2.getAuthInstance().signIn()}>Authorize</button>;
+        return <button onClick={onClickAuthorize}>Authorize</button>;
     }
 }
 

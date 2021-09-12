@@ -52,14 +52,16 @@ jobs:
       - run: git remote
       - run: git pull
       - run: git merge origin/pages-build --allow-unrelated-histories
+      - run: git merge main
+
+      - run: git status
 
       - run: npm ci
-
-      - run: git merge main
 
       - name: compile
         run: npx tsc
 
       - run: git add .
       - run: git commit -m "compile typescript"
+      - run: git status
       - run: git push origin pages-build
