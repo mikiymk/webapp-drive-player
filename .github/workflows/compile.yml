@@ -56,10 +56,13 @@ jobs:
 
       - run: npm ci
 
+      - run: git checkout -b pages-build
+      - run: git add .
+      - run: git commit -m "pre compile typescript"
+
       - name: compile
         run: npx tsc
 
-      - run: git checkout -b pages-build
       - run: git add .
       - run: git commit -m "compile typescript"
       - run: git push -f origin pages-build
