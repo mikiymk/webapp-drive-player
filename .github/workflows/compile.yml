@@ -60,7 +60,7 @@ jobs:
         run: |
           git checkout --theirs .
           git add .
-          git commit
+          git commit -m "merge main"
 
       - run: git status
 

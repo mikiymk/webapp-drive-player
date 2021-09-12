@@ -159,7 +159,7 @@ const MusicList: React.FunctionComponent<{ files: File[] }> = (props) => {
  * @returns react render
  */
 const MusicListItem: React.FunctionComponent<File> = (props) => {
-    const playing: React.MouseEventHandler<HTMLButtonElement> = (event) => {
+    const playing = () => {
         console.log(props.link);
         let audio = new Audio(props.link);
         audio.play();
