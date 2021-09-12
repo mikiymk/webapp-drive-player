@@ -36,10 +36,12 @@ async function getFiles() {
     return files;
 }
 
+type File = { name: string, id: string, link: string };
+
 /**
  * react component root.
  */
-class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { name: string, id: string, link: string }[], preText: string }> {
+class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File[], preText: string }> {
     constructor(props: {}) {
         super(props);
         this.state = {
@@ -139,7 +141,7 @@ const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => 
  * @param props compontnt props
  * @returns react render
  */
-const MusicList: React.FunctionComponent<{ files: { name: string, id: string, link: string }[] }> = (props) => {
+const MusicList: React.FunctionComponent<{ files: File[] }> = (props) => {
     if (props.files.length == 0) {
         return <div>No files</div>
     }
@@ -156,7 +158,7 @@ const MusicList: React.FunctionComponent<{ files: { name: string, id: string, li
  * @param props compontnt props
  * @returns react render
  */
-const MusicListItem: React.FunctionComponent<{ name: string, id: string, link: string }> = (props) => {
+const MusicListItem: React.FunctionComponent<File> = (props) => {
     const playing: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         console.log(props.link);
         let audio = new Audio(props.link);

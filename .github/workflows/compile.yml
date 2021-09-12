@@ -58,7 +58,7 @@ jobs:
       - name: fix conflict
         if: failure() && steps.git_merge_main.outcome == 'failure'
         run: |
-          git checkout -theirs .
+          git checkout --theirs .
           git add .
           git commit
 
