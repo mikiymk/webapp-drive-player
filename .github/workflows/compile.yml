@@ -52,7 +52,7 @@ jobs:
       - run: git remote
 
       - run: git checkout -b pages-build origin/pages-build
-      - run: git merge --no-ff main
+      - run: git merge --no-ff --allow-unrelated-histories main
 
       - run: git status
 

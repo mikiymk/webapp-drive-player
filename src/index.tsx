@@ -144,6 +144,11 @@ const MusicList: React.FunctionComponent<{ files: { name: string, id: string, li
     </div>;
 }
 
+/**
+ * item of musics list
+ * @param props compontnt props
+ * @returns react render
+ */
 const MusicListItem: React.FunctionComponent<{ name: string, id: string, link: string }> = (props) => {
     const playing: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         console.log(props.link);
