@@ -45,7 +45,7 @@ jobs:
         run: |
           git config --global user.email "github@example.com"
           git config --global user.name "github-actions"
-      - run: git fetch
+      - run: git pull
       - run: git checkout -b pages-build
       - run: git status
       - run: git merge origin/pages-build
