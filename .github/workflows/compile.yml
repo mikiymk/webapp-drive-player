@@ -35,27 +35,14 @@ jobs:
         with:
           node-version: "14"
 
-      - name: node versions
-        run: |
-          node -v
-          npm -v
-          npm list
-
       - name: git config
         run: |
           git config --global user.email "github@example.com"
           git config --global user.name "github-actions"
+
       - run: git fetch
-
-      - run: git status
-      - run: git branch -a
-      - run: git remote
-
       - run: git checkout -b pages-build origin/pages-build
-
       - run: git merge --no-ff --allow-unrelated-histories -Xtheirs main
-
-      - run: git status
 
       - run: npm ci
 
@@ -66,7 +53,6 @@ jobs:
         run: |
           git add .
           git commit -m "compile typescript"
-          git status
           git push origin pages-build
 
       - name: always git state
