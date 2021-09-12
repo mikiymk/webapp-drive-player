@@ -52,29 +52,25 @@ jobs:
       - run: git remote
 
       - run: git checkout -b pages-build origin/pages-build
-      - run: git merge --no-ff --allow-unrelated-histories main
-        id: git_merge_main
 
-      - name: fix conflict
-        id: git_fix_conflict_commit
-        if: failure() && steps.git_merge_main.outcome == 'failure'
+      - name: definition fix conflict
         run: |
-          git checkout --theirs .
-          git add .
-          git commit -m "merge main"
+          git_merge_commit () {
+            git checkout --theirs .
+            git add .
+            git commit -m "merge main"
+          }
+
+      - run: git merge --no-ff --allow-unrelated-histories main || git_merge_commit
 
       - run: git status
-        if: ${{ success() || ( failure() && ( steps.git_merge_main.outcome == 'success' || steps.git_fix_conflict_commit.outcome == 'success' ) ) }}
 
       - run: npm ci
-        if: ${{ success() || ( failure() && ( steps.git_merge_main.outcome == 'success' || steps.git_fix_conflict_commit.outcome == 'success' ) ) }}
 
       - name: compile
-        if: ${{ success() || ( failure() && ( steps.git_merge_main.outcome == 'success' || steps.git_fix_conflict_commit.outcome == 'success' ) ) }}
         run: npx tsc
 
       - name: git commit and push
-        if: ${{ success() || ( failure() && ( steps.git_merge_main.outcome == 'success' || steps.git_fix_conflict_commit.outcome == 'success' ) ) }}
         run: |
           git add .
           git commit -m "compile typescript"
