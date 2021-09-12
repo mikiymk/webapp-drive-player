@@ -53,6 +53,9 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: { na
         gapi.load('client:auth2', () => this.initClient());
     }
 
+/**
+ * initialize gapi client and if succeed update status
+ */
     async initClient() {
         try {
             await gapi.client.init({

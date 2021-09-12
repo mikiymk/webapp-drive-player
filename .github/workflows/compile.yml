@@ -65,3 +65,7 @@ jobs:
       - run: git commit -m "compile typescript"
       - run: git status
       - run: git push origin pages-build
+
+      - name: always git state
+        run: git status
+        if: always()
