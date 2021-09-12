@@ -48,7 +48,7 @@ jobs:
       - run: git fetch
       - run: git checkout -b pages-build
       - run: git status
-      - run: git merge origin pages-build
+      - run: git merge origin/pages-build
 
       - run: npm ci
 
