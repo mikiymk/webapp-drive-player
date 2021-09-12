@@ -112,10 +112,17 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
  * @returns react render
  */
 const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioElement }> = (props) => {
+
     const duration = props.audio.duration;
+
+    const hour = Math.floor(duration / 3600);
+    const minute = Math.floor(duration % 3600 / 60);
+    const second = Math.floor(duration % 60);
+    const millisecond = Math.round(duration % 1 * 1000);
+    
     return <div>
         {props.name}
-        {Math.floor(duration / 3600)}:{Math.floor(duration % 3600 / 60)}:{Math.floor(duration % 60)}.{Math.round(duration % 1 * 100)}
+        {hour}:{minute}:{second}.{millisecond}
     </div>;
 }
 

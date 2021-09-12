@@ -56,6 +56,7 @@ jobs:
         id: git_merge_main
 
       - name: fix conflict
+        id: git_fix_conflict_commit
         if: failure() && steps.git_merge_main.outcome == 'failure'
         run: |
           git checkout --theirs .
@@ -63,16 +64,22 @@ jobs:
           git commit -m "merge main"
 
       - run: git status
+        if: ${{ success() || ( failure() && ( steps.git_merge_main.outcome == 'success' || steps.git_fix_conflict_commit.outcome == 'success' ) ) }}
 
       - run: npm ci
+        if: ${{ success() || ( failure() && ( steps.git_merge_main.outcome == 'success' || steps.git_fix_conflict_commit.outcome == 'success' ) ) }}
 
       - name: compile
+        if: ${{ success() || ( failure() && ( steps.git_merge_main.outcome == 'success' || steps.git_fix_conflict_commit.outcome == 'success' ) ) }}
         run: npx tsc
 
-      - run: git add .
-      - run: git commit -m "compile typescript"
-      - run: git status
-      - run: git push origin pages-build
+      - name: git commit and push
+        if: ${{ success() || ( failure() && ( steps.git_merge_main.outcome == 'success' || steps.git_fix_conflict_commit.outcome == 'success' ) ) }}
+        run: |
+          git add .
+          git commit -m "compile typescript"
+          git status
+          git push origin pages-build
 
       - name: always git state
         run: git status
