@@ -53,15 +53,7 @@ jobs:
 
       - run: git checkout -b pages-build origin/pages-build
 
-      - name: definition fix conflict
-        run: |
-          git_merge_commit () {
-            git checkout --theirs .
-            git add .
-            git commit -m "merge main"
-          }
-
-      - run: git merge --no-ff --allow-unrelated-histories main || git_merge_commit
+      - run: git merge --no-ff --allow-unrelated-histories -Xtheirs main
 
       - run: git status
 

@@ -113,6 +113,8 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
 /**
  * now playing audio info view
  * @param props compontnt props
+ * @param props.name play song name
+ * @param props.audio play song audio element
  * @returns react render
  */
 const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioElement }> = (props) => {
