@@ -41,7 +41,12 @@ jobs:
           npm -v
           npm list
 
-      - run: git fetch
+      - name: git config
+        run: |
+          git config --global user.email "github@example.com"
+          git config --global user.name "github-actions"
+      - run: git checkout -b pages-build
+      - run: git pull
 
       - name: git branch and remote
         run: |
@@ -49,14 +54,8 @@ jobs:
           git branch -a
           git remote
 
-      - name: git config
-        run: |
-          git config --global user.email "mikiymk001@gmail.com"
-          git config --global user.name "mikiymk"
-
       - run: npm ci
 
-      - run: git checkout -b pages-build
       - run: git merge main
 
       - name: compile
