@@ -127,6 +127,11 @@ const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => 
     }
 }
 
+/**
+ * list of musics
+ * @param props compontnt props
+ * @returns react render
+ */
 const MusicList: React.FunctionComponent<{ files: { name: string, id: string, link: string }[] }> = (props) => {
     if (props.files.length == 0) {
         return <div>No files</div>

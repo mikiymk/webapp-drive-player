@@ -50,9 +50,9 @@ jobs:
       - run: git status
       - run: git branch -a
       - run: git remote
-      - run: git pull
-      - run: git merge origin/pages-build --allow-unrelated-histories
-      - run: git merge main
+
+      - run: git checkout -b pages-build origin/pages-build
+      - run: git merge --no-ff main
 
       - run: git status
 
