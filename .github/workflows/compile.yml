@@ -45,9 +45,10 @@ jobs:
         run: |
           git config --global user.email "github@example.com"
           git config --global user.name "github-actions"
-      - run: git pull origin/pages-build
+      - run: git pull
       - run: git status
       - run: git branch -a
+      - run: git merge origin/pages-build --allow-unrelated-histories
 
       - run: npm ci
 
