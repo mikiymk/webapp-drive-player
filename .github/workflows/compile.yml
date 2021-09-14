@@ -44,6 +44,8 @@ jobs:
       - run: git checkout -b pages-build origin/pages-build
       - run: git merge --no-ff --allow-unrelated-histories -Xtheirs main
 
+      - run: git rm -rv javascript/*
+
       - run: npm ci
 
       - name: compile
