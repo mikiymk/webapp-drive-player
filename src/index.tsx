@@ -2,6 +2,35 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { API_KEY, CLIENT_ID, DISCOVERY_DOCS, SCOPES } from "./api";
 
+type File = { name: string, id: string, link: string };
+
+const get10Files = async (token: undefined | string): [File[], undefined | string] => {
+    const request: {
+        fields: string,
+        pageSize: number
+        pageToken: undefined | string,
+        q: string,
+    } = {
+        'fields': 'nextPageToken, files(id, name, webContentLink)',
+        'pageSize': 10,
+        'pageToken': token,
+        'q': "mimeType contains 'audio/'",
+    };
+
+    const isFile = (obj: any): obj is File => {
+        return obj.id && obj.name && obj.link;
+    };
+
+    const response = await gapi.client.drive.files.list(request);
+
+    const files = response.result.files.map(
+        ({id, name, webContentLink}) => ({id, name, link: webContentLink})
+    ).filter(isFile);
+    const nextToken = response.result.nextPageToken;
+
+    return [files, nextToken];
+};
+
 /**
  * get file list from google drive using gapi
  * @returns list of files
@@ -35,8 +64,6 @@ async function getFiles() {
     }
     return files;
 }
-
-type File = { name: string, id: string, link: string };
 
 /**
  * react component root.
