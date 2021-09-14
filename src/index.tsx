@@ -23,7 +23,8 @@ const get10Files = async (token: undefined | string): Promise<[File[], string | 
 
     const response = await gapi.client.drive.files.list(request);
 
-    const files = response.result.files.map(
+    const row_files = response.result.files ?? [];
+    const files = row_files.map(
         ({id, name, webContentLink}) => ({id, name, link: webContentLink})
     ).filter(isFile);
     const nextToken = response.result.nextPageToken;
