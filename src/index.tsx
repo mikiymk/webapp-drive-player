@@ -4,7 +4,7 @@ import { API_KEY, CLIENT_ID, DISCOVERY_DOCS, SCOPES } from "./api";
 
 type File = { name: string, id: string, link: string };
 
-const get10Files = async (token: undefined | string): [File[], undefined | string] => {
+const get10Files = async (token: undefined | string): Promise<[File[], string | undefined]> => {
     const request: {
         fields: string,
         pageSize: number
