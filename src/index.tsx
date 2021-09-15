@@ -67,8 +67,13 @@ class MusicPlayer extends React.Component<{}, {
     }
 
     play(link: string) {
-        this.state.audio.src = link;
-        this.state.audio.play();
+        this.setState((state) => {
+            console.log('play start', link);
+            state.audio.src = link;
+            state.audio.currentTime = 0;
+            state.audio.play();
+            return state;
+        })
     }
 
     render() {
