@@ -26,33 +26,16 @@ const get10Files = async (token?: string): Promise<[File[], string | undefined]>
  * @returns list of files
  */
 async function getFiles() {
-    const request: {
-        fields: string,
-        q: string,
-        pageToken: undefined | string,
-    } = {
-        'fields': '*',
-        'q': "mimeType contains 'audio/'",
-        'pageToken': undefined,
-    };
+    let allFiles: File[] = [];
+    let token: string | undefined = undefined;
 
-    let files: gapi.client.drive.File[] = [];
-    let hasNextPage = true;
+    while (token) {
+        let [files, nextToken]: [File[], string | undefined] = await get10Files(token);
 
-    while (hasNextPage) {
-        const response = await gapi.client.drive.files.list(request);
-        console.log(response.result);
-        if (response.result.files) {
-            files = files.concat(response.result.files);
-        }
-        if (response.result.nextPageToken) {
-            request.pageToken = response.result.nextPageToken;
-            hasNextPage = true;
-        } else {
-            hasNextPage = false;
-        }
+        allFiles = allFiles.concat(files);
+        token = nextToken;
     }
-    return files;
+    return allFiles;
 }
 
 /**
@@ -99,14 +82,7 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
      */
     updateSigninStatus(isSignedIn: boolean) {
         this.setState({ isSignedIn });
-        getFiles().then((value) => {
-            const files = value.map((file) => ({
-                name: file.name ?? '',
-                id: file.id ?? '',
-                link: file.webContentLink ?? '',
-            }));
-            this.setState({ files })
-        })
+        getFiles().then((files) => this.setState({ files }));
     }
 
     /**
