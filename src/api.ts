@@ -40,8 +40,7 @@ const get10Files = async (token?: string): Promise<[File[], string | undefined]>
  * @returns list of files
  */
 export const getFiles = async () => {
-    let allFiles: File[] = [];
-    let token: string | undefined = undefined;
+    let [allFiles, token]: [File[], string | undefined] = await get10Files();
 
     while (token) {
         let [files, nextToken]: [File[], string | undefined] = await get10Files(token);
