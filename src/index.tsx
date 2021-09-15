@@ -15,7 +15,7 @@ const get10Files = async (token?: string): Promise<[File[], string | undefined]>
     const row_files = response.result.files ?? [];
     const files = row_files
         .map(({ id, name, webContentLink }) => ({ id, name, link: webContentLink }))
-        .filter((obj): obj is File => !!(obj.id ?? obj.name ?? obj.link ?? false));
+        .filter((obj): obj is File => !!(obj.id && obj.name && obj.link));
     const nextToken = response.result.nextPageToken;
 
     return [files, nextToken];
@@ -39,6 +39,27 @@ async function getFiles() {
 }
 
 /**
+    * initialize gapi client and if succeed update status
+    */
+const initClient = (updateSigninStatus: (isSignedIn: boolean) => void, onError?: (error: unknown) => void) => async () => {
+    try {
+        await gapi.client.init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            discoveryDocs: DISCOVERY_DOCS,
+            scope: SCOPES
+        });
+
+        // Listen for sign-in state changes.
+        gapi.auth2.getAuthInstance().isSignedIn.listen(signedIn => updateSigninStatus(signedIn));
+        // Handle the initial sign-in state.
+        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+    } catch (error) {
+        onError && onError(error);
+    }
+}
+
+/**
  * react component root.
  */
 class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File[], preText: string }> {
@@ -52,28 +73,9 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
     }
 
     componentDidMount() {
-        gapi.load('client:auth2', () => this.initClient());
-    }
-
-    /**
-     * initialize gapi client and if succeed update status
-     */
-    async initClient() {
-        try {
-            await gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: DISCOVERY_DOCS,
-                scope: SCOPES
-            });
-
-            // Listen for sign-in state changes.
-            gapi.auth2.getAuthInstance().isSignedIn.listen(signedIn => this.updateSigninStatus(signedIn));
-            // Handle the initial sign-in state.
-            this.updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-        } catch (error) {
-            this.appendPre(JSON.stringify(error, null, 2));
-        }
+        gapi.load('client:auth2', initClient(
+            (isSignedIn) => this.updateSigninStatus(isSignedIn),
+            (error) => this.appendPre(JSON.stringify(error, null, 2))));
     }
 
     /**
@@ -82,7 +84,8 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
      */
     updateSigninStatus(isSignedIn: boolean) {
         this.setState({ isSignedIn });
-        getFiles().then((files) => this.setState({ files }));
+        getFiles()
+            .then(files => this.setState({ files }));
     }
 
     /**
@@ -90,7 +93,8 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
      * @param message append message
      */
     appendPre(message: string) {
-        this.setState({ preText: this.state.preText + message + '\n' });
+        const preText = this.state.preText + message + '\n';
+        this.setState({ preText });
     }
 
     render() {
