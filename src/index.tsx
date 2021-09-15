@@ -1,3 +1,4 @@
+import { loadavg } from "os";
 import React from "react";
 import ReactDOM from "react-dom";
 import { API_KEY, CLIENT_ID, DISCOVERY_DOCS, SCOPES } from "./api";
@@ -38,6 +39,10 @@ async function getFiles() {
     return allFiles;
 }
 
+const load = (callback: () => void) => {
+    gapi.load('client:auth2', callback);
+};
+
 /**
     * initialize gapi client and if succeed update status
     */
@@ -58,6 +63,10 @@ const initClient = (updateSigninStatus: (isSignedIn: boolean) => void, onError?:
         onError && onError(error);
     }
 }
+
+
+const signIn = () => { gapi.auth2.getAuthInstance().signIn(); };
+const signOut = () => { gapi.auth2.getAuthInstance().signOut(); };
 
 const formatTime = (time: number): string => {
     const hour = Math.floor(time / 3600).toString();
@@ -88,7 +97,7 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
     }
 
     componentDidMount() {
-        gapi.load('client:auth2', initClient(
+        load(initClient(
             (isSignedIn) => this.updateSigninStatus(isSignedIn),
             (error) => this.appendPre(JSON.stringify(error, null, 2))));
     }
@@ -146,14 +155,10 @@ const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioEleme
  * @returns react render
  */
 const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => {
-
-    const onClickAuthorize = () => { gapi.auth2.getAuthInstance().signIn(); };
-    const onClickSignOut = () => { gapi.auth2.getAuthInstance().signOut(); };
-
     if (props.isSignedIn) {
-        return <button onClick={onClickSignOut}>Sign Out</button>;
+        return <button onClick={signIn}>Sign Out</button>;
     } else {
-        return <button onClick={onClickAuthorize}>Authorize</button>;
+        return <button onClick={signOut}>Authorize</button>;
     }
 }
 
@@ -166,8 +171,8 @@ const MusicList: React.FunctionComponent<{ files: File[] }> = (props) => {
     if (props.files.length == 0) {
         return <div>No files</div>
     }
-    const listitems = props.files.map(
-        ({ name, id, link }) => <MusicListItem name={name} id={id} link={link} />);
+    const listitems = props.files
+        .map((file) => <MusicListItem {...file} />);
     return <div>
         Files:
         <ul>{listitems}</ul>
