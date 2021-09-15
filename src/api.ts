@@ -83,5 +83,11 @@ export const loadAndInit = (updateSigninStatus: (isSignedIn: boolean) => void, o
     gapi.load('client:auth2', initClient);
 }
 
-export const signIn = () => { gapi.auth2.getAuthInstance().signIn(); };
-export const signOut = () => { gapi.auth2.getAuthInstance().signOut(); };
+export const signIn = () => {
+    console.log('sign in');
+    gapi.auth2.getAuthInstance().signIn();
+};
+export const signOut = () => {
+    console.log('sign out');
+    gapi.auth2.getAuthInstance().signOut();
+};

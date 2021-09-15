@@ -119,9 +119,9 @@ const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioEleme
 const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => {
     console.log('render Authorize Button');
     if (props.isSignedIn) {
-        return <button onClick={signIn}>Sign Out</button>;
+        return <button onClick={signOut}>Sign Out</button>;
     } else {
-        return <button onClick={signOut}>Authorize</button>;
+        return <button onClick={signIn}>Authorize</button>;
     }
 }
 
