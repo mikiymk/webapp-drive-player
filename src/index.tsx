@@ -1,72 +1,7 @@
-import { loadavg } from "os";
-import React from "react";
-import ReactDOM from "react-dom";
-import { API_KEY, CLIENT_ID, DISCOVERY_DOCS, SCOPES } from "./api";
-
-type File = { name: string, id: string, link: string };
-
-const get10Files = async (token?: string): Promise<[File[], string | undefined]> => {
-    const response = await gapi.client.drive.files.list({
-        'fields': 'nextPageToken, files(id, name, webContentLink)',
-        'pageSize': 10,
-        'pageToken': token,
-        'q': "mimeType contains 'audio/'",
-    });
-
-    const row_files = response.result.files ?? [];
-    const files = row_files
-        .map(({ id, name, webContentLink }) => ({ id, name, link: webContentLink }))
-        .filter((obj): obj is File => !!(obj.id && obj.name && obj.link));
-    const nextToken = response.result.nextPageToken;
-
-    return [files, nextToken];
-};
-
-/**
- * get file list from google drive using gapi
- * @returns list of files
- */
-async function getFiles() {
-    let allFiles: File[] = [];
-    let token: string | undefined = undefined;
-
-    while (token) {
-        let [files, nextToken]: [File[], string | undefined] = await get10Files(token);
-
-        allFiles = allFiles.concat(files);
-        token = nextToken;
-    }
-    return allFiles;
-}
-
-const load = (callback: () => void) => {
-    gapi.load('client:auth2', callback);
-};
-
-/**
-    * initialize gapi client and if succeed update status
-    */
-const initClient = (updateSigninStatus: (isSignedIn: boolean) => void, onError?: (error: unknown) => void) => async () => {
-    try {
-        await gapi.client.init({
-            apiKey: API_KEY,
-            clientId: CLIENT_ID,
-            discoveryDocs: DISCOVERY_DOCS,
-            scope: SCOPES
-        });
-
-        // Listen for sign-in state changes.
-        gapi.auth2.getAuthInstance().isSignedIn.listen(signedIn => updateSigninStatus(signedIn));
-        // Handle the initial sign-in state.
-        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    } catch (error) {
-        onError && onError(error);
-    }
-}
-
-
-const signIn = () => { gapi.auth2.getAuthInstance().signIn(); };
-const signOut = () => { gapi.auth2.getAuthInstance().signOut(); };
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { getFiles, initClient, load, signIn, signOut } from './api';
+import { File } from './type';
 
 const formatTime = (time: number): string => {
     const hour = Math.floor(time / 3600).toString();
@@ -92,7 +27,7 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
         this.state = {
             isSignedIn: false,
             files: [],
-            preText: "",
+            preText: '',
         }
     }
 
@@ -123,7 +58,7 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
 
     render() {
         return <div>
-            <PlayingInfo name={""} audio={new Audio()} />
+            <PlayingInfo name={''} audio={new Audio()} />
             <AuthButton isSignedIn={this.state.isSignedIn} />
             <MusicList files={this.state.files} />
             <pre>{this.state.preText}</pre>
