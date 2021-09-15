@@ -39,9 +39,8 @@ class MusicPlayer extends React.Component<{}, {
             (isSignedIn) => this.updateSigninStatus(isSignedIn),
             (error) => this.appendPre(JSON.stringify(error, null, 2)));
 
-        this.state.audio.addEventListener('loadeddata', (event) => {
-            this.forceUpdate();
-        });
+        this.state.audio.addEventListener('loadeddata', () => this.forceUpdate());
+        this.state.audio.addEventListener('timeupdate', () => this.forceUpdate());
         this.state.audio.addEventListener('ended', (event) => {
             const audio = event.target;
             if (audio instanceof HTMLAudioElement) {
@@ -101,12 +100,12 @@ class MusicPlayer extends React.Component<{}, {
 const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioElement }> = (props) => {
     console.log('render Playing Info');
 
-    const duration = props.audio.duration || 0;
-    const timeText = formatTime(duration);
+    const duration = formatTime(props.audio.duration || 0);
+    const currentTime = formatTime(props.audio.currentTime || 0);
 
     return <div>
         {props.name}
-        {timeText}
+        {currentTime}/{duration}
     </div>;
 }
 
