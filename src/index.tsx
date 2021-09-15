@@ -77,6 +77,7 @@ class MusicPlayer extends React.Component<{}, {
     }
 
     render() {
+        console.log('render Music Player');
         return <div>
             <PlayingInfo name={''} audio={this.state.audio} />
             <AuthButton isSignedIn={this.state.isSignedIn} />
@@ -94,6 +95,7 @@ class MusicPlayer extends React.Component<{}, {
  * @returns react render
  */
 const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioElement }> = (props) => {
+    console.log('render Playing Info');
 
     const duration = props.audio.duration || 0;
     const timeText = formatTime(duration);
@@ -110,6 +112,7 @@ const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioEleme
  * @returns react render
  */
 const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => {
+    console.log('render Authorize Button');
     if (props.isSignedIn) {
         return <button onClick={signIn}>Sign Out</button>;
     } else {
@@ -123,6 +126,7 @@ const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => 
  * @returns react render
  */
 const MusicList: React.FunctionComponent<{ files: File[], play: (link: string) => void }> = (props) => {
+    console.log('render Music List');
     if (props.files.length == 0) {
         return <div>No files</div>
     }
