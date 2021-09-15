@@ -56,8 +56,10 @@ class MusicPlayer extends React.Component<{}, {
      */
     updateSigninStatus(isSignedIn: boolean) {
         this.setState({ isSignedIn });
-        getFiles()
-            .then(files => this.setState({ files }));
+        if (isSignedIn) {
+            getFiles()
+                .then(files => this.setState({ files }));
+        }
     }
 
     /**
