@@ -1,13 +1,11 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require("path");
-const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 
-const isProduction = process.env.NODE_ENV == "production";
-
-const config = {
+module.exports = {
   mode: "development",
   entry: "./src/index.tsx",
+  devtool: 'source-map',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, "javascript"),
@@ -37,13 +35,4 @@ const config = {
     extensions: [".tsx", ".ts", ".js"],
     modules: ['node_modules'],
   },
-};
-
-module.exports = () => {
-  if (isProduction) {
-    config.mode = "production";
-
-    config.plugins.push(new WorkboxWebpackPlugin.GenerateSW());
-  }
-  return config;
 };
