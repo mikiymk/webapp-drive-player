@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { getFiles, initClient, load, signIn, signOut } from './api';
+import { getFiles, loadAndInit, signIn, signOut } from './api';
 import { File } from './type';
 
 const formatTime = (time: number): string => {
@@ -32,9 +32,9 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
     }
 
     componentDidMount() {
-        load(initClient(
+        loadAndInit(
             (isSignedIn) => this.updateSigninStatus(isSignedIn),
-            (error) => this.appendPre(JSON.stringify(error, null, 2))));
+            (error) => this.appendPre(JSON.stringify(error, null, 2)));
     }
 
     /**

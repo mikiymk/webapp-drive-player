@@ -1,3 +1,4 @@
+import exp from 'constants';
 import { File } from './type';
 
 // Client ID and API key from the Developer Console
@@ -49,31 +50,31 @@ export const getFiles = async () => {
     return allFiles;
 }
 
-export const load = (callback: () => void) => {
-    gapi.load('client:auth2', callback);
-};
+export const loadAndInit = (updateSigninStatus: (isSignedIn: boolean) => void, onError?: (error: unknown) => void) => {
 
-/**
+    /**
     * initialize gapi client and if succeed update status
     */
-export const initClient = (updateSigninStatus: (isSignedIn: boolean) => void, onError?: (error: unknown) => void) => async () => {
-    try {
-        await gapi.client.init({
-            apiKey: API_KEY,
-            clientId: CLIENT_ID,
-            discoveryDocs: DISCOVERY_DOCS,
-            scope: SCOPES
-        });
+    const initClient = async () => {
+        try {
+            await gapi.client.init({
+                apiKey: API_KEY,
+                clientId: CLIENT_ID,
+                discoveryDocs: DISCOVERY_DOCS,
+                scope: SCOPES
+            });
 
-        // Listen for sign-in state changes.
-        gapi.auth2.getAuthInstance().isSignedIn.listen(signedIn => updateSigninStatus(signedIn));
-        // Handle the initial sign-in state.
-        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    } catch (error) {
-        onError && onError(error);
+            // Listen for sign-in state changes.
+            gapi.auth2.getAuthInstance().isSignedIn.listen(signedIn => updateSigninStatus(signedIn));
+            // Handle the initial sign-in state.
+            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+        } catch (error) {
+            onError && onError(error);
+        }
     }
-}
 
+    gapi.load('client:auth2', initClient);
+}
 
 export const signIn = () => { gapi.auth2.getAuthInstance().signIn(); };
 export const signOut = () => { gapi.auth2.getAuthInstance().signOut(); };
