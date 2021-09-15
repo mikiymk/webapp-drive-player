@@ -38,6 +38,10 @@ class MusicPlayer extends React.Component<{}, {
         loadAndInit(
             (isSignedIn) => this.updateSigninStatus(isSignedIn),
             (error) => this.appendPre(JSON.stringify(error, null, 2)));
+
+        this.state.audio.addEventListener('loadeddata', (event) => {
+            this.forceUpdate();
+        });
         this.state.audio.addEventListener('ended', (event) => {
             const audio = event.target;
             if (audio instanceof HTMLAudioElement) {
