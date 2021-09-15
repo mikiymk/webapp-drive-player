@@ -5,28 +5,17 @@ import { API_KEY, CLIENT_ID, DISCOVERY_DOCS, SCOPES } from "./api";
 type File = { name: string, id: string, link: string };
 
 const get10Files = async (token: undefined | string): Promise<[File[], string | undefined]> => {
-    const request: {
-        fields: string,
-        pageSize: number
-        pageToken: undefined | string,
-        q: string,
-    } = {
+    const response = await gapi.client.drive.files.list({
         'fields': 'nextPageToken, files(id, name, webContentLink)',
         'pageSize': 10,
         'pageToken': token,
         'q': "mimeType contains 'audio/'",
-    };
-
-    const isFile = (obj: any): obj is File => {
-        return obj.id && obj.name && obj.link;
-    };
-
-    const response = await gapi.client.drive.files.list(request);
+    });
 
     const row_files = response.result.files ?? [];
-    const files = row_files.map(
-        ({id, name, webContentLink}) => ({id, name, link: webContentLink})
-    ).filter(isFile);
+    const files = row_files
+        .map(({ id, name, webContentLink }) => ({ id, name, link: webContentLink }))
+        .filter((obj): obj is File => !!(obj.id ?? obj.name ?? obj.link ?? false));
     const nextToken = response.result.nextPageToken;
 
     return [files, nextToken];
