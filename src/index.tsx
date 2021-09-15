@@ -10,11 +10,11 @@ const formatTime = (time: number): string => {
     const millisecond = Math.round(time % 1 * 1000).toString().padStart(3, '0');
 
     if (hour !== '0') {
-        return `${hour}:${minute}:${second}:${millisecond}`;
+        return `${hour}:${minute}:${second}.${millisecond}`;
     } else if (minute !== '00') {
-        return `${minute}:${second}:${millisecond}`;
+        return `${minute}:${second}.${millisecond}`;
     } else {
-        return `${second}:${millisecond}`;
+        return `${second}.${millisecond}`;
     }
 }
 

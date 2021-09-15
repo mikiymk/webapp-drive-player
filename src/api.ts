@@ -30,6 +30,8 @@ const get10Files = async (token?: string): Promise<[File[], string | undefined]>
         .filter((obj): obj is File => !!(obj.id && obj.name && obj.link));
     const nextToken = response.result.nextPageToken;
 
+    console.log(row_files, files, nextToken);
+
     return [files, nextToken];
 };
 
@@ -47,6 +49,7 @@ export const getFiles = async () => {
         allFiles = allFiles.concat(files);
         token = nextToken;
     }
+    console.log('files', allFiles);
     return allFiles;
 }
 
@@ -57,6 +60,7 @@ export const loadAndInit = (updateSigninStatus: (isSignedIn: boolean) => void, o
     */
     const initClient = async () => {
         try {
+            console.log('initialize client');
             await gapi.client.init({
                 apiKey: API_KEY,
                 clientId: CLIENT_ID,
@@ -67,12 +71,16 @@ export const loadAndInit = (updateSigninStatus: (isSignedIn: boolean) => void, o
             // Listen for sign-in state changes.
             gapi.auth2.getAuthInstance().isSignedIn.listen(signedIn => updateSigninStatus(signedIn));
             // Handle the initial sign-in state.
-            updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+            const isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
+            console.log('signed in:', isSignedIn);
+            updateSigninStatus(isSignedIn);
         } catch (error) {
+            console.error('error:', error);
             onError && onError(error);
         }
     }
 
+    console.log('load client:auth2');
     gapi.load('client:auth2', initClient);
 }
 
