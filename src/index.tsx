@@ -59,6 +59,21 @@ const initClient = (updateSigninStatus: (isSignedIn: boolean) => void, onError?:
     }
 }
 
+const formatTime = (time: number): string => {
+    const hour = Math.floor(time / 3600).toString();
+    const minute = Math.floor(time % 3600 / 60).toString().padStart(2, '0');
+    const second = Math.floor(time % 60).toString().padStart(2, '0');
+    const millisecond = Math.round(time % 1 * 1000).toString().padStart(3, '0');
+
+    if (hour !== '0') {
+        return `${hour}:${minute}:${second}:${millisecond}`;
+    } else if (minute !== '00') {
+        return `${minute}:${second}:${millisecond}`;
+    } else {
+        return `${second}:${millisecond}`;
+    }
+}
+
 /**
  * react component root.
  */
@@ -116,16 +131,12 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
  */
 const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioElement }> = (props) => {
 
-    const duration = props.audio.duration;
-
-    const hour = Math.floor(duration / 3600);
-    const minute = Math.floor(duration % 3600 / 60);
-    const second = Math.floor(duration % 60);
-    const millisecond = Math.round(duration % 1 * 1000);
+    const duration = props.audio.duration || 0;
+    const timeText = formatTime(duration);
 
     return <div>
         {props.name}
-        {hour}:{minute}:{second}.{millisecond}
+        {timeText}
     </div>;
 }
 
