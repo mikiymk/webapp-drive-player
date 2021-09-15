@@ -21,13 +21,16 @@ const formatTime = (time: number): string => {
 /**
  * react component root.
  */
-class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File[], preText: string }> {
+class MusicPlayer extends React.Component<{}, {
+    isSignedIn: boolean, files: File[], preText: string, audio: HTMLAudioElement,
+}> {
     constructor(props: {}) {
         super(props);
         this.state = {
             isSignedIn: false,
             files: [],
             preText: '',
+            audio: new Audio(),
         }
     }
 
@@ -35,6 +38,13 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
         loadAndInit(
             (isSignedIn) => this.updateSigninStatus(isSignedIn),
             (error) => this.appendPre(JSON.stringify(error, null, 2)));
+        this.state.audio.addEventListener('ended', (event) => {
+            const audio = event.target;
+            if (audio instanceof HTMLAudioElement) {
+                audio.currentTime = 0;
+                audio.play();
+            }
+        });
     }
 
     /**
@@ -56,11 +66,16 @@ class MusicPlayer extends React.Component<{}, { isSignedIn: boolean, files: File
         this.setState({ preText });
     }
 
+    play(link: string) {
+        this.state.audio.src = link;
+        this.state.audio.play();
+    }
+
     render() {
         return <div>
-            <PlayingInfo name={''} audio={new Audio()} />
+            <PlayingInfo name={''} audio={this.state.audio} />
             <AuthButton isSignedIn={this.state.isSignedIn} />
-            <MusicList files={this.state.files} />
+            <MusicList files={this.state.files} play={(link) => this.play(link)} />
             <pre>{this.state.preText}</pre>
         </div>
     }
@@ -102,12 +117,12 @@ const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => 
  * @param props compontnt props
  * @returns react render
  */
-const MusicList: React.FunctionComponent<{ files: File[] }> = (props) => {
+const MusicList: React.FunctionComponent<{ files: File[], play: (link: string) => void }> = (props) => {
     if (props.files.length == 0) {
         return <div>No files</div>
     }
     const listitems = props.files
-        .map((file) => <MusicListItem {...file} />);
+        .map((file) => <MusicListItem {...file} play={props.play} />);
     return <div>
         Files:
         <ul>{listitems}</ul>
@@ -119,11 +134,9 @@ const MusicList: React.FunctionComponent<{ files: File[] }> = (props) => {
  * @param props compontnt props
  * @returns react render
  */
-const MusicListItem: React.FunctionComponent<File> = (props) => {
+const MusicListItem: React.FunctionComponent<File & { play: (link: string) => void }> = (props) => {
     const playing = () => {
-        console.log(props.link);
-        let audio = new Audio(props.link);
-        audio.play();
+        props.play(props.link)
     };
     return <li>
         {props.name}({props.id})
