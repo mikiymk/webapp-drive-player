@@ -4,7 +4,7 @@ import { API_KEY, CLIENT_ID, DISCOVERY_DOCS, SCOPES } from "./api";
 
 type File = { name: string, id: string, link: string };
 
-const get10Files = async (token: undefined | string): Promise<[File[], string | undefined]> => {
+const get10Files = async (token?: string): Promise<[File[], string | undefined]> => {
     const response = await gapi.client.drive.files.list({
         'fields': 'nextPageToken, files(id, name, webContentLink)',
         'pageSize': 10,
