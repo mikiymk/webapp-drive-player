@@ -3,8 +3,3 @@ export type File = {
     id: string,
     link: string
 };
-
-export type AudioController = {
-    play: (link: string) => Promise<void>,
-    isPlaying: () => boolean,
-}
