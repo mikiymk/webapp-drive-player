@@ -55,6 +55,7 @@ jobs:
       - name: git commit and push
         run: |
           git add .
+          git add -f javascript
           git commit -m "compile typescript"
           git push origin pages-build
 
