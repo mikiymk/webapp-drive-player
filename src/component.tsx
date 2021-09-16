@@ -99,7 +99,7 @@ const PlayingInfo: React.FC<{ name: string, audio: HTMLAudioElement }> = ({ name
     return <div>
         {name}
         <PlayPauseButton isPaused={audio.paused} play={play} pause={pause} />
-        {currentTime}/{duration}
+        <SeekBar duration={audio.duration} />{currentTime}/{duration}
     </div>;
 }
 
@@ -111,6 +111,14 @@ const PlayPauseButton: React.FC<{ isPaused: boolean, play: () => void, pause: ()
     } else {
         return <button onClick={pause}>pause</button>;
     }
+}
+
+const SeekBar: React.FC<{ duration: number }> = ({ duration }) => {
+    return <input
+        type="range"
+        min="0"
+        max={duration * 1000}
+        onChange={console.log}></input>
 }
 
 /**
