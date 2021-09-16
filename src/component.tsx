@@ -26,6 +26,8 @@ export class MusicPlayer extends React.Component<{}, {
 
         this.state.audio.addEventListener('loadeddata', () => this.forceUpdate());
         this.state.audio.addEventListener('timeupdate', () => this.forceUpdate());
+        this.state.audio.addEventListener('play', () => this.forceUpdate());
+        this.state.audio.addEventListener('pause', () => this.forceUpdate());
         this.state.audio.addEventListener('ended', (event) => {
             const audio = event.target;
             if (audio instanceof HTMLAudioElement) {
@@ -90,10 +92,25 @@ const PlayingInfo: React.FC<{ name: string, audio: HTMLAudioElement }> = ({ name
     const duration = formatTime(audio.duration || 0);
     const currentTime = formatTime(audio.currentTime || 0);
 
+    const play = () => { audio.play(); };
+    const pause = () => { audio.pause(); };
+
+
     return <div>
         {name}
+        <PlayPauseButton isPaused={audio.paused} play={play} pause={pause} />
         {currentTime}/{duration}
     </div>;
+}
+
+const PlayPauseButton: React.FC<{ isPaused: boolean, play: () => void, pause: () => void }> = ({ isPaused, play, pause }) => {
+    console.log('render Play Pause Button');
+
+    if (isPaused) {
+        return <button onClick={play}>play</button>;
+    } else {
+        return <button onClick={pause}>pause</button>;
+    }
 }
 
 /**
