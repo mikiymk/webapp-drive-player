@@ -2,7 +2,9 @@ import exp from 'constants';
 import { File } from './type';
 
 // Client ID and API key from the Developer Console
-const CLIENT_ID = '820614082295-6sqmb2cr2pgs2j7l1mjh00bv7rbc2t2c.apps.googleusercontent.com';
+const CLIENT_ID_1 = '820614082295-6sqmb2cr2pgs2j7l1mjh00bv7rbc2t2c.apps.googleusercontent.com';
+const CLIENT_ID_2 = '820614082295-ob2em235vu1va9b5mhu0uhpvo299ipt7.apps.googleusercontent.com';
+
 const API_KEY = 'AIzaSyAg5BcUDni6Srv8AwwCVYXrRIHcj8E9_0E';
 
 // Array of API discovery doc URLs for APIs used by the quickstart
@@ -62,7 +64,7 @@ export const loadAndInit = (updateSigninStatus: (isSignedIn: boolean) => void, o
             console.log('initialize client');
             await gapi.client.init({
                 apiKey: API_KEY,
-                clientId: CLIENT_ID,
+                clientId: CLIENT_ID_2,
                 discoveryDocs: DISCOVERY_DOCS,
                 scope: SCOPES
             });
