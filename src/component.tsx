@@ -68,10 +68,18 @@ export class MusicPlayer extends React.Component<{}, {
         })
     }
 
+    seek(time: number) {
+        this.setState((state) => {
+            console.log('seek to', time);
+            state.audio.currentTime = time;
+            return state;
+        })
+    }
+
     render() {
         console.log('render Music Player');
         return <div>
-            <PlayingInfo name={''} audio={this.state.audio} />
+            <PlayingInfo name={''} audio={this.state.audio} seek={(time) => this.seek(time)} />
             <AuthButton isSignedIn={this.state.isSignedIn} />
             <MusicList files={this.state.files} play={(link) => this.play(link)} />
             <pre>{this.state.preText}</pre>
@@ -86,7 +94,7 @@ export class MusicPlayer extends React.Component<{}, {
  * @param props.audio play song audio element
  * @returns react render
  */
-const PlayingInfo: React.FC<{ name: string, audio: HTMLAudioElement }> = ({ name, audio }) => {
+const PlayingInfo: React.FC<{ name: string, audio: HTMLAudioElement, seek: (time: number) => void }> = ({ name, audio, seek }) => {
     console.log('render Playing Info');
 
     const duration = formatTime(audio.duration || 0);
@@ -99,7 +107,7 @@ const PlayingInfo: React.FC<{ name: string, audio: HTMLAudioElement }> = ({ name
     return <div>
         {name}
         <PlayPauseButton isPaused={audio.paused} play={play} pause={pause} />
-        <SeekBar duration={audio.duration} />{currentTime}/{duration}
+        <SeekBar duration={audio.duration} time={audio.currentTime} seek={seek} />{currentTime}/{duration}
     </div>;
 }
 
@@ -113,12 +121,13 @@ const PlayPauseButton: React.FC<{ isPaused: boolean, play: () => void, pause: ()
     }
 }
 
-const SeekBar: React.FC<{ duration: number }> = ({ duration }) => {
+const SeekBar: React.FC<{ duration: number, time: number, seek: (time: number) => void }> = ({ duration, time, seek }) => {
     return <input
         type="range"
         min="0"
         max={duration * 1000}
-        onChange={console.log}></input>
+        value={time * 1000}
+        onChange={(event) => seek(parseInt(event.target.value, 10) / 1000)}></input>
 }
 
 /**
