@@ -84,14 +84,14 @@ export class MusicPlayer extends React.Component<{}, {
  * @param props.audio play song audio element
  * @returns react render
  */
-const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioElement }> = (props) => {
+const PlayingInfo: React.FC<{ name: string, audio: HTMLAudioElement }> = ({ name, audio }) => {
     console.log('render Playing Info');
 
-    const duration = formatTime(props.audio.duration || 0);
-    const currentTime = formatTime(props.audio.currentTime || 0);
+    const duration = formatTime(audio.duration || 0);
+    const currentTime = formatTime(audio.currentTime || 0);
 
     return <div>
-        {props.name}
+        {name}
         {currentTime}/{duration}
     </div>;
 }
@@ -101,9 +101,9 @@ const PlayingInfo: React.FunctionComponent<{ name: string, audio: HTMLAudioEleme
  * @param props compontnt props
  * @returns react render
  */
-const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => {
+const AuthButton: React.FC<{ isSignedIn: boolean }> = ({ isSignedIn }) => {
     console.log('render Authorize Button');
-    if (props.isSignedIn) {
+    if (isSignedIn) {
         return <button onClick={signOut}>Sign Out</button>;
     } else {
         return <button onClick={signIn}>Authorize</button>;
@@ -115,13 +115,12 @@ const AuthButton: React.FunctionComponent<{ isSignedIn: boolean }> = (props) => 
  * @param props compontnt props
  * @returns react render
  */
-const MusicList: React.FunctionComponent<{ files: File[], play: (link: string) => void }> = (props) => {
+const MusicList: React.FC<{ files: File[], play: (link: string) => void }> = ({ files, play }) => {
     console.log('render Music List');
-    if (props.files.length == 0) {
+    if (files.length == 0) {
         return <div>No files</div>
     }
-    const listitems = props.files
-        .map((file) => <MusicListItem {...file} play={props.play} />);
+    const listitems = files.map((file) => <MusicListItem {...file} play={play} />);
     return <div>
         Files:
         <ul>{listitems}</ul>
@@ -133,12 +132,12 @@ const MusicList: React.FunctionComponent<{ files: File[], play: (link: string) =
  * @param props compontnt props
  * @returns react render
  */
-const MusicListItem: React.FunctionComponent<File & { play: (link: string) => void }> = (props) => {
+const MusicListItem: React.FC<File & { play: (link: string) => void }> = ({ play, name, id, link }) => {
     const playing = () => {
-        props.play(props.link)
+        play(link)
     };
     return <li>
-        {props.name}({props.id})
+        {name}({id})
         <button onClick={playing}>play</button>
     </li>;
 }
