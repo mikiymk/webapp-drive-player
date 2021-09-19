@@ -8,7 +8,8 @@
     "build": "webpack --config=webpack.prod.js --mode=production --node-env=production",
     "build:dev": "webpack --config=webpack.dev.js --mode=development",
     "build:prod": "webpack --config=webpack.prod.js --mode=production --node-env=production",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "server":"http-server"
   },
   "repository": {
     "type": "git",
