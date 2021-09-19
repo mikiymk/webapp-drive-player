@@ -32,13 +32,7 @@ export class MusicPlayer extends React.Component<{}, {
         this.state.audio.addEventListener('timeupdate', () => this.forceUpdate());
         this.state.audio.addEventListener('play', () => this.forceUpdate());
         this.state.audio.addEventListener('pause', () => this.forceUpdate());
-        this.state.audio.addEventListener('ended', (event) => {
-            const audio = event.target;
-            if (audio instanceof HTMLAudioElement) {
-                audio.currentTime = 0;
-                audio.play();
-            }
-        });
+        this.state.audio.addEventListener('ended', () => this.playNext());
     }
 
     /**
@@ -67,13 +61,45 @@ export class MusicPlayer extends React.Component<{}, {
             console.log('play start', link);
             state.audio.src = link;
             state.audio.currentTime = 0;
-            state.audio.play();
+            this.setPlaying(true);
             return state;
         });
     }
 
-    addNowPlaying(link: string) {
+    playNext() {
+        const index = this.state.nowPlayingIndex;
+        const length = this.state.nowPlayingList.length;
+        let nextIndex = 0;
+        if (index === undefined) {
+            nextIndex = 0;
+        } else if (index + 1 === length) {
+            nextIndex = 0;
+        } else {
+            nextIndex = index + 1;
+        }
 
+        this.setNowPlayingIndex(nextIndex);
+        this.play();
+    }
+
+    playPrev() {
+        const index = this.state.nowPlayingIndex;
+        const length = this.state.nowPlayingList.length;
+
+        let prevIndex = 0;
+        if (index === undefined) {
+            prevIndex = 0;
+        } else if (index === 0) {
+            prevIndex = length - 1;
+        } else {
+            prevIndex = index - 1;
+        }
+
+        this.setNowPlayingIndex(prevIndex);
+        this.play();
+    }
+
+    addNowPlaying(link: string) {
         this.setState((state) => {
             const pushAndPlay = state.nowPlayingList.length === 0;
             state.nowPlayingList.push(link);
@@ -167,6 +193,10 @@ const PlayPauseButton: React.FC<{ isPaused: boolean, play: () => void, pause: ()
 const SeekBar: React.FC<{
     duration: number, time: number, seek: (time: number) => void
 }> = ({ duration, time, seek }) => {
+
+    duration ||= 0;
+    time ||= 0;
+
     return <input
         type="range"
         min="0"
@@ -199,7 +229,7 @@ const MusicList: React.FC<{ files: File[], play: (link: string) => void }> = ({ 
     if (files.length == 0) {
         return <div>No files</div>
     }
-    const listitems = files.map((file) => <MusicListItem {...file} play={play} />);
+    const listitems = files.map((file) => <MusicListItem {...file} key={file.id} play={play} />);
     return <div>
         Files:
         <ul>{listitems}</ul>
