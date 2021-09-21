@@ -7,9 +7,12 @@ import { formatTime } from './format';
  * react component root.
  */
 export class MusicPlayer extends React.Component<{}, {
-    isSignedIn: boolean, files: File[],
-    preText: string, audio: HTMLAudioElement,
-    nowPlayingList: File[], nowPlayingIndex: number,
+    isSignedIn: boolean,
+    files: File[],
+    preText: string,
+    audio: HTMLAudioElement,
+    nowPlayingList: File[],
+    nowPlayingIndex: number,
 }> {
     constructor(props: {}) {
         super(props);
@@ -69,10 +72,9 @@ export class MusicPlayer extends React.Component<{}, {
     playNext() {
         const index = this.state.nowPlayingIndex;
         const length = this.state.nowPlayingList.length;
+
         let nextIndex = 0;
-        if (index === undefined) {
-            nextIndex = 0;
-        } else if (index + 1 === length) {
+        if (index + 1 === length) {
             nextIndex = 0;
         } else {
             nextIndex = index + 1;
@@ -87,9 +89,7 @@ export class MusicPlayer extends React.Component<{}, {
         const length = this.state.nowPlayingList.length;
 
         let prevIndex = 0;
-        if (index === undefined) {
-            prevIndex = 0;
-        } else if (index === 0) {
+        if (index === 0) {
             prevIndex = length - 1;
         } else {
             prevIndex = index - 1;
@@ -101,10 +101,12 @@ export class MusicPlayer extends React.Component<{}, {
 
     addNowPlaying(file: File) {
         const pushAndPlay = this.state.nowPlayingList.length === 0;
-        this.setState((state) => {
-            state.nowPlayingList.push(file);
-            return state;
-        })
+
+        this.setState({
+            ...this.state,
+            nowPlayingList: [...this.state.nowPlayingList, file]
+        });
+
         if (pushAndPlay) {
             this.setNowPlayingIndex(0);
             this.play();
@@ -166,8 +168,13 @@ export class MusicPlayer extends React.Component<{}, {
  * @returns react render
  */
 const PlayingInfo: React.FC<{
-    name: string, duration: number, currentTime: number, paused: boolean,
-    seek: (time: number) => void, play: () => void, pause: () => void,
+    name: string,
+    duration: number,
+    currentTime: number,
+    paused: boolean,
+    seek: (time: number) => void,
+    play: () => void,
+    pause: () => void,
 }> = ({ name, duration, currentTime, paused, seek, play, pause }) => {
     console.log('render Playing Info');
 
@@ -177,11 +184,16 @@ const PlayingInfo: React.FC<{
     return <div>
         {name}
         <PlayPauseButton isPaused={paused} play={play} pause={pause} />
-        <SeekBar duration={duration} time={currentTime} seek={seek} />{currentTimeText}/{durationText}
+        <SeekBar duration={duration} time={currentTime} seek={seek} />
+        {currentTimeText}/{durationText}
     </div>;
 }
 
-const PlayPauseButton: React.FC<{ isPaused: boolean, play: () => void, pause: () => void }> = ({ isPaused, play, pause }) => {
+const PlayPauseButton: React.FC<{
+    isPaused: boolean,
+    play: () => void,
+    pause: () => void,
+}> = ({ isPaused, play, pause }) => {
     console.log('render Play Pause Button');
 
     if (isPaused) {
@@ -192,7 +204,9 @@ const PlayPauseButton: React.FC<{ isPaused: boolean, play: () => void, pause: ()
 }
 
 const SeekBar: React.FC<{
-    duration: number, time: number, seek: (time: number) => void
+    duration: number,
+    time: number,
+    seek: (time: number) => void,
 }> = ({ duration, time, seek }) => {
 
     duration ||= 0;
@@ -230,7 +244,7 @@ const MusicList: React.FC<{ files: File[] } & PropPlay> = ({ files, play }) => {
     if (files.length == 0) {
         return <div>No files</div>
     }
-    const listitems = files.map((file) => <MusicListItem {...file} key={file.id} play={play} />);
+    const listitems = files.map((file) => <MusicListItem key={file.id} {...file} play={play} />);
     return <div>
         Files:
         <ul>{listitems}</ul>
@@ -252,18 +266,17 @@ const MusicListItem: React.FC<File & PropPlay> = ({ play, name, id, link }) => {
     </li>;
 }
 
-const NowPlayingList: React.FC<{ list: File[], index: number, }> = (props) => {
-    const listItem = props.list.map((value, iindex) => {
-        return <NowPlayingItem key={iindex} {...value} isPlayingNow={props.index === iindex} />
-    })
+const NowPlayingList: React.FC<{ list: File[], index: number, }> = ({ list, index }) => {
+    const listItem = list.map((value, itemIndex) =>
+        <NowPlayingItem key={itemIndex} {...value} isPlayingNow={index === itemIndex} />);
     return <div>
         Now Playing:
         <ul>{listItem}</ul>
     </div>
 }
 
-const NowPlayingItem: React.FC<File & { isPlayingNow: boolean }> = (props) => {
+const NowPlayingItem: React.FC<File & { isPlayingNow: boolean }> = ({ isPlayingNow, name }) => {
     return <li>
-        {props.isPlayingNow ? 'playing' : ''}:{props.name}
+        {isPlayingNow ? 'playing' : ''}:{name}
     </li>
 }
