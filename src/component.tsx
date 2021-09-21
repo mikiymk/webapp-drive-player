@@ -9,7 +9,7 @@ import { formatTime } from './format';
 export class MusicPlayer extends React.Component<{}, {
     isSignedIn: boolean, files: File[],
     preText: string, audio: HTMLAudioElement,
-    nowPlayingList: File[], nowPlayingIndex: number | undefined,
+    nowPlayingList: File[], nowPlayingIndex: number,
 }> {
     constructor(props: {}) {
         super(props);
@@ -19,7 +19,7 @@ export class MusicPlayer extends React.Component<{}, {
             preText: '',
             audio: new Audio(),
             nowPlayingList: [],
-            nowPlayingIndex: undefined,
+            nowPlayingIndex: 0,
         }
     }
 
@@ -100,15 +100,15 @@ export class MusicPlayer extends React.Component<{}, {
     }
 
     addNowPlaying(file: File) {
+        const pushAndPlay = this.state.nowPlayingList.length === 0;
         this.setState((state) => {
-            const pushAndPlay = state.nowPlayingList.length === 0;
             state.nowPlayingList.push(file);
-            if (pushAndPlay) {
-                this.setNowPlayingIndex(0);
-                this.play();
-            }
             return state;
         })
+        if (pushAndPlay) {
+            this.setNowPlayingIndex(0);
+            this.play();
+        }
     }
 
 
@@ -152,6 +152,7 @@ export class MusicPlayer extends React.Component<{}, {
                 pause={() => this.setPlaying(false)} />
             <AuthButton isSignedIn={this.state.isSignedIn} />
             <MusicList files={this.state.files} play={(file) => this.addNowPlaying(file)} />
+            <NowPlayingList list={this.state.nowPlayingList} index={this.state.nowPlayingIndex} />
             <pre>{this.state.preText}</pre>
         </div>
     }
@@ -249,4 +250,20 @@ const MusicListItem: React.FC<File & PropPlay> = ({ play, name, id, link }) => {
         {name}({id})
         <button onClick={playing}>play</button>
     </li>;
+}
+
+const NowPlayingList: React.FC<{ list: File[], index: number, }> = (props) => {
+    const listItem = props.list.map((value, iindex) => {
+        return <NowPlayingItem key={iindex} {...value} />
+    })
+    return <div>
+        Now Playing:
+        {listItem}
+    </div>
+}
+
+const NowPlayingItem: React.FC<File> = (props) => {
+    return <li>
+        {props.name}
+    </li>
 }
