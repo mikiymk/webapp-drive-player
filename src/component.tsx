@@ -154,7 +154,7 @@ export class MusicPlayer extends React.Component<{}, {
                 pause={() => this.setPlaying(false)} />
             <AuthButton isSignedIn={this.state.isSignedIn} />
             <MusicList files={this.state.files} play={(file) => this.addNowPlaying(file)} />
-            <NowPlayingList list={this.state.nowPlayingList} index={this.state.nowPlayingIndex} />
+            <NowPlayingList list={this.state.nowPlayingList} playingIndex={this.state.nowPlayingIndex} />
             <pre>{this.state.preText}</pre>
         </div>
     }
@@ -241,9 +241,6 @@ const AuthButton: React.FC<{ isSignedIn: boolean }> = ({ isSignedIn }) => {
  */
 const MusicList: React.FC<{ files: File[] } & PropPlay> = ({ files, play }) => {
     console.log('render Music List');
-    if (files.length == 0) {
-        return <div>No files</div>
-    }
     const listitems = files.map((file) => <MusicListItem key={file.id} {...file} play={play} />);
     return <div>
         Files:
@@ -266,9 +263,9 @@ const MusicListItem: React.FC<File & PropPlay> = ({ play, name, id, link }) => {
     </li>;
 }
 
-const NowPlayingList: React.FC<{ list: File[], index: number, }> = ({ list, index }) => {
-    const listItem = list.map((value, itemIndex) =>
-        <NowPlayingItem key={itemIndex} {...value} isPlayingNow={index === itemIndex} />);
+const NowPlayingList: React.FC<{ list: File[], playingIndex: number, }> = ({ list, playingIndex }) => {
+    const listItem = list.map((item, index) =>
+        <NowPlayingItem key={index} {...item} isPlayingNow={playingIndex === index} />);
     return <div>
         Now Playing:
         <ul>{listItem}</ul>
