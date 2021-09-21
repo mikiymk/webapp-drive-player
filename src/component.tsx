@@ -1,6 +1,6 @@
 import React from 'react';
 import { loadAndInit, getFiles, signOut, signIn } from './api';
-import { File } from './type';
+import { File, PropPlay } from './type';
 import { formatTime } from './format';
 
 /**
@@ -9,7 +9,7 @@ import { formatTime } from './format';
 export class MusicPlayer extends React.Component<{}, {
     isSignedIn: boolean, files: File[],
     preText: string, audio: HTMLAudioElement,
-    nowPlayingList: string[], nowPlayingIndex: number | undefined,
+    nowPlayingList: File[], nowPlayingIndex: number | undefined,
 }> {
     constructor(props: {}) {
         super(props);
@@ -57,13 +57,13 @@ export class MusicPlayer extends React.Component<{}, {
 
     play() {
         this.setState((state) => {
-            const link = state.nowPlayingList[state.nowPlayingIndex ?? 0];
-            console.log('play start', link);
-            state.audio.src = link;
+            const file = state.nowPlayingList[state.nowPlayingIndex ?? 0];
+            console.log('play start', file);
+            state.audio.src = file.link;
             state.audio.currentTime = 0;
-            this.setPlaying(true);
             return state;
         });
+        this.setPlaying(true);
     }
 
     playNext() {
@@ -99,10 +99,10 @@ export class MusicPlayer extends React.Component<{}, {
         this.play();
     }
 
-    addNowPlaying(link: string) {
+    addNowPlaying(file: File) {
         this.setState((state) => {
             const pushAndPlay = state.nowPlayingList.length === 0;
-            state.nowPlayingList.push(link);
+            state.nowPlayingList.push(file);
             if (pushAndPlay) {
                 this.setNowPlayingIndex(0);
                 this.play();
@@ -151,7 +151,7 @@ export class MusicPlayer extends React.Component<{}, {
                 play={() => this.setPlaying(true)}
                 pause={() => this.setPlaying(false)} />
             <AuthButton isSignedIn={this.state.isSignedIn} />
-            <MusicList files={this.state.files} play={(link) => this.addNowPlaying(link)} />
+            <MusicList files={this.state.files} play={(file) => this.addNowPlaying(file)} />
             <pre>{this.state.preText}</pre>
         </div>
     }
@@ -224,7 +224,7 @@ const AuthButton: React.FC<{ isSignedIn: boolean }> = ({ isSignedIn }) => {
  * @param props compontnt props
  * @returns react render
  */
-const MusicList: React.FC<{ files: File[], play: (link: string) => void }> = ({ files, play }) => {
+const MusicList: React.FC<{ files: File[] } & PropPlay> = ({ files, play }) => {
     console.log('render Music List');
     if (files.length == 0) {
         return <div>No files</div>
@@ -241,9 +241,9 @@ const MusicList: React.FC<{ files: File[], play: (link: string) => void }> = ({ 
  * @param props compontnt props
  * @returns react render
  */
-const MusicListItem: React.FC<File & { play: (link: string) => void }> = ({ play, name, id, link }) => {
+const MusicListItem: React.FC<File & PropPlay> = ({ play, name, id, link }) => {
     const playing = () => {
-        play(link)
+        play({ name, id, link })
     };
     return <li>
         {name}({id})

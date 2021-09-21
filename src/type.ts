@@ -3,3 +3,7 @@ export type File = {
     id: string,
     link: string
 };
+
+export type PropPlay = {
+    play: (file: File) => void,
+}
