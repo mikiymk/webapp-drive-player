@@ -7,9 +7,9 @@
 - [x] play music file on Google Drive
 - [x] change plalying files
 - [x] change play and pause
-- [ ] make now-playing-list
-- [ ] show now-playing-list
-- [ ] play through now-playing-list
+- [x] make now-playing-list
+- [x] show now-playing-list
+- [x] play through now-playing-list
 - [ ] add music to now-playing-list
 - [ ] delete music from now-playing-list
 - [ ] sort auto now-playing-list
