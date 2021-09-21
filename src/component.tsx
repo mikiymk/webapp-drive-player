@@ -57,7 +57,7 @@ export class MusicPlayer extends React.Component<{}, {
 
     play() {
         this.setState((state) => {
-            const file = state.nowPlayingList[state.nowPlayingIndex ?? 0];
+            const file = state.nowPlayingList[state.nowPlayingIndex];
             console.log('play start', file);
             state.audio.src = file.link;
             state.audio.currentTime = 0;
@@ -254,16 +254,16 @@ const MusicListItem: React.FC<File & PropPlay> = ({ play, name, id, link }) => {
 
 const NowPlayingList: React.FC<{ list: File[], index: number, }> = (props) => {
     const listItem = props.list.map((value, iindex) => {
-        return <NowPlayingItem key={iindex} {...value} />
+        return <NowPlayingItem key={iindex} {...value} isPlayingNow={props.index === iindex} />
     })
     return <div>
         Now Playing:
-        {listItem}
+        <ul>{listItem}</ul>
     </div>
 }
 
-const NowPlayingItem: React.FC<File> = (props) => {
+const NowPlayingItem: React.FC<File & { isPlayingNow: boolean }> = (props) => {
     return <li>
-        {props.name}
+        {props.isPlayingNow ? 'playing' : ''}:{props.name}
     </li>
 }
