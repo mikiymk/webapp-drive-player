@@ -1,45 +1,53 @@
-import React from 'react';
-import { loadAndInit, getFiles, signOut, signIn } from './api';
-import { File, PropPlay } from './type';
-import { formatTime } from './format';
+import React from "react";
+import { loadAndInit, getFiles, signOut, signIn } from "./api";
+import { File, PropPlay } from "./type";
+import { formatTime } from "./format";
 
 /**
  * react component root.
  */
-export class MusicPlayer extends React.Component<{}, {
-    isSignedIn: boolean,
-    files: File[],
-    preText: string,
-    audio: HTMLAudioElement,
-    nowPlayingList: File[],
-    nowPlayingIndex: number,
-}> {
+export class MusicPlayer extends React.Component<
+    {},
+    {
+        isSignedIn: boolean;
+        files: File[];
+        preText: string;
+        audio: HTMLAudioElement;
+        nowPlayingList: File[];
+        nowPlayingIndex: number;
+    }
+> {
     constructor(props: {}) {
         super(props);
         this.state = {
             isSignedIn: false,
             files: [],
-            preText: '',
+            preText: "",
             audio: new Audio(),
             nowPlayingList: [],
             nowPlayingIndex: 0,
-        }
+        };
     }
 
     componentDidMount() {
         loadAndInit(
-            (isSignedIn) => this.updateSigninStatus(isSignedIn),
-            (error) => this.appendPre(JSON.stringify(error, null, 2)));
+            isSignedIn => this.updateSigninStatus(isSignedIn),
+            error => this.appendPre(JSON.stringify(error, null, 2))
+        );
 
-        this.state.audio.addEventListener('loadeddata', () => this.forceUpdate());
-        this.state.audio.addEventListener('timeupdate', () => this.forceUpdate());
-        this.state.audio.addEventListener('play', () => this.forceUpdate());
-        this.state.audio.addEventListener('pause', () => this.forceUpdate());
-        this.state.audio.addEventListener('ended', () => this.playNext());
+        this.state.audio.addEventListener("loadeddata", () =>
+            this.forceUpdate()
+        );
+        this.state.audio.addEventListener("timeupdate", () =>
+            this.forceUpdate()
+        );
+        this.state.audio.addEventListener("play", () => this.forceUpdate());
+        this.state.audio.addEventListener("pause", () => this.forceUpdate());
+        this.state.audio.addEventListener("ended", () => this.playNext());
     }
 
     /**
-     * of sign in status, 
+     * of sign in status,
      * @param isSignedIn if google signed in
      */
     updateSigninStatus(isSignedIn: boolean) {
@@ -54,14 +62,14 @@ export class MusicPlayer extends React.Component<{}, {
      * @param message append message
      */
     appendPre(message: string) {
-        const preText = this.state.preText + message + '\n';
+        const preText = this.state.preText + message + "\n";
         this.setState({ preText });
     }
 
     play() {
-        this.setState((state) => {
+        this.setState(state => {
             const file = state.nowPlayingList[state.nowPlayingIndex];
-            console.log('play start', file);
+            console.log("play start", file);
             state.audio.src = file.link;
             state.audio.currentTime = 0;
             return state;
@@ -104,7 +112,7 @@ export class MusicPlayer extends React.Component<{}, {
 
         this.setState({
             ...this.state,
-            nowPlayingList: [...this.state.nowPlayingList, file]
+            nowPlayingList: [...this.state.nowPlayingList, file],
         });
 
         if (pushAndPlay) {
@@ -112,7 +120,6 @@ export class MusicPlayer extends React.Component<{}, {
             this.play();
         }
     }
-
 
     setNowPlayingIndex(index: number) {
         this.setState({
@@ -122,12 +129,12 @@ export class MusicPlayer extends React.Component<{}, {
     }
 
     setPlaying(isPlay: boolean) {
-        this.setState((state) => {
+        this.setState(state => {
             if (isPlay) {
-                console.log('play start');
+                console.log("play start");
                 state.audio.play().catch(console.log);
             } else {
-                console.log('play stop');
+                console.log("play stop");
                 state.audio.pause();
             }
             return state;
@@ -135,28 +142,38 @@ export class MusicPlayer extends React.Component<{}, {
     }
 
     seek(time: number) {
-        this.setState((state) => {
-            console.log('seek to', time);
+        this.setState(state => {
+            console.log("seek to", time);
             state.audio.currentTime = time;
             return state;
         });
     }
 
     render() {
-        console.log('render Music Player');
-        return <div>
-            <PlayingInfo name={''}
-                duration={this.state.audio.duration}
-                currentTime={this.state.audio.currentTime}
-                paused={this.state.audio.paused}
-                seek={(time) => this.seek(time)}
-                play={() => this.setPlaying(true)}
-                pause={() => this.setPlaying(false)} />
-            <AuthButton isSignedIn={this.state.isSignedIn} />
-            <MusicList files={this.state.files} play={(file) => this.addNowPlaying(file)} />
-            <NowPlayingList list={this.state.nowPlayingList} playingIndex={this.state.nowPlayingIndex} />
-            <pre>{this.state.preText}</pre>
-        </div>
+        console.log("render Music Player");
+        return (
+            <div>
+                <PlayingInfo
+                    name={""}
+                    duration={this.state.audio.duration}
+                    currentTime={this.state.audio.currentTime}
+                    paused={this.state.audio.paused}
+                    seek={time => this.seek(time)}
+                    play={() => this.setPlaying(true)}
+                    pause={() => this.setPlaying(false)}
+                />
+                <AuthButton isSignedIn={this.state.isSignedIn} />
+                <MusicList
+                    files={this.state.files}
+                    play={file => this.addNowPlaying(file)}
+                />
+                <NowPlayingList
+                    list={this.state.nowPlayingList}
+                    playingIndex={this.state.nowPlayingIndex}
+                />
+                <pre>{this.state.preText}</pre>
+            </div>
+        );
     }
 }
 
@@ -168,57 +185,62 @@ export class MusicPlayer extends React.Component<{}, {
  * @returns react render
  */
 const PlayingInfo: React.FC<{
-    name: string,
-    duration: number,
-    currentTime: number,
-    paused: boolean,
-    seek: (time: number) => void,
-    play: () => void,
-    pause: () => void,
+    name: string;
+    duration: number;
+    currentTime: number;
+    paused: boolean;
+    seek: (time: number) => void;
+    play: () => void;
+    pause: () => void;
 }> = ({ name, duration, currentTime, paused, seek, play, pause }) => {
-    console.log('render Playing Info');
+    console.log("render Playing Info");
 
     const durationText = formatTime(duration || 0);
     const currentTimeText = formatTime(currentTime || 0);
 
-    return <div>
-        {name}
-        <PlayPauseButton isPaused={paused} play={play} pause={pause} />
-        <SeekBar duration={duration} time={currentTime} seek={seek} />
-        {currentTimeText}/{durationText}
-    </div>;
-}
+    return (
+        <div>
+            {name}
+            <PlayPauseButton isPaused={paused} play={play} pause={pause} />
+            <SeekBar duration={duration} time={currentTime} seek={seek} />
+            {currentTimeText}/{durationText}
+        </div>
+    );
+};
 
 const PlayPauseButton: React.FC<{
-    isPaused: boolean,
-    play: () => void,
-    pause: () => void,
+    isPaused: boolean;
+    play: () => void;
+    pause: () => void;
 }> = ({ isPaused, play, pause }) => {
-    console.log('render Play Pause Button');
+    console.log("render Play Pause Button");
 
     if (isPaused) {
         return <button onClick={play}>play</button>;
     } else {
         return <button onClick={pause}>pause</button>;
     }
-}
+};
 
 const SeekBar: React.FC<{
-    duration: number,
-    time: number,
-    seek: (time: number) => void,
+    duration: number;
+    time: number;
+    seek: (time: number) => void;
 }> = ({ duration, time, seek }) => {
-
     duration ||= 0;
     time ||= 0;
 
-    return <input
-        type="range"
-        min="0"
-        max={duration * 1000}
-        value={time * 1000}
-        onChange={(event) => seek(parseInt(event.target.value, 10) / 1000)}></input>
-}
+    return (
+        <input
+            type="range"
+            min="0"
+            max={duration * 1000}
+            value={time * 1000}
+            onChange={event =>
+                seek(parseInt(event.target.value, 10) / 1000)
+            }></input>
+    );
+};
 
 /**
  * authorize or sign out button
@@ -226,13 +248,13 @@ const SeekBar: React.FC<{
  * @returns react render
  */
 const AuthButton: React.FC<{ isSignedIn: boolean }> = ({ isSignedIn }) => {
-    console.log('render Authorize Button');
+    console.log("render Authorize Button");
     if (isSignedIn) {
         return <button onClick={signOut}>Sign Out</button>;
     } else {
         return <button onClick={signIn}>Authorize</button>;
     }
-}
+};
 
 /**
  * list of musics
@@ -240,13 +262,17 @@ const AuthButton: React.FC<{ isSignedIn: boolean }> = ({ isSignedIn }) => {
  * @returns react render
  */
 const MusicList: React.FC<{ files: File[] } & PropPlay> = ({ files, play }) => {
-    console.log('render Music List');
-    const listitems = files.map((file) => <MusicListItem key={file.id} {...file} play={play} />);
-    return <div>
-        Files:
-        <ul>{listitems}</ul>
-    </div>;
-}
+    console.log("render Music List");
+    const listitems = files.map(file => (
+        <MusicListItem key={file.id} {...file} play={play} />
+    ));
+    return (
+        <div>
+            Files:
+            <ul>{listitems}</ul>
+        </div>
+    );
+};
 
 /**
  * item of musics list
@@ -255,25 +281,41 @@ const MusicList: React.FC<{ files: File[] } & PropPlay> = ({ files, play }) => {
  */
 const MusicListItem: React.FC<File & PropPlay> = ({ play, name, id, link }) => {
     const playing = () => {
-        play({ name, id, link })
+        play({ name, id, link });
     };
-    return <li>
-        {name}({id})
-        <button onClick={playing}>play</button>
-    </li>;
-}
+    return (
+        <li>
+            {name}({id})<button onClick={playing}>play</button>
+        </li>
+    );
+};
 
-const NowPlayingList: React.FC<{ list: File[], playingIndex: number, }> = ({ list, playingIndex }) => {
-    const listItem = list.map((item, index) =>
-        <NowPlayingItem key={index} {...item} isPlayingNow={playingIndex === index} />);
-    return <div>
-        Now Playing:
-        <ul>{listItem}</ul>
-    </div>
-}
+const NowPlayingList: React.FC<{ list: File[]; playingIndex: number }> = ({
+    list,
+    playingIndex,
+}) => {
+    const listItem = list.map((item, index) => (
+        <NowPlayingItem
+            key={index}
+            {...item}
+            isPlayingNow={playingIndex === index}
+        />
+    ));
+    return (
+        <div>
+            Now Playing:
+            <ul>{listItem}</ul>
+        </div>
+    );
+};
 
-const NowPlayingItem: React.FC<File & { isPlayingNow: boolean }> = ({ isPlayingNow, name }) => {
-    return <li>
-        {isPlayingNow ? 'playing' : ''}:{name}
-    </li>
-}
+const NowPlayingItem: React.FC<File & { isPlayingNow: boolean }> = ({
+    isPlayingNow,
+    name,
+}) => {
+    return (
+        <li>
+            {isPlayingNow ? "playing" : ""}:{name}
+        </li>
+    );
+};
