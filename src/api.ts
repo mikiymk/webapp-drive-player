@@ -1,10 +1,7 @@
-import exp from "constants";
 import { File } from "./type";
 
 // Client ID and API key from the Developer Console
-const CLIENT_ID_1 =
-    "820614082295-6sqmb2cr2pgs2j7l1mjh00bv7rbc2t2c.apps.googleusercontent.com";
-const CLIENT_ID_2 =
+const CLIENT_ID =
     "820614082295-ob2em235vu1va9b5mhu0uhpvo299ipt7.apps.googleusercontent.com";
 
 const API_KEY = "AIzaSyAg5BcUDni6Srv8AwwCVYXrRIHcj8E9_0E";
@@ -21,9 +18,9 @@ const SCOPES = [
     "https://www.googleapis.com/auth/drive.metadata.readonly",
 ].join(" ");
 
-const get10Files = async (
-    token?: string
-): Promise<[File[], string | undefined]> => {
+type Result = [File[], string | undefined];
+
+const get10Files = async (token?: string) => {
     const response = await gapi.client.drive.files.list({
         fields: "nextPageToken, files(id, name, webContentLink)",
         pageSize: 10,
@@ -41,9 +38,11 @@ const get10Files = async (
         .filter((obj): obj is File => !!(obj.id && obj.name && obj.link));
     const nextToken = response.result.nextPageToken;
 
-    console.log(row_files, files, nextToken);
+    console.log("10 files", files);
+    console.log("nextpage token", nextToken);
 
-    return [files, nextToken];
+    const result: Result = [files, nextToken];
+    return result;
 };
 
 /**
@@ -51,17 +50,17 @@ const get10Files = async (
  * @returns list of files
  */
 export const getFiles = async () => {
-    let [allFiles, token]: [File[], string | undefined] = await get10Files();
+    let [allFiles, token]: Result = await get10Files();
 
     while (token) {
-        let [files, nextToken]: [File[], string | undefined] = await get10Files(
-            token
-        );
+        const [files, nextToken]: Result = await get10Files(token);
 
         allFiles = allFiles.concat(files);
         token = nextToken;
     }
+
     console.log("files", allFiles);
+
     return allFiles;
 };
 
@@ -77,15 +76,13 @@ export const loadAndInit = (
             console.log("initialize client");
             await gapi.client.init({
                 apiKey: API_KEY,
-                clientId: CLIENT_ID_2,
+                clientId: CLIENT_ID,
                 discoveryDocs: DISCOVERY_DOCS,
                 scope: SCOPES,
             });
 
             // Listen for sign-in state changes.
-            gapi.auth2
-                .getAuthInstance()
-                .isSignedIn.listen(signedIn => updateSigninStatus(signedIn));
+            gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
             // Handle the initial sign-in state.
             const isSignedIn = gapi.auth2.getAuthInstance().isSignedIn.get();
             console.log("signed in:", isSignedIn);
