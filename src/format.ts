@@ -1,4 +1,4 @@
-export const formatTime = (time: number): string => {
+export const formatTime = (time: number, force?: "hour" | "minute"): string => {
     const hour = Math.floor(time / 3600).toString();
     const minute = Math.floor((time % 3600) / 60)
         .toString()
@@ -10,9 +10,9 @@ export const formatTime = (time: number): string => {
         .toString()
         .padStart(3, "0");
 
-    if (hour !== "0") {
+    if (hour !== "0" || force === "hour") {
         return `${hour}:${minute}:${second}.${millisecond}`;
-    } else if (minute !== "00") {
+    } else if (minute !== "00" || force === "minute") {
         return `${minute}:${second}.${millisecond}`;
     } else {
         return `${second}.${millisecond}`;
