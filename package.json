@@ -10,7 +10,7 @@
         "build:prod": "webpack --config=webpack.prod.js --mode=production --node-env=production",
         "watch": "webpack --watch",
         "server": "http-server",
-        "start": "run-s build:dev server",
+        "start": "run-s format build:dev server",
         "format": "prettier -w src index.html"
     },
     "repository": {

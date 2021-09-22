@@ -110,10 +110,10 @@ export class MusicPlayer extends React.Component<
     addNowPlaying(file: File) {
         const pushAndPlay = this.state.nowPlayingList.length === 0;
 
-        this.setState({
-            ...this.state,
-            nowPlayingList: [...this.state.nowPlayingList, file],
-        });
+        this.setState(state => ({
+            ...state,
+            nowPlayingList: [...state.nowPlayingList, file],
+        }));
 
         if (pushAndPlay) {
             this.setNowPlayingIndex(0);
@@ -122,10 +122,10 @@ export class MusicPlayer extends React.Component<
     }
 
     setNowPlayingIndex(index: number) {
-        this.setState({
-            ...this.state,
+        this.setState(state => ({
+            ...state,
             nowPlayingIndex: index,
-        });
+        }));
     }
 
     setPlaying(isPlay: boolean) {
