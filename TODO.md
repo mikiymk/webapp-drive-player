@@ -15,3 +15,5 @@
 - [ ] sort auto playing-list
 - [ ] sort manual playing-list
 - [ ] shuffle playing-list
+- [ ] loop one music
+- [ ] loop whole playing-list
