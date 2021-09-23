@@ -89,7 +89,6 @@ export class MusicPlayer extends React.Component<
     }
 
     render() {
-        console.log("render Music Player");
         return (
             <div>
                 <PlayingInfo
@@ -132,8 +131,6 @@ const PlayingInfo: React.FC<{
     play: () => void;
     pause: () => void;
 }> = ({ name, duration, currentTime, paused, seek, play, pause }) => {
-    console.log("render Playing Info");
-
     const durationText = formatTime(duration || 0);
     const currentTimeText = formatTime(currentTime || 0);
 
@@ -152,8 +149,6 @@ const PlayPauseButton: React.FC<{
     play: () => void;
     pause: () => void;
 }> = ({ isPaused, play, pause }) => {
-    console.log("render Play Pause Button");
-
     if (isPaused) {
         return <button onClick={play}>play</button>;
     } else {
@@ -187,7 +182,6 @@ const SeekBar: React.FC<{
  * @returns react render
  */
 const AuthButton: React.FC<{ isSignedIn: boolean }> = ({ isSignedIn }) => {
-    console.log("render Authorize Button");
     if (isSignedIn) {
         return <button onClick={signOut}>Sign Out</button>;
     } else {
@@ -201,7 +195,6 @@ const AuthButton: React.FC<{ isSignedIn: boolean }> = ({ isSignedIn }) => {
  * @returns react render
  */
 const MusicList: React.FC<{ files: File[] } & PropPlay> = ({ files, play }) => {
-    console.log("render Music List");
     const listitems = files.map(file => (
         <MusicListItem key={file.id} {...file} play={play} />
     ));
