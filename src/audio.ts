@@ -1,144 +1,143 @@
 import { File } from "./type";
 
 export class PlayingList {
-    playing: HTMLAudioElement;
-    nextPlaying: HTMLAudioElement;
-    list: File[];
-    index: number;
-    history: (File | number)[];
-    isLoop: boolean;
+  playing: HTMLAudioElement;
+  nextPlaying: HTMLAudioElement;
+  list: File[];
+  index: number;
+  history: (File | number)[];
+  isLoop: boolean;
 
-    constructor() {
-        this.playing = new Audio();
-        this.nextPlaying = new Audio();
-        this.list = [];
-        this.index = 0;
-        this.history = [];
-        this.isLoop = false;
+  constructor() {
+    this.playing = new Audio();
+    this.nextPlaying = new Audio();
+    this.list = [];
+    this.index = 0;
+    this.history = [];
+    this.isLoop = false;
 
-        this.onEnded();
+    this.onEnded();
+  }
+
+  addMusic(music: File) {
+    console.log("add music", music.name);
+
+    this.list.push(music);
+
+    if (this.list.length === 1) {
+      this.setIndex(0);
+      this.play();
+    } else if (this.list.length === 2) {
+      this.setMusicToNextPlaying();
+    }
+  }
+
+  setMusicToPlaying() {
+    if (this.list.length < 1) {
+      return;
     }
 
-    addMusic(music: File) {
-        console.log("add music", music.name);
+    this.playing.src = this.list[this.index].link;
+    this.playing.currentTime = 0;
+    this.playing.load();
 
-        this.list.push(music);
+    console.log("set playing", this.playing.src);
+  }
 
-        if (this.list.length === 1) {
-            this.setIndex(0);
-            this.play();
-        } else if (this.list.length === 2) {
-            this.setMusicToNextPlaying();
-        }
+  setMusicToNextPlaying() {
+    if (this.list.length < 2) {
+      return;
+    } else if (this.index + 1 === this.list.length && !this.isLoop) {
+      this.nextPlaying.src = "";
+    } else {
+      this.nextPlaying.src = this.list[this.calcIndex(this.index, 1)].link;
     }
 
-    setMusicToPlaying() {
-        if (this.list.length < 1) {
-            return;
-        }
+    this.nextPlaying.currentTime = 0;
+    this.nextPlaying.load();
 
-        this.playing.src = this.list[this.index].link;
-        this.playing.currentTime = 0;
-        this.playing.load();
+    console.log("set next playing", this.nextPlaying.src);
+  }
 
-        console.log("set playing", this.playing.src);
+  skipToNext() {
+    console.log("skip next");
+
+    if (this.nextPlaying.currentSrc.length === 0) {
+      const index = this.calcIndex(this.index, 1);
+      this.setIndex(index);
+      return;
     }
 
-    setMusicToNextPlaying() {
-        if (this.list.length < 2) {
-            return;
-        } else if (this.index + 1 === this.list.length && !this.isLoop) {
-            this.nextPlaying.src = "";
-        } else {
-            this.nextPlaying.src =
-                this.list[this.calcIndex(this.index, 1)].link;
-        }
+    const tmp = this.playing;
+    this.playing = this.nextPlaying;
+    this.nextPlaying = tmp;
 
-        this.nextPlaying.currentTime = 0;
-        this.nextPlaying.load();
+    this.index = this.calcIndex(this.index, 1);
+    this.playing.currentTime = 0;
+    this.setMusicToNextPlaying();
+  }
 
-        console.log("set next playing", this.nextPlaying.src);
+  skipTo(move: number) {
+    console.log("skip", move);
+
+    if (move === 1) {
+      this.skipToNext();
+      return;
     }
+    const index = this.calcIndex(this.index, move);
+    this.setIndex(index);
+  }
 
-    skipToNext() {
-        console.log("skip next");
+  setIndex(index: number) {
+    console.log("set index", index);
 
-        if (this.nextPlaying.currentSrc.length === 0) {
-            const index = this.calcIndex(this.index, 1);
-            this.setIndex(index);
-            return;
-        }
+    this.index = this.calcIndex(index, 0);
+    this.setMusicToPlaying();
+    this.setMusicToNextPlaying();
+  }
 
-        const tmp = this.playing;
-        this.playing = this.nextPlaying;
-        this.nextPlaying = tmp;
+  play() {
+    console.log("playing");
 
-        this.index = this.calcIndex(this.index, 1);
-        this.playing.currentTime = 0;
-        this.setMusicToNextPlaying();
+    if (this.playing.currentSrc.length === 0) {
+      this.setMusicToPlaying();
     }
+    this.playing.play();
+  }
 
-    skipTo(move: number) {
-        console.log("skip", move);
+  pause() {
+    console.log("pausing");
 
-        if (move === 1) {
-            this.skipToNext();
-            return;
-        }
-        const index = this.calcIndex(this.index, move);
-        this.setIndex(index);
+    this.playing.pause();
+  }
+
+  seek(time: number) {
+    console.log("seeking");
+
+    this.playing.currentTime = time;
+  }
+
+  calcIndex(index: number, move: number): number {
+    if (this.isLoop) {
+      return (index + move) % this.list.length;
+    } else {
+      return Math.max(0, Math.min(this.list.length - 1, index + move));
     }
+  }
 
-    setIndex(index: number) {
-        console.log("set index", index);
+  onTimeUpdate(callback: () => void) {
+    this.playing.addEventListener("timeupdate", callback);
+    this.nextPlaying.addEventListener("timeupdate", callback);
+  }
 
-        this.index = this.calcIndex(index, 0);
-        this.setMusicToPlaying();
-        this.setMusicToNextPlaying();
-    }
+  onEnded() {
+    const listener = () => {
+      console.log("play ended");
+      this.skipToNext();
+      this.play();
+    };
 
-    play() {
-        console.log("playing");
-
-        if (this.playing.currentSrc.length === 0) {
-            this.setMusicToPlaying();
-        }
-        this.playing.play();
-    }
-
-    pause() {
-        console.log("pausing");
-
-        this.playing.pause();
-    }
-
-    seek(time: number) {
-        console.log("seeking");
-
-        this.playing.currentTime = time;
-    }
-
-    calcIndex(index: number, move: number): number {
-        if (this.isLoop) {
-            return (index + move) % this.list.length;
-        } else {
-            return Math.max(0, Math.min(this.list.length - 1, index + move));
-        }
-    }
-
-    onTimeUpdate(callback: () => void) {
-        this.playing.addEventListener("timeupdate", callback);
-        this.nextPlaying.addEventListener("timeupdate", callback);
-    }
-
-    onEnded() {
-        const listener = () => {
-            console.log("play ended");
-            this.skipToNext();
-            this.play();
-        };
-
-        this.playing.addEventListener("ended", listener);
-        this.nextPlaying.addEventListener("ended", listener);
-    }
+    this.playing.addEventListener("ended", listener);
+    this.nextPlaying.addEventListener("ended", listener);
+  }
 }
