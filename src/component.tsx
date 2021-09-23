@@ -2,6 +2,7 @@ import React from "react";
 import { loadAndInit, getFiles, signOut, signIn } from "./api";
 import { File, PropPlay } from "./type";
 import { formatTime } from "./format";
+import { PlayingList } from "./audio";
 
 /**
  * react component root.
@@ -12,9 +13,7 @@ export class MusicPlayer extends React.Component<
         isSignedIn: boolean;
         files: File[];
         preText: string;
-        audio: HTMLAudioElement;
-        nowPlayingList: File[];
-        nowPlayingIndex: number;
+        audio: PlayingList;
     }
 > {
     constructor(props: {}) {
@@ -23,9 +22,7 @@ export class MusicPlayer extends React.Component<
             isSignedIn: false,
             files: [],
             preText: "",
-            audio: new Audio(),
-            nowPlayingList: [],
-            nowPlayingIndex: 0,
+            audio: new PlayingList(),
         };
     }
 
@@ -35,15 +32,7 @@ export class MusicPlayer extends React.Component<
             error => this.appendPre(JSON.stringify(error, null, 2))
         );
 
-        this.state.audio.addEventListener("loadeddata", () =>
-            this.forceUpdate()
-        );
-        this.state.audio.addEventListener("timeupdate", () =>
-            this.forceUpdate()
-        );
-        this.state.audio.addEventListener("play", () => this.forceUpdate());
-        this.state.audio.addEventListener("pause", () => this.forceUpdate());
-        this.state.audio.addEventListener("ended", () => this.playNext());
+        this.state.audio.onTimeUpdate(() => this.forceUpdate());
     }
 
     /**
@@ -66,75 +55,26 @@ export class MusicPlayer extends React.Component<
         this.setState({ preText });
     }
 
-    play() {
+    playTo(move: number) {
         this.setState(state => {
-            const file = state.nowPlayingList[state.nowPlayingIndex];
-            console.log("play start", file);
-            state.audio.src = file.link;
-            state.audio.currentTime = 0;
+            state.audio.skipTo(move);
+            state.audio.play();
             return state;
         });
-        this.setPlaying(true);
     }
 
-    playNext() {
-        const index = this.state.nowPlayingIndex;
-        const length = this.state.nowPlayingList.length;
-
-        let nextIndex = 0;
-        if (index + 1 === length) {
-            nextIndex = 0;
-        } else {
-            nextIndex = index + 1;
-        }
-
-        this.setNowPlayingIndex(nextIndex);
-        this.play();
-    }
-
-    playPrev() {
-        const index = this.state.nowPlayingIndex;
-        const length = this.state.nowPlayingList.length;
-
-        let prevIndex = 0;
-        if (index === 0) {
-            prevIndex = length - 1;
-        } else {
-            prevIndex = index - 1;
-        }
-
-        this.setNowPlayingIndex(prevIndex);
-        this.play();
-    }
-
-    addNowPlaying(file: File) {
-        const pushAndPlay = this.state.nowPlayingList.length === 0;
-
-        this.setState(state => ({
-            ...state,
-            nowPlayingList: [...state.nowPlayingList, file],
-        }));
-
-        if (pushAndPlay) {
-            this.setNowPlayingIndex(0);
-            this.play();
-        }
-    }
-
-    setNowPlayingIndex(index: number) {
-        this.setState(state => ({
-            ...state,
-            nowPlayingIndex: index,
-        }));
+    addToPlayingList(file: File) {
+        this.setState(state => {
+            state.audio.addMusic(file);
+            return state;
+        });
     }
 
     setPlaying(isPlay: boolean) {
         this.setState(state => {
             if (isPlay) {
-                console.log("play start");
-                state.audio.play().catch(console.log);
+                state.audio.play();
             } else {
-                console.log("play stop");
                 state.audio.pause();
             }
             return state;
@@ -143,8 +83,7 @@ export class MusicPlayer extends React.Component<
 
     seek(time: number) {
         this.setState(state => {
-            console.log("seek to", time);
-            state.audio.currentTime = time;
+            state.audio.seek(time);
             return state;
         });
     }
@@ -155,9 +94,9 @@ export class MusicPlayer extends React.Component<
             <div>
                 <PlayingInfo
                     name={""}
-                    duration={this.state.audio.duration}
-                    currentTime={this.state.audio.currentTime}
-                    paused={this.state.audio.paused}
+                    duration={this.state.audio.playing.duration}
+                    currentTime={this.state.audio.playing.currentTime}
+                    paused={this.state.audio.playing.paused}
                     seek={time => this.seek(time)}
                     play={() => this.setPlaying(true)}
                     pause={() => this.setPlaying(false)}
@@ -165,11 +104,11 @@ export class MusicPlayer extends React.Component<
                 <AuthButton isSignedIn={this.state.isSignedIn} />
                 <MusicList
                     files={this.state.files}
-                    play={file => this.addNowPlaying(file)}
+                    play={file => this.addToPlayingList(file)}
                 />
                 <NowPlayingList
-                    list={this.state.nowPlayingList}
-                    playingIndex={this.state.nowPlayingIndex}
+                    list={this.state.audio.list}
+                    playingIndex={this.state.audio.index}
                 />
                 <pre>{this.state.preText}</pre>
             </div>

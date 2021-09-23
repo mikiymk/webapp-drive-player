@@ -1,18 +1,5 @@
 import { File } from "./type";
 
-const calcIndex = (
-    index: number,
-    move: number,
-    length: number,
-    isLoop: boolean
-): number => {
-    if (isLoop) {
-        return (index + move) % length;
-    } else {
-        return Math.max(0, Math.min(length - 1, index + move));
-    }
-};
-
 export class PlayingList {
     playing: HTMLAudioElement;
     nextPlaying: HTMLAudioElement;
@@ -28,6 +15,9 @@ export class PlayingList {
         this.index = 0;
         this.history = [];
         this.isLoop = false;
+
+        this.playing.addEventListener("ended", () => this.skipToNext());
+        this.nextPlaying.addEventListener("ended", () => this.skipToNext());
     }
 
     addMusic(music: File) {
@@ -35,49 +25,78 @@ export class PlayingList {
     }
 
     setMusicToPlaying() {
-        if (this.nextPlaying.currentSrc.length === 0) {
-            if (this.list.length !== 0) {
-                this.playing.src = this.list[this.index].link;
-            }
-            this.playing.load();
-        } else {
-            const tmp = this.playing;
-            this.playing = this.nextPlaying;
-            this.nextPlaying = tmp;
+        if (this.list.length < 1) {
+            return;
         }
+
+        this.playing.src = this.list[this.index].link;
         this.playing.currentTime = 0;
+        this.playing.load();
     }
 
     setMusicToNextPlaying() {
         if (this.list.length < 2) {
             return;
         }
-        this.nextPlaying.src =
-            this.list[
-                calcIndex(this.index, 1, this.list.length, this.isLoop)
-            ].link;
+
+        this.nextPlaying.src = this.list[this.calcIndex(this.index, 1)].link;
+        this.nextPlaying.currentTime = 0;
         this.nextPlaying.load();
     }
 
+    skipToNext() {
+        if (this.nextPlaying.currentSrc.length === 0) {
+            const index = this.calcIndex(this.index, 1);
+            this.setIndex(index);
+            return;
+        }
+        const tmp = this.playing;
+        this.playing = this.nextPlaying;
+        this.nextPlaying = tmp;
+        this.playing.currentTime = 0;
+        this.setMusicToNextPlaying();
+    }
+
     skipTo(move: number) {
-        this.index = calcIndex(this.index, move, this.list.length, this.isLoop);
+        if (move === 1) {
+            this.skipToNext();
+            return;
+        }
+        const index = this.calcIndex(this.index, move);
+        this.setIndex(index);
+    }
+
+    setIndex(index: number) {
+        this.index = this.calcIndex(index, 0);
         this.setMusicToPlaying();
         this.setMusicToNextPlaying();
     }
 
-    setIndex(index: number) {
-        this.index = calcIndex(index, 0, this.list.length, this.isLoop);
+    play() {
+        if (this.playing.currentSrc.length === 0) {
+            this.setMusicToPlaying();
+        }
+        this.playing.play();
     }
 
-    setPlaying(isPlay: boolean) {
-        if (isPlay) {
-            this.playing.play().catch(console.log);
-        } else {
-            this.playing.pause();
-        }
+    pause() {
+        this.playing.pause();
     }
 
     seek(time: number) {
         this.playing.currentTime = time;
+    }
+
+    calcIndex(index: number, move: number): number {
+        if (this.isLoop) {
+            return (index + move) % this.list.length;
+        } else {
+            return Math.max(0, Math.min(this.list.length - 1, index + move));
+        }
+    }
+
+    onTimeUpdate(callback: () => void) {
+        this.playing.addEventListener("timeupdate", callback);
+        this.nextPlaying.addEventListener("timeupdate", callback);
     }
 }
