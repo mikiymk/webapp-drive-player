@@ -51,19 +51,17 @@ const get10Files = async (token?: string) => {
  * get file list from google drive using gapi
  * @returns list of files
  */
-export const getFiles = async () => {
-  let [allFiles, token]: Result = await get10Files();
+export const getFiles = async (addFile: (files: File[]) => void) => {
+  let token = undefined;
+  let isFirst = true;
 
-  while (token) {
+  while (token || isFirst) {
     const [files, nextToken]: Result = await get10Files(token);
 
-    allFiles = allFiles.concat(files);
+    addFile(files);
     token = nextToken;
+    isFirst = false;
   }
-
-  console.log("files", allFiles);
-
-  return allFiles;
 };
 
 export const loadAndInit = (
