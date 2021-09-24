@@ -11,7 +11,7 @@
 - [x] show playing-list
 - [x] play through playing-list
 - [x] add music to playing-list
-- [ ] delete music from playing-list
+- [x] delete music from playing-list
 - [ ] sort auto playing-list
 - [ ] sort manual playing-list
 - [ ] shuffle playing-list

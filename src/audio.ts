@@ -32,6 +32,13 @@ export class PlayingList {
     }
   }
 
+  deleteFromPlaying(index: number) {
+    this.list.splice(index, 1);
+    if (index === this.index + 1) {
+      this.setMusicToNextPlaying();
+    }
+  }
+
   setMusicToPlaying() {
     if (this.list.length < 1) {
       return;

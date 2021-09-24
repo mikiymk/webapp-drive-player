@@ -18,12 +18,14 @@ const SCOPES = [
   "https://www.googleapis.com/auth/drive.metadata.readonly",
 ].join(" ");
 
+const GET_PAGE_SIZE = 100;
+
 type Result = [File[], string | undefined];
 
 const get10Files = async (token?: string) => {
   const response = await gapi.client.drive.files.list({
     fields: "nextPageToken, files(id, name, webContentLink)",
-    pageSize: 10,
+    pageSize: GET_PAGE_SIZE,
     pageToken: token,
     q: "mimeType contains 'audio/'",
   });

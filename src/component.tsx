@@ -108,6 +108,7 @@ export class MusicPlayer extends React.Component<
         <NowPlayingList
           list={this.state.audio.list}
           playingIndex={this.state.audio.index}
+          deletePlaying={index => this.state.audio.deleteFromPlaying(index)}
         />
         <pre>{this.state.preText}</pre>
       </div>
@@ -220,15 +221,17 @@ const MusicListItem: React.FC<File & PropPlay> = ({ play, name, id, link }) => {
   );
 };
 
-const NowPlayingList: React.FC<{ list: File[]; playingIndex: number }> = ({
-  list,
-  playingIndex,
-}) => {
+const NowPlayingList: React.FC<{
+  list: File[];
+  playingIndex: number;
+  deletePlaying: (index: number) => void;
+}> = ({ list, playingIndex, deletePlaying }) => {
   const listItem = list.map((item, index) => (
     <NowPlayingItem
       key={index}
       {...item}
       isPlayingNow={playingIndex === index}
+      deletePlaying={() => deletePlaying(index)}
     />
   ));
   return (
@@ -239,13 +242,13 @@ const NowPlayingList: React.FC<{ list: File[]; playingIndex: number }> = ({
   );
 };
 
-const NowPlayingItem: React.FC<File & { isPlayingNow: boolean }> = ({
-  isPlayingNow,
-  name,
-}) => {
+const NowPlayingItem: React.FC<
+  File & { isPlayingNow: boolean; deletePlaying: () => void }
+> = ({ isPlayingNow, name, deletePlaying }) => {
   return (
     <li>
       {isPlayingNow ? "playing" : ""}:{name}
+      <button onClick={deletePlaying}>delete</button>
     </li>
   );
 };
