@@ -9,6 +9,8 @@ export class PlayingList {
   history: (File | number)[];
   isLoop: boolean;
 
+  context: AudioContext;
+
   constructor() {
     this.playing = new Audio();
     this.nextPlaying = new Audio();
@@ -16,6 +18,8 @@ export class PlayingList {
     this.index = 0;
     this.history = [];
     this.isLoop = false;
+
+    this.context = new AudioContext();
 
     this.onEnded();
   }
@@ -49,7 +53,33 @@ export class PlayingList {
     this.playing.currentTime = 0;
     this.playing.load();
 
-    downloadFile(this.list[this.index].id);
+    const downloaded = downloadFile(this.list[this.index].id);
+
+    downloaded
+      .then(value => new Blob([value], { type: "text/plain" }))
+      .then(
+        value =>
+          new Promise<ArrayBuffer>((res, rej) => {
+            const f = new FileReader();
+            f.onload = ev => {
+              if (
+                ev.target === null ||
+                !(ev.target.result instanceof ArrayBuffer)
+              ) {
+                rej("target is null");
+              } else {
+                res(ev.target.result);
+              }
+            };
+            f.onerror = rej;
+            f.readAsArrayBuffer(value);
+          })
+      )
+      .then(ab => this.context.decodeAudioData(ab))
+      .then(console.log)
+      .catch(console.error);
+
+    this.context.createMediaStreamDestination();
 
     console.log("set playing", this.playing.src);
   }
