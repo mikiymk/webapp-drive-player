@@ -32,7 +32,7 @@ export class MusicPlayer extends React.Component<
       error => this.appendPre(JSON.stringify(error, null, 2))
     );
 
-    this.state.audio.onTimeUpdate(() => this.forceUpdate());
+    this.state.audio.onTimeUpdate = () => this.forceUpdate();
   }
 
   /**
@@ -70,7 +70,7 @@ export class MusicPlayer extends React.Component<
 
   addToPlayingList(file: File) {
     this.setState(state => {
-      state.audio.addMusic(file);
+      state.audio.addMusicToPlaying(file);
       return state;
     });
   }
@@ -100,7 +100,7 @@ export class MusicPlayer extends React.Component<
           name={""}
           duration={this.state.audio.playing.duration}
           currentTime={this.state.audio.playing.currentTime}
-          paused={this.state.audio.playing.paused}
+          paused={this.state.audio.playing.isPaused}
           seek={time => this.seek(time)}
           play={() => this.setPlaying(true)}
           pause={() => this.setPlaying(false)}
@@ -113,7 +113,9 @@ export class MusicPlayer extends React.Component<
         <NowPlayingList
           list={this.state.audio.list}
           playingIndex={this.state.audio.index}
-          deletePlaying={index => this.state.audio.deleteFromPlaying(index)}
+          deletePlaying={index =>
+            this.state.audio.deleteMusicFromPlaying(index)
+          }
         />
         <pre>{this.state.preText}</pre>
       </div>

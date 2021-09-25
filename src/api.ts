@@ -71,7 +71,6 @@ export const downloadFile = async (fileId: string) => {
       alt: "media",
     });
 
-    console.log(response);
     return response.body;
   } catch (error) {
     console.error(error);
