@@ -1,6 +1,6 @@
 export class AudioPlayer {
-  context = new AudioContext();
-  node = this.context.createBufferSource();
+  context: AudioContext;
+  node: AudioBufferSourceNode;
 
   intervalID = 0;
 
@@ -17,6 +17,11 @@ export class AudioPlayer {
   onSetPause = (isPaused: boolean) => {};
 
   onEnd = () => {};
+
+  constructor(context: AudioContext) {
+    this.context = context;
+    this.node = this.context.createBufferSource();
+  }
 
   setBuffer(buffer: AudioBuffer) {
     this.node = this.context.createBufferSource();
