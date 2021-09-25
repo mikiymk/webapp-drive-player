@@ -40,7 +40,7 @@ const get10Files = async (token?: string) => {
     .filter((obj): obj is File => !!(obj.id && obj.name && obj.link));
   const nextToken = response.result.nextPageToken;
 
-  console.log("10 files", files);
+  console.log(GET_PAGE_SIZE, "files", files);
   console.log("nextpage token", nextToken);
 
   const result: Result = [files, nextToken];
@@ -61,6 +61,20 @@ export const getFiles = async (addFile: (files: File[]) => void) => {
     addFile(files);
     token = nextToken;
     isFirst = false;
+  }
+};
+
+export const downloadFile = async (fileId: string) => {
+  try {
+    const response = await gapi.client.drive.files.get({
+      fileId,
+      alt: "media",
+    });
+
+    console.log(response);
+    return response.body;
+  } catch (error) {
+    console.error(error);
   }
 };
 

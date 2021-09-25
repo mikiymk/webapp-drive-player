@@ -1,3 +1,4 @@
+import { downloadFile } from "./api";
 import { File } from "./type";
 
 export class PlayingList {
@@ -47,6 +48,8 @@ export class PlayingList {
     this.playing.src = this.list[this.index].link;
     this.playing.currentTime = 0;
     this.playing.load();
+
+    downloadFile(this.list[this.index].id);
 
     console.log("set playing", this.playing.src);
   }
