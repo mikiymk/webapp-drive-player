@@ -66,17 +66,23 @@ export const getFiles = async (addFile: (files: File[]) => void) => {
 
 export const downloadFile = async (fileId: string) => {
   try {
+    await gapi.client.drive.files
+      .get({
+        fileId,
+        fields: "size",
+      })
+      .then(r => r.result.size)
+      .then(size => console.log("size", size));
+
     const response = await gapi.client.drive.files.get({
       fileId,
-      fields: "files(size)",
       alt: "media",
     });
 
     console.log(response);
-    return response.body;
+    return response;
   } catch (error) {
     console.error(error);
-    return "";
   }
 };
 

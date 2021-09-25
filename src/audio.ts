@@ -53,33 +53,7 @@ export class PlayingList {
     this.playing.currentTime = 0;
     this.playing.load();
 
-    const downloaded = downloadFile(this.list[this.index].id);
-
-    downloaded
-      .then(value => new Blob([value], { type: "text/plain" }))
-      .then(
-        value =>
-          new Promise<ArrayBuffer>((res, rej) => {
-            const f = new FileReader();
-            f.onload = ev => {
-              if (
-                ev.target === null ||
-                !(ev.target.result instanceof ArrayBuffer)
-              ) {
-                rej("target is null");
-              } else {
-                res(ev.target.result);
-              }
-            };
-            f.onerror = rej;
-            f.readAsArrayBuffer(value);
-          })
-      )
-      .then(ab => this.context.decodeAudioData(ab))
-      .then(console.log)
-      .catch(console.error);
-
-    this.context.createMediaStreamDestination();
+    downloadAudio(this.list[this.index].id, this.context);
 
     console.log("set playing", this.playing.src);
   }
@@ -181,3 +155,30 @@ export class PlayingList {
     this.nextPlaying.addEventListener("ended", listener);
   }
 }
+
+const downloadAudio = (id: string, context: AudioContext) => {
+  const downloaded = downloadFile(id);
+
+  downloaded
+    .then(value => {
+      const body = value?.body || "";
+      const type =
+        value?.headers === undefined
+          ? "text/plain;charset=UTF-8"
+          : value?.headers["content-type"];
+
+      console.log("body", body.length);
+      console.log(
+        "body array",
+        Array.from(body)
+          .map(c => c.charCodeAt(0))
+          .reduce((pre, cur) => (pre < cur ? cur : pre))
+      );
+      return new Uint8Array(Array.from(body).map(c => c.charCodeAt(0))).buffer;
+    })
+    .then(ab => context.decodeAudioData(ab))
+    .then(console.log)
+    .catch(console.error);
+
+  context.createMediaStreamDestination();
+};
