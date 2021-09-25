@@ -1,10 +1,13 @@
 - [ ] write TODO
 
-# ver.0.1
+# Google Drive
 
 - [x] access to Google Drive
 - [x] get Google Drive file list
 - [x] play music file on Google Drive
+
+# Manage playing
+
 - [x] change plalying files
 - [x] change play and pause
 - [x] make playing-list
