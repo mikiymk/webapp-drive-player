@@ -156,29 +156,14 @@ export class PlayingList {
   }
 }
 
-const downloadAudio = (id: string, context: AudioContext) => {
-  const downloaded = downloadFile(id);
+const downloadAudio = async (id: string, context: AudioContext) => {
+  const fileData = await downloadFile(id);
 
-  downloaded
-    .then(value => {
-      const body = value?.body || "";
-      const type =
-        value?.headers === undefined
-          ? "text/plain;charset=UTF-8"
-          : value?.headers["content-type"];
+  const dataArray = Array.from(fileData).map(c => c.charCodeAt(0));
 
-      console.log("body", body.length);
-      console.log(
-        "body array",
-        Array.from(body)
-          .map(c => c.charCodeAt(0))
-          .reduce((pre, cur) => (pre < cur ? cur : pre))
-      );
-      return new Uint8Array(Array.from(body).map(c => c.charCodeAt(0))).buffer;
-    })
-    .then(ab => context.decodeAudioData(ab))
-    .then(console.log)
-    .catch(console.error);
+  const buffer = new Uint8Array(dataArray).buffer;
 
-  context.createMediaStreamDestination();
+  const audioData = await context.decodeAudioData(buffer);
+
+  console.log(audioData);
 };
