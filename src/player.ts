@@ -29,9 +29,13 @@ export class AudioPlayer {
     console.log("set buffer", buffer);
 
     this.setDuration(buffer.duration);
+    this.stop();
+
     this.node = this.context.createBufferSource();
     this.node.buffer = buffer;
     this.node.connect(this.context.destination);
+
+    this.start();
   }
 
   private setDuration(duration: number) {

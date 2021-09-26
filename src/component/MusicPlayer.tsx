@@ -7,6 +7,7 @@ import { MusicList } from "./MusicList";
 import { NowPlayingList } from "./PlayingList";
 import { AudioPlayer } from "../player";
 import { AudioList } from "../list";
+import { callbackify } from "util";
 
 /**
  * react component root.
@@ -18,22 +19,27 @@ export class MusicPlayer extends React.Component<
     files: File[];
     preText: string;
     context: AudioContext;
-    audio: PlayingList;
     player: AudioPlayer;
     list: AudioList;
+    paused: boolean;
+    duration: number;
+    currentTime: number;
   }
 > {
   constructor(props: {}) {
     super(props);
     const ctx = new AudioContext();
+    const file: File[] = [];
     this.state = {
       isSignedIn: false,
-      files: [],
+      files: file,
       preText: "",
-      audio: new PlayingList(),
       context: ctx,
       player: new AudioPlayer(ctx),
-      list: new AudioList(ctx, [], 0),
+      list: new AudioList(ctx, file, 0),
+      paused: true,
+      duration: 0,
+      currentTime: 0,
     };
   }
 
@@ -43,7 +49,34 @@ export class MusicPlayer extends React.Component<
       error => this.appendPre(JSON.stringify(error, null, 2))
     );
 
-    this.state.audio.onTimeUpdate = () => this.forceUpdate();
+    this.state.player.onSetCurrentTime = currentTime =>
+      this.setState(state => {
+        const newState = {
+          ...state,
+        };
+        newState.currentTime = currentTime;
+        return state;
+      });
+
+    this.state.player.onSetDuration = duration =>
+      this.setState(state => {
+        const newState = {
+          ...state,
+        };
+        newState.duration = duration;
+        return state;
+      });
+
+    this.state.player.onSetPause = paused =>
+      this.setState(state => {
+        const newState = {
+          ...state,
+        };
+        newState.paused = paused;
+        return state;
+      });
+
+    this.state.list.getBuffer(buffer => this.state.player.setBuffer(buffer));
   }
 
   /**
@@ -71,37 +104,23 @@ export class MusicPlayer extends React.Component<
     this.setState({ preText });
   }
 
-  playTo(move: number) {
+  playWithIndex(index: number) {
     this.setState(state => {
-      state.audio.skipTo(move);
-      state.audio.play();
-      return state;
-    });
-  }
-
-  addToPlayingList(file: File) {
-    this.setState(state => {
-      state.audio.addMusicToPlaying(file);
+      state.list.setIndex(index);
       return state;
     });
   }
 
   setPlaying(isPlay: boolean) {
-    this.setState(state => {
-      if (isPlay) {
-        state.audio.play();
-      } else {
-        state.audio.pause();
-      }
-      return state;
-    });
+    if (isPlay) {
+      this.state.player.play();
+    } else {
+      this.state.player.pause();
+    }
   }
 
   seek(time: number) {
-    this.setState(state => {
-      state.audio.seek(time);
-      return state;
-    });
+    this.state.player.seek(time);
   }
 
   render() {
@@ -109,9 +128,9 @@ export class MusicPlayer extends React.Component<
       <div>
         <PlayingInfo
           name={""}
-          duration={this.state.audio.playing.duration}
-          currentTime={this.state.audio.playing.currentTime}
-          paused={this.state.audio.playing.isPaused}
+          duration={this.state.duration}
+          currentTime={this.state.currentTime}
+          paused={this.state.paused}
           seek={time => this.seek(time)}
           play={() => this.setPlaying(true)}
           pause={() => this.setPlaying(false)}
@@ -119,14 +138,11 @@ export class MusicPlayer extends React.Component<
         <AuthButton isSignedIn={this.state.isSignedIn} />
         <MusicList
           files={this.state.files}
-          play={file => this.addToPlayingList(file)}
+          play={index => this.playWithIndex(index)}
         />
         <NowPlayingList
-          list={this.state.audio.list}
-          playingIndex={this.state.audio.index}
-          deletePlaying={index =>
-            this.state.audio.deleteMusicFromPlaying(index)
-          }
+          list={this.state.list.list}
+          playingIndex={this.state.list.index}
         />
         <pre>{this.state.preText}</pre>
       </div>

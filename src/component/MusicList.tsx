@@ -10,8 +10,8 @@ export const MusicList: React.FC<{ files: File[] } & PropPlay> = ({
   files,
   play,
 }) => {
-  const listitems = files.map(file => (
-    <MusicListItem key={file.id} {...file} play={play} />
+  const listitems = files.map((file, index) => (
+    <MusicListItem key={file.id} {...file} play={play} index={index} />
   ));
   return (
     <div>
@@ -26,9 +26,14 @@ export const MusicList: React.FC<{ files: File[] } & PropPlay> = ({
  * @param props compontnt props
  * @returns react render
  */
-const MusicListItem: React.FC<File & PropPlay> = ({ play, name, id, link }) => {
+const MusicListItem: React.FC<File & PropPlay & { index: number }> = ({
+  play,
+  name,
+  id,
+  index,
+}) => {
   const playing = () => {
-    play({ name, id, link });
+    play(index);
   };
   return (
     <li>

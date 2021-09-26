@@ -5,5 +5,5 @@ export type File = {
 };
 
 export type PropPlay = {
-  play: (file: File) => void;
+  play: (index: number) => void;
 };

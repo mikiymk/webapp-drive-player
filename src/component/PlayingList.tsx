@@ -4,14 +4,12 @@ import { File } from "type";
 export const NowPlayingList: React.FC<{
   list: File[];
   playingIndex: number;
-  deletePlaying: (index: number) => void;
-}> = ({ list, playingIndex, deletePlaying }) => {
+}> = ({ list, playingIndex }) => {
   const listItem = list.map((item, index) => (
     <NowPlayingItem
       key={index}
       {...item}
       isPlayingNow={playingIndex === index}
-      deletePlaying={() => deletePlaying(index)}
     />
   ));
   return (
@@ -22,13 +20,13 @@ export const NowPlayingList: React.FC<{
   );
 };
 
-const NowPlayingItem: React.FC<
-  File & { isPlayingNow: boolean; deletePlaying: () => void }
-> = ({ isPlayingNow, name, deletePlaying }) => {
+const NowPlayingItem: React.FC<File & { isPlayingNow: boolean }> = ({
+  isPlayingNow,
+  name,
+}) => {
   return (
     <li>
       {isPlayingNow ? "playing" : ""}:{name}
-      <button onClick={deletePlaying}>delete</button>
     </li>
   );
 };

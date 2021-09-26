@@ -1,30 +1,38 @@
 import { downloadFile } from "./api";
-import { File } from "./type";
+import { File as Music } from "./type";
 
 const BUFFER_MAX_SIZE = 5;
 
 export class AudioList {
   private readonly context: AudioContext;
 
-  readonly list: File[];
+  readonly list: Music[];
   index: number = 0;
 
   downloadIDs: string[] = [];
   buffers: AudioBuffer[] = [];
-  history: File[] = [];
-  isLoop: boolean = false;
+  history: Music[] = [];
+  isLoop: boolean = true;
 
   isDownloading: boolean = false;
 
   getBufferCallBack: ((buffer: AudioBuffer) => void) | null = null;
 
-  constructor(context: AudioContext, files: File[], index: number) {
+  constructor(context: AudioContext, files: Music[], index: number) {
     this.context = context;
     this.list = files;
 
     console.log("audio list", files);
 
     this.setIndex(index);
+  }
+
+  addMusic(music: Music) {
+    this.list.push(music);
+  }
+
+  removeMusic(index: number) {
+    this.list.splice(index, 1);
   }
 
   getBuffer(callback: (buffer: AudioBuffer) => void) {
@@ -92,6 +100,8 @@ export class AudioList {
     }
 
     const buffer = await this.download(id);
+
+    console.log("downloaded");
 
     if (this.getBufferCallBack) {
       this.getBufferCallBack(buffer);
