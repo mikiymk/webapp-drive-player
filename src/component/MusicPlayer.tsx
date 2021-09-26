@@ -5,6 +5,8 @@ import { PlayingList } from "../audio";
 import { PlayingInfo } from "./PlayManager";
 import { MusicList } from "./MusicList";
 import { NowPlayingList } from "./PlayingList";
+import { AudioPlayer } from "../player";
+import { AudioList } from "../list";
 
 /**
  * react component root.
@@ -15,16 +17,23 @@ export class MusicPlayer extends React.Component<
     isSignedIn: boolean;
     files: File[];
     preText: string;
+    context: AudioContext;
     audio: PlayingList;
+    player: AudioPlayer;
+    list: AudioList;
   }
 > {
   constructor(props: {}) {
     super(props);
+    const ctx = new AudioContext();
     this.state = {
       isSignedIn: false,
       files: [],
       preText: "",
       audio: new PlayingList(),
+      context: ctx,
+      player: new AudioPlayer(ctx),
+      list: new AudioList(ctx, [], 0),
     };
   }
 

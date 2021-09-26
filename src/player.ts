@@ -1,8 +1,8 @@
 export class AudioPlayer {
-  context: AudioContext;
-  node: AudioBufferSourceNode;
+  private readonly context: AudioContext;
+  private node: AudioBufferSourceNode;
 
-  intervalID = 0;
+  private intervalID = 0;
 
   duration = 0;
   currentTime = 0;
@@ -24,37 +24,38 @@ export class AudioPlayer {
   }
 
   setBuffer(buffer: AudioBuffer) {
+    this.setDuration(buffer.duration);
     this.node = this.context.createBufferSource();
     this.node.buffer = buffer;
     this.node.connect(this.context.destination);
   }
 
-  setDuration(duration: number) {
+  private setDuration(duration: number) {
     this.duration = duration;
     this.onSetDuration(duration);
   }
 
-  setCurrentTime(currentTime: number) {
+  private setCurrentTime(currentTime: number) {
     this.currentTime = currentTime;
     this.onSetCurrentTime(currentTime);
   }
 
-  setStartAt(startAt: number) {
+  private setStartAt(startAt: number) {
     this.startAt = startAt;
     this.onSetStartAt(startAt);
   }
 
-  setStopAt(stopAt: number) {
+  private setStopAt(stopAt: number) {
     this.stopAt = stopAt;
     this.onSetStopAt(stopAt);
   }
 
-  setPause(isPaused: boolean) {
+  private setPause(isPaused: boolean) {
     this.isPaused = isPaused;
     this.onSetPause(isPaused);
   }
 
-  updateTime() {
+  private updateTime() {
     if (this.isPaused) {
       this.setCurrentTime(this.stopAt);
     } else {

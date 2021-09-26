@@ -3,10 +3,10 @@ import { File } from "./type";
 
 const BUFFER_MAX_SIZE = 5;
 
-export class PlayingList {
-  context: AudioContext;
+export class AudioList {
+  private readonly context: AudioContext;
 
-  list: File[];
+  readonly list: File[];
   index: number = 0;
 
   downloadIDs: string[] = [];
@@ -39,10 +39,16 @@ export class PlayingList {
 
   setIndex(index: number) {
     this.index = this.calcIndex(index, 0);
-    this.downloadIDs = [
-      this.list[this.index].id,
-      this.list[this.calcIndex(index, 1)].id,
-    ];
+    if (this.list.length === 0) {
+      this.downloadIDs = [];
+    } else if (this.list.length === 1) {
+      this.downloadIDs = [this.list[this.index].id];
+    } else {
+      this.downloadIDs = [
+        this.list[this.index].id,
+        this.list[this.calcIndex(index, 1)].id,
+      ];
+    }
     this.buffers = [];
     this.noticeDownload();
   }
@@ -52,7 +58,7 @@ export class PlayingList {
     this.noticeDownload();
   }
 
-  noticeDownload() {
+  private noticeDownload() {
     if (this.downloadIDs.length === 0) {
       return;
     } else if (this.buffers.length > BUFFER_MAX_SIZE) {
@@ -65,7 +71,7 @@ export class PlayingList {
     }
   }
 
-  async downloadBuffer() {
+  private async downloadBuffer() {
     const id = this.downloadIDs.shift();
     if (id === undefined) {
       return;
@@ -81,14 +87,14 @@ export class PlayingList {
     this.noticeDownload();
   }
 
-  async download(id: string) {
+  private async download(id: string) {
     const fileData = await downloadFile(id);
     const dataArray = Array.from(fileData).map(c => c.charCodeAt(0));
     const buffer = new Uint8Array(dataArray).buffer;
     return await this.context.decodeAudioData(buffer);
   }
 
-  calcIndex(index: number, move: number): number {
+  private calcIndex(index: number, move: number): number {
     if (this.isLoop) {
       return (index + move) % this.list.length;
     } else {
