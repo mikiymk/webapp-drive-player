@@ -3,12 +3,12 @@
 
 # Google Drive
 
-- [x] access to Google Drive
-- [x] get part of files list from Google Drive
-- [x] get all files list from Google Drive
+- [x] connect
+- [x] get part of files list
+- [x] get all files list
 - [x] get only music files list
 - [ ] get only files list in folder
-- [x] get file on Google Drive
+- [x] get file data
 
 
 # Audio
