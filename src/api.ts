@@ -23,6 +23,8 @@ const GET_PAGE_SIZE = 100;
 type Result = [File[], string | undefined];
 
 const get10Files = async (token?: string) => {
+  console.log("get files list page", "token ", token);
+
   const response = await gapi.client.drive.files.list({
     fields: "nextPageToken, files(id, name, webContentLink)",
     pageSize: GET_PAGE_SIZE,
@@ -52,6 +54,8 @@ const get10Files = async (token?: string) => {
  * @returns list of files
  */
 export const getFiles = async (addFile: (files: File[]) => void) => {
+  console.log("get all files list");
+
   let token = undefined;
   let isFirst = true;
 
@@ -65,6 +69,7 @@ export const getFiles = async (addFile: (files: File[]) => void) => {
 };
 
 export const downloadFile = async (fileId: string) => {
+  console.log("download file data", "ID", fileId);
   try {
     const response = await gapi.client.drive.files.get({
       fileId,

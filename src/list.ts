@@ -22,15 +22,21 @@ export class AudioList {
     this.context = context;
     this.list = files;
 
+    console.log("audio list", files);
+
     this.setIndex(index);
   }
 
   getBuffer(callback: (buffer: AudioBuffer) => void) {
+    console.log("get buffer");
+
     const buffer = this.buffers.shift();
     if (buffer !== undefined) {
       callback(buffer);
     } else {
       this.getBufferCallBack = (buffer: AudioBuffer) => {
+        console.log("get buffer callback");
+
         callback(buffer);
         this.getBufferCallBack = null;
       };
@@ -38,6 +44,8 @@ export class AudioList {
   }
 
   setIndex(index: number) {
+    console.log("set index", index);
+
     this.index = this.calcIndex(index, 0);
     if (this.list.length === 0) {
       this.downloadIDs = [];
@@ -54,11 +62,15 @@ export class AudioList {
   }
 
   addDownloadID(id: string) {
+    console.log("add download id", id);
+
     this.downloadIDs.push(id);
     this.noticeDownload();
   }
 
   private noticeDownload() {
+    console.log("notice");
+
     if (this.downloadIDs.length === 0) {
       return;
     } else if (this.buffers.length > BUFFER_MAX_SIZE) {
@@ -72,11 +84,15 @@ export class AudioList {
   }
 
   private async downloadBuffer() {
+    console.log("download");
+
     const id = this.downloadIDs.shift();
     if (id === undefined) {
       return;
     }
+
     const buffer = await this.download(id);
+
     if (this.getBufferCallBack) {
       this.getBufferCallBack(buffer);
     } else {

@@ -1,4 +1,6 @@
 export const formatTime = (time: number, force?: "hour" | "minute"): string => {
+  console.log("format time", time);
+
   const hour = Math.floor(time / 3600).toString();
   const minute = Math.floor((time % 3600) / 60)
     .toString()
