@@ -1,22 +1,38 @@
 - [ ] write TODO
 
+
 # Google Drive
 
-- [x] access to Google Drive
-- [x] get Google Drive file list
-- [x] play music file on Google Drive
+- [x] connect
+- [x] get part of files list
+- [x] get all files list
+- [x] get only music files list
+- [ ] get only files list in folder
+- [x] get file data
 
-# Manage playing
 
-- [x] change plalying files
-- [x] change play and pause
-- [x] make playing-list
-- [x] show playing-list
-- [x] play through playing-list
-- [x] add music to playing-list
-- [x] delete music from playing-list
-- [ ] sort auto playing-list
-- [ ] sort manual playing-list
-- [ ] shuffle playing-list
-- [ ] loop one music
-- [ ] loop whole playing-list
+# Audio
+
+- [x] convert file into audio object
+- [ ] play audio
+- [ ] pause audio
+- [ ] play audio where pause time
+- [ ] seek play time
+- [ ] play loop one music
+- [ ] play loop all play list
+
+
+# Play list
+
+- [ ] use play list
+- [ ] play shuffle
+- [ ] play in order
+- [ ] make from music files list
+- [ ] add music
+- [ ] delete music
+- [ ] sort
+
+
+# View style
+
+- [ ] use css
