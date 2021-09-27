@@ -14,6 +14,7 @@ const DISCOVERY_DOCS = [
 // Authorization scopes required by the API; multiple scopes can be
 // included, separated by spaces.
 const SCOPES = [
+  "https://www.googleapis.com/auth/drive.appdata",
   "https://www.googleapis.com/auth/drive.readonly",
   "https://www.googleapis.com/auth/drive.metadata.readonly",
 ].join(" ");
