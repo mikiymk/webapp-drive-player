@@ -44,7 +44,7 @@ jobs:
       - run: git checkout -b pages-build origin/pages-build
       - run: git merge --no-ff --allow-unrelated-histories -Xtheirs main
 
-      - run: cat src/**/*
+      - run: for i in src/**/*; do echo $i; cat $i; done
 
       - run: git rm -r javascript/*
       - run: git commit -m "delete now files"
