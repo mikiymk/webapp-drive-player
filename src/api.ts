@@ -51,7 +51,7 @@ const get10Files = async (token?: string) => {
 };
 
 /**
- * get file list from google drive using gapi
+ * get file list from google drive use gapi
  * @returns list of files
  */
 export const getFiles = async (addFile: (files: File[]) => void) => {
@@ -69,6 +69,11 @@ export const getFiles = async (addFile: (files: File[]) => void) => {
   }
 };
 
+/**
+ * get file data at file id from google drive
+ * @param fileId google drive file id
+ * @returns file data string
+ */
 export const downloadFile = async (fileId: string) => {
   console.log("download file data", "ID", fileId);
   try {
@@ -84,14 +89,14 @@ export const downloadFile = async (fileId: string) => {
   }
 };
 
+/**
+ * initialize gapi client and if succeed update status
+ */
 export const loadAndInit = (
   updateSigninStatus: (isSignedIn: boolean) => void,
   onError?: (error: unknown) => void
 ) => {
-  /**
-   * initialize gapi client and if succeed update status
-   */
-  const initClient = async () => {
+  gapi.load("client:auth2", async () => {
     try {
       console.log("initialize client");
       await gapi.client.init({
@@ -111,17 +116,15 @@ export const loadAndInit = (
       console.error("error:", error);
       onError && onError(error);
     }
-  };
-
-  console.log("load client:auth2");
-  gapi.load("client:auth2", initClient);
+  });
 };
 
-export const signIn = () => {
-  console.log("sign in");
-  gapi.auth2.getAuthInstance().signIn();
-};
-export const signOut = () => {
-  console.log("sign out");
-  gapi.auth2.getAuthInstance().signOut();
-};
+/**
+ * sign in to google
+ */
+export const signIn = () => gapi.auth2.getAuthInstance().signIn();
+
+/**
+ * sign out to google
+ */
+export const signOut = () => gapi.auth2.getAuthInstance().signOut();
