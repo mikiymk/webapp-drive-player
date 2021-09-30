@@ -27,13 +27,13 @@ export class MusicPlayer extends React.Component<
   constructor(props: {}) {
     super(props);
     const ctx = new AudioContext();
-    const file: File[] = [];
+    const files: File[] = [];
     this.state = {
       isSignedIn: false,
-      files: file,
+      files,
       context: ctx,
       player: new AudioPlayer(ctx),
-      list: new AudioList(ctx, file, 0),
+      list: new AudioList(ctx, files, 0),
       paused: true,
       duration: 0,
       currentTime: 0,

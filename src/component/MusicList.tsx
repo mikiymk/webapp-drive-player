@@ -32,12 +32,9 @@ const MusicListItem: React.FC<File & PropPlay & { index: number }> = ({
   id,
   index,
 }) => {
-  const playing = () => {
-    play(index);
-  };
   return (
     <li>
-      {name}({id})<button onClick={playing}>play</button>
+      {name}({id})<button onClick={() => play(index)}>play</button>
     </li>
   );
 };
