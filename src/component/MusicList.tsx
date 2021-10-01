@@ -1,17 +1,17 @@
 import React from "react";
-import { File, PropPlay } from "type";
+import { File, Play } from "type";
 
 /**
  * list of musics
  * @param props compontnt props
  * @returns react render
  */
-export const MusicList: React.FC<{ files: File[] } & PropPlay> = ({
+export const MusicList: React.FC<{ files: File[] } & Play> = ({
   files,
   play,
 }) => {
   const listitems = files.map((file, index) => (
-    <MusicListItem key={file.id} {...file} play={play} index={index} />
+    <MusicItem key={file.id} {...file} play={play} index={index} />
   ));
   return (
     <div>
@@ -26,7 +26,7 @@ export const MusicList: React.FC<{ files: File[] } & PropPlay> = ({
  * @param props compontnt props
  * @returns react render
  */
-const MusicListItem: React.FC<File & PropPlay & { index: number }> = ({
+const MusicItem: React.FC<File & Play & { index: number }> = ({
   play,
   name,
   id,

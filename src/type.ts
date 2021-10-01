@@ -4,6 +4,6 @@ export type File = {
   link: string;
 };
 
-export type PropPlay = {
+export type Play = {
   play: (index: number) => void;
 };
