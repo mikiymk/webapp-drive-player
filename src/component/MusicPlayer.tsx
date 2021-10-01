@@ -4,8 +4,8 @@ import { File } from "../type";
 import { PlayingInfo } from "./PlayManager";
 import { MusicList } from "./MusicList";
 import { NowPlayingList } from "./PlayingList";
-import { AudioPlayer } from "../player";
-import { AudioList } from "../list";
+import { AudioPlayer } from "../audio/player";
+import { AudioList } from "../audio/list";
 import { Authorize } from "./Authorize";
 
 /**

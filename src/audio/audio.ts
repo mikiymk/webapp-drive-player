@@ -1,5 +1,5 @@
-import { downloadFile } from "./api";
-import { File } from "./type";
+import { downloadFile } from "../api";
+import { File } from "../type";
 
 export class PlayingList {
   playing: {
