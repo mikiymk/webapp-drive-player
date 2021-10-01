@@ -1,5 +1,6 @@
+const context = new AudioContext();
+
 export class AudioPlayer {
-  private readonly context: AudioContext;
   private node: AudioBufferSourceNode;
 
   private intervalID = 0;
@@ -18,22 +19,17 @@ export class AudioPlayer {
 
   onEnd = () => {};
 
-  constructor(context: AudioContext) {
-    this.context = context;
-    this.node = this.context.createBufferSource();
-
-    console.log("audio player");
+  constructor() {
+    this.node = context.createBufferSource();
   }
 
   setBuffer(buffer: AudioBuffer) {
-    console.log("set buffer", buffer);
-
     this.setDuration(buffer.duration);
     this.stop();
 
-    this.node = this.context.createBufferSource();
+    this.node = context.createBufferSource();
     this.node.buffer = buffer;
-    this.node.connect(this.context.destination);
+    this.node.connect(context.destination);
 
     this.start();
   }
@@ -77,7 +73,7 @@ export class AudioPlayer {
     if (this.isPaused) {
       this.setCurrentTime(this.stopAt);
     } else {
-      this.setCurrentTime(this.context.currentTime - this.startAt);
+      this.setCurrentTime(context.currentTime - this.startAt);
     }
   }
 
@@ -91,7 +87,7 @@ export class AudioPlayer {
 
       this.intervalID = window.setInterval(() => this.updateTime(), 250);
 
-      this.node.start(this.context.currentTime, 0);
+      this.node.start(context.currentTime, 0);
     }
   }
 
@@ -104,7 +100,7 @@ export class AudioPlayer {
 
       window.clearInterval(this.intervalID);
 
-      this.node.stop(this.context.currentTime);
+      this.node.stop(context.currentTime);
     }
   }
 
@@ -112,12 +108,12 @@ export class AudioPlayer {
     if (this.isPaused) {
       console.log("player play");
 
-      this.setStartAt(this.context.currentTime - this.stopAt);
+      this.setStartAt(context.currentTime - this.stopAt);
       this.setPause(false);
 
       this.intervalID = window.setInterval(() => this.updateTime(), 250);
 
-      this.node.start(this.context.currentTime, this.stopAt);
+      this.node.start(context.currentTime, this.stopAt);
     }
   }
 
@@ -125,12 +121,12 @@ export class AudioPlayer {
     if (!this.isPaused) {
       console.log("player pause");
 
-      this.setStopAt(this.context.currentTime - this.startAt);
+      this.setStopAt(context.currentTime - this.startAt);
       this.setPause(true);
 
       window.clearInterval(this.intervalID);
 
-      this.node.stop(this.context.currentTime);
+      this.node.stop(context.currentTime);
     }
   }
 
@@ -141,7 +137,7 @@ export class AudioPlayer {
       this.setStopAt(time);
     } else {
       this.node.stop();
-      this.node.start(this.context.currentTime, time);
+      this.node.start(context.currentTime, time);
     }
   }
 }
