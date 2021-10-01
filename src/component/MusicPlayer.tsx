@@ -4,8 +4,6 @@ import { File } from "../type";
 import { PlayingInfo } from "./PlayManager";
 import { MusicList } from "./MusicList";
 import { NowPlayingList } from "./PlayingList";
-import { AudioPlayer } from "../audio/player";
-import { AudioList } from "../audio/list";
 import { Authorize } from "./Authorize";
 
 /**
@@ -16,9 +14,6 @@ export class MusicPlayer extends React.Component<
   {
     isSignedIn: boolean;
     files: File[];
-    context: AudioContext;
-    player: AudioPlayer;
-    list: AudioList;
     paused: boolean;
     duration: number;
     currentTime: number;
@@ -26,49 +21,14 @@ export class MusicPlayer extends React.Component<
 > {
   constructor(props: {}) {
     super(props);
-    const ctx = new AudioContext();
     const files: File[] = [];
     this.state = {
       isSignedIn: false,
       files,
-      context: ctx,
-      player: new AudioPlayer(ctx),
-      list: new AudioList(ctx, files, 0),
       paused: true,
       duration: 0,
       currentTime: 0,
     };
-  }
-
-  componentDidMount() {
-    this.state.player.onSetCurrentTime = currentTime =>
-      this.setState(state => {
-        const newState = {
-          ...state,
-        };
-        newState.currentTime = currentTime;
-        return state;
-      });
-
-    this.state.player.onSetDuration = duration =>
-      this.setState(state => {
-        const newState = {
-          ...state,
-        };
-        newState.duration = duration;
-        return state;
-      });
-
-    this.state.player.onSetPause = paused =>
-      this.setState(state => {
-        const newState = {
-          ...state,
-        };
-        newState.paused = paused;
-        return state;
-      });
-
-    this.state.list.getBuffer(buffer => this.state.player.setBuffer(buffer));
   }
 
   /**
@@ -84,10 +44,7 @@ export class MusicPlayer extends React.Component<
   }
 
   playWithIndex(index: number) {
-    this.setState(state => {
-      state.list.setIndex(index);
-      return state;
-    });
+    console.log("cannnot play with index");
   }
 
   render() {
@@ -98,19 +55,16 @@ export class MusicPlayer extends React.Component<
           duration={this.state.duration}
           currentTime={this.state.currentTime}
           paused={this.state.paused}
-          seek={time => this.state.player.seek(time)}
-          play={() => this.state.player.play()}
-          pause={() => this.state.player.pause()}
+          seek={() => console.log("cannnot seek")}
+          play={() => console.log("cannnot  play")}
+          pause={() => console.log("cannnot pause")}
         />
         <Authorize onSignIn={() => this.onSignIn()} />
         <MusicList
           files={this.state.files}
           play={index => this.playWithIndex(index)}
         />
-        <NowPlayingList
-          list={this.state.list.list}
-          playingIndex={this.state.list.index}
-        />
+        <NowPlayingList list={[]} playingIndex={0} />
       </div>
     );
   }
