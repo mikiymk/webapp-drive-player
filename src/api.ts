@@ -4,7 +4,7 @@ import { File } from "./type";
 const CLIENT_ID =
   "820614082295-ob2em235vu1va9b5mhu0uhpvo299ipt7.apps.googleusercontent.com";
 
-const API_KEY = "AIzaSyAg5BcUDni6Srv8AwwCVYXrRIHcj8E9_0E";
+export const API_KEY = "AIzaSyAg5BcUDni6Srv8AwwCVYXrRIHcj8E9_0E";
 
 // Array of API discovery doc URLs for APIs used by the quickstart
 const DISCOVERY_DOCS = [
@@ -128,3 +128,5 @@ export const signIn = () => gapi.auth2.getAuthInstance().signIn();
  * sign out to google
  */
 export const signOut = () => gapi.auth2.getAuthInstance().signOut();
+
+export const getAccessToken = () => gapi.client.getToken().access_token;

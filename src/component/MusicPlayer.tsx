@@ -1,10 +1,11 @@
 import React from "react";
-import { getFiles } from "../api";
+import { downloadFile, getFiles } from "../api";
 import { File } from "../type";
 import { PlayingInfo } from "./PlayManager";
 import { MusicList } from "./MusicList";
 import { NowPlayingList } from "./PlayingList";
 import { Authorize } from "./Authorize";
+import { playWithUrl } from "../audio/player";
 
 /**
  * react component root.
@@ -44,7 +45,12 @@ export class MusicPlayer extends React.Component<
   }
 
   playWithIndex(index: number) {
-    console.log("cannnot play with index");
+    const item = this.state.files[index];
+    if (!item) {
+      console.log("no item");
+      return;
+    }
+    playWithUrl(item.id);
   }
 
   render() {
