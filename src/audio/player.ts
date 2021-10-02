@@ -145,18 +145,9 @@ export class AudioPlayer {
 }
 
 export const playWithUrl = async (id: string) => {
-  const headers = new Headers();
-  headers.set("Authorization", "Bearer " + getAccessToken());
-  headers.set("Access-Control-Allow-Origin", "*");
-
-  const url =
-    "https://www.googleapis.com/drive/v3/files/" +
-    id +
-    "?alt=media&key=" +
-    API_KEY;
-
-  const responce = await fetch(url, { headers });
-  const arrayBuffer = await responce.arrayBuffer();
+  const fileData = await downloadFile(id);
+  const dataArray = Array.from(fileData).map(c => c.charCodeAt(0));
+  const arrayBuffer = new Uint8Array(dataArray).buffer;
   const audioBuffer = await context.decodeAudioData(arrayBuffer);
 
   const node = context.createBufferSource();

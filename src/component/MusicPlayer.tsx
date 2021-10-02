@@ -1,5 +1,5 @@
 import React from "react";
-import { downloadFile, getFiles } from "../api";
+import { getFiles } from "../api";
 import { File } from "../type";
 import { PlayingInfo } from "./PlayManager";
 import { MusicList } from "./MusicList";
