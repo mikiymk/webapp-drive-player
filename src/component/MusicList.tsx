@@ -1,5 +1,5 @@
 import React from "react";
-import { File, Play } from "type";
+import { File, Play } from "../type";
 
 /**
  * list of musics

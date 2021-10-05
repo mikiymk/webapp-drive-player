@@ -1,5 +1,5 @@
 import React from "react";
-import { File } from "type";
+import { File } from "../type";
 
 const PlayingList: React.FC<{
   list: File[];
