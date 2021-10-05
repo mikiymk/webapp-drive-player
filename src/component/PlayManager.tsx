@@ -8,7 +8,7 @@ import React from "react";
  * @param props.audio play song audio element
  * @returns react render
  */
-export const PlayingInfo: React.FC<{
+const PlayingInfo: React.FC<{
   name: string;
   duration: number;
   currentTime: number;
@@ -59,3 +59,5 @@ const SeekBar: React.FC<{
       onChange={event => seek(parseInt(event.target.value, 10) / 1000)}></input>
   );
 };
+
+export default PlayingInfo;

@@ -6,7 +6,7 @@ import React from "react";
  * @param props compontnt props
  * @returns react render
  */
-export const Authorize: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
+const Authorize: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
   const [isSignedIn, setIsSignedIn] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState("");
 
@@ -37,3 +37,5 @@ export const Authorize: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
     </div>
   );
 };
+
+export default Authorize;

@@ -1,16 +1,12 @@
 import React from "react";
 import { File } from "type";
 
-export const NowPlayingList: React.FC<{
+const PlayingList: React.FC<{
   list: File[];
   playingIndex: number;
 }> = ({ list, playingIndex }) => {
   const listItem = list.map((item, index) => (
-    <NowPlayingItem
-      key={index}
-      {...item}
-      isPlayingNow={playingIndex === index}
-    />
+    <PlayingItem key={index} {...item} isPlayingNow={playingIndex === index} />
   ));
   return (
     <div>
@@ -20,7 +16,7 @@ export const NowPlayingList: React.FC<{
   );
 };
 
-const NowPlayingItem: React.FC<File & { isPlayingNow: boolean }> = ({
+const PlayingItem: React.FC<File & { isPlayingNow: boolean }> = ({
   isPlayingNow,
   name,
 }) => {
@@ -30,3 +26,5 @@ const NowPlayingItem: React.FC<File & { isPlayingNow: boolean }> = ({
     </li>
   );
 };
+
+export default PlayingList;

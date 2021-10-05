@@ -6,10 +6,7 @@ import { File, Play } from "type";
  * @param props compontnt props
  * @returns react render
  */
-export const MusicList: React.FC<{ files: File[] } & Play> = ({
-  files,
-  play,
-}) => {
+const MusicList: React.FC<{ files: File[] } & Play> = ({ files, play }) => {
   const listitems = files.map((file, index) => (
     <MusicItem key={file.id} {...file} play={play} index={index} />
   ));
@@ -38,3 +35,5 @@ const MusicItem: React.FC<File & Play & { index: number }> = ({
     </li>
   );
 };
+
+export default MusicList;

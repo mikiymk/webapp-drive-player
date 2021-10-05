@@ -1,16 +1,16 @@
 import React from "react";
 import { getFiles } from "../api";
 import { File } from "../type";
-import { PlayingInfo } from "./PlayManager";
-import { MusicList } from "./MusicList";
-import { NowPlayingList } from "./PlayingList";
-import { Authorize } from "./Authorize";
+import PlayingInfo from "./PlayManager";
+import MusicList from "./MusicList";
+import PlayingList from "./PlayingList";
+import Authorize from "./Authorize";
 import { playWithUrl } from "../audio/player";
 
 /**
  * react component root.
  */
-export class MusicPlayer extends React.Component<
+class MusicPlayer extends React.Component<
   {},
   {
     isSignedIn: boolean;
@@ -70,8 +70,10 @@ export class MusicPlayer extends React.Component<
           files={this.state.files}
           play={index => this.playWithIndex(index)}
         />
-        <NowPlayingList list={[]} playingIndex={0} />
+        <PlayingList list={[]} playingIndex={0} />
       </div>
     );
   }
 }
+
+export default MusicPlayer;

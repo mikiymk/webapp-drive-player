@@ -1,4 +1,4 @@
-import { MusicPlayer } from "./component/MusicPlayer";
+import MusicPlayer from "./component/MusicPlayer";
 import React from "react";
 import ReactDOM from "react-dom";
 import "./scss/style.scss";
