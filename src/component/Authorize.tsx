@@ -23,19 +23,22 @@ const Authorize: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
     return;
   }, []);
 
-  const error = <pre>{errorMessage}</pre>;
-  const button = isSignedIn ? (
+  return (
+    <div>
+      <ErrorMessage message={errorMessage} />
+      <AuthorizeButton isSignedIn={isSignedIn} />
+    </div>
+  );
+};
+
+const AuthorizeButton: React.FC<{ isSignedIn: boolean }> = ({ isSignedIn }) =>
+  isSignedIn ? (
     <button onClick={signOut}>Sign Out</button>
   ) : (
     <button onClick={signIn}>Authorize</button>
   );
 
-  return (
-    <div>
-      {errorMessage ? error : ""}
-      {button}
-    </div>
-  );
-};
+const ErrorMessage: React.FC<{ message: string }> = ({ message }) =>
+  message ? <pre>{message}</pre> : null;
 
 export default Authorize;
