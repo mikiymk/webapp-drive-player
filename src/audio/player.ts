@@ -1,8 +1,7 @@
-import { API_KEY, downloadFile, getAccessToken } from "../api";
+import { downloadFile } from "../api";
 
-const context = new AudioContext();
-
-export class AudioPlayer {
+class AudioPlayer {
+  private context = new AudioContext();
   private node: AudioBufferSourceNode;
 
   private intervalID = 0;
@@ -22,16 +21,26 @@ export class AudioPlayer {
   onEnd = () => {};
 
   constructor() {
-    this.node = context.createBufferSource();
+    this.node = this.context.createBufferSource();
   }
+
+  playWithUrl = async (id: string) => {
+    const fileData = await downloadFile(id);
+    const dataArray = Array.from(fileData).map(c => c.charCodeAt(0));
+    const arrayBuffer = new Uint8Array(dataArray).buffer;
+    const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
+
+    this.setBuffer(audioBuffer);
+  };
 
   setBuffer(buffer: AudioBuffer) {
     this.setDuration(buffer.duration);
     this.stop();
 
-    this.node = context.createBufferSource();
+    this.node = this.context.createBufferSource();
+    this.node.loop = true;
     this.node.buffer = buffer;
-    this.node.connect(context.destination);
+    this.node.connect(this.context.destination);
 
     this.start();
   }
@@ -75,7 +84,7 @@ export class AudioPlayer {
     if (this.isPaused) {
       this.setCurrentTime(this.stopAt);
     } else {
-      this.setCurrentTime(context.currentTime - this.startAt);
+      this.setCurrentTime(this.context.currentTime - this.startAt);
     }
   }
 
@@ -83,13 +92,13 @@ export class AudioPlayer {
     if (this.isPaused) {
       console.log("player start");
 
-      this.setStartAt(this.currentTime);
+      this.setStartAt(this.context.currentTime);
       this.setStopAt(0);
       this.setPause(false);
 
       this.intervalID = window.setInterval(() => this.updateTime(), 250);
 
-      this.node.start(context.currentTime, 0);
+      this.node.start(this.context.currentTime, 0);
     }
   }
 
@@ -102,7 +111,7 @@ export class AudioPlayer {
 
       window.clearInterval(this.intervalID);
 
-      this.node.stop(context.currentTime);
+      this.node.stop(this.context.currentTime);
     }
   }
 
@@ -110,12 +119,12 @@ export class AudioPlayer {
     if (this.isPaused) {
       console.log("player play");
 
-      this.setStartAt(context.currentTime - this.stopAt);
+      this.setStartAt(this.context.currentTime - this.stopAt);
       this.setPause(false);
 
       this.intervalID = window.setInterval(() => this.updateTime(), 250);
 
-      this.node.start(context.currentTime, this.stopAt);
+      this.node.start(this.context.currentTime, this.stopAt);
     }
   }
 
@@ -123,12 +132,12 @@ export class AudioPlayer {
     if (!this.isPaused) {
       console.log("player pause");
 
-      this.setStopAt(context.currentTime - this.startAt);
+      this.setStopAt(this.context.currentTime - this.startAt);
       this.setPause(true);
 
       window.clearInterval(this.intervalID);
 
-      this.node.stop(context.currentTime);
+      this.node.stop(this.context.currentTime);
     }
   }
 
@@ -139,20 +148,9 @@ export class AudioPlayer {
       this.setStopAt(time);
     } else {
       this.node.stop();
-      this.node.start(context.currentTime, time);
+      this.node.start(this.context.currentTime, time);
     }
   }
 }
 
-export const playWithUrl = async (id: string) => {
-  const fileData = await downloadFile(id);
-  const dataArray = Array.from(fileData).map(c => c.charCodeAt(0));
-  const arrayBuffer = new Uint8Array(dataArray).buffer;
-  const audioBuffer = await context.decodeAudioData(arrayBuffer);
-
-  const node = context.createBufferSource();
-  node.loop = true;
-  node.buffer = audioBuffer;
-  node.connect(context.destination);
-  node.start(context.currentTime, 0);
-};
+export default AudioPlayer;

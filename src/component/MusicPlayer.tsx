@@ -5,7 +5,7 @@ import PlayingInfo from "./PlayManager";
 import MusicList from "./MusicList";
 import PlayingList from "./PlayingList";
 import Authorize from "./Authorize";
-import { playWithUrl } from "../audio/player";
+import AudioPlayer from "../audio/player";
 
 /**
  * react component root.
@@ -20,6 +20,8 @@ class MusicPlayer extends React.Component<
     currentTime: number;
   }
 > {
+  player: AudioPlayer;
+
   constructor(props: {}) {
     super(props);
     const files: File[] = [];
@@ -30,6 +32,18 @@ class MusicPlayer extends React.Component<
       duration: 0,
       currentTime: 0,
     };
+    this.player = new AudioPlayer();
+  }
+
+  componentDidMount() {
+    this.player.onSetDuration = duration =>
+      this.setState(state => ({ ...state, duration }));
+
+    this.player.onSetPause = paused =>
+      this.setState(state => ({ ...state, paused }));
+
+    this.player.onSetCurrentTime = currentTime =>
+      this.setState(state => ({ ...state, currentTime }));
   }
 
   /**
@@ -50,7 +64,7 @@ class MusicPlayer extends React.Component<
       console.log("no item");
       return;
     }
-    playWithUrl(item.id);
+    this.player.playWithUrl(item.id);
   }
 
   render() {
@@ -61,9 +75,9 @@ class MusicPlayer extends React.Component<
           duration={this.state.duration}
           currentTime={this.state.currentTime}
           paused={this.state.paused}
-          seek={() => console.log("cannnot seek")}
-          play={() => console.log("cannnot  play")}
-          pause={() => console.log("cannnot pause")}
+          seek={time => this.player.seek(time)}
+          play={() => this.player.play()}
+          pause={() => this.player.pause()}
         />
         <Authorize onSignIn={() => this.onSignIn()} />
         <MusicList
