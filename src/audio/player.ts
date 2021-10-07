@@ -3,6 +3,7 @@ import { downloadFile } from "../api";
 class AudioPlayer {
   private context = new AudioContext();
   private node: AudioBufferSourceNode;
+  private buffer: AudioBuffer | null = null;
 
   private intervalID = 0;
 
@@ -25,24 +26,28 @@ class AudioPlayer {
   }
 
   playWithUrl = async (id: string) => {
+    this.stop();
+
     const fileData = await downloadFile(id);
     const dataArray = Array.from(fileData).map(c => c.charCodeAt(0));
     const arrayBuffer = new Uint8Array(dataArray).buffer;
     const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
 
-    this.setBuffer(audioBuffer);
-  };
-
-  setBuffer(buffer: AudioBuffer) {
-    this.setDuration(buffer.duration);
-    this.stop();
-
-    this.node = this.context.createBufferSource();
-    this.node.loop = true;
-    this.node.buffer = buffer;
-    this.node.connect(this.context.destination);
+    this.setDuration(audioBuffer.duration);
+    this.buffer = audioBuffer;
 
     this.start();
+  };
+
+  setBuffer() {
+    if (this.buffer === null) {
+      return;
+    }
+    this.node.disconnect();
+    this.node = this.context.createBufferSource();
+    this.node.loop = true;
+    this.node.buffer = this.buffer;
+    this.node.connect(this.context.destination);
   }
 
   private setDuration(duration: number) {
@@ -98,6 +103,7 @@ class AudioPlayer {
 
       this.intervalID = window.setInterval(() => this.updateTime(), 250);
 
+      this.setBuffer();
       this.node.start(this.context.currentTime, 0);
     }
   }
@@ -124,6 +130,7 @@ class AudioPlayer {
 
       this.intervalID = window.setInterval(() => this.updateTime(), 250);
 
+      this.setBuffer();
       this.node.start(this.context.currentTime, this.stopAt);
     }
   }
