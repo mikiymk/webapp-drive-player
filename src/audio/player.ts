@@ -93,6 +93,23 @@ class AudioPlayer {
     }
   }
 
+  private setInterval() {
+    if (this.intervalID) {
+      throw new Error("interval has already set");
+    } else {
+      this.intervalID = window.setInterval(() => this.updateTime(), 250);
+    }
+  }
+
+  private unsetInterval() {
+    if (!this.intervalID) {
+      throw new Error("interval is no set");
+    } else {
+      window.clearInterval(this.intervalID);
+      this.intervalID = 0;
+    }
+  }
+
   start() {
     if (this.isPaused) {
       console.log("player start");
@@ -101,7 +118,7 @@ class AudioPlayer {
       this.setStopAt(0);
       this.setPause(false);
 
-      this.intervalID = window.setInterval(() => this.updateTime(), 250);
+      this.setInterval();
 
       this.setBuffer();
       this.node.start(this.context.currentTime, 0);
@@ -115,7 +132,7 @@ class AudioPlayer {
       this.setStopAt(0);
       this.setPause(true);
 
-      window.clearInterval(this.intervalID);
+      this.unsetInterval();
 
       this.node.stop(this.context.currentTime);
     }
@@ -128,7 +145,7 @@ class AudioPlayer {
       this.setStartAt(this.context.currentTime - this.stopAt);
       this.setPause(false);
 
-      this.intervalID = window.setInterval(() => this.updateTime(), 250);
+      this.setInterval();
 
       this.setBuffer();
       this.node.start(this.context.currentTime, this.stopAt);
@@ -142,20 +159,24 @@ class AudioPlayer {
       this.setStopAt(this.context.currentTime - this.startAt);
       this.setPause(true);
 
-      window.clearInterval(this.intervalID);
+      this.unsetInterval();
 
       this.node.stop(this.context.currentTime);
     }
   }
 
   seek(time: number) {
+    console.log("player seek", time);
     if (this.isPaused) {
-      console.log("player seek", time);
+      console.log("paused");
 
       this.setStopAt(time);
     } else {
-      this.node.stop();
-      this.node.start(this.context.currentTime, time);
+      console.log("no paused");
+
+      this.stop();
+      this.setStopAt(time);
+      this.play();
     }
   }
 }

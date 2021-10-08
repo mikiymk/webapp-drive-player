@@ -50,13 +50,22 @@ const SeekBar: React.FC<{
   duration ||= 0;
   time ||= 0;
 
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    const parsed = parseInt(value, 10);
+    const milli = parsed / 1000;
+    console.log(value, parsed, milli);
+    return seek(milli);
+  };
+
   return (
     <input
       type="range"
       min="0"
       max={duration * 1000}
       value={time * 1000}
-      onChange={event => seek(parseInt(event.target.value, 10) / 1000)}></input>
+      onChange={onChange}
+    />
   );
 };
 
