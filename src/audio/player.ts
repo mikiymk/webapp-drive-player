@@ -58,6 +58,7 @@ class AudioPlayer {
   }
 
   private setCurrentTime(currentTime: number) {
+    currentTime %= this.duration;
     console.log("set current time", currentTime);
 
     this.currentTime = currentTime;
@@ -65,6 +66,7 @@ class AudioPlayer {
   }
 
   private setStartAt(startAt: number) {
+    startAt %= this.duration;
     console.log("set start at", startAt);
 
     this.startAt = startAt;
@@ -72,6 +74,7 @@ class AudioPlayer {
   }
 
   private setStopAt(stopAt: number) {
+    stopAt %= this.duration;
     console.log("set stop at", stopAt);
 
     this.stopAt = stopAt;
