@@ -1,24 +1,34 @@
 import React from "react";
+import Authorize from "./Authorize";
 
-const Menu: React.FC<{}> = props => {
+const Menu: React.FC<{
+  onSignIn: () => void;
+  items: { [name: string]: { name: string; element: JSX.Element } };
+}> = ({ onSignIn, items }) => {
+  const [selected, setSelected] = React.useState("playing");
+
+  const itemsList = Object.entries(items).map(([name, value]) =>
+    name === selected ? value.element : null
+  );
+
+  const menuList = Object.entries(items).map(([name, value]) => (
+    <li id={name}>
+      <a href={"#" + name} onClick={() => setSelected(name)}>
+        {value.name}
+      </a>
+    </li>
+  ));
+
   return (
-    <ul>
-      <li>
-        <a href="#playing">Now Playing</a>
-      </li>
-      <li>
-        <a href="#library">Library</a>
-      </li>
-      <li>
-        <a href="#playlist">Playlists</a>
-      </li>
-      <li>
-        <a href="#drive">Google Drive</a>
-      </li>
-      <li>
-        <a href="#setting">Settings</a>
-      </li>
-    </ul>
+    <div>
+      <ul>
+        {menuList}
+        <li>
+          <Authorize onSignIn={onSignIn} />
+        </li>
+      </ul>
+      {itemsList}
+    </div>
   );
 };
 

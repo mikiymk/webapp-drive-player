@@ -3,8 +3,6 @@ import { getFiles } from "../api";
 import { File } from "../type";
 import PlayingInfo from "./PlayManager";
 import MusicList from "./MusicList";
-import PlayingList from "./PlayingList";
-import Authorize from "./Authorize";
 import AudioPlayer from "../audio/player";
 import Menu from "./Menu";
 
@@ -25,9 +23,7 @@ const MusicPlayer: React.FC = () => {
     player.onSetCurrentTime = currentTime => setCurrentTime(currentTime);
   }, []);
 
-  const onSignIn = () => {
-    getFiles(newFiles => setFiles(files.concat(newFiles)));
-  };
+  const onSignIn = () => getFiles(newFiles => setFiles(files.concat(newFiles)));
 
   const playWithIndex = (index: number) => {
     const item = files[index];
@@ -38,23 +34,28 @@ const MusicPlayer: React.FC = () => {
     player.playWithUrl(item.id);
   };
 
-  return (
-    <div>
-      <Menu />
-      <PlayingInfo
-        name={""}
-        duration={duration}
-        currentTime={currentTime}
-        paused={paused}
-        seek={time => player.seek(time)}
-        play={() => player.play()}
-        pause={() => player.pause()}
-      />
-      <Authorize onSignIn={onSignIn} />
-      <MusicList files={files} play={playWithIndex} />
-      <PlayingList list={[]} playingIndex={0} />
-    </div>
-  );
+  const menuItems = {
+    playing: {
+      name: "Now Playing",
+      element: (
+        <PlayingInfo
+          name={""}
+          duration={duration}
+          currentTime={currentTime}
+          paused={paused}
+          seek={time => player.seek(time)}
+          play={() => player.play()}
+          pause={() => player.pause()}
+        />
+      ),
+    },
+    library: {
+      name: "Library",
+      element: <MusicList files={files} play={playWithIndex} />,
+    },
+  };
+
+  return <Menu onSignIn={onSignIn} items={menuItems} />;
 };
 
 export default MusicPlayer;
