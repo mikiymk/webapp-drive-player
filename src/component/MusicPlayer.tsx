@@ -8,88 +8,53 @@ import Authorize from "./Authorize";
 import AudioPlayer from "../audio/player";
 import Menu from "./Menu";
 
+const player = new AudioPlayer();
+
 /**
  * react component root.
  */
-class MusicPlayer extends React.Component<
-  {},
-  {
-    isSignedIn: boolean;
-    files: File[];
-    paused: boolean;
-    duration: number;
-    currentTime: number;
-  }
-> {
-  player: AudioPlayer;
+const MusicPlayer: React.FC = () => {
+  const [files, setFiles] = React.useState<File[]>([]);
+  const [paused, setPaused] = React.useState(true);
+  const [duration, setDuration] = React.useState(0);
+  const [currentTime, setCurrentTime] = React.useState(0);
 
-  constructor(props: {}) {
-    super(props);
-    const files: File[] = [];
-    this.state = {
-      isSignedIn: false,
-      files,
-      paused: true,
-      duration: 0,
-      currentTime: 0,
-    };
-    this.player = new AudioPlayer();
-  }
+  React.useEffect(() => {
+    player.onSetDuration = duration => setDuration(duration);
+    player.onSetPause = paused => setPaused(paused);
+    player.onSetCurrentTime = currentTime => setCurrentTime(currentTime);
+  }, []);
 
-  componentDidMount() {
-    this.player.onSetDuration = duration =>
-      this.setState(state => ({ ...state, duration }));
+  const onSignIn = () => {
+    getFiles(newFiles => setFiles(files.concat(newFiles)));
+  };
 
-    this.player.onSetPause = paused =>
-      this.setState(state => ({ ...state, paused }));
-
-    this.player.onSetCurrentTime = currentTime =>
-      this.setState(state => ({ ...state, currentTime }));
-  }
-
-  /**
-   * called when sign in at google
-   */
-  onSignIn() {
-    getFiles(files =>
-      this.setState(state => {
-        state.files.push(...files);
-        return state;
-      })
-    );
-  }
-
-  playWithIndex(index: number) {
-    const item = this.state.files[index];
+  const playWithIndex = (index: number) => {
+    const item = files[index];
     if (!item) {
       console.log("no item");
       return;
     }
-    this.player.playWithUrl(item.id);
-  }
+    player.playWithUrl(item.id);
+  };
 
-  render() {
-    return (
-      <div>
-        <Menu />
-        <PlayingInfo
-          name={""}
-          duration={this.state.duration}
-          currentTime={this.state.currentTime}
-          paused={this.state.paused}
-          seek={time => this.player.seek(time)}
-          play={() => this.player.play()}
-          pause={() => this.player.pause()}
-        />
-        <Authorize onSignIn={() => this.onSignIn()} />
-        <MusicList
-          files={this.state.files}
-          play={index => this.playWithIndex(index)}
-        />
-        <PlayingList list={[]} playingIndex={0} />
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Menu />
+      <PlayingInfo
+        name={""}
+        duration={duration}
+        currentTime={currentTime}
+        paused={paused}
+        seek={time => player.seek(time)}
+        play={() => player.play()}
+        pause={() => player.pause()}
+      />
+      <Authorize onSignIn={onSignIn} />
+      <MusicList files={files} play={playWithIndex} />
+      <PlayingList list={[]} playingIndex={0} />
+    </div>
+  );
+};
 
 export default MusicPlayer;

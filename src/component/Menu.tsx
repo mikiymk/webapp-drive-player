@@ -7,13 +7,13 @@ const Menu: React.FC<{}> = props => {
         <a href="#playing">Now Playing</a>
       </li>
       <li>
-        <a href="#song">All Songs</a>
+        <a href="#library">Library</a>
       </li>
       <li>
         <a href="#playlist">Playlists</a>
       </li>
       <li>
-        <a href="#file">Drive Files</a>
+        <a href="#drive">Google Drive</a>
       </li>
       <li>
         <a href="#setting">Settings</a>
