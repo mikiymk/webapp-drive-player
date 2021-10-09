@@ -6,6 +6,7 @@ import MusicList from "./MusicList";
 import PlayingList from "./PlayingList";
 import Authorize from "./Authorize";
 import AudioPlayer from "../audio/player";
+import Menu from "./Menu";
 
 /**
  * react component root.
@@ -70,6 +71,7 @@ class MusicPlayer extends React.Component<
   render() {
     return (
       <div>
+        <Menu />
         <PlayingInfo
           name={""}
           duration={this.state.duration}
