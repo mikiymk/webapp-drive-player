@@ -1,5 +1,5 @@
 import { formatTime } from "../format";
-import React from "react";
+import React, { useState } from "react";
 
 /**
  * now playing audio info view
@@ -25,6 +25,7 @@ const PlayingInfo: React.FC<{
       {name}
       <PlayPauseButton isPaused={paused} play={play} pause={pause} />
       <SeekBar duration={duration} time={currentTime} seek={seek} />
+      <ToggleLoop />
       {currentTimeText}/{durationText}
     </div>
   );
@@ -50,22 +51,36 @@ const SeekBar: React.FC<{
   duration ||= 0;
   time ||= 0;
 
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    const parsed = parseInt(value, 10);
-    const milli = parsed / 1000;
-    console.log(value, parsed, milli);
-    return seek(milli);
-  };
-
   return (
     <input
       type="range"
       min="0"
       max={duration * 1000}
       value={time * 1000}
-      onChange={onChange}
+      onChange={event => seek(parseInt(event.target.value, 10) / 1000)}
     />
+  );
+};
+
+const ToggleLoop: React.FC = props => {
+  const loopType = ["no", "one", "all"];
+  const loopTypeElement = loopType.map(loop => (
+    <ToggleLoopItem key={loop} name={loop} />
+  ));
+  return (
+    <div>
+      Loop:
+      {loopTypeElement}
+    </div>
+  );
+};
+
+const ToggleLoopItem: React.FC<{ name: string }> = ({ name }) => {
+  return (
+    <>
+      <input type="radio" name="loop" id={"loop_" + name} value={name} />
+      <label htmlFor={"loop_" + name}>{name}</label>
+    </>
   );
 };
 
