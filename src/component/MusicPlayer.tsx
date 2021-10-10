@@ -3,10 +3,8 @@ import { getFiles } from "../api";
 import { File } from "../type";
 import PlayingInfo from "./PlayManager";
 import MusicList from "./MusicList";
-import AudioPlayer from "../audio/player";
+import player from "../audio/player";
 import Menu from "./Menu";
-
-const player = new AudioPlayer();
 
 /**
  * react component root.
