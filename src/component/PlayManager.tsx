@@ -62,26 +62,57 @@ const SeekBar: React.FC<{
   );
 };
 
+const loopType = ["no", "one", "all"];
+
+const toggleLoopType = (now: string) => {
+  return { no: "one", one: "all", all: "no" }[now] ?? "no";
+};
+
 const ToggleLoop: React.FC = props => {
-  const loopType = ["no", "one", "all"];
+  const [selected, setSelected] = useState(loopType[0]);
+
   const loopTypeElement = loopType.map(loop => (
-    <ToggleLoopItem key={loop} name={loop} />
+    <ToggleLoopItem
+      key={loop}
+      name={loop}
+      set={setSelected}
+      checked={loop === selected}
+    />
   ));
   return (
     <div>
       Loop:
       {loopTypeElement}
+      <ToggleLoopButton name={selected} set={setSelected} />
     </div>
   );
 };
 
-const ToggleLoopItem: React.FC<{ name: string }> = ({ name }) => {
+const ToggleLoopItem: React.FC<{
+  name: string;
+  set: (name: string) => void;
+  checked: boolean;
+}> = ({ name, set, checked }) => {
   return (
     <>
-      <input type="radio" name="loop" id={"loop_" + name} value={name} />
+      <input
+        type="radio"
+        name="loop"
+        id={"loop_" + name}
+        value={name}
+        onClick={() => set(name)}
+        checked={checked}
+      />
       <label htmlFor={"loop_" + name}>{name}</label>
     </>
   );
+};
+
+const ToggleLoopButton: React.FC<{
+  name: string;
+  set: (name: string) => void;
+}> = ({ name, set }) => {
+  return <button onClick={() => set(toggleLoopType(name))}>{name}</button>;
 };
 
 export default PlayingInfo;
