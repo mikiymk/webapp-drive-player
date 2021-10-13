@@ -8,11 +8,13 @@ const Menu: React.FC<{
   const [selected, setSelected] = React.useState("playing");
 
   const itemsList = Object.entries(items).map(([name, value]) =>
-    name === selected ? value.element : null
+    name === selected ? (
+      <React.Fragment key={name}>{value.element}</React.Fragment>
+    ) : null
   );
 
   const menuList = Object.entries(items).map(([name, value]) => (
-    <li id={name}>
+    <li key={name} id={name}>
       <a href={"#" + name} onClick={() => setSelected(name)}>
         {value.name}
       </a>

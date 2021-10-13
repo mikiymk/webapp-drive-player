@@ -100,7 +100,7 @@ const ToggleLoopItem: React.FC<{
         name="loop"
         id={"loop_" + name}
         value={name}
-        onClick={() => set(name)}
+        onChange={() => set(name)}
         checked={checked}
       />
       <label htmlFor={"loop_" + name}>{name}</label>
