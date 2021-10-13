@@ -5,53 +5,7 @@ const GET_PAGE_SIZE = 100;
 
 type Result = [File[], string | undefined];
 
-const get10Files = async (token?: string) => {
-  console.log("get files list page", "token ", token);
-
-  const response = await gapi.client.drive.files.list({
-    fields: "nextPageToken, files(id, name, webContentLink)",
-    pageSize: GET_PAGE_SIZE,
-    pageToken: token,
-    q: "mimeType contains 'audio/'",
-  });
-
-  const row_files = response.result.files ?? [];
-  const files = row_files
-    .map(({ id, name, webContentLink }) => ({
-      id,
-      name,
-      link: webContentLink,
-    }))
-    .filter((obj): obj is File => !!(obj.id && obj.name && obj.link));
-  const nextToken = response.result.nextPageToken;
-
-  console.log(GET_PAGE_SIZE, "files", files);
-  console.log("nextpage token", nextToken);
-
-  const result: Result = [files, nextToken];
-  return result;
-};
-
-/**
- * get file list from google drive use gapi
- * @returns list of files
- */
-export const getFiles = async (addFile: (files: File[]) => void) => {
-  console.log("get all files list");
-
-  let token = undefined;
-  let isFirst = true;
-
-  while (token || isFirst) {
-    const [files, nextToken]: Result = await get10Files(token);
-
-    addFile(files);
-    token = nextToken;
-    isFirst = false;
-  }
-};
-
-const getLimitedFilesByParent = async (parent: string, token?: string) => {
+const getPagedFiles = async (parent: string, token?: string) => {
   console.log("get files list page", "token ", token);
 
   const response = await gapi.client.drive.files.list({
@@ -78,7 +32,7 @@ const getLimitedFilesByParent = async (parent: string, token?: string) => {
   return result;
 };
 
-export const getAllFilesByParent = async (
+export const getAllFiles = async (
   addFile: (files: File[]) => void,
   parent?: string
 ) => {
@@ -89,7 +43,7 @@ export const getAllFilesByParent = async (
   let isFirst = true;
 
   while (token || isFirst) {
-    const [files, nextToken]: Result = await getLimitedFilesByParent(
+    const [files, nextToken]: Result = await getPagedFiles(
       constParent,
       token
     );
