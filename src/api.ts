@@ -51,6 +51,55 @@ export const getFiles = async (addFile: (files: File[]) => void) => {
   }
 };
 
+const getLimitedFilesByParent = async (parent: string, token?: string) => {
+  console.log("get files list page", "token ", token);
+
+  const response = await gapi.client.drive.files.list({
+    fields: "nextPageToken, files(id, name, webContentLink)",
+    pageSize: GET_PAGE_SIZE,
+    pageToken: token,
+    q: `mimeType contains 'audio/' and parents in '${parent}'`,
+  });
+
+  const row_files = response.result.files ?? [];
+  const files = row_files
+    .map(({ id, name, webContentLink }) => ({
+      id,
+      name,
+      link: webContentLink,
+    }))
+    .filter((obj): obj is File => !!(obj.id && obj.name && obj.link));
+  const nextToken = response.result.nextPageToken;
+
+  console.log(GET_PAGE_SIZE, "files", files);
+  console.log("nextpage token", nextToken);
+
+  const result: Result = [files, nextToken];
+  return result;
+};
+
+export const getAllFilesByParent = async (
+  addFile: (files: File[]) => void,
+  parent?: string
+) => {
+  console.log("get all files list");
+
+  const constParent = parent ?? "root";
+  let token = undefined;
+  let isFirst = true;
+
+  while (token || isFirst) {
+    const [files, nextToken]: Result = await getLimitedFilesByParent(
+      constParent,
+      token
+    );
+
+    addFile(files);
+    token = nextToken;
+    isFirst = false;
+  }
+};
+
 /**
  * get file data at file id from google drive
  * @param fileId google drive file id

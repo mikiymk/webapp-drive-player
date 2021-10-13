@@ -1,5 +1,5 @@
 import React from "react";
-import { getFiles } from "../api";
+import { getAllFilesByParent, getFiles } from "../api";
 import { File } from "../type";
 import PlayingInfo from "./PlayManager";
 import MusicList from "./MusicList";
@@ -21,7 +21,8 @@ const MusicPlayer: React.FC = () => {
     player.onSetCurrentTime = currentTime => setCurrentTime(currentTime);
   }, []);
 
-  const onSignIn = () => getFiles(newFiles => setFiles(files.concat(newFiles)));
+  const onSignIn = () =>
+    getAllFilesByParent(newFiles => setFiles(files.concat(newFiles)));
 
   const playWithIndex = (index: number) => {
     const item = files[index];
