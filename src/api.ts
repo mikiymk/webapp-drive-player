@@ -5,22 +5,33 @@ const GET_PAGE_SIZE = 100;
 
 type Result = [File[], string | undefined];
 
-const getPagedFiles = async (parent: string, token?: string) => {
+const getList = async (query: string, token?: string) => {
   const response = await gapi.client.drive.files.list({
     fields: "nextPageToken, files(id, name)",
     pageSize: GET_PAGE_SIZE,
     pageToken: token,
-    q: `mimeType contains 'audio/' and parents in '${parent}'`,
+    q: query,
   });
 
-  const row_files = response.result.files ?? [];
+  return response.result;
+};
+
+const getPagedFiles = async (
+  parent: string,
+  token?: string
+): Promise<Result> => {
+  const result = await getList(
+    `mimeType contains 'audio/' and parents in '${parent}'`,
+    token
+  );
+
+  const row_files = result.files ?? [];
   const files = row_files
     .map(({ id, name }) => ({ id, name }))
     .filter((obj): obj is File => !!(obj.id && obj.name));
-  const nextToken = response.result.nextPageToken;
+  const nextToken = result.nextPageToken;
 
-  const result: Result = [files, nextToken];
-  return result;
+  return [files, nextToken];
 };
 
 export const getAllFiles = async (
