@@ -17,13 +17,10 @@ const getList = async (query: string, token?: string) => {
 };
 
 const getPagedFiles = async (
-  parent: string,
+  query: string,
   token?: string
 ): Promise<Result> => {
-  const result = await getList(
-    `mimeType contains 'audio/' and parents in '${parent}'`,
-    token
-  );
+  const result = await getList(query, token);
 
   const row_files = result.files ?? [];
   const files = row_files
@@ -34,14 +31,13 @@ const getPagedFiles = async (
   return [files, nextToken];
 };
 
-export const getAllFiles = async (parent?: string) => {
-  const constParent = parent ?? "root";
+const getAllFiles = async (query: string) => {
   let token = undefined;
   let isFirst = true;
   let allFiles: File[] = [];
 
   while (token || isFirst) {
-    const [paged, next]: Result = await getPagedFiles(constParent, token);
+    const [paged, next]: Result = await getPagedFiles(query, token);
 
     allFiles = allFiles.concat(paged);
     token = next;
@@ -50,6 +46,18 @@ export const getAllFiles = async (parent?: string) => {
 
   return allFiles;
 };
+
+export const getAllFolders = async (parent?: string) =>
+  getAllFiles(
+    `mimeType = 'application/vnd.google-apps.folder' and parents in '${
+      parent ?? "root"
+    }'`
+  );
+
+export const getAllMusics = async (parent?: string) =>
+  getAllFiles(
+    `mimeType contains 'audio/' and parents in '${parent ?? "root"}'`
+  );
 
 /**
  * get file data at file id from google drive
