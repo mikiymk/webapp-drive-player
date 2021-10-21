@@ -6,27 +6,23 @@ import React from "react";
  * @param props compontnt props
  * @returns react render
  */
-const Authorize: React.FC<{ onSignIn: () => void }> = ({ onSignIn }) => {
-  const [isSignedIn, setIsSignedIn] = React.useState(false);
+const Authorize: React.FC<{
+  signIn: boolean;
+  setSignIn: (signIn: boolean) => void;
+}> = ({ signIn, setSignIn }) => {
   const [errorMessage, setErrorMessage] = React.useState("");
 
   React.useEffect(() => {
     loadAndInit(
-      isSignedIn => {
-        setIsSignedIn(isSignedIn);
-        if (isSignedIn) {
-          onSignIn();
-        }
-      },
+      isSignedIn => setSignIn(isSignedIn),
       error => setErrorMessage(JSON.stringify(error, null, 2))
     );
-    return;
   }, []);
 
   return (
     <div>
       <ErrorMessage message={errorMessage} />
-      <AuthorizeButton isSignedIn={isSignedIn} />
+      <AuthorizeButton isSignedIn={signIn} />
     </div>
   );
 };

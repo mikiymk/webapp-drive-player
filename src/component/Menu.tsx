@@ -2,9 +2,9 @@ import React from "react";
 import Authorize from "./Authorize";
 
 const Menu: React.FC<{
-  onSignIn: () => void;
+  authorize: JSX.Element;
   items: { [name: string]: { name: string; element: JSX.Element } };
-}> = ({ onSignIn, items }) => {
+}> = ({ authorize, items }) => {
   const [selected, setSelected] = React.useState("playing");
 
   const itemsList = Object.entries(items).map(([name, value]) =>
@@ -25,9 +25,7 @@ const Menu: React.FC<{
     <div>
       <ul>
         {menuList}
-        <li>
-          <Authorize onSignIn={onSignIn} />
-        </li>
+        <li>{authorize}</li>
       </ul>
       {itemsList}
     </div>

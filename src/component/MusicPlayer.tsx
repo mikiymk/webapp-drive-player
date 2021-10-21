@@ -1,15 +1,17 @@
 import React from "react";
-import { getAllFiles } from "../api";
-import { File } from "../type";
+import player from "../audio/player";
 import PlayingInfo from "./PlayManager";
 import MusicList from "./MusicList";
-import player from "../audio/player";
 import Menu from "./Menu";
+import Authorize from "./Authorize";
+import DriveFiles from "./DriveFiles";
+import { File } from "../type";
 
 /**
  * react component root.
  */
 const MusicPlayer: React.FC = () => {
+  const [signIn, setSignIn] = React.useState(false);
   const [files, setFiles] = React.useState<File[]>([]);
   const [paused, setPaused] = React.useState(true);
   const [duration, setDuration] = React.useState(0);
@@ -21,8 +23,7 @@ const MusicPlayer: React.FC = () => {
     player.onSetCurrentTime = currentTime => setCurrentTime(currentTime);
   }, []);
 
-  const onSignIn = () =>
-    getAllFiles(newFiles => setFiles(files.concat(newFiles)));
+  const addFiles = (newFiles: File[]) => setFiles(files.concat(newFiles));
 
   const playWithIndex = (index: number) => {
     const item = files[index];
@@ -32,6 +33,8 @@ const MusicPlayer: React.FC = () => {
     }
     player.playWithUrl(item.id);
   };
+
+  const authorize = <Authorize signIn={signIn} setSignIn={setSignIn} />;
 
   const menuItems = {
     playing: {
@@ -52,9 +55,13 @@ const MusicPlayer: React.FC = () => {
       name: "Library",
       element: <MusicList files={files} play={playWithIndex} />,
     },
+    drive: {
+      name: "Google Drive",
+      element: <DriveFiles />,
+    },
   };
 
-  return <Menu onSignIn={onSignIn} items={menuItems} />;
+  return <Menu authorize={authorize} items={menuItems} />;
 };
 
 export default MusicPlayer;
