@@ -57,7 +57,7 @@ const MusicPlayer: React.FC = () => {
     },
     drive: {
       name: "Google Drive",
-      element: <DriveFiles />,
+      element: <DriveFiles signIn={signIn} />,
     },
   };
 

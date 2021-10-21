@@ -34,21 +34,21 @@ const getPagedFiles = async (
   return [files, nextToken];
 };
 
-export const getAllFiles = async (
-  addFile: (files: File[]) => void,
-  parent?: string
-) => {
+export const getAllFiles = async (parent?: string) => {
   const constParent = parent ?? "root";
   let token = undefined;
   let isFirst = true;
+  let allFiles: File[] = [];
 
   while (token || isFirst) {
-    const [files, nextToken]: Result = await getPagedFiles(constParent, token);
+    const [paged, next]: Result = await getPagedFiles(constParent, token);
 
-    addFile(files);
-    token = nextToken;
+    allFiles = allFiles.concat(paged);
+    token = next;
     isFirst = false;
   }
+
+  return allFiles;
 };
 
 /**
