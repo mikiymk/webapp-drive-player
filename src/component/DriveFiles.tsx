@@ -20,10 +20,10 @@ const DriveFiles: React.FC<{ signIn: boolean }> = ({ signIn }) => {
   return (
     <ul>
       {folders.map(file => (
-        <DriveFilesFolder file={file} click={addParents} />
+        <DriveFilesFolder key={file.id} file={file} click={addParents} />
       ))}
       {files.map(file => (
-        <DriveFilesFile file={file} />
+        <DriveFilesFile key={file.id} file={file} />
       ))}
     </ul>
   );
