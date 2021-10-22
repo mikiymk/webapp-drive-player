@@ -36,30 +36,39 @@ const MusicPlayer: React.FC = () => {
 
   const authorize = <Authorize signIn={signIn} setSignIn={setSignIn} />;
 
-  const menuItems = {
-    playing: {
-      name: "Now Playing",
-      element: (
-        <PlayingInfo
-          name={""}
-          duration={duration}
-          currentTime={currentTime}
-          paused={paused}
-          seek={time => player.seek(time)}
-          play={() => player.play()}
-          pause={() => player.pause()}
-        />
-      ),
-    },
-    library: {
-      name: "Library",
-      element: <MusicList files={files} play={playWithIndex} />,
-    },
-    drive: {
-      name: "Google Drive",
-      element: <DriveFiles signIn={signIn} />,
-    },
-  };
+  const menuItems = new Map([
+    [
+      "playing",
+      {
+        name: "Now Playing",
+        element: (
+          <PlayingInfo
+            name={""}
+            duration={duration}
+            currentTime={currentTime}
+            paused={paused}
+            seek={time => player.seek(time)}
+            play={() => player.play()}
+            pause={() => player.pause()}
+          />
+        ),
+      },
+    ],
+    [
+      "library",
+      {
+        name: "Library",
+        element: <MusicList files={files} play={playWithIndex} />,
+      },
+    ],
+    [
+      "drive",
+      {
+        name: "Google Drive",
+        element: <DriveFiles signIn={signIn} />,
+      },
+    ],
+  ]);
 
   return <Menu authorize={authorize} items={menuItems} />;
 };
