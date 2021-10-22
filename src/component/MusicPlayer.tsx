@@ -23,7 +23,7 @@ const MusicPlayer: React.FC = () => {
     player.onSetCurrentTime = currentTime => setCurrentTime(currentTime);
   }, []);
 
-  const addFiles = (newFiles: File[]) => setFiles(files.concat(newFiles));
+  const addFile = (newFiles: File) => setFiles(files.concat(newFiles));
 
   const playWithIndex = (index: number) => {
     const item = files[index];
@@ -65,7 +65,7 @@ const MusicPlayer: React.FC = () => {
       "drive",
       {
         name: "Google Drive",
-        element: <DriveFiles signIn={signIn} />,
+        element: <DriveFiles signIn={signIn} addFile={addFile} />,
       },
     ],
   ]);

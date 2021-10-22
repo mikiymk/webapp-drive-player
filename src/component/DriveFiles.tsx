@@ -2,7 +2,10 @@ import React from "react";
 import { getAllMusics, getAllFolders } from "../api";
 import { File } from "../type";
 
-const DriveFiles: React.FC<{ signIn: boolean }> = ({ signIn }) => {
+const DriveFiles: React.FC<{
+  signIn: boolean;
+  addFile: (file: File) => void;
+}> = ({ signIn, addFile }) => {
   const [parents, setParents] = React.useState<File[]>([
     { name: "root", id: "root" },
   ]);
@@ -24,10 +27,10 @@ const DriveFiles: React.FC<{ signIn: boolean }> = ({ signIn }) => {
       <Breadcrumbs parents={parents} setParents={setParents} />
       <ul>
         {folders.map(file => (
-          <DriveFilesFolder key={file.id} file={file} click={addParents} />
+          <DriveFilesFile key={file.id} file={file} click={addParents} folder />
         ))}
         {files.map(file => (
-          <DriveFilesFile key={file.id} file={file} />
+          <DriveFilesFile key={file.id} file={file} click={addFile} />
         ))}
       </ul>
     </>
@@ -51,20 +54,16 @@ const Breadcrumbs: React.FC<{
   </div>
 );
 
-const DriveFilesFolder: React.FC<{
+const DriveFilesFile: React.FC<{
   file: File;
-  click: (folder: File) => void;
-}> = ({ file, click }) => (
+  click: (file: File) => void;
+  folder?: boolean;
+}> = ({ file, click, folder: isFolder }) => (
   <li>
     <a onClick={() => click(file)}>
-      Folder:{file.name}({file.id})
+      {isFolder && "Folder:"}
+      {file.name}({file.id})
     </a>
-  </li>
-);
-
-const DriveFilesFile: React.FC<{ file: File }> = ({ file: { name, id } }) => (
-  <li>
-    {name}({id})
   </li>
 );
 

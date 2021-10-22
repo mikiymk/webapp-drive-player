@@ -20,7 +20,7 @@ const Menu: React.FC<{
         {menuList}
         <li>{authorize}</li>
       </ul>
-      {items.get(selected) ?? null}
+      {items.get(selected)?.element ?? null}
     </div>
   );
 };
