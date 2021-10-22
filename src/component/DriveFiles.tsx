@@ -3,19 +3,21 @@ import { getAllMusics, getAllFolders } from "../api";
 import { File } from "../type";
 
 const DriveFiles: React.FC<{ signIn: boolean }> = ({ signIn }) => {
-  const [parents, setParents] = React.useState(["root"]);
+  const [parents, setParents] = React.useState<File[]>([
+    { name: "root", id: "root" },
+  ]);
   const [files, setFiles] = React.useState<File[]>([]);
   const [folders, setFolders] = React.useState<File[]>([]);
 
   React.useEffect(() => {
     if (signIn) {
-      const parent = parents[parents.length - 1];
-      getAllFolders(parent).then(folders => setFolders(folders));
-      getAllMusics(parent).then(files => setFiles(files));
+      const parentId = parents[parents.length - 1].id;
+      getAllFolders(parentId).then(folders => setFolders(folders));
+      getAllMusics(parentId).then(files => setFiles(files));
     }
   }, [signIn, parents]);
 
-  const addParents = (folder: string) => setParents(parents.concat([folder]));
+  const addParents = (folder: File) => setParents(parents.concat([folder]));
 
   return (
     <ul>
@@ -31,11 +33,11 @@ const DriveFiles: React.FC<{ signIn: boolean }> = ({ signIn }) => {
 
 const DriveFilesFolder: React.FC<{
   file: File;
-  click: (folder: string) => void;
-}> = ({ file: { name, id }, click }) => (
+  click: (folder: File) => void;
+}> = ({ file, click }) => (
   <li>
-    <a onClick={() => click(id)}>
-      Folder:{name}({id})
+    <a onClick={() => click(file)}>
+      Folder:{file.name}({file.id})
     </a>
   </li>
 );
