@@ -20,16 +20,36 @@ const DriveFiles: React.FC<{ signIn: boolean }> = ({ signIn }) => {
   const addParents = (folder: File) => setParents(parents.concat([folder]));
 
   return (
-    <ul>
-      {folders.map(file => (
-        <DriveFilesFolder key={file.id} file={file} click={addParents} />
-      ))}
-      {files.map(file => (
-        <DriveFilesFile key={file.id} file={file} />
-      ))}
-    </ul>
+    <>
+      <Breadcrumbs parents={parents} setParents={setParents} />
+      <ul>
+        {folders.map(file => (
+          <DriveFilesFolder key={file.id} file={file} click={addParents} />
+        ))}
+        {files.map(file => (
+          <DriveFilesFile key={file.id} file={file} />
+        ))}
+      </ul>
+    </>
   );
 };
+
+const Breadcrumbs: React.FC<{
+  parents: File[];
+  setParents: (parents: File[]) => void;
+}> = ({ parents, setParents }) => (
+  <div>
+    {parents
+      .map((parent, index) => (
+        <a
+          key={parent.id}
+          onClick={() => setParents(parents.slice(0, index + 1))}>
+          {parent.name}
+        </a>
+      ))
+      .flatMap((value, index) => [index !== 0 ? " > " : null, value])}
+  </div>
+);
 
 const DriveFilesFolder: React.FC<{
   file: File;
