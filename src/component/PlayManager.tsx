@@ -35,13 +35,12 @@ const PlayPauseButton: React.FC<{
   isPaused: boolean;
   play: () => void;
   pause: () => void;
-}> = ({ isPaused, play, pause }) => {
-  if (isPaused) {
-    return <button onClick={play}>play</button>;
-  } else {
-    return <button onClick={pause}>pause</button>;
-  }
-};
+}> = ({ isPaused, play, pause }) =>
+  isPaused ? (
+    <button onClick={play}>play</button>
+  ) : (
+    <button onClick={pause}>pause</button>
+  );
 
 const SeekBar: React.FC<{
   duration: number;
@@ -92,27 +91,24 @@ const ToggleLoopItem: React.FC<{
   name: string;
   set: (name: string) => void;
   checked: boolean;
-}> = ({ name, set, checked }) => {
-  return (
-    <>
-      <input
-        type="radio"
-        name="loop"
-        id={"loop_" + name}
-        value={name}
-        onChange={() => set(name)}
-        checked={checked}
-      />
-      <label htmlFor={"loop_" + name}>{name}</label>
-    </>
-  );
-};
+}> = ({ name, set, checked }) => (
+  <>
+    <input
+      type="radio"
+      name="loop"
+      id={"loop_" + name}
+      value={name}
+      onChange={() => set(name)}
+      checked={checked}
+    />
+    <label htmlFor={"loop_" + name}>{name}</label>
+  </>
+);
 
 const ToggleLoopButton: React.FC<{
   name: string;
   set: (name: string) => void;
-}> = ({ name, set }) => {
-  return <button onClick={() => set(toggleLoopType(name))}>{name}</button>;
-};
-
+}> = ({ name, set }) => (
+  <button onClick={() => set(toggleLoopType(name))}>{name}</button>
+);
 export default PlayingInfo;

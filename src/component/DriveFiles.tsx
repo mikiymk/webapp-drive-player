@@ -58,10 +58,10 @@ const DriveFilesFile: React.FC<{
   file: File;
   click: (file: File) => void;
   folder?: boolean;
-}> = ({ file, click, folder: isFolder }) => (
+}> = ({ file, click, folder }) => (
   <li>
     <a onClick={() => click(file)}>
-      {isFolder && "Folder:"}
+      {folder && "Folder:"}
       {file.name}({file.id})
     </a>
   </li>

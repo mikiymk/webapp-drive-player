@@ -6,18 +6,13 @@ import { File, Play } from "../type";
  * @param props compontnt props
  * @returns react render
  */
-const MusicList: React.FC<{ files: File[] } & Play> = ({ files, play }) => {
-  const listitems = files.map((file, index) => (
-    <MusicItem key={file.id} {...file} play={play} index={index} />
-  ));
-  return (
-    <div>
-      Files:
-      <ul>{listitems}</ul>
-    </div>
-  );
-};
-
+const MusicList: React.FC<{ files: File[] } & Play> = ({ files, play }) => (
+  <ul>
+    {files.map((file, index) => (
+      <MusicItem key={file.id} {...file} play={play} index={index} />
+    ))}
+  </ul>
+);
 /**
  * item of musics list
  * @param props compontnt props
