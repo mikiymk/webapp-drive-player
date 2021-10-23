@@ -1,6 +1,5 @@
 import React from "react";
-import { getAllMusics, getAllFolders } from "../api";
-import { File } from "../type";
+import { getAllMusics, getAllFolders, File } from "../file";
 
 const DriveFiles: React.FC<{
   signIn: boolean;

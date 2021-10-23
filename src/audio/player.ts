@@ -1,4 +1,4 @@
-import { downloadFile } from "../api";
+import { downloadFile } from "../google-api/file";
 
 class AudioPlayer {
   private context = new AudioContext();

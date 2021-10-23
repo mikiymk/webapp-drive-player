@@ -1,5 +1,5 @@
-import { signOut, signIn, loadAndInit } from "../api";
 import React from "react";
+import { signOut, signIn, loadAndInit } from "../google-api/init";
 
 /**
  * authorize or sign out button

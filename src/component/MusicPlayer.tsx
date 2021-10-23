@@ -5,7 +5,7 @@ import MusicList from "./MusicList";
 import Menu from "./Menu";
 import Authorize from "./Authorize";
 import DriveFiles from "./DriveFiles";
-import { File } from "../type";
+import { File } from "../file";
 
 /**
  * react component root.

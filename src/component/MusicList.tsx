@@ -1,5 +1,5 @@
 import React from "react";
-import { File } from "../type";
+import { File } from "../file";
 
 /**
  * list of musics
@@ -26,12 +26,10 @@ const MusicItem: React.FC<{
   file: File;
   play: (index: number) => void;
   index: number;
-}> = ({ file: { name, id }, play, index }) => {
-  return (
-    <li>
-      {name}({id})<button onClick={() => play(index)}>play</button>
-    </li>
-  );
-};
+}> = ({ file: { name, id }, play, index }) => (
+  <li>
+    {name}({id})<button onClick={() => play(index)}>play</button>
+  </li>
+);
 
 export default MusicList;
