@@ -2,9 +2,7 @@ import React from "react";
 import { signOut, signIn, loadAndInit } from "../google-api/init";
 
 /**
- * authorize or sign out button
- * @param props compontnt props
- * @returns react render
+ * authorize sign in or sign out button and error message
  */
 const Authorize: React.FC<{
   signIn: boolean;
@@ -12,6 +10,7 @@ const Authorize: React.FC<{
 }> = ({ signIn, setSignIn }) => {
   const [errorMessage, setErrorMessage] = React.useState("");
 
+  // init at first
   React.useEffect(() => {
     loadAndInit(
       isSignedIn => setSignIn(isSignedIn),
@@ -20,10 +19,10 @@ const Authorize: React.FC<{
   }, []);
 
   return (
-    <div>
+    <>
       <ErrorMessage message={errorMessage} />
       <AuthorizeButton isSignedIn={signIn} />
-    </div>
+    </>
   );
 };
 

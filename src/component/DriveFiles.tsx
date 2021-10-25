@@ -1,6 +1,9 @@
 import React from "react";
 import { getAllMusics, getAllFolders, File } from "../file";
 
+/**
+ * get files from google drive
+ */
 const DriveFiles: React.FC<{
   signIn: boolean;
   addFile: (file: File) => void;
@@ -14,8 +17,8 @@ const DriveFiles: React.FC<{
   React.useEffect(() => {
     if (signIn) {
       const parentId = parents[parents.length - 1].id;
-      getAllFolders(parentId).then(folders => setFolders(folders));
-      getAllMusics(parentId).then(files => setFiles(files));
+      getAllFolders(parentId).then(setFolders);
+      getAllMusics(parentId).then(setFiles);
     }
   }, [signIn, parents]);
 
@@ -49,7 +52,7 @@ const Breadcrumbs: React.FC<{
           {parent.name}
         </a>
       ))
-      .flatMap((value, index) => [index !== 0 ? " > " : null, value])}
+      .flatMap((value, index) => [index !== 0 && " > ", value])}
   </div>
 );
 

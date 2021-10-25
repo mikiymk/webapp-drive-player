@@ -1,5 +1,8 @@
 import { downloadFile } from "../google-api/file";
 
+/**
+ * play audio manager
+ */
 class AudioPlayer {
   private context = new AudioContext();
   private node: AudioBufferSourceNode;

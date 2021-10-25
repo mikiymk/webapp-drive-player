@@ -38,6 +38,11 @@ const getAllFiles = async (query: string) => {
   return allFiles;
 };
 
+/**
+ * get folders in parent folder
+ * @param parent parent folder id
+ * @returns folders list in parent folder
+ */
 export const getAllFolders = async (parent?: string) =>
   getAllFiles(
     `mimeType = 'application/vnd.google-apps.folder' and parents in '${
@@ -45,6 +50,11 @@ export const getAllFolders = async (parent?: string) =>
     }'`
   );
 
+/**
+ * get music files in parent folder
+ * @param parent parent folder id
+ * @returns music files list in parent folder
+ */
 export const getAllMusics = async (parent?: string) =>
   getAllFiles(
     `mimeType contains 'audio/' and parents in '${parent ?? "root"}'`

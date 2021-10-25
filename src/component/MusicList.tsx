@@ -3,8 +3,6 @@ import { File } from "../file";
 
 /**
  * list of musics
- * @param props compontnt props
- * @returns react render
  */
 const MusicList: React.FC<{
   files: File[];
@@ -19,8 +17,6 @@ const MusicList: React.FC<{
 
 /**
  * item of musics list
- * @param props compontnt props
- * @returns react render
  */
 const MusicItem: React.FC<{
   file: File;

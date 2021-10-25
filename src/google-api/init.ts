@@ -2,6 +2,8 @@ import { API_KEY, CLIENT_ID, DISCOVERY_DOCS, SCOPES } from "./key";
 
 /**
  * initialize gapi client and if succeed update status
+ * @param updateSigninStatus on update signin status, called
+ * @param onError if error when sign in, called
  */
 export const loadAndInit = (
   updateSigninStatus: (isSignedIn: boolean) => void,

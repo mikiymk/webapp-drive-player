@@ -3,10 +3,6 @@ import React, { useState } from "react";
 
 /**
  * now playing audio info view
- * @param props compontnt props
- * @param props.name play song name
- * @param props.audio play song audio element
- * @returns react render
  */
 const PlayingInfo: React.FC<{
   name: string;
@@ -17,8 +13,11 @@ const PlayingInfo: React.FC<{
   play: () => void;
   pause: () => void;
 }> = ({ name, duration, currentTime, paused, seek, play, pause }) => {
-  const durationText = formatTime(duration || 0);
-  const currentTimeText = formatTime(currentTime || 0);
+  duration ||= 0;
+  currentTime ||= 0;
+
+  const durationText = formatTime(duration);
+  const currentTimeText = formatTime(currentTime);
 
   return (
     <div>
@@ -46,28 +45,22 @@ const SeekBar: React.FC<{
   duration: number;
   time: number;
   seek: (time: number) => void;
-}> = ({ duration, time, seek }) => {
-  duration ||= 0;
-  time ||= 0;
-
-  return (
-    <input
-      type="range"
-      min="0"
-      max={duration * 1000}
-      value={time * 1000}
-      onChange={event => seek(parseInt(event.target.value, 10) / 1000)}
-    />
-  );
-};
+}> = ({ duration, time, seek }) => (
+  <input
+    type="range"
+    min="0"
+    max={duration * 1000}
+    value={time * 1000}
+    onChange={event => seek(parseInt(event.target.value, 10) / 1000)}
+  />
+);
 
 const loopType = ["no", "one", "all"];
 
-const toggleLoopType = (now: string) => {
-  return { no: "one", one: "all", all: "no" }[now] ?? "no";
-};
+const toggleLoopType = (now: string) =>
+  ({ no: "one", one: "all", all: "no" }[now] ?? "no");
 
-const ToggleLoop: React.FC = props => {
+const ToggleLoop: React.FC = () => {
   const [selected, setSelected] = useState(loopType[0]);
 
   const loopTypeElement = loopType.map(loop => (
@@ -78,6 +71,7 @@ const ToggleLoop: React.FC = props => {
       checked={loop === selected}
     />
   ));
+
   return (
     <div>
       Loop:
@@ -111,4 +105,5 @@ const ToggleLoopButton: React.FC<{
 }> = ({ name, set }) => (
   <button onClick={() => set(toggleLoopType(name))}>{name}</button>
 );
+
 export default PlayingInfo;

@@ -1,3 +1,9 @@
+/**
+ * time seconds number format to string hh:mm:ss
+ * @param time to format times
+ * @param force force to show hour or minutes
+ * @returns formatted time string
+ */
 export const formatTime = (time: number, force?: "hour" | "minute"): string => {
   console.log("format time", time);
 
