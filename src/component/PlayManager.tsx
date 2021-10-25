@@ -55,7 +55,7 @@ const SeekBar: React.FC<{
   />
 );
 
-const useToggle = <T extends string>(changes: T[]): [T, () => void] => {
+const useToggle = <T,>(changes: T[]): [T, () => void] => {
   const [index, setIndex] = useState(0);
 
   const toggleSelected = () => setIndex((index + 1) % changes.length);
@@ -68,19 +68,17 @@ const ToggleLoop: React.FC = () => {
 
   const [selected, toggle] = useToggle(loopType);
 
-  const loopTypeElement = loopType.map(loop => (
-    <ToggleLoopItem
-      key={loop}
-      name={loop}
-      set={toggle}
-      checked={loop === selected}
-    />
-  ));
-
   return (
     <div>
       Loop:
-      {loopTypeElement}
+      {loopType.map(loop => (
+        <ToggleLoopItem
+          key={loop}
+          name={loop}
+          set={toggle}
+          checked={loop === selected}
+        />
+      ))}
       <ToggleLoopButton name={selected} toggle={toggle} />
     </div>
   );
