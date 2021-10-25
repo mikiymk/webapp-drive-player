@@ -55,19 +55,24 @@ const SeekBar: React.FC<{
   />
 );
 
-const loopType = ["no", "one", "all"];
+const useToggle = <T extends string>(changes: T[]): [T, () => void] => {
+  const [index, setIndex] = useState(0);
 
-const toggleLoopType = (now: string) =>
-  ({ no: "one", one: "all", all: "no" }[now] ?? "no");
+  const toggleSelected = () => setIndex((index + 1) % changes.length);
+
+  return [changes[index], toggleSelected];
+};
 
 const ToggleLoop: React.FC = () => {
-  const [selected, setSelected] = useState(loopType[0]);
+  const loopType = ["no", "one", "all"];
+
+  const [selected, toggle] = useToggle(loopType);
 
   const loopTypeElement = loopType.map(loop => (
     <ToggleLoopItem
       key={loop}
       name={loop}
-      set={setSelected}
+      set={toggle}
       checked={loop === selected}
     />
   ));
@@ -76,7 +81,7 @@ const ToggleLoop: React.FC = () => {
     <div>
       Loop:
       {loopTypeElement}
-      <ToggleLoopButton name={selected} set={setSelected} />
+      <ToggleLoopButton name={selected} toggle={toggle} />
     </div>
   );
 };
@@ -94,6 +99,7 @@ const ToggleLoopItem: React.FC<{
       value={name}
       onChange={() => set(name)}
       checked={checked}
+      disabled
     />
     <label htmlFor={"loop_" + name}>{name}</label>
   </>
@@ -101,9 +107,7 @@ const ToggleLoopItem: React.FC<{
 
 const ToggleLoopButton: React.FC<{
   name: string;
-  set: (name: string) => void;
-}> = ({ name, set }) => (
-  <button onClick={() => set(toggleLoopType(name))}>{name}</button>
-);
+  toggle: () => void;
+}> = ({ name, toggle }) => <button onClick={toggle}>{name}</button>;
 
 export default PlayingInfo;
