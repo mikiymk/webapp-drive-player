@@ -31,7 +31,7 @@ const MusicPlayer: React.FC = () => {
       console.log("no item");
       return;
     }
-    player.playWithUrl(item.id);
+    player.playWithId(item.id);
   };
 
   const authorize = <Authorize signIn={signIn} setSignIn={setSignIn} />;

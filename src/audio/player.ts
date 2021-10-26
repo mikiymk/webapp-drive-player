@@ -6,10 +6,17 @@ import { downloadFile } from "../google-api/file";
 class AudioPlayer {
   private context = new AudioContext();
   private node: AudioBufferSourceNode;
+
   private buffer: AudioBuffer | null = null;
+  private nextBuffer: AudioBuffer | null = null;
+  private loadedNextBuffer: boolean = false;
+
+  private musicIds: string[] = [];
+  private index: number = NaN;
 
   private intervalID = 0;
 
+  loop: "no" | "one" | "all" = "one";
   duration = 0;
   currentTime = 0;
   startAt = 0;
@@ -28,21 +35,40 @@ class AudioPlayer {
     this.node = this.context.createBufferSource();
   }
 
-  playWithUrl = async (id: string) => {
+  async playWithId(id: string) {
     this.stop();
 
-    const fileData = await downloadFile(id);
-    const dataArray = Array.from(fileData).map(c => c.charCodeAt(0));
-    const arrayBuffer = new Uint8Array(dataArray).buffer;
-    const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
+    const audioBuffer = await this.downloadAudio(id);
 
     this.setDuration(audioBuffer.duration);
     this.buffer = audioBuffer;
 
     this.start();
-  };
+  }
 
-  setBuffer() {
+  private async downloadAudio(id: string) {
+    const fileData = await downloadFile(id);
+    const dataArray = Array.from(fileData).map(c => c.charCodeAt(0));
+    const arrayBuffer = new Uint8Array(dataArray).buffer;
+    return await this.context.decodeAudioData(arrayBuffer);
+  }
+
+  private async loadNextBuffer(id: string) {
+    this.loadedNextBuffer = false;
+    this.nextBuffer = null;
+
+    this.nextBuffer = await this.downloadAudio(id);
+    this.loadedNextBuffer = true;
+  }
+
+  playWithIdList(ids: string[], index: number) {
+    this.musicIds = ids.concat();
+
+    this.playWithId(this.musicIds[index]);
+    this.loadNextBuffer(this.musicIds[index + 1]);
+  }
+
+  private setBuffer() {
     if (this.buffer === null) {
       return;
     }
@@ -54,39 +80,29 @@ class AudioPlayer {
   }
 
   private setDuration(duration: number) {
-    console.log("set duration", duration);
-
     this.duration = duration;
     this.onSetDuration(duration);
   }
 
   private setCurrentTime(currentTime: number) {
     currentTime %= this.duration;
-    console.log("set current time", currentTime);
-
     this.currentTime = currentTime;
     this.onSetCurrentTime(currentTime);
   }
 
   private setStartAt(startAt: number) {
     startAt %= this.duration;
-    console.log("set start at", startAt);
-
     this.startAt = startAt;
     this.onSetStartAt(startAt);
   }
 
   private setStopAt(stopAt: number) {
     stopAt %= this.duration;
-    console.log("set stop at", stopAt);
-
     this.stopAt = stopAt;
     this.onSetStopAt(stopAt);
   }
 
   private setPause(isPaused: boolean) {
-    console.log("set pause", isPaused);
-
     this.isPaused = isPaused;
     this.onSetPause(isPaused);
   }
@@ -103,7 +119,7 @@ class AudioPlayer {
     if (this.intervalID) {
       throw new Error("interval has already set");
     } else {
-      this.intervalID = window.setInterval(() => this.updateTime(), 250);
+      this.intervalID = window.setInterval(() => this.updateTime(), 1000 / 24);
     }
   }
 
@@ -118,8 +134,6 @@ class AudioPlayer {
 
   start() {
     if (this.isPaused) {
-      console.log("player start");
-
       this.setStartAt(this.context.currentTime);
       this.setStopAt(0);
       this.setPause(false);
@@ -133,8 +147,6 @@ class AudioPlayer {
 
   stop() {
     if (!this.isPaused) {
-      console.log("player stop");
-
       this.setStopAt(0);
       this.setPause(true);
 
@@ -146,8 +158,6 @@ class AudioPlayer {
 
   play() {
     if (this.isPaused) {
-      console.log("player play");
-
       this.setStartAt(this.context.currentTime - this.stopAt);
       this.setPause(false);
 
@@ -160,8 +170,6 @@ class AudioPlayer {
 
   pause() {
     if (!this.isPaused) {
-      console.log("player pause");
-
       this.setStopAt(this.context.currentTime - this.startAt);
       this.setPause(true);
 
@@ -172,14 +180,9 @@ class AudioPlayer {
   }
 
   seek(time: number) {
-    console.log("player seek", time);
     if (this.isPaused) {
-      console.log("paused");
-
       this.setStopAt(time);
     } else {
-      console.log("no paused");
-
       this.stop();
       this.setStopAt(time);
       this.play();
