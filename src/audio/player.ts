@@ -38,6 +38,7 @@ class AudioPlayer {
   async playWithId(id: string) {
     this.stop();
 
+    if (!id) return;
     const audioBuffer = await this.downloadAudio(id);
 
     this.setDuration(audioBuffer.duration);
@@ -53,19 +54,32 @@ class AudioPlayer {
     return await this.context.decodeAudioData(arrayBuffer);
   }
 
-  private async loadNextBuffer(id: string) {
+  private loadNextBuffer(id: string) {
+    if (!id) return;
     this.loadedNextBuffer = false;
     this.nextBuffer = null;
 
-    this.nextBuffer = await this.downloadAudio(id);
-    this.loadedNextBuffer = true;
+    this.downloadAudio(id).then(buffer => {
+      this.nextBuffer = buffer;
+      this.loadedNextBuffer = true;
+    });
   }
 
   playWithIdList(ids: string[], index: number) {
-    this.musicIds = ids.concat();
+    this.musicIds = ids;
+    this.index = index;
 
-    this.playWithId(this.musicIds[index]);
-    this.loadNextBuffer(this.musicIds[index + 1]);
+    this.playWithId(this.musicIds[this.index]).then(() =>
+      this.loadNextBuffer(this.musicIds[this.index + 1])
+    );
+  }
+
+  get nextIndex() {
+    if (this.loop === "all") {
+      return (this.index + 1) % this.musicIds.length;
+    } else {
+      return this.index + 1;
+    }
   }
 
   private setBuffer() {
@@ -74,37 +88,43 @@ class AudioPlayer {
     }
     this.node.disconnect();
     this.node = this.context.createBufferSource();
-    this.node.loop = true;
     this.node.buffer = this.buffer;
     this.node.connect(this.context.destination);
   }
 
+  setLoop(loop: "no" | "one" | "all") {
+    if (loop === "one") {
+      this.node.loop = true;
+      this.node.onended = null;
+    } else {
+      this.node.loop = false;
+      this.node.onended = () => {};
+    }
+  }
+
   private setDuration(duration: number) {
     this.duration = duration;
-    this.onSetDuration(duration);
+    this.onSetDuration(this.duration);
   }
 
   private setCurrentTime(currentTime: number) {
-    currentTime %= this.duration;
-    this.currentTime = currentTime;
-    this.onSetCurrentTime(currentTime);
+    this.currentTime = currentTime % this.duration;
+    this.onSetCurrentTime(this.currentTime);
   }
 
   private setStartAt(startAt: number) {
-    startAt %= this.duration;
-    this.startAt = startAt;
-    this.onSetStartAt(startAt);
+    this.startAt = startAt % this.duration;
+    this.onSetStartAt(this.startAt);
   }
 
   private setStopAt(stopAt: number) {
-    stopAt %= this.duration;
-    this.stopAt = stopAt;
-    this.onSetStopAt(stopAt);
+    this.stopAt = stopAt % this.duration;
+    this.onSetStopAt(this.stopAt);
   }
 
   private setPause(isPaused: boolean) {
     this.isPaused = isPaused;
-    this.onSetPause(isPaused);
+    this.onSetPause(this.isPaused);
   }
 
   private updateTime() {

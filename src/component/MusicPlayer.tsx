@@ -26,12 +26,10 @@ const MusicPlayer: React.FC = () => {
   const addFile = (newFiles: File) => setFiles(files.concat(newFiles));
 
   const playWithIndex = (index: number) => {
-    const item = files[index];
-    if (!item) {
-      console.log("no item");
-      return;
-    }
-    player.playWithId(item.id);
+    player.playWithIdList(
+      files.map(file => file.id),
+      index
+    );
   };
 
   const authorize = <Authorize signIn={signIn} setSignIn={setSignIn} />;
