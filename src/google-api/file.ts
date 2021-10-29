@@ -24,13 +24,14 @@ export const getList = async (query: string, token?: string) => {
  * @returns file data string
  */
 export const downloadFile = async (fileId: string) => {
-  console.log("download file data", "ID", fileId);
+  console.log(`download file ID ${fileId}`);
   try {
     const response = await gapi.client.drive.files.get({
       fileId,
       alt: "media",
     });
 
+    console.log(`downloaded ${fileId}`);
     return response.body;
   } catch (error) {
     console.error(error);

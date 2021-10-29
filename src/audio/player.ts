@@ -16,7 +16,7 @@ class AudioPlayer {
 
   private intervalID = 0;
 
-  loop: "no" | "one" | "all" = "one";
+  loop: "no" | "one" | "all" = "all";
   duration = 0;
   currentTime = 0;
   startAt = 0;
@@ -41,7 +41,6 @@ class AudioPlayer {
     if (!id) return;
     const audioBuffer = await this.downloadAudio(id);
 
-    this.setDuration(audioBuffer.duration);
     this.buffer = audioBuffer;
 
     this.start();
@@ -60,18 +59,36 @@ class AudioPlayer {
     this.nextBuffer = null;
 
     this.downloadAudio(id).then(buffer => {
-      this.nextBuffer = buffer;
-      this.loadedNextBuffer = true;
+      if (!this.loadedNextBuffer) {
+        this.nextBuffer = buffer;
+        this.loadedNextBuffer = true;
+      }
     });
+  }
+
+  private skipToNext() {
+    this.stop();
+    this.index = this.nextIndex;
+    if (this.loadedNextBuffer) {
+      this.buffer = this.nextBuffer;
+      this.setBuffer();
+      this.loadNextBuffer(this.musicIds[this.nextIndex]);
+      this.start();
+    } else {
+      this.playAndLoad();
+    }
+  }
+
+  async playAndLoad() {
+    await this.playWithId(this.musicIds[this.index]);
+    this.loadNextBuffer(this.musicIds[this.nextIndex]);
   }
 
   playWithIdList(ids: string[], index: number) {
     this.musicIds = ids;
     this.index = index;
 
-    this.playWithId(this.musicIds[this.index]).then(() =>
-      this.loadNextBuffer(this.musicIds[this.index + 1])
-    );
+    this.playAndLoad();
   }
 
   get nextIndex() {
@@ -90,16 +107,29 @@ class AudioPlayer {
     this.node = this.context.createBufferSource();
     this.node.buffer = this.buffer;
     this.node.connect(this.context.destination);
+    this.setDuration(this.buffer.duration);
+    this.setLoop(this.loop);
   }
 
   setLoop(loop: "no" | "one" | "all") {
-    if (loop === "one") {
-      this.node.loop = true;
-      this.node.onended = null;
-    } else {
-      this.node.loop = false;
-      this.node.onended = () => {};
-    }
+    this.node.loop = false;
+    this.node.onended = () => {
+      console.log("ended", this.currentTime, this.duration);
+      if (this.duration - this.currentTime <= 1) {
+        ({
+          no: () => {
+            this.skipToNext();
+          },
+          one: () => {
+            this.stop();
+            this.start();
+          },
+          all: () => {
+            this.skipToNext();
+          },
+        }[loop]());
+      }
+    };
   }
 
   private setDuration(duration: number) {
@@ -108,17 +138,17 @@ class AudioPlayer {
   }
 
   private setCurrentTime(currentTime: number) {
-    this.currentTime = currentTime % this.duration;
+    this.currentTime = currentTime;
     this.onSetCurrentTime(this.currentTime);
   }
 
   private setStartAt(startAt: number) {
-    this.startAt = startAt % this.duration;
+    this.startAt = startAt;
     this.onSetStartAt(this.startAt);
   }
 
   private setStopAt(stopAt: number) {
-    this.stopAt = stopAt % this.duration;
+    this.stopAt = stopAt;
     this.onSetStopAt(this.stopAt);
   }
 
@@ -190,7 +220,7 @@ class AudioPlayer {
 
   pause() {
     if (!this.isPaused) {
-      this.setStopAt(this.context.currentTime - this.startAt);
+      this.setStopAt((this.context.currentTime - this.startAt) % this.duration);
       this.setPause(true);
 
       this.unsetInterval();
@@ -201,10 +231,10 @@ class AudioPlayer {
 
   seek(time: number) {
     if (this.isPaused) {
-      this.setStopAt(time);
+      this.setStopAt(time % this.duration);
     } else {
       this.stop();
-      this.setStopAt(time);
+      this.setStopAt(time % this.duration);
       this.play();
     }
   }
