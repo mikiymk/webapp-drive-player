@@ -1,12 +1,10 @@
 /**
- * time seconds number format to string hh:mm:ss.SSS
+ * time seconds number format to string mm:ss.SSS
  * @param time to format times
- * @param force force to show hour or minutes
  * @returns formatted time string
  */
-export const formatTime = (time: number, force?: "hour" | "minute"): string => {
-  const hour = Math.floor(time / 3600).toString();
-  const minute = Math.floor((time % 3600) / 60)
+export const formatTime = (time: number): string => {
+  const minute = Math.floor(time / 60)
     .toString()
     .padStart(2, "0");
   const second = Math.floor(time % 60)
@@ -16,11 +14,5 @@ export const formatTime = (time: number, force?: "hour" | "minute"): string => {
     .toString()
     .padStart(3, "0");
 
-  if (hour !== "0" || force === "hour") {
-    return `${hour}:${minute}:${second}.${millisecond}`;
-  } else if (minute !== "00" || force === "minute") {
-    return `${minute}:${second}.${millisecond}`;
-  } else {
-    return `${second}.${millisecond}`;
-  }
+  return `${minute}:${second}.${millisecond}`;
 };

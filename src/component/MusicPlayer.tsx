@@ -13,9 +13,11 @@ import { File } from "../file";
 const MusicPlayer: React.FC = () => {
   const [signIn, setSignIn] = React.useState(false);
   const [files, setFiles] = React.useState<File[]>([]);
+
   const [paused, setPaused] = React.useState(true);
   const [duration, setDuration] = React.useState(0);
   const [currentTime, setCurrentTime] = React.useState(0);
+  const [loop, setLoop] = React.useState("no");
 
   React.useEffect(() => {
     player.onSetDuration = duration => setDuration(duration);
