@@ -17,12 +17,13 @@ const MusicPlayer: React.FC = () => {
   const [paused, setPaused] = React.useState(true);
   const [duration, setDuration] = React.useState(0);
   const [currentTime, setCurrentTime] = React.useState(0);
-  const [loop, setLoop] = React.useState("no");
+  const [loop, setLoop] = React.useState<"no" | "one" | "all">("no");
 
   React.useEffect(() => {
     player.onSetDuration = duration => setDuration(duration);
     player.onSetPause = paused => setPaused(paused);
     player.onSetCurrentTime = currentTime => setCurrentTime(currentTime);
+    player.onSetLoop = loop => setLoop(loop);
   }, []);
 
   const addFile = (newFiles: File) => setFiles(files.concat(newFiles));
@@ -47,9 +48,11 @@ const MusicPlayer: React.FC = () => {
             duration={duration}
             currentTime={currentTime}
             paused={paused}
+            loop={loop}
             seek={time => player.seek(time)}
             play={() => player.play()}
             pause={() => player.pause()}
+            setLoop={loop => player.setLoop(loop)}
           />
         ),
       },

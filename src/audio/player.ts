@@ -16,7 +16,7 @@ class AudioPlayer {
 
   private intervalID = 0;
 
-  loop: "no" | "one" | "all" = "all";
+  loop: "no" | "one" | "all" = "no";
   duration = 0;
   currentTime = 0;
   startAt = 0;
@@ -28,6 +28,7 @@ class AudioPlayer {
   onSetStartAt = (startAt: number) => {};
   onSetStopAt = (stopAt: number) => {};
   onSetPause = (isPaused: boolean) => {};
+  onSetLoop = (loop: "no" | "one" | "all") => {};
 
   onEnd = () => {};
 
@@ -130,6 +131,7 @@ class AudioPlayer {
         }[loop]());
       }
     };
+    this.onSetLoop(loop);
   }
 
   private setDuration(duration: number) {

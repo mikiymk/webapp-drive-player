@@ -9,10 +9,22 @@ const PlayingInfo: React.FC<{
   duration: number;
   currentTime: number;
   paused: boolean;
+  loop: "no" | "one" | "all";
   seek: (time: number) => void;
   play: () => void;
   pause: () => void;
-}> = ({ name, duration, currentTime, paused, seek, play, pause }) => {
+  setLoop: (loop: "no" | "one" | "all") => void;
+}> = ({
+  name,
+  duration,
+  currentTime,
+  paused,
+  loop,
+  seek,
+  play,
+  pause,
+  setLoop,
+}) => {
   duration ||= 0;
   currentTime ||= 0;
 
@@ -24,7 +36,7 @@ const PlayingInfo: React.FC<{
       {name}
       <PlayPauseButton isPaused={paused} play={play} pause={pause} />
       <SeekBar duration={duration} time={currentTime} seek={seek} />
-      <ToggleLoop />
+      <ToggleLoop loop={loop} setLoop={setLoop} />
       {currentTimeText}/{durationText}
     </div>
   );
@@ -92,23 +104,27 @@ const useToggle = <T,>(changes: T[]): [T, () => void] => {
   return [changes[index], toggleSelected];
 };
 
-const ToggleLoop: React.FC = () => {
-  const loopType = ["no", "one", "all"];
+const toggleLoop = (loop: "no" | "one" | "all") => {
+  switch (loop) {
+    case "no":
+      return "one";
+    case "one":
+      return "all";
+    case "all":
+      return "no";
+  }
+};
 
-  const [selected, toggle] = useToggle(loopType);
+const ToggleLoop: React.FC<{
+  loop: "no" | "one" | "all";
+  setLoop: (loop: "no" | "one" | "all") => void;
+}> = ({ loop, setLoop }) => {
+  const onClick = () => setLoop(toggleLoop(loop));
 
   return (
     <div>
       Loop:
-      {loopType.map(loop => (
-        <ToggleLoopItem
-          key={loop}
-          name={loop}
-          set={toggle}
-          checked={loop === selected}
-        />
-      ))}
-      <ToggleLoopButton name={selected} toggle={toggle} />
+      <button onClick={onClick}>{loop}</button>
     </div>
   );
 };
