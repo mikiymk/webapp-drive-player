@@ -55,9 +55,10 @@ class AudioPlayer {
   }
 
   private loadNextBuffer(id: string) {
-    if (!id) return;
     this.loadedNextBuffer = false;
     this.nextBuffer = null;
+
+    if (!id) return;
 
     this.downloadAudio(id).then(buffer => {
       if (!this.loadedNextBuffer) {
@@ -101,11 +102,10 @@ class AudioPlayer {
   }
 
   private setBuffer() {
-    if (this.buffer === null) {
-      return;
-    }
     this.node.disconnect();
     this.node = this.context.createBufferSource();
+
+    if (this.buffer === null) return;
     this.node.buffer = this.buffer;
     this.node.connect(this.context.destination);
     this.setDuration(this.buffer.duration);
@@ -113,6 +113,7 @@ class AudioPlayer {
   }
 
   setLoop(loop: "no" | "one" | "all") {
+    this.loop = loop;
     this.node.loop = false;
     this.node.onended = () => {
       console.log("ended", this.currentTime, this.duration);
