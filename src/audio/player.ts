@@ -93,7 +93,8 @@ class AudioPlayer {
     const fileData = await downloadFile(id);
     const dataArray = Array.from(fileData).map(c => c.charCodeAt(0));
     const arrayBuffer = new Uint8Array(dataArray).buffer;
-    return await this.context.decodeAudioData(arrayBuffer);
+    const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
+    return audioBuffer;
   }
 
   /**

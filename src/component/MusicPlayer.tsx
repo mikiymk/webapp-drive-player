@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import AudioPlayer from "../audio/player";
 import PlayingInfo from "./PlayManager";
 import MusicList from "./MusicList";
@@ -11,8 +11,8 @@ import { File } from "../file";
  * react component root.
  */
 const MusicPlayer: React.FC = () => {
-  const [signIn, setSignIn] = React.useState(false);
-  const [files, setFiles] = React.useState<File[]>([]);
+  const [signIn, setSignIn] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
   const { player, status } = usePlayer();
 
   const addFile = (newFiles: File) => setFiles(files.concat(newFiles));
@@ -54,14 +54,14 @@ const MusicPlayer: React.FC = () => {
 };
 
 const usePlayer = () => {
-  const [paused, setPaused] = React.useState(true);
-  const [duration, setDuration] = React.useState(0);
-  const [currentTime, setCurrentTime] = React.useState(0);
-  const [loop, setLoop] = React.useState<"no" | "one" | "all">("no");
+  const [paused, setPaused] = useState(true);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [loop, setLoop] = useState<"no" | "one" | "all">("no");
 
-  const player = React.useRef<AudioPlayer | null>(null);
+  const player = useRef<AudioPlayer | null>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     player.current = new AudioPlayer();
 
     player.current.onSetDuration = duration => setDuration(duration);
