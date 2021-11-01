@@ -24,41 +24,31 @@ const MusicPlayer: React.FC = () => {
   };
 
   const authorize = <Authorize signIn={signIn} setSignIn={setSignIn} />;
-  const menuItems = new Map([
-    [
-      "playing",
-      {
-        name: "Now Playing",
-        element: (
-          <PlayingInfo
-            name={""}
-            duration={status.duration}
-            currentTime={status.currentTime}
-            paused={status.paused}
-            loop={status.loop}
-            seek={time => player?.seek(time)}
-            play={() => player?.play()}
-            pause={() => player?.pause()}
-            setLoop={loop => player?.setLoop(loop)}
-          />
-        ),
-      },
-    ],
-    [
-      "library",
-      {
-        name: "Library",
-        element: <MusicList files={files} play={playWithIndex} />,
-      },
-    ],
-    [
-      "drive",
-      {
-        name: "Google Drive",
-        element: <DriveFiles signIn={signIn} addFile={addFile} />,
-      },
-    ],
-  ]);
+  const menuItems = new Map<string, { name: string; element: JSX.Element }>()
+    .set("playing", {
+      name: "Now Playing",
+      element: (
+        <PlayingInfo
+          name={""}
+          duration={status.duration}
+          currentTime={status.currentTime}
+          paused={status.paused}
+          loop={status.loop}
+          seek={time => player?.seek(time)}
+          play={() => player?.play()}
+          pause={() => player?.pause()}
+          setLoop={loop => player?.setLoop(loop)}
+        />
+      ),
+    })
+    .set("library", {
+      name: "Library",
+      element: <MusicList files={files} play={playWithIndex} />,
+    })
+    .set("drive", {
+      name: "Google Drive",
+      element: <DriveFiles signIn={signIn} addFile={addFile} />,
+    });
 
   return <Menu authorize={authorize} items={menuItems} />;
 };
