@@ -1,5 +1,5 @@
 import React from "react";
-import player from "../audio/player";
+import AudioPlayer from "../audio/player";
 import PlayingInfo from "./PlayManager";
 import MusicList from "./MusicList";
 import Menu from "./Menu";
@@ -19,17 +19,21 @@ const MusicPlayer: React.FC = () => {
   const [currentTime, setCurrentTime] = React.useState(0);
   const [loop, setLoop] = React.useState<"no" | "one" | "all">("no");
 
+  const player = React.useRef<AudioPlayer | null>(null);
+
   React.useEffect(() => {
-    player.onSetDuration = duration => setDuration(duration);
-    player.onSetPause = paused => setPaused(paused);
-    player.onSetCurrentTime = currentTime => setCurrentTime(currentTime);
-    player.onSetLoop = loop => setLoop(loop);
+    player.current = new AudioPlayer();
+    player.current.onSetDuration = duration => setDuration(duration);
+    player.current.onSetPause = paused => setPaused(paused);
+    player.current.onSetCurrentTime = currentTime =>
+      setCurrentTime(currentTime);
+    player.current.onSetLoop = loop => setLoop(loop);
   }, []);
 
   const addFile = (newFiles: File) => setFiles(files.concat(newFiles));
 
   const playWithIndex = (index: number) => {
-    player.playWithIdList(
+    player.current?.playWithIdList(
       files.map(file => file.id),
       index
     );
@@ -49,10 +53,10 @@ const MusicPlayer: React.FC = () => {
             currentTime={currentTime}
             paused={paused}
             loop={loop}
-            seek={time => player.seek(time)}
-            play={() => player.play()}
-            pause={() => player.pause()}
-            setLoop={loop => player.setLoop(loop)}
+            seek={time => player.current?.seek(time)}
+            play={() => player.current?.play()}
+            pause={() => player.current?.pause()}
+            setLoop={loop => player.current?.setLoop(loop)}
           />
         ),
       },

@@ -328,6 +328,4 @@ class AudioPlayer {
   }
 }
 
-const player = new AudioPlayer();
-
-export default player;
+export default AudioPlayer;
