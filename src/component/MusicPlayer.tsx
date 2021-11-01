@@ -13,34 +13,17 @@ import { File } from "../file";
 const MusicPlayer: React.FC = () => {
   const [signIn, setSignIn] = React.useState(false);
   const [files, setFiles] = React.useState<File[]>([]);
-
-  const [paused, setPaused] = React.useState(true);
-  const [duration, setDuration] = React.useState(0);
-  const [currentTime, setCurrentTime] = React.useState(0);
-  const [loop, setLoop] = React.useState<"no" | "one" | "all">("no");
-
-  const player = React.useRef<AudioPlayer | null>(null);
-
-  React.useEffect(() => {
-    player.current = new AudioPlayer();
-    player.current.onSetDuration = duration => setDuration(duration);
-    player.current.onSetPause = paused => setPaused(paused);
-    player.current.onSetCurrentTime = currentTime =>
-      setCurrentTime(currentTime);
-    player.current.onSetLoop = loop => setLoop(loop);
-  }, []);
+  const { player, status } = usePlayer();
 
   const addFile = (newFiles: File) => setFiles(files.concat(newFiles));
-
   const playWithIndex = (index: number) => {
-    player.current?.playWithIdList(
+    player?.playWithIdList(
       files.map(file => file.id),
       index
     );
   };
 
   const authorize = <Authorize signIn={signIn} setSignIn={setSignIn} />;
-
   const menuItems = new Map([
     [
       "playing",
@@ -49,14 +32,14 @@ const MusicPlayer: React.FC = () => {
         element: (
           <PlayingInfo
             name={""}
-            duration={duration}
-            currentTime={currentTime}
-            paused={paused}
-            loop={loop}
-            seek={time => player.current?.seek(time)}
-            play={() => player.current?.play()}
-            pause={() => player.current?.pause()}
-            setLoop={loop => player.current?.setLoop(loop)}
+            duration={status.duration}
+            currentTime={status.currentTime}
+            paused={status.paused}
+            loop={status.loop}
+            seek={time => player?.seek(time)}
+            play={() => player?.play()}
+            pause={() => player?.pause()}
+            setLoop={loop => player?.setLoop(loop)}
           />
         ),
       },
@@ -78,6 +61,30 @@ const MusicPlayer: React.FC = () => {
   ]);
 
   return <Menu authorize={authorize} items={menuItems} />;
+};
+
+const usePlayer = () => {
+  const [paused, setPaused] = React.useState(true);
+  const [duration, setDuration] = React.useState(0);
+  const [currentTime, setCurrentTime] = React.useState(0);
+  const [loop, setLoop] = React.useState<"no" | "one" | "all">("no");
+
+  const player = React.useRef<AudioPlayer | null>(null);
+
+  React.useEffect(() => {
+    player.current = new AudioPlayer();
+
+    player.current.onSetDuration = duration => setDuration(duration);
+    player.current.onSetPause = paused => setPaused(paused);
+    player.current.onSetCurrentTime = currentTime =>
+      setCurrentTime(currentTime);
+    player.current.onSetLoop = loop => setLoop(loop);
+  }, []);
+
+  return {
+    player: player.current,
+    status: { paused, duration, currentTime, loop },
+  };
 };
 
 export default MusicPlayer;

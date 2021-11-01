@@ -25,19 +25,13 @@ const PlayingInfo: React.FC<{
   pause,
   setLoop,
 }) => {
-  duration ||= 0;
-  currentTime ||= 0;
-
-  const durationText = formatTime(duration);
-  const currentTimeText = formatTime(currentTime);
-
   return (
     <div>
       {name}
       <PlayPauseButton isPaused={paused} play={play} pause={pause} />
       <SeekBar duration={duration} time={currentTime} seek={seek} />
       <ToggleLoop loop={loop} setLoop={setLoop} />
-      {currentTimeText}/{durationText}
+      {formatTime(currentTime)}/{formatTime(duration)}
     </div>
   );
 };
