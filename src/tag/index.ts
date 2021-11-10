@@ -199,14 +199,19 @@ https://stackoverflow.com/questions/63578757/id3-parser-and-editor
 
 export const readTagFromData = (data: ArrayBuffer): TagInfo => {
   let v1;
+
   try {
     v1 = readID3v1(data);
-  } catch {}
+  } catch (error) {
+    console.error(error);
+  }
 
   let v2;
   try {
     v2 = readID3v2(data);
-  } catch {}
+  } catch (error) {
+    console.error(error);
+  }
 
   return { v1, v2 };
 };
@@ -220,7 +225,7 @@ const readID3v1 = (data: ArrayBuffer): ID3v1 | ID3v1_1 => {
 
   const tag = getString(0, 3);
   if (tag !== "TAG") {
-    throw new Error("tag is not ID3v1");
+    throw new Error("audio has no ID3v1");
   }
   const title = getString(3, 30);
   const artist = getString(33, 30);
@@ -262,12 +267,12 @@ const readID3v2 = (data: ArrayBuffer): ID3v2 => {
 
   const id3 = String.fromCharCode(...uint8.slice(0, 3));
   if (id3 !== "ID3") {
-    throw new Error("tag is not ID3v2");
+    throw new Error("audio has no ID3v2");
   }
 
   const version = `2.${uint8[3]}.${uint8[4]}`;
 
-  if (version == "2.3.0") {
+  if (version === "2.3.0") {
     const hasExtendHeader = uint8[5] & 0b0100_0000;
 
     const SIZE_MASK = 0b0111_1111;
@@ -283,16 +288,16 @@ const readID3v2 = (data: ArrayBuffer): ID3v2 => {
         uint8[10] * 256 ** 3 +
         uint8[11] * 256 ** 2 +
         uint8[12] * 256 ** 1 +
-        uint8[13] * 256 ** 0;
+        uint8[13] * 256 ** 0 +
+        4;
     }
-
-    const framesData = new Uint8Array(data.slice(9 + extendHeaderSize, size));
     const tags: ID3v2Frame[] = [];
 
-    let index = 0;
+    let index = 10 + extendHeaderSize;
     while (true) {
-      const id = String.fromCharCode(...framesData.slice(index, index + 4));
-      if (!/^[0-9A-Z]{4}$/g.test(id)) {
+      const id = String.fromCharCode(...uint8.slice(index, index + 4));
+      console.log(id);
+      if (!/^[0-9A-Z]{4}$/.test(id)) {
         break;
       }
       const frameSize =
@@ -301,8 +306,9 @@ const readID3v2 = (data: ArrayBuffer): ID3v2 => {
         uint8[index + 6] * 256 ** 1 +
         uint8[index + 7] * 256 ** 0;
 
-      const data = uint8.slice(10, size + 10);
-      tags.push({ id, data });
+      const data = uint8.slice(index + 10, index + 10 + frameSize);
+      tags.push(convertData(id, data));
+      index += 10 + frameSize;
     }
 
     return {
@@ -312,4 +318,253 @@ const readID3v2 = (data: ArrayBuffer): ID3v2 => {
   }
 
   throw new Error(`no supported version ${version}`);
+};
+
+const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
+  if (id === "UFID") {
+    // 4.1 Unique file identifier
+    const sepIndex = data.indexOf(0);
+    return {
+      id,
+      data: {
+        ownerIdentifier: data.slice(0, sepIndex),
+        identifier: data.slice(sepIndex + 1),
+      },
+    };
+  } else if (id === "TXXX") {
+    // 4.2.2 User defined text information frame
+    const decoder = getDecorder(data[0], data[1], data[2]);
+    const isUnicode = data[0] === 1;
+    const sepIndex = readUntilZero(data, 1, isUnicode);
+    if (sepIndex === -1) {
+      throw new Error("TXXX has no separator");
+    }
+
+    const description = decoder.decode(data.slice(isUnicode ? 3 : 1, sepIndex));
+    const value = decoder.decode(data.slice(sepIndex + 1));
+
+    return {
+      id,
+      data: { description, value },
+    };
+  } else if (id[0] === "T" || ["IPLS"].includes(id)) {
+    // 4.2 Text information frames
+    const decoder = getDecorder(data[0], data[1], data[2]);
+    const isUnicode = data[0] === 1;
+    const text = decoder.decode(data.slice(isUnicode ? 3 : 1));
+
+    return {
+      id,
+      data: text,
+    };
+  } else if (id === "WXXX") {
+    // 4.3.2 User defined URL link frame
+    const decoder = getDecorder(data[0], data[1], data[2]);
+    const isUnicode = data[0] === 1;
+    const sepIndex = readUntilZero(data, 1, isUnicode);
+    if (sepIndex === -1) {
+      throw new Error("WXXX has no separator");
+    }
+
+    const description = decoder.decode(data.slice(isUnicode ? 3 : 1, sepIndex));
+    const url = String.fromCharCode(...data.slice(sepIndex + 1));
+
+    return {
+      id,
+      data: { description, url },
+    };
+  } else if (id[0] === "W") {
+    // 4.3 URL link frames
+    const sepIndex = data.indexOf(0);
+
+    let url;
+    if (sepIndex === -1) {
+      url = String.fromCharCode(...data);
+    } else {
+      url = String.fromCharCode(...data.slice(0, sepIndex));
+    }
+
+    return {
+      id,
+      data: url,
+    };
+  } else if (id === "USLT" || id === "COMM") {
+    // 4.9 Unsychronised lyrics/text transcription
+    const decoder = getDecorder(data[0], data[4], data[5]);
+    const isUnicode = data[0] === 1;
+    const sepIndex = readUntilZero(data, 4, isUnicode);
+    if (sepIndex === -1) {
+      throw new Error("USLT has no separator");
+    }
+    const language = String.fromCharCode(data[1], data[2], data[3]);
+    const contentDescriptor = decoder.decode(
+      data.slice(isUnicode ? 3 : 1, sepIndex)
+    );
+    const text = decoder.decode(data.slice(sepIndex + (isUnicode ? 2 : 1)));
+
+    return {
+      id,
+      data: {
+        language,
+        contentDescriptor,
+        text,
+      },
+    };
+  } else if (id === "SYLT") {
+    // 4.10 Synchronised lyrics/text
+    const decoder = getDecorder(data[0], data[6], data[7]);
+    const isUnicode = data[0] === 1;
+    const sepIndex = readUntilZero(data, 6, isUnicode);
+    if (sepIndex === -1) {
+      throw new Error("SYLT has no separator");
+    }
+
+    const language = String.fromCharCode(data[1], data[2], data[3]);
+    const timestampFormat = data[4];
+    const contentType = data[5];
+
+    const contentDescriptor = decoder.decode(
+      data.slice(isUnicode ? 3 : 1, sepIndex)
+    );
+
+    const sepLength = isUnicode ? 2 : 1;
+
+    const content: { text: string; timestamp: number }[] = [];
+    let startIndex = sepIndex + sepLength;
+    while (true) {
+      const sepIndex = readUntilZero(data, startIndex, isUnicode);
+      if (sepIndex === -1) {
+        break;
+      }
+
+      const text = decoder.decode(data.slice(startIndex, sepIndex));
+      const timestamp =
+        data[sepIndex + sepLength + 0] * 256 ** 3 +
+        data[sepIndex + sepLength + 1] * 256 ** 2 +
+        data[sepIndex + sepLength + 2] * 256 ** 1 +
+        data[sepIndex + sepLength + 3] * 256 ** 0;
+      content.push({ text, timestamp });
+
+      startIndex = sepIndex + sepLength + 4;
+    }
+    return {
+      id,
+      data: {
+        language,
+        timestampFormat,
+        contentType,
+        contentDescriptor,
+        content,
+      },
+    };
+  } else if (id === "APIC") {
+    const decoder = getDecorder(data[0], data[6], data[7]);
+    const isUnicode = data[0] === 1;
+    const mimetypeSepIndex = readUntilZero(data, 1, false);
+    if (mimetypeSepIndex === -1) {
+      throw new Error("APIC has no separator");
+    }
+    const descriptionSepIndex = readUntilZero(
+      data,
+      mimetypeSepIndex + 2,
+      isUnicode
+    );
+    if (mimetypeSepIndex === -1) {
+      throw new Error("APIC has no separator");
+    }
+
+    const mimetype = String.fromCharCode(...data.slice(1, mimetypeSepIndex));
+    const pictureType = data[mimetypeSepIndex + 1];
+    const description = decoder.decode(
+      data.slice(mimetypeSepIndex + 2, descriptionSepIndex)
+    );
+    const pictureData = data.slice(descriptionSepIndex + (isUnicode ? 2 : 1));
+
+    return {
+      id,
+      data: {
+        mimetype,
+        pictureType,
+        description,
+        pictureData,
+      },
+    };
+  } else if (id === "GEOB") {
+    const decoder = getDecorder(data[0], data[6], data[7]);
+    const isUnicode = data[0] === 1;
+    const sepLength = isUnicode ? 2 : 1;
+    const mimetypeSepIndex = readUntilZero(data, 1, false);
+    if (mimetypeSepIndex === -1) {
+      throw new Error("GEOB has no separator");
+    }
+    const fileNameSepIndex = readUntilZero(
+      data,
+      mimetypeSepIndex + 1,
+      isUnicode
+    );
+    if (fileNameSepIndex === -1) {
+      throw new Error("GEOB has no separator");
+    }
+    const descriptionSepIndex = readUntilZero(
+      data,
+      fileNameSepIndex + sepLength,
+      isUnicode
+    );
+    if (descriptionSepIndex === -1) {
+      throw new Error("GEOB has no separator");
+    }
+
+    const mimetype = String.fromCharCode(...data.slice(1, mimetypeSepIndex));
+    const fileName = decoder.decode(
+      data.slice(mimetypeSepIndex + 1, fileNameSepIndex)
+    );
+    const description = decoder.decode(
+      data.slice(fileNameSepIndex + sepLength, descriptionSepIndex)
+    );
+    const object = data.slice(descriptionSepIndex + sepLength);
+
+    return {
+      id,
+      data: {
+        mimetype,
+        fileName,
+        description,
+        object,
+      },
+    };
+  } else {
+    return { id, data };
+  }
+};
+
+const getDecorder = (id: number, bom1?: number, bom2?: number): TextDecoder => {
+  if (id === 1 && bom1 === 0xff && bom2 === 0xfe) {
+    return new TextDecoder("utf-16le");
+  } else if (id === 1 && bom1 === 0xfe && bom2 === 0xff) {
+    return new TextDecoder("utf-16be");
+  } else {
+    return new TextDecoder("iso-8859-1");
+  }
+};
+
+const readUntilZero = (
+  data: Uint8Array,
+  start: number,
+  isUnicode: boolean
+): number => {
+  let prevZero = false;
+  for (let i = start; i < data.length; i++) {
+    if (data[i] === 0) {
+      if (!isUnicode) {
+        return i;
+      } else if (prevZero) {
+        return i - 1;
+      } else {
+        prevZero = true;
+      }
+    } else {
+      prevZero = false;
+    }
+  }
+  return -1;
 };
