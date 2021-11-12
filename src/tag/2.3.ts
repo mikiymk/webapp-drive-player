@@ -53,182 +53,19 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
   } else if (id === "TXXX") {
     return { id, data: getTXXX(data) };
   } else if (id[0] === "T" || ["IPLS"].includes(id)) {
-    // 4.2 Text information frames
-    const decoder = getDecorder(data[0], data[1], data[2]);
-    const isUnicode = data[0] === 1;
-    const text = decoder.decode(data.slice(isUnicode ? 3 : 1));
-
-    return {
-      id,
-      data: text,
-    };
+    return { id, data: getTEXT(data) };
   } else if (id === "WXXX") {
-    // 4.3.2 User defined URL link frame
-    const decoder = getDecorder(data[0], data[1], data[2]);
-    const isUnicode = data[0] === 1;
-    const sepIndex = getSep(data, 1, isUnicode);
-    if (sepIndex === -1) {
-      throw new Error("WXXX has no separator");
-    }
-
-    const description = decoder.decode(data.slice(isUnicode ? 3 : 1, sepIndex));
-    const url = String.fromCharCode(...data.slice(sepIndex + 1));
-
-    return {
-      id,
-      data: { description, url },
-    };
+    return { id, data: getWXXX(data) };
   } else if (id[0] === "W") {
-    // 4.3 URL link frames
-    const sepIndex = data.indexOf(0);
-
-    let url;
-    if (sepIndex === -1) {
-      url = String.fromCharCode(...data);
-    } else {
-      url = String.fromCharCode(...data.slice(0, sepIndex));
-    }
-
-    return {
-      id,
-      data: url,
-    };
+    return { id, data: getWEXT(data) };
   } else if (id === "USLT" || id === "COMM") {
-    // 4.9 Unsychronised lyrics/text transcription
-    const decoder = getDecorder(data[0], data[4], data[5]);
-    const isUnicode = data[0] === 1;
-    const sepIndex = getSep(data, 4, isUnicode);
-    if (sepIndex === -1) {
-      throw new Error("USLT has no separator");
-    }
-    const language = String.fromCharCode(data[1], data[2], data[3]);
-    const contentDescriptor = decoder.decode(
-      data.slice(isUnicode ? 3 : 1, sepIndex)
-    );
-    const text = decoder.decode(data.slice(sepIndex + (isUnicode ? 2 : 1)));
-
-    return {
-      id,
-      data: {
-        language,
-        contentDescriptor,
-        text,
-      },
-    };
+    return { id, data: getCOMM(data) };
   } else if (id === "SYLT") {
-    // 4.10 Synchronised lyrics/text
-    const decoder = getDecorder(data[0], data[6], data[7]);
-    const isUnicode = data[0] === 1;
-    const sepIndex = getSep(data, 6, isUnicode);
-    if (sepIndex === -1) {
-      throw new Error("SYLT has no separator");
-    }
-
-    const language = String.fromCharCode(data[1], data[2], data[3]);
-    const timestampFormat = data[4];
-    const contentType = data[5];
-
-    const contentDescriptor = decoder.decode(
-      data.slice(isUnicode ? 3 : 1, sepIndex)
-    );
-
-    const sepLength = isUnicode ? 2 : 1;
-
-    const content: { text: string; timestamp: number }[] = [];
-    let startIndex = sepIndex + sepLength;
-    while (true) {
-      const sepIndex = getSep(data, startIndex, isUnicode);
-      if (sepIndex === -1) {
-        break;
-      }
-
-      const text = decoder.decode(data.slice(startIndex, sepIndex));
-      const timestamp =
-        data[sepIndex + sepLength + 0] * 256 ** 3 +
-        data[sepIndex + sepLength + 1] * 256 ** 2 +
-        data[sepIndex + sepLength + 2] * 256 ** 1 +
-        data[sepIndex + sepLength + 3] * 256 ** 0;
-      content.push({ text, timestamp });
-
-      startIndex = sepIndex + sepLength + 4;
-    }
-    return {
-      id,
-      data: {
-        language,
-        timestampFormat,
-        contentType,
-        contentDescriptor,
-        content,
-      },
-    };
+    return { id, data: getSYLT(data) };
   } else if (id === "APIC") {
-    const decoder = getDecorder(data[0], data[6], data[7]);
-    const isUnicode = data[0] === 1;
-    const mimetypeSepIndex = getSep(data, 1, false);
-    if (mimetypeSepIndex === -1) {
-      throw new Error("APIC has no separator");
-    }
-    const descriptionSepIndex = getSep(data, mimetypeSepIndex + 2, isUnicode);
-    if (mimetypeSepIndex === -1) {
-      throw new Error("APIC has no separator");
-    }
-
-    const mimetype = String.fromCharCode(...data.slice(1, mimetypeSepIndex));
-    const pictureType = data[mimetypeSepIndex + 1];
-    const description = decoder.decode(
-      data.slice(mimetypeSepIndex + 2, descriptionSepIndex)
-    );
-    const pictureData = data.slice(descriptionSepIndex + (isUnicode ? 2 : 1));
-
-    return {
-      id,
-      data: {
-        mimetype,
-        pictureType,
-        description,
-        pictureData,
-      },
-    };
+    return { id, data: getAPIC(data) };
   } else if (id === "GEOB") {
-    const decoder = getDecorder(data[0], data[6], data[7]);
-    const isUnicode = data[0] === 1;
-    const sepLength = isUnicode ? 2 : 1;
-    const mimetypeSepIndex = getSep(data, 1, false);
-    if (mimetypeSepIndex === -1) {
-      throw new Error("GEOB has no separator");
-    }
-    const fileNameSepIndex = getSep(data, mimetypeSepIndex + 1, isUnicode);
-    if (fileNameSepIndex === -1) {
-      throw new Error("GEOB has no separator");
-    }
-    const descriptionSepIndex = getSep(
-      data,
-      fileNameSepIndex + sepLength,
-      isUnicode
-    );
-    if (descriptionSepIndex === -1) {
-      throw new Error("GEOB has no separator");
-    }
-
-    const mimetype = String.fromCharCode(...data.slice(1, mimetypeSepIndex));
-    const fileName = decoder.decode(
-      data.slice(mimetypeSepIndex + 1, fileNameSepIndex)
-    );
-    const description = decoder.decode(
-      data.slice(fileNameSepIndex + sepLength, descriptionSepIndex)
-    );
-    const object = data.slice(descriptionSepIndex + sepLength);
-
-    return {
-      id,
-      data: {
-        mimetype,
-        fileName,
-        description,
-        object,
-      },
-    };
+    return { id, data: getGEOB(data) };
   } else {
     return { id, data };
   }
@@ -249,6 +86,118 @@ const getTXXX = (data: Uint8Array) => {
   const [value] = readText(data, sep, isUnicode, false);
 
   return { isUnicode, description, value };
+};
+
+const getTEXT = (data: Uint8Array) => {
+  // 4.2 Text information frames
+  // 4.4 Involved people list
+  const [text] = readText(data, 1, data[0] === 1, false);
+  return text;
+};
+
+const getWXXX = (data: Uint8Array) => {
+  // 4.3.2 User defined URL link frame
+  const isUnicode = data[0] === 1;
+
+  const [description, sep] = readText(data, 1, isUnicode, true);
+  const [url] = readText(data, sep, false, false);
+
+  return { description, url };
+};
+
+const getWEXT = (data: Uint8Array) => {
+  // 4.3 URL link frames
+  const [url] = readText(data, 0, false, false);
+
+  return url;
+};
+
+const getCOMM = (data: Uint8Array) => {
+  // 4.9 Unsychronised lyrics/text transcription
+  // 4.11 Comments
+  const isUnicode = data[0] === 1;
+
+  const language = String.fromCharCode(data[1], data[2], data[3]);
+  const [contentDescriptor, sep] = readText(data, 4, isUnicode, true);
+  const [text] = readText(data, sep, isUnicode, false);
+
+  return {
+    language,
+    contentDescriptor,
+    text,
+  };
+};
+
+const getSYLT = (data: Uint8Array) => {
+  // 4.10 Synchronised lyrics/text
+  const isUnicode = data[0] === 1;
+
+  const language = String.fromCharCode(data[1], data[2], data[3]);
+  const timestampFormat = data[4];
+  const contentType = data[5];
+
+  const [contentDescriptor, sep] = readText(data, 6, isUnicode, true);
+
+  const content: { text: string; timestamp: number }[] = [];
+  let startIndex = sep;
+  while (true) {
+    let text, sep;
+    try {
+      [text, sep] = readText(data, startIndex, isUnicode, true);
+    } catch {
+      break;
+    }
+    const timestamp =
+      data[sep + 0] * 256 ** 3 +
+      data[sep + 1] * 256 ** 2 +
+      data[sep + 2] * 256 ** 1 +
+      data[sep + 3] * 256 ** 0;
+    content.push({ text, timestamp });
+
+    startIndex = sep + 4;
+  }
+
+  return {
+    language,
+    timestampFormat,
+    contentType,
+    contentDescriptor,
+    content,
+  };
+};
+
+const getAPIC = (data: Uint8Array) => {
+  // 4.15 Attached picture
+  const isUnicode = data[0] === 1;
+
+  const [mimetype, msep] = readText(data, 1, false, true);
+  const pictureType = data[msep];
+  const [description, dsep] = readText(data, msep + 1, data[0] === 1, true);
+  const pictureData = data.slice(dsep);
+
+  return {
+    mimetype,
+    pictureType,
+    description,
+    pictureData,
+  };
+};
+
+const getGEOB = (data: Uint8Array) => {
+  // 4.16 General encapsulated object
+  const isUnicode = data[0] === 1;
+
+  const [mimetype, msep] = readText(data, 1, false, true);
+  const [fileName, fsep] = readText(data, msep, isUnicode, true);
+  const [description, dsep] = readText(data, fsep, isUnicode, true);
+  const object = data.slice(dsep);
+
+  return {
+    mimetype,
+    fileName,
+    description,
+    object,
+  };
 };
 
 const UTF_16LE = new TextDecoder("utf-16le");
@@ -286,18 +235,28 @@ const getSep = (
   throw new Error("no separator");
 };
 
+/**
+ * read text from data start to null character or data end
+ * @param data read from
+ * @param start start index include
+ * @param isUnicode if unicode true
+ * @param hasSep if $ 00 or $ 00 00 ends true
+ * @returns tuple readed text and next null character index
+ */
 const readText = (
   data: Uint8Array,
   start: number,
   isUnicode: boolean,
   hasSep: boolean
 ): [string, number] => {
-  const end = hasSep
-    ? getSep(data, start, isUnicode) + (isUnicode ? 2 : 1)
-    : undefined;
+  const end = hasSep ? getSep(data, start, isUnicode) : undefined;
   const decoder = getDecorder(isUnicode ? 1 : 0, data[start], data[start + 1]);
 
   const text = decoder.decode(data.slice(start, end));
 
-  return [text, end ?? data.length];
+  if (end === undefined) {
+    return [text, data.length];
+  } else {
+    return [text, end + (isUnicode ? 2 : 1)];
+  }
 };
