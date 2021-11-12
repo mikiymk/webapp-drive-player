@@ -21,7 +21,7 @@ export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
 
   let index = 10 + extendHeaderSize;
   while (true) {
-    const id = String.fromCharCode(...data.slice(index, index + 4));
+    const id = String.fromCharCode(...data.subarray(index, index + 4));
     if (!/^[0-9A-Z]{4}$/.test(id)) {
       break;
     }
@@ -33,7 +33,7 @@ export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
 
     const converted = convertData(
       id,
-      data.slice(index + 10, index + 10 + frameSize)
+      data.subarray(index + 10, index + 10 + frameSize)
     );
     tags.push(converted);
     index += 10 + frameSize;
@@ -74,7 +74,7 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
 const getUFID = (data: Uint8Array) => {
   // 4.1 Unique file identifier
   const [ownerIdentifier, sep] = readText(data, 0, false, true);
-  const [identifier] = data.slice(sep);
+  const [identifier] = data.subarray(sep);
   return { ownerIdentifier, identifier };
 };
 
@@ -173,13 +173,14 @@ const getAPIC = (data: Uint8Array) => {
   const [mimetype, msep] = readText(data, 1, false, true);
   const pictureType = data[msep];
   const [description, dsep] = readText(data, msep + 1, data[0] === 1, true);
-  const pictureData = data.slice(dsep);
+  const pictureData = data.subarray(dsep);
 
   return {
     mimetype,
     pictureType,
     description,
     pictureData,
+    // uri: `data:${mimetype};base64,${btoa(String.fromCharCode(...pictureData))}`,
   };
 };
 
@@ -190,7 +191,7 @@ const getGEOB = (data: Uint8Array) => {
   const [mimetype, msep] = readText(data, 1, false, true);
   const [fileName, fsep] = readText(data, msep, isUnicode, true);
   const [description, dsep] = readText(data, fsep, isUnicode, true);
-  const object = data.slice(dsep);
+  const object = data.subarray(dsep);
 
   return {
     mimetype,
@@ -252,7 +253,7 @@ const readText = (
   const end = hasSep ? getSep(data, start, isUnicode) : undefined;
   const decoder = getDecorder(isUnicode ? 1 : 0, data[start], data[start + 1]);
 
-  const text = decoder.decode(data.slice(start, end));
+  const text = decoder.decode(data.subarray(start, end));
 
   if (end === undefined) {
     return [text, data.length];
