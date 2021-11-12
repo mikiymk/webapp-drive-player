@@ -22,7 +22,6 @@ export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
   let index = 10 + extendHeaderSize;
   while (true) {
     const id = String.fromCharCode(...data.slice(index, index + 4));
-    console.log(id);
     if (!/^[0-9A-Z]{4}$/.test(id)) {
       break;
     }
@@ -47,27 +46,12 @@ export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
 };
 
 const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
+  console.log(id, data);
+
   if (id === "UFID") {
-    // 4.1 Unique file identifier
-    const [ownerIdentifier, sep] = readText(data, 0, false, true);
-    const [identifier] = data.slice(sep);
-    return { id, data: { ownerIdentifier, identifier } };
+    return { id, data: getUFID(data) };
   } else if (id === "TXXX") {
-    // 4.2.2 User defined text information frame
-    const decoder = getDecorder(data[0], data[1], data[2]);
-    const isUnicode = data[0] === 1;
-    const sepIndex = getSep(data, 1, isUnicode);
-    if (sepIndex === -1) {
-      throw new Error("TXXX has no separator");
-    }
-
-    const description = decoder.decode(data.slice(1, sepIndex));
-    const value = decoder.decode(data.slice(sepIndex + 1));
-
-    return {
-      id,
-      data: { description, value },
-    };
+    return { id, data: getTXXX(data) };
   } else if (id[0] === "T" || ["IPLS"].includes(id)) {
     // 4.2 Text information frames
     const decoder = getDecorder(data[0], data[1], data[2]);
@@ -250,6 +234,23 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
   }
 };
 
+const getUFID = (data: Uint8Array) => {
+  // 4.1 Unique file identifier
+  const [ownerIdentifier, sep] = readText(data, 0, false, true);
+  const [identifier] = data.slice(sep);
+  return { ownerIdentifier, identifier };
+};
+
+const getTXXX = (data: Uint8Array) => {
+  // 4.2.2 User defined text information frame
+  const isUnicode = data[0] === 1;
+
+  const [description, sep] = readText(data, 1, isUnicode, true);
+  const [value] = readText(data, sep, isUnicode, false);
+
+  return { isUnicode, description, value };
+};
+
 const UTF_16LE = new TextDecoder("utf-16le");
 const UTF_16BE = new TextDecoder("utf-16be");
 const ISO_8859_1 = new TextDecoder("iso-8859-1");
@@ -269,18 +270,17 @@ const getSep = (
   start: number,
   isUnicode: boolean
 ): number => {
-  let prevZero = false;
-  for (let i = start; i < data.length; i++) {
-    if (data[i] === 0) {
-      if (!isUnicode) {
+  if (isUnicode) {
+    for (let i = start; i < data.length; i += 2) {
+      if (data[i] === 0 && data[i + 1] === 0) {
         return i;
-      } else if (prevZero) {
-        return i - 1;
-      } else {
-        prevZero = true;
       }
-    } else {
-      prevZero = false;
+    }
+  } else {
+    for (let i = start; i < data.length; i++) {
+      if (data[i] === 0) {
+        return i;
+      }
     }
   }
   throw new Error("no separator");
