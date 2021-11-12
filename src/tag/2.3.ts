@@ -32,7 +32,11 @@ export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
       data[index + 6] * 256 ** 1 +
       data[index + 7] * 256 ** 0;
 
-    tags.push(convertData(id, data.slice(index + 10, index + 10 + frameSize)));
+    const converted = convertData(
+      id,
+      data.slice(index + 10, index + 10 + frameSize)
+    );
+    tags.push(converted);
     index += 10 + frameSize;
   }
 
@@ -45,24 +49,19 @@ export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
 const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
   if (id === "UFID") {
     // 4.1 Unique file identifier
-    const sepIndex = data.indexOf(0);
-    return {
-      id,
-      data: {
-        ownerIdentifier: data.slice(0, sepIndex),
-        identifier: data.slice(sepIndex + 1),
-      },
-    };
+    const [ownerIdentifier, sep] = readText(data, 0, false, true);
+    const [identifier] = data.slice(sep);
+    return { id, data: { ownerIdentifier, identifier } };
   } else if (id === "TXXX") {
     // 4.2.2 User defined text information frame
     const decoder = getDecorder(data[0], data[1], data[2]);
     const isUnicode = data[0] === 1;
-    const sepIndex = readUntilZero(data, 1, isUnicode);
+    const sepIndex = getSep(data, 1, isUnicode);
     if (sepIndex === -1) {
       throw new Error("TXXX has no separator");
     }
 
-    const description = decoder.decode(data.slice(isUnicode ? 3 : 1, sepIndex));
+    const description = decoder.decode(data.slice(1, sepIndex));
     const value = decoder.decode(data.slice(sepIndex + 1));
 
     return {
@@ -83,7 +82,7 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
     // 4.3.2 User defined URL link frame
     const decoder = getDecorder(data[0], data[1], data[2]);
     const isUnicode = data[0] === 1;
-    const sepIndex = readUntilZero(data, 1, isUnicode);
+    const sepIndex = getSep(data, 1, isUnicode);
     if (sepIndex === -1) {
       throw new Error("WXXX has no separator");
     }
@@ -114,7 +113,7 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
     // 4.9 Unsychronised lyrics/text transcription
     const decoder = getDecorder(data[0], data[4], data[5]);
     const isUnicode = data[0] === 1;
-    const sepIndex = readUntilZero(data, 4, isUnicode);
+    const sepIndex = getSep(data, 4, isUnicode);
     if (sepIndex === -1) {
       throw new Error("USLT has no separator");
     }
@@ -136,7 +135,7 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
     // 4.10 Synchronised lyrics/text
     const decoder = getDecorder(data[0], data[6], data[7]);
     const isUnicode = data[0] === 1;
-    const sepIndex = readUntilZero(data, 6, isUnicode);
+    const sepIndex = getSep(data, 6, isUnicode);
     if (sepIndex === -1) {
       throw new Error("SYLT has no separator");
     }
@@ -154,7 +153,7 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
     const content: { text: string; timestamp: number }[] = [];
     let startIndex = sepIndex + sepLength;
     while (true) {
-      const sepIndex = readUntilZero(data, startIndex, isUnicode);
+      const sepIndex = getSep(data, startIndex, isUnicode);
       if (sepIndex === -1) {
         break;
       }
@@ -182,15 +181,11 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
   } else if (id === "APIC") {
     const decoder = getDecorder(data[0], data[6], data[7]);
     const isUnicode = data[0] === 1;
-    const mimetypeSepIndex = readUntilZero(data, 1, false);
+    const mimetypeSepIndex = getSep(data, 1, false);
     if (mimetypeSepIndex === -1) {
       throw new Error("APIC has no separator");
     }
-    const descriptionSepIndex = readUntilZero(
-      data,
-      mimetypeSepIndex + 2,
-      isUnicode
-    );
+    const descriptionSepIndex = getSep(data, mimetypeSepIndex + 2, isUnicode);
     if (mimetypeSepIndex === -1) {
       throw new Error("APIC has no separator");
     }
@@ -215,19 +210,15 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
     const decoder = getDecorder(data[0], data[6], data[7]);
     const isUnicode = data[0] === 1;
     const sepLength = isUnicode ? 2 : 1;
-    const mimetypeSepIndex = readUntilZero(data, 1, false);
+    const mimetypeSepIndex = getSep(data, 1, false);
     if (mimetypeSepIndex === -1) {
       throw new Error("GEOB has no separator");
     }
-    const fileNameSepIndex = readUntilZero(
-      data,
-      mimetypeSepIndex + 1,
-      isUnicode
-    );
+    const fileNameSepIndex = getSep(data, mimetypeSepIndex + 1, isUnicode);
     if (fileNameSepIndex === -1) {
       throw new Error("GEOB has no separator");
     }
-    const descriptionSepIndex = readUntilZero(
+    const descriptionSepIndex = getSep(
       data,
       fileNameSepIndex + sepLength,
       isUnicode
@@ -259,17 +250,21 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
   }
 };
 
+const UTF_16LE = new TextDecoder("utf-16le");
+const UTF_16BE = new TextDecoder("utf-16be");
+const ISO_8859_1 = new TextDecoder("iso-8859-1");
+
 const getDecorder = (id: number, bom1?: number, bom2?: number): TextDecoder => {
   if (id === 1 && bom1 === 0xff && bom2 === 0xfe) {
-    return new TextDecoder("utf-16le");
+    return UTF_16LE;
   } else if (id === 1 && bom1 === 0xfe && bom2 === 0xff) {
-    return new TextDecoder("utf-16be");
+    return UTF_16BE;
   } else {
-    return new TextDecoder("iso-8859-1");
+    return ISO_8859_1;
   }
 };
 
-const readUntilZero = (
+const getSep = (
   data: Uint8Array,
   start: number,
   isUnicode: boolean
@@ -288,5 +283,21 @@ const readUntilZero = (
       prevZero = false;
     }
   }
-  return -1;
+  throw new Error("no separator");
+};
+
+const readText = (
+  data: Uint8Array,
+  start: number,
+  isUnicode: boolean,
+  hasSep: boolean
+): [string, number] => {
+  const end = hasSep
+    ? getSep(data, start, isUnicode) + (isUnicode ? 2 : 1)
+    : undefined;
+  const decoder = getDecorder(isUnicode ? 1 : 0, data[start], data[start + 1]);
+
+  const text = decoder.decode(data.slice(start, end));
+
+  return [text, end ?? data.length];
 };
