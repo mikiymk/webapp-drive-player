@@ -49,54 +49,121 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
   console.log(id, data);
 
   if (id === "UFID") {
+    // 4.1 Unique file identifier
     return { id, data: getUFID(data) };
   } else if (id === "TXXX") {
+    // 4.2.2 User defined text information frame
     return { id, data: getTXXX(data) };
-  } else if (id[0] === "T" || ["IPLS"].includes(id)) {
+  } else if (id[0] === "T") {
+    // 4.2 Text information frames
     return { id, data: getTEXT(data) };
   } else if (id === "WXXX") {
+    // 4.3.2 User defined URL link frame
     return { id, data: getWXXX(data) };
   } else if (id[0] === "W") {
+    // 4.3 URL link frames
     return { id, data: getWEXT(data) };
-  } else if (id === "USLT" || id === "COMM") {
+  } else if ((id = "IPLS")) {
+    // 4.4 Involved people list
+    return { id, data: getTEXT(data) };
+  } else if (id === "MCDI") {
+    // 4.5 usic CD identifier
+    return { id, data };
+  } else if (id === "ETCO") {
+    // 4.6 Event timing codes
+    return { id, data: getETCO(data) };
+  } else if (id === "MLLT") {
+    // 4.7 MPEG location lookup table
+    return { id, data: getMLLT(data) };
+  } else if (id === "SYTC") {
+    // 4.8 Synchronised tempo codes
+    return { id, data: getSYTC(data) };
+  } else if (id === "USLT") {
+    // 4.9 Unsychronised lyrics/text transcription
     return { id, data: getCOMM(data) };
   } else if (id === "SYLT") {
+    // 4.10 Synchronised lyrics/text
     return { id, data: getSYLT(data) };
+  } else if (id === "COMM") {
+    // 4.11 Comments
+    return { id, data: getCOMM(data) };
+  } else if (id === "RVAD") {
+    // 4.12 Relative volume adjustment
+    return { id, data: getRVAD(data) };
+  } else if (id === "EQUA") {
+    // 4.13 Equalisation
+    return { id, data: getEQUA(data) };
+  } else if (id === "RVRB") {
+    // 4.14 Reverb
+    return { id, data: getRVRB(data) };
   } else if (id === "APIC") {
+    // 4.15 Attached picture
     return { id, data: getAPIC(data) };
   } else if (id === "GEOB") {
+    // 4.16 General encapsulated object
     return { id, data: getGEOB(data) };
+  } else if (id === "PCNT") {
+    // 4.17 Play counter
+    return { id, data: getPCNT(data) };
+  } else if (id === "POPM") {
+    // 4.18 Popularimeter
+    return { id, data: getPOPM(data) };
+  } else if (id === "RBUF") {
+    // 4.19 Recommended buffer size
+    return { id, data: getRBUF(data) };
+  } else if (id === "AENC") {
+    // 4.20 Audio encryption
+    return { id, data: getAENC(data) };
+  } else if (id === "LINK") {
+    // 4.21 Linked information
+    return { id, data: getLINK(data) };
+  } else if (id === "POSS") {
+    // 4.22 Position synchronisation frame
+    return { id, data: getPOSS(data) };
+  } else if (id === "USER") {
+    // 4.23 Terms of use frame
+    return { id, data: getUSER(data) };
+  } else if (id === "OWNE") {
+    // 4.24 Ownership frame
+    return { id, data: getOWNE(data) };
+  } else if (id === "COMR") {
+    // 4.25 Commercial frame
+    return { id, data: getCOMR(data) };
+  } else if (id === "ENCR") {
+    // 4.26 Encryption method registration
+    return { id, data: getENCR(data) };
+  } else if (id === "GRID") {
+    // 4.27 Group identification registration
+    return { id, data: getGRID(data) };
+  } else if (id === "PRIV") {
+    // 4.28 Private frame
+    return { id, data: getPRIV(data) };
   } else {
     return { id, data };
   }
 };
 
 const getUFID = (data: Uint8Array) => {
-  // 4.1 Unique file identifier
   const [ownerIdentifier, sep] = readText(data, 0, false, true);
   const [identifier] = data.subarray(sep);
   return { ownerIdentifier, identifier };
 };
 
 const getTXXX = (data: Uint8Array) => {
-  // 4.2.2 User defined text information frame
   const isUnicode = data[0] === 1;
 
   const [description, sep] = readText(data, 1, isUnicode, true);
   const [value] = readText(data, sep, isUnicode, false);
 
-  return { isUnicode, description, value };
+  return { description, value };
 };
 
 const getTEXT = (data: Uint8Array) => {
-  // 4.2 Text information frames
-  // 4.4 Involved people list
   const [text] = readText(data, 1, data[0] === 1, false);
   return text;
 };
 
 const getWXXX = (data: Uint8Array) => {
-  // 4.3.2 User defined URL link frame
   const isUnicode = data[0] === 1;
 
   const [description, sep] = readText(data, 1, isUnicode, true);
@@ -106,18 +173,47 @@ const getWXXX = (data: Uint8Array) => {
 };
 
 const getWEXT = (data: Uint8Array) => {
-  // 4.3 URL link frames
   const [url] = readText(data, 0, false, false);
 
   return url;
 };
 
+const getETCO = (data: Uint8Array) => {
+  const timestampFormat = data[0];
+
+  const timestamps = [];
+  for (let i = 1; i < data.length; i += 5) {
+    const eventType = data[i];
+    const timestamp =
+      data[i + 1] * 256 ** 3 +
+      data[i + 2] * 256 ** 2 +
+      data[i + 3] * 256 ** 1 +
+      data[i + 4] * 256 ** 0;
+
+    timestamps.push({ eventType, timestamp });
+  }
+
+  return {
+    timestampFormat,
+    timestamps,
+  };
+};
+
+const getMLLT = (data: Uint8Array) => {
+  console.log("MLLT is no support yet");
+  return data;
+};
+
+const getSYTC = (data: Uint8Array) => {
+  const timestampFormat = data[0];
+  const tempo = data.slice(1);
+  return { timestampFormat, tempo };
+};
+
 const getCOMM = (data: Uint8Array) => {
-  // 4.9 Unsychronised lyrics/text transcription
-  // 4.11 Comments
   const isUnicode = data[0] === 1;
 
-  const language = String.fromCharCode(data[1], data[2], data[3]);
+  const language = readFixText(data, 1, 3);
   const [contentDescriptor, sep] = readText(data, 4, isUnicode, true);
   const [text] = readText(data, sep, isUnicode, false);
 
@@ -129,10 +225,9 @@ const getCOMM = (data: Uint8Array) => {
 };
 
 const getSYLT = (data: Uint8Array) => {
-  // 4.10 Synchronised lyrics/text
   const isUnicode = data[0] === 1;
 
-  const language = String.fromCharCode(data[1], data[2], data[3]);
+  const language = readFixText(data, 1, 3);
   const timestampFormat = data[4];
   const contentType = data[5];
 
@@ -144,8 +239,9 @@ const getSYLT = (data: Uint8Array) => {
     let text, sep;
     try {
       [text, sep] = readText(data, startIndex, isUnicode, true);
-    } catch {
-      break;
+    } catch (error) {
+      if (error instanceof Error && error.message === "no separator") break;
+      else throw error;
     }
     const timestamp =
       data[sep + 0] * 256 ** 3 +
@@ -166,8 +262,83 @@ const getSYLT = (data: Uint8Array) => {
   };
 };
 
+const getRVAD = (data: Uint8Array) => {
+  const incDecrement = data[0];
+  const bit = Math.ceil(data[1] / 8);
+
+  const rerativeVolumeChangeRight = readInteger(data, 2, bit);
+  const rerativeVolumeChangeLeft = readInteger(data, 2 + bit, bit);
+
+  const peakVolumeRight = readInteger(data, 2 + bit * 2, bit);
+  const peakVolumeLeft = readInteger(data, 2 + bit * 3, bit);
+
+  let rerativeVolumeChangeRightBack,
+    rerativeVolumeChangeLeftBack,
+    peakVolumeRightBack,
+    peakVolumeLeftBack;
+  if (data.length >= 2 + bit * 4) {
+    rerativeVolumeChangeRightBack = readInteger(data, 2 + bit * 4, bit);
+    rerativeVolumeChangeLeftBack = readInteger(data, 2 + bit * 5, bit);
+
+    peakVolumeRightBack = readInteger(data, 2 + bit * 6, bit);
+    peakVolumeLeftBack = readInteger(data, 2 + bit * 7, bit);
+  }
+
+  let rerativeVolumeChangeCenter, peakVolumeCenter;
+  if (data.length >= 2 + bit * 8) {
+    rerativeVolumeChangeCenter = readInteger(data, 2 + bit * 8, bit);
+    peakVolumeCenter = readInteger(data, 2 + bit * 9, bit);
+  }
+
+  let rerativeVolumeChangeBass, peakVolumeBass;
+  if (data.length >= 2 + bit * 10) {
+    rerativeVolumeChangeBass = readInteger(data, 2 + bit * 10, bit);
+    peakVolumeBass = readInteger(data, 2 + bit * 11, bit);
+  }
+
+  return {
+    rerativeVolumeChangeRight,
+    rerativeVolumeChangeLeft,
+    rerativeVolumeChangeRightBack,
+    rerativeVolumeChangeLeftBack,
+    rerativeVolumeChangeCenter,
+    rerativeVolumeChangeBass,
+    peakVolumeRight,
+    peakVolumeLeft,
+    peakVolumeRightBack,
+    peakVolumeLeftBack,
+    peakVolumeCenter,
+    peakVolumeBass,
+  };
+};
+
+const getEQUA = (data: Uint8Array) => {
+  const adjustmentBit = data[0];
+  const isIncrement = (data[1] & 0b1000_0000) !== 0;
+  const frequency = (data[1] & 0b0111_1111) * 256 + data[2];
+  const adjustment = readInteger(data, 3, adjustmentBit);
+
+  return {
+    isIncrement,
+    frequency,
+    adjustment,
+  };
+};
+
+const getRVRB = (data: Uint8Array) => ({
+  reverbLeft: readInteger(data, 0, 2),
+  reverbRight: readInteger(data, 2, 2),
+  reverbBouncesLeft: data[4],
+  reverbBouncesRight: data[5],
+  reverbFeedbackLeftToLeft: data[6],
+  reverbFeedbackLeftToRight: data[7],
+  reverbFeedbackRightToRight: data[8],
+  reverbFeedbackRightToLeft: data[9],
+  premixLeftToRight: data[10],
+  premixRightToLeft: data[11],
+});
+
 const getAPIC = (data: Uint8Array) => {
-  // 4.15 Attached picture
   const isUnicode = data[0] === 1;
 
   const [mimetype, msep] = readText(data, 1, false, true);
@@ -185,7 +356,6 @@ const getAPIC = (data: Uint8Array) => {
 };
 
 const getGEOB = (data: Uint8Array) => {
-  // 4.16 General encapsulated object
   const isUnicode = data[0] === 1;
 
   const [mimetype, msep] = readText(data, 1, false, true);
@@ -198,6 +368,149 @@ const getGEOB = (data: Uint8Array) => {
     fileName,
     description,
     object,
+  };
+};
+
+const getPCNT = (data: Uint8Array) => readInteger(data, 0, data.length);
+
+const getPOPM = (data: Uint8Array) => {
+  const [email, sep] = readText(data, 0, false, true);
+  const rating = data[sep];
+  const counter = readInteger(data, sep + 1, data.length - (sep + 1));
+
+  return {
+    email,
+    rating,
+    counter,
+  };
+};
+
+const getRBUF = (data: Uint8Array) => {
+  const bufferSize = readInteger(data, 0, 3);
+  const hasEmbedInfo = (data[4] & 1) === 1;
+  const offsetToNextTag = readInteger(data, 5, 4);
+
+  return {
+    bufferSize,
+    hasEmbedInfo,
+    offsetToNextTag,
+  };
+};
+
+const getAENC = (data: Uint8Array) => {
+  const [ownerIdentifier, sep] = readText(data, 0, false, true);
+  const previewStart = data[sep];
+  const previewLength = data[sep + 1];
+  const encryptionInfo = data.slice(sep + 2);
+
+  return {
+    ownerIdentifier,
+    previewStart,
+    previewLength,
+    encryptionInfo,
+  };
+};
+
+const getLINK = (data: Uint8Array) => {
+  const frameIdentifier = readInteger(data, 0, 3);
+  const [url, sep] = readText(data, 3, false, true);
+  const addtionalData = readText(data, sep, false, false);
+
+  return {
+    frameIdentifier,
+    url,
+    addtionalData,
+  };
+};
+
+const getPOSS = (data: Uint8Array) => {
+  const timestampFormat = data[0];
+  const position = readInteger(data, 1, 4);
+
+  return {
+    timestampFormat,
+    position,
+  };
+};
+
+const getUSER = (data: Uint8Array) => {
+  const isUnicode = data[0] === 1;
+  const language = readFixText(data, 1, 3);
+  const text = readText(data, 4, isUnicode, false);
+
+  return {
+    language,
+    text,
+  };
+};
+
+const getOWNE = (data: Uint8Array) => {
+  const isUnicode = data[0] === 1;
+  const [pricePayed, sep] = readText(data, 1, false, true);
+  const dateOfPurch = readFixText(data, sep, 8);
+  const [sellor] = readText(data, sep + 8, isUnicode, false);
+
+  return {
+    pricePayed,
+    dateOfPurch,
+    sellor,
+  };
+};
+
+const getCOMR = (data: Uint8Array) => {
+  const isUnicode = data[0] === 1;
+  const [price, psep] = readText(data, 1, false, true);
+  const validUntil = readFixText(data, psep, 8);
+  const [contactUrl, csep] = readText(data, psep + 8, false, true);
+  const receivedAs = data[csep];
+  const [nameOfSeller, nsep] = readText(data, csep + 1, isUnicode, true);
+  const [description, dsep] = readText(data, nsep, isUnicode, true);
+  const [mimetype, msep] = readText(data, dsep, false, true);
+  const sellerLogo = readBinary(data, msep);
+
+  return {
+    price,
+    validUntil,
+    contactUrl,
+    receivedAs,
+    nameOfSeller,
+    description,
+    mimetype,
+    sellerLogo,
+  };
+};
+
+const getENCR = (data: Uint8Array) => {
+  const [ownerIdentifier, sep] = readText(data, 0, false, true);
+  const methodSymbol = data[sep];
+  const encryptionData = readBinary(data, sep + 1);
+
+  return {
+    ownerIdentifier,
+    methodSymbol,
+    encryptionData,
+  };
+};
+
+const getGRID = (data: Uint8Array) => {
+  const [ownerIdentifier, sep] = readText(data, 0, false, true);
+  const groupSymbol = data[sep];
+  const groupDependentData = readBinary(data, sep + 1);
+
+  return {
+    ownerIdentifier,
+    groupSymbol,
+    groupDependentData,
+  };
+};
+
+const getPRIV = (data: Uint8Array) => {
+  const [ownerIdentifier, sep] = readText(data, 0, false, true);
+  const privateData = readBinary(data, sep);
+
+  return {
+    ownerIdentifier,
+    privateData,
   };
 };
 
@@ -261,3 +574,30 @@ const readText = (
     return [text, end + (isUnicode ? 2 : 1)];
   }
 };
+
+const readFixText = (data: Uint8Array, start: number, length: number) => {
+  return ISO_8859_1.decode(data.subarray(start, start + length));
+};
+
+const readInteger = (data: Uint8Array, start: number, length: number) => {
+  let num = 0;
+  for (let i = 0; i < length; i++) {
+    num = (num << 8) + data[start + i];
+  }
+  return num;
+};
+
+const readSynchsafeInteger = (
+  data: Uint8Array,
+  start: number,
+  length: number
+) => {
+  let num = 0;
+  for (let i = 0; i < length; i++) {
+    num = (num << 7) + data[start + i];
+  }
+  return num;
+};
+
+const readBinary = (data: Uint8Array, start: number, end?: number) =>
+  data.slice(start, end);
