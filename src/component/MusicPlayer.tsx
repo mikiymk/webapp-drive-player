@@ -29,7 +29,10 @@ const MusicPlayer: React.FC = () => {
       name: "Now Playing",
       element: (
         <PlayingInfo
-          name={""}
+          title={status.title}
+          artist={status.artist}
+          album={status.album}
+          jacket={status.jacket}
           duration={status.duration}
           currentTime={status.currentTime}
           paused={status.paused}
@@ -59,6 +62,11 @@ const usePlayer = () => {
   const [currentTime, setCurrentTime] = useState(0);
   const [loop, setLoop] = useState<"no" | "one" | "all">("no");
 
+  const [title, setTitle] = useState("");
+  const [artist, setArtist] = useState("");
+  const [album, setAlbum] = useState("");
+  const [jacket, setJacket] = useState("");
+
   const player = useRef<AudioPlayer | null>(null);
 
   useEffect(() => {
@@ -69,11 +77,25 @@ const usePlayer = () => {
     player.current.onSetCurrentTime = currentTime =>
       setCurrentTime(currentTime);
     player.current.onSetLoop = loop => setLoop(loop);
+
+    player.current.onSetTitle = title => setTitle(title);
+    player.current.onSetArtist = artist => setArtist(artist);
+    player.current.onSetAlbum = album => setAlbum(album);
+    player.current.onSetJacket = jacket => setJacket(jacket);
   }, []);
 
   return {
     player: player.current,
-    status: { paused, duration, currentTime, loop },
+    status: {
+      paused,
+      duration,
+      currentTime,
+      loop,
+      title,
+      artist,
+      album,
+      jacket,
+    },
   };
 };
 

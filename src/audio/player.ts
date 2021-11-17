@@ -63,6 +63,11 @@ class AudioPlayer {
   /** called on loop change with new loop state */
   onSetLoop = (loop: "no" | "one" | "all") => {};
 
+  onSetTitle = (title: string) => {};
+  onSetArtist = (artist: string) => {};
+  onSetAlbum = (album: string) => {};
+  onSetJacket = (jacket: string) => {};
+
   constructor() {
     this.node = this.context.createBufferSource();
   }
@@ -97,9 +102,41 @@ class AudioPlayer {
     const audioBuffer = await this.context.decodeAudioData(
       arrayBuffer.slice(0)
     );
-    const tag = readTagFromData(arrayBuffer);
-    console.log(tag);
+
+    this.setInfo(arrayBuffer);
+
     return audioBuffer;
+  }
+
+  async setInfo(data: ArrayBuffer) {
+    const tag = readTagFromData(data);
+
+    let title = "",
+      artist = "",
+      album = "",
+      jacket = "";
+    if (tag.v2 !== undefined) {
+      title = tag.v2.tags.find(({ id }) => id === "TIT2")?.data.text;
+      artist = tag.v2.tags.find(({ id }) => id === "TPE1")?.data.text;
+      album = tag.v2.tags.find(({ id }) => id === "TALB")?.data.text;
+      const { mimetype, pictureData } = tag.v2.tags.find(
+        ({ id }) => id === "APIC"
+      )?.data;
+      jacket = `data:${mimetype};base64,${btoa(
+        String.fromCharCode(...pictureData)
+      )}`;
+    } else if (tag.v1 !== undefined) {
+      title = tag.v1.title;
+      artist = tag.v1.artist;
+      album = tag.v1.album;
+    }
+
+    this.onSetTitle(title);
+    this.onSetArtist(artist);
+    this.onSetAlbum(album);
+    this.onSetJacket(jacket);
+
+    console.log(tag);
   }
 
   /**

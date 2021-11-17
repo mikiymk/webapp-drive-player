@@ -5,7 +5,10 @@ import React, { useEffect, useState } from "react";
  * now playing audio info view
  */
 const PlayingInfo: React.FC<{
-  name: string;
+  title: string;
+  artist: string;
+  album: string;
+  jacket: string;
   duration: number;
   currentTime: number;
   paused: boolean;
@@ -15,7 +18,10 @@ const PlayingInfo: React.FC<{
   pause: () => void;
   setLoop: (loop: "no" | "one" | "all") => void;
 }> = ({
-  name,
+  title,
+  artist,
+  album,
+  jacket,
   duration,
   currentTime,
   paused,
@@ -27,7 +33,10 @@ const PlayingInfo: React.FC<{
 }) => {
   return (
     <div>
-      {name}
+      <p>TITLE: {title}</p>
+      <p>ARTIST: {artist}</p>
+      <p>ALBUM: {album}</p>
+      <img src={jacket} alt="album jacket" />
       <PlayPauseButton isPaused={paused} play={play} pause={pause} />
       <SeekBar duration={duration} time={currentTime} seek={seek} />
       <ToggleLoop loop={loop} setLoop={setLoop} />

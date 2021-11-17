@@ -20,6 +20,8 @@ export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
     const frameData = data.subarray(index + 10, index + 10 + frameSize);
 
     const converted = convertData(id, frameData);
+    console.log(id, frameData, converted);
+
     tags.push(converted);
 
     index += 10 + frameSize;
@@ -32,8 +34,6 @@ export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
 };
 
 const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
-  console.log(id, data);
-
   if (id === "UFID") {
     // 4.1 Unique file identifier
     return { id, data: getUFID(data) };
@@ -49,7 +49,7 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
   } else if (id[0] === "W") {
     // 4.3 URL link frames
     return { id, data: getWEXT(data) };
-  } else if ((id = "IPLS")) {
+  } else if (id === "IPLS") {
     // 4.4 Involved people list
     return { id, data: getTEXT(data) };
   } else if (id === "MCDI") {
@@ -366,7 +366,6 @@ const getAPIC = (data: Uint8Array) => {
     pictureType,
     description,
     pictureData,
-    // uri: `data:${mimetype};base64,${btoa(String.fromCharCode(...pictureData))}`,
   };
 };
 
