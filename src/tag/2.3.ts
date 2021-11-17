@@ -1,41 +1,27 @@
 export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
-  const hasExtendHeader = data[5] & 0b0100_0000;
+  const hasExtendHeader = readBit(data, 5, 6);
 
-  const SIZE_MASK = 0b0111_1111;
-  const size =
-    (data[6] & SIZE_MASK) * 128 ** 3 +
-    (data[7] & SIZE_MASK) * 128 ** 2 +
-    (data[8] & SIZE_MASK) * 128 ** 1 +
-    (data[9] & SIZE_MASK) * 128 ** 0;
+  const size = readSynchsafeInteger(data, 6, 4);
 
   let extendHeaderSize = 0;
   if (hasExtendHeader) {
-    extendHeaderSize =
-      data[10] * 256 ** 3 +
-      data[11] * 256 ** 2 +
-      data[12] * 256 ** 1 +
-      data[13] * 256 ** 0 +
-      4;
+    extendHeaderSize = readInteger(data, 10, 4) + 4;
   }
   const tags: ID3v2Frame[] = [];
 
   let index = 10 + extendHeaderSize;
   while (true) {
-    const id = String.fromCharCode(...data.subarray(index, index + 4));
+    const id = readFixText(data, index, 4);
     if (!/^[0-9A-Z]{4}$/.test(id)) {
       break;
     }
-    const frameSize =
-      data[index + 4] * 256 ** 3 +
-      data[index + 5] * 256 ** 2 +
-      data[index + 6] * 256 ** 1 +
-      data[index + 7] * 256 ** 0;
 
-    const converted = convertData(
-      id,
-      data.subarray(index + 10, index + 10 + frameSize)
-    );
+    const frameSize = readInteger(data, index + 4, 4);
+    const frameData = data.subarray(index + 10, index + 10 + frameSize);
+
+    const converted = convertData(id, frameData);
     tags.push(converted);
+
     index += 10 + frameSize;
   }
 
@@ -139,14 +125,19 @@ const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
     // 4.28 Private frame
     return { id, data: getPRIV(data) };
   } else {
+    console.warn("unknown tag" + id);
     return { id, data };
   }
 };
 
 const getUFID = (data: Uint8Array) => {
   const [ownerIdentifier, sep] = readText(data, 0, false, true);
-  const [identifier] = data.subarray(sep);
-  return { ownerIdentifier, identifier };
+  const [identifier] = readBinary(data, sep);
+
+  return {
+    ownerIdentifier,
+    identifier,
+  };
 };
 
 const getTXXX = (data: Uint8Array) => {
@@ -155,12 +146,18 @@ const getTXXX = (data: Uint8Array) => {
   const [description, sep] = readText(data, 1, isUnicode, true);
   const [value] = readText(data, sep, isUnicode, false);
 
-  return { description, value };
+  return {
+    description,
+    value,
+  };
 };
 
 const getTEXT = (data: Uint8Array) => {
   const [text] = readText(data, 1, data[0] === 1, false);
-  return text;
+
+  return {
+    text,
+  };
 };
 
 const getWXXX = (data: Uint8Array) => {
@@ -169,13 +166,18 @@ const getWXXX = (data: Uint8Array) => {
   const [description, sep] = readText(data, 1, isUnicode, true);
   const [url] = readText(data, sep, false, false);
 
-  return { description, url };
+  return {
+    description,
+    url,
+  };
 };
 
 const getWEXT = (data: Uint8Array) => {
   const [url] = readText(data, 0, false, false);
 
-  return url;
+  return {
+    url,
+  };
 };
 
 const getETCO = (data: Uint8Array) => {
@@ -184,11 +186,7 @@ const getETCO = (data: Uint8Array) => {
   const timestamps = [];
   for (let i = 1; i < data.length; i += 5) {
     const eventType = data[i];
-    const timestamp =
-      data[i + 1] * 256 ** 3 +
-      data[i + 2] * 256 ** 2 +
-      data[i + 3] * 256 ** 1 +
-      data[i + 4] * 256 ** 0;
+    const timestamp = readInteger(data, i + 1, 4);
 
     timestamps.push({ eventType, timestamp });
   }
@@ -200,14 +198,18 @@ const getETCO = (data: Uint8Array) => {
 };
 
 const getMLLT = (data: Uint8Array) => {
-  console.log("MLLT is no support yet");
+  console.warn("MLLT is no support yet");
   return data;
 };
 
 const getSYTC = (data: Uint8Array) => {
   const timestampFormat = data[0];
-  const tempo = data.slice(1);
-  return { timestampFormat, tempo };
+  const tempo = readBinary(data, 1);
+
+  return {
+    timestampFormat,
+    tempo,
+  };
 };
 
 const getCOMM = (data: Uint8Array) => {
@@ -240,14 +242,13 @@ const getSYLT = (data: Uint8Array) => {
     try {
       [text, sep] = readText(data, startIndex, isUnicode, true);
     } catch (error) {
-      if (error instanceof Error && error.message === "no separator") break;
-      else throw error;
+      if (error instanceof Error && error.message === "no separator") {
+        break;
+      } else {
+        throw error;
+      }
     }
-    const timestamp =
-      data[sep + 0] * 256 ** 3 +
-      data[sep + 1] * 256 ** 2 +
-      data[sep + 2] * 256 ** 1 +
-      data[sep + 3] * 256 ** 0;
+    const timestamp = readInteger(data, sep, 4);
     content.push({ text, timestamp });
 
     startIndex = sep + 4;
@@ -263,7 +264,7 @@ const getSYLT = (data: Uint8Array) => {
 };
 
 const getRVAD = (data: Uint8Array) => {
-  const incDecrement = data[0];
+  const incrementDecrement = data[0];
   const bit = Math.ceil(data[1] / 8);
 
   const rerativeVolumeChangeRight = readInteger(data, 2, bit);
@@ -297,6 +298,7 @@ const getRVAD = (data: Uint8Array) => {
   }
 
   return {
+    incrementDecrement,
     rerativeVolumeChangeRight,
     rerativeVolumeChangeLeft,
     rerativeVolumeChangeRightBack,
@@ -313,8 +315,8 @@ const getRVAD = (data: Uint8Array) => {
 };
 
 const getEQUA = (data: Uint8Array) => {
-  const adjustmentBit = data[0];
-  const isIncrement = (data[1] & 0b1000_0000) !== 0;
+  const adjustmentBit = Math.ceil(data[0] / 8);
+  const isIncrement = readBit(data, 1, 7);
   const frequency = (data[1] & 0b0111_1111) * 256 + data[2];
   const adjustment = readInteger(data, 3, adjustmentBit);
 
@@ -325,26 +327,39 @@ const getEQUA = (data: Uint8Array) => {
   };
 };
 
-const getRVRB = (data: Uint8Array) => ({
-  reverbLeft: readInteger(data, 0, 2),
-  reverbRight: readInteger(data, 2, 2),
-  reverbBouncesLeft: data[4],
-  reverbBouncesRight: data[5],
-  reverbFeedbackLeftToLeft: data[6],
-  reverbFeedbackLeftToRight: data[7],
-  reverbFeedbackRightToRight: data[8],
-  reverbFeedbackRightToLeft: data[9],
-  premixLeftToRight: data[10],
-  premixRightToLeft: data[11],
-});
+const getRVRB = (data: Uint8Array) => {
+  const reverbLeft = readInteger(data, 0, 2);
+  const reverbRight = readInteger(data, 2, 2);
+  const reverbBouncesLeft = readInteger(data, 4, 1);
+  const reverbBouncesRight = readInteger(data, 5, 1);
+  const reverbFeedbackLeftToLeft = readInteger(data, 6, 1);
+  const reverbFeedbackLeftToRight = readInteger(data, 7, 1);
+  const reverbFeedbackRightToRight = readInteger(data, 8, 1);
+  const reverbFeedbackRightToLeft = readInteger(data, 9, 1);
+  const premixLeftToRight = readInteger(data, 10, 1);
+  const premixRightToLeft = readInteger(data, 11, 1);
+
+  return {
+    reverbLeft,
+    reverbRight,
+    reverbBouncesLeft,
+    reverbBouncesRight,
+    reverbFeedbackLeftToLeft,
+    reverbFeedbackLeftToRight,
+    reverbFeedbackRightToRight,
+    reverbFeedbackRightToLeft,
+    premixLeftToRight,
+    premixRightToLeft,
+  };
+};
 
 const getAPIC = (data: Uint8Array) => {
   const isUnicode = data[0] === 1;
 
   const [mimetype, msep] = readText(data, 1, false, true);
   const pictureType = data[msep];
-  const [description, dsep] = readText(data, msep + 1, data[0] === 1, true);
-  const pictureData = data.subarray(dsep);
+  const [description, dsep] = readText(data, msep + 1, isUnicode, true);
+  const pictureData = readBinary(data, dsep);
 
   return {
     mimetype,
@@ -361,7 +376,7 @@ const getGEOB = (data: Uint8Array) => {
   const [mimetype, msep] = readText(data, 1, false, true);
   const [fileName, fsep] = readText(data, msep, isUnicode, true);
   const [description, dsep] = readText(data, fsep, isUnicode, true);
-  const object = data.subarray(dsep);
+  const object = readBinary(data, dsep);
 
   return {
     mimetype,
@@ -387,7 +402,7 @@ const getPOPM = (data: Uint8Array) => {
 
 const getRBUF = (data: Uint8Array) => {
   const bufferSize = readInteger(data, 0, 3);
-  const hasEmbedInfo = (data[4] & 1) === 1;
+  const hasEmbedInfo = readBit(data, 4, 0);
   const offsetToNextTag = readInteger(data, 5, 4);
 
   return {
@@ -401,7 +416,7 @@ const getAENC = (data: Uint8Array) => {
   const [ownerIdentifier, sep] = readText(data, 0, false, true);
   const previewStart = data[sep];
   const previewLength = data[sep + 1];
-  const encryptionInfo = data.slice(sep + 2);
+  const encryptionInfo = readBinary(data, sep + 2);
 
   return {
     ownerIdentifier,
@@ -599,5 +614,29 @@ const readSynchsafeInteger = (
   return num;
 };
 
-const readBinary = (data: Uint8Array, start: number, end?: number) =>
-  data.slice(start, end);
+const readBinary = (data: Uint8Array, start: number, end?: number) => {
+  return data.slice(start, end);
+};
+
+/**
+ * read bit from data.
+ *
+ *     %xxxxxxxx
+ *      76543210
+ *      ^      ^
+ *       \      \
+ *        \       0 is Least Significant Bit
+ *         7 is Most Significant Bit
+ *
+ * @param data read from the data array
+ * @param index read data index
+ * @param bit bit number between 0-7
+ * @returns bit 1 true, bit 0 false
+ */
+const readBit = (data: Uint8Array, index: number, bit: number) => {
+  if (bit < 0 || 7 < bit) {
+    throw new Error(`bit number in 0-7 but ${bit}`);
+  }
+
+  return 0 !== (data[index] & (1 << bit));
+};
