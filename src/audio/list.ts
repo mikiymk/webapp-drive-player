@@ -7,14 +7,14 @@ export class AudioList {
   private readonly context: AudioContext;
 
   readonly list: Music[];
-  index: number = 0;
+  index = 0;
 
   downloadIDs: string[] = [];
   buffers: AudioBuffer[] = [];
   history: Music[] = [];
-  isLoop: boolean = true;
+  isLoop = true;
 
-  isDownloading: boolean = false;
+  isDownloading = false;
 
   getBufferCallBack: ((buffer: AudioBuffer) => void) | null = null;
 

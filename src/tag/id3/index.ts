@@ -1,4 +1,4 @@
-import { readID3v2_3 } from "./2_3";
+import { readID3v23 } from "./2_3";
 
 export const readTagFromData = (data: ArrayBuffer): TagInfo => {
   let v1;
@@ -19,7 +19,7 @@ export const readTagFromData = (data: ArrayBuffer): TagInfo => {
   return { v1, v2 };
 };
 
-const readID3v1 = (data: ArrayBuffer): ID3v1 | ID3v1_1 => {
+const readID3v1 = (data: ArrayBuffer): ID3v1 | ID3v11 => {
   const slicedData = new Uint8Array(data.slice(-128));
 
   const getString = (start: number, length: number) =>
@@ -33,35 +33,32 @@ const readID3v1 = (data: ArrayBuffer): ID3v1 | ID3v1_1 => {
   const artist = getString(33, 30);
   const album = getString(63, 30);
   const year = parseInt(getString(93, 4));
-  let comment, track;
-  if (slicedData[97 + 28]) {
-    comment = getString(97, 30);
-  } else {
-    comment = getString(97, 28);
-    track = slicedData[97 + 29];
-  }
   const genre = slicedData[127];
-
-  return track
-    ? {
-        version: "1.1",
-        title,
-        artist,
-        album,
-        year,
-        comment,
-        track,
-        genre,
-      }
-    : {
-        version: "1",
-        title,
-        artist,
-        album,
-        year,
-        comment,
-        genre,
-      };
+  if (slicedData[97 + 28]) {
+    const comment = getString(97, 30);
+    return {
+      version: "1",
+      title,
+      artist,
+      album,
+      year,
+      comment,
+      genre,
+    };
+  } else {
+    const comment = getString(97, 28);
+    const track = slicedData[97 + 29];
+    return {
+      version: "1.1",
+      title,
+      artist,
+      album,
+      year,
+      comment,
+      track,
+      genre,
+    };
+  }
 };
 
 const readID3v2 = (data: ArrayBuffer): ID3v2 => {
@@ -75,7 +72,7 @@ const readID3v2 = (data: ArrayBuffer): ID3v2 => {
   const version = `2.${uint8[3]}.${uint8[4]}`;
 
   if (version === "2.3.0") {
-    return readID3v2_3(uint8);
+    return readID3v23(uint8);
   }
 
   throw new Error(`no supported version ${version}`);

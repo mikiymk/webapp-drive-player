@@ -1,5 +1,5 @@
 type TagInfo = {
-  v1?: ID3v1 | ID3v1_1;
+  v1?: ID3v1 | ID3v11;
   v2?: ID3v2;
 };
 
@@ -13,7 +13,7 @@ interface ID3v1 {
   genre: number;
 }
 
-interface ID3v1_1 {
+interface ID3v11 {
   version: "1.1";
   title: string;
   artist: string;

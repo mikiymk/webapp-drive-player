@@ -108,14 +108,14 @@ const useToggle = <T,>(changes: T[]): [T, () => void] => {
 };
 
 const toggleLoop = (loop: "no" | "one" | "all") => {
-  switch (loop) {
-    case "no":
-      return "one";
-    case "one":
-      return "all";
-    case "all":
-      return "no";
+  if (loop === "no") {
+    return "one";
+  } else if (loop === "one") {
+    return "all";
+  } else if (loop === "all") {
+    return "no";
   }
+  return "one";
 };
 
 const ToggleLoop: React.FC<{

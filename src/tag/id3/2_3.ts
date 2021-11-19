@@ -1,4 +1,4 @@
-export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
+export const readID3v23 = (data: Uint8Array): ID3v2 => {
   const hasExtendHeader = readBit(data, 5, 6);
 
   const size = readSynchsafeInteger(data, 6, 4);
@@ -10,17 +10,13 @@ export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
   const tags: ID3v2Frame[] = [];
 
   let index = 10 + extendHeaderSize;
-  while (true) {
-    const id = readFixText(data, index, 4);
-    if (!/^[0-9A-Z]{4}$/.test(id)) {
-      break;
-    }
-
+  let id;
+  while (/^[0-9A-Z]{4}$/.test((id = readFixText(data, index, 4)))) {
     const frameSize = readInteger(data, index + 4, 4);
     const frameData = data.subarray(index + 10, index + 10 + frameSize);
 
     const converted = convertData(id, frameData);
-    console.log(id, frameData, converted);
+    // console.log(id, frameData, converted);
 
     tags.push(converted);
 
@@ -33,6 +29,7 @@ export const readID3v2_3 = (data: Uint8Array): ID3v2 => {
   };
 };
 
+// eslint-disable-next-line max-statements
 const convertData = (id: string, data: Uint8Array): ID3v2Frame => {
   if (id === "UFID") {
     // 4.1 Unique file identifier

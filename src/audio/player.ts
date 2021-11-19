@@ -17,13 +17,13 @@ class AudioPlayer {
    * null if will load and not loaded.
    */
   private nextBuffer: AudioBuffer | null = null;
-  private loadedNextBuffer: boolean = false;
+  private loadedNextBuffer = false;
 
   /** play music ids list */
   private musicIds: string[] = [];
 
   /** play music ids index */
-  private index: number = NaN;
+  private index = NaN;
 
   /** set and clear interval id */
   private intervalID = 0;
@@ -52,21 +52,40 @@ class AudioPlayer {
   isPaused = true;
 
   /** called on duration change with new duration */
-  onSetDuration = (duration: number) => {};
+  onSetDuration: (duration: number) => void = () => {
+    // change duration
+  };
 
   /** called on current time change with new current time */
-  onSetCurrentTime = (currentTime: number) => {};
+  onSetCurrentTime: (currentTime: number) => void = () => {
+    // change currentTime
+  };
 
   /** called on pause change with new pause state */
-  onSetPause = (isPaused: boolean) => {};
+  onSetPause: (isPaused: boolean) => void = () => {
+    // change isPaused
+  };
 
   /** called on loop change with new loop state */
-  onSetLoop = (loop: "no" | "one" | "all") => {};
+  onSetLoop: (loop: "no" | "one" | "all") => void = () => {
+    // change loop
+  };
 
-  onSetTitle = (title: string) => {};
-  onSetArtist = (artist: string) => {};
-  onSetAlbum = (album: string) => {};
-  onSetJacket = (jacket: string) => {};
+  onSetTitle: (title: string) => void = () => {
+    // change title
+  };
+
+  onSetArtist: (artist: string) => void = () => {
+    // change artist
+  };
+
+  onSetAlbum: (album: string) => void = () => {
+    // change album
+  };
+
+  onSetJacket: (jacket: string) => void = () => {
+    // change jacket
+  };
 
   constructor() {
     this.node = this.context.createBufferSource();
@@ -119,11 +138,9 @@ class AudioPlayer {
       title = tag.v2.tags.find(({ id }) => id === "TIT2")?.data.text;
       artist = tag.v2.tags.find(({ id }) => id === "TPE1")?.data.text;
       album = tag.v2.tags.find(({ id }) => id === "TALB")?.data.text;
-      const { mimetype, pictureData } = tag.v2.tags.find(
-        ({ id }) => id === "APIC"
-      )?.data;
-      jacket = `data:${mimetype};base64,${btoa(
-        String.fromCharCode(...pictureData)
+      const apic = tag.v2.tags.find(({ id }) => id === "APIC")?.data;
+      jacket = `data:${apic.mimetype};base64,${btoa(
+        String.fromCharCode(...apic.pictureData)
       )}`;
     } else if (tag.v1 !== undefined) {
       title = tag.v1.title;

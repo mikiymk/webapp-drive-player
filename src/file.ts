@@ -13,8 +13,8 @@ const getPagedFiles = async (
 ): Promise<Result> => {
   const result = await getList(query, token);
 
-  const row_files = result.files ?? [];
-  const files = row_files
+  const rowFiles = result.files ?? [];
+  const files = rowFiles
     .map(({ id, name }) => ({ id, name }))
     .filter((obj): obj is File => !!(obj.id && obj.name));
   const nextToken = result.nextPageToken;
