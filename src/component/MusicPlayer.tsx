@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import AudioPlayer from "../audio/player";
-import PlayingInfo from "./PlayManager";
-import MusicList from "./MusicList";
+
+import PlayingInfo from "./Playing/index";
+import MusicList from "./MusicLibrary/index";
+import DriveFiles from "./GoogleDrive/index";
+
 import Menu from "./Menu";
 import Authorize from "./Authorize";
-import DriveFiles from "./DriveFiles";
+
+import AudioPlayer from "../audio/player";
 import { File } from "../file";
 
 /**

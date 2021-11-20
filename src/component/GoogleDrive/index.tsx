@@ -1,5 +1,9 @@
 import React from "react";
-import { getAllMusics, getAllFolders, File } from "../file";
+
+import { Breadcrumbs } from "./Breakcrumbs";
+import { Item } from "./Item";
+
+import { getAllMusics, getAllFolders, File } from "../../file";
 
 /**
  * get files from google drive
@@ -29,44 +33,14 @@ const DriveFiles: React.FC<{
       <Breadcrumbs parents={parents} setParents={setParents} />
       <ul>
         {folders.map(file => (
-          <DriveFilesFile key={file.id} file={file} click={addParents} folder />
+          <Item key={file.id} file={file} click={addParents} folder />
         ))}
         {files.map(file => (
-          <DriveFilesFile key={file.id} file={file} click={addFile} />
+          <Item key={file.id} file={file} click={addFile} />
         ))}
       </ul>
     </>
   );
 };
-
-const Breadcrumbs: React.FC<{
-  parents: File[];
-  setParents: (parents: File[]) => void;
-}> = ({ parents, setParents }) => (
-  <div>
-    {parents
-      .map((parent, index) => (
-        <a
-          key={parent.id}
-          onClick={() => setParents(parents.slice(0, index + 1))}>
-          {parent.name}
-        </a>
-      ))
-      .flatMap((value, index) => [index !== 0 && " > ", value])}
-  </div>
-);
-
-const DriveFilesFile: React.FC<{
-  file: File;
-  click: (file: File) => void;
-  folder?: boolean;
-}> = ({ file, click, folder }) => (
-  <li>
-    <a onClick={() => click(file)}>
-      {folder && "Folder:"}
-      {file.name}({file.id})
-    </a>
-  </li>
-);
 
 export default DriveFiles;
