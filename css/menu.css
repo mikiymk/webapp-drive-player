@@ -1,0 +1,39 @@
+div.player-container {
+  display: flex;
+  flex-direction: column;
+
+  width: 100vw;
+  height: 100vh;
+}
+
+div.player-bottom-controller {
+  flex: 0 1 1.5rem;
+}
+
+div.menu-container {
+  display: flex;
+
+  flex: 1 0 max-content;
+}
+
+ul.menu-left {
+  flex: 0 0 max-content;
+  padding-top: 4rem;
+
+  color: rgb(91, 95, 102);
+  background-color: rgb(165, 165, 165);
+
+  overflow-y: scroll;
+}
+
+.menu-left > li {
+  margin: 0.5rem;
+}
+
+.menu-right {
+  flex: 1 1 content;
+
+  background-color: rgb(207, 207, 207);
+
+  overflow-wrap: anywhere;
+}
