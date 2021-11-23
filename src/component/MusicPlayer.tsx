@@ -56,8 +56,17 @@ const MusicPlayer: React.FC = () => {
       element: <DriveFiles signIn={signIn} addFile={addFile} />,
     });
 
-  return <Menu authorize={authorize} items={menuItems} />;
+  return (
+    <div className="player-container">
+      <Menu authorize={authorize} items={menuItems} />
+      <BottomController />
+    </div>
+  );
 };
+
+const BottomController: React.FC = () => (
+  <div className="player-bottom-controller">controll</div>
+);
 
 const usePlayer = () => {
   const [paused, setPaused] = useState(true);

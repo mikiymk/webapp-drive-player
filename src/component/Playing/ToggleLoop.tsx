@@ -7,10 +7,10 @@ export const ToggleLoop: React.FC<{
   const onClick = () => setLoop(toggleLoop(loop));
 
   return (
-    <div>
+    <>
       Loop:
       <button onClick={onClick}>{loop}</button>
-    </div>
+    </>
   );
 };
 
