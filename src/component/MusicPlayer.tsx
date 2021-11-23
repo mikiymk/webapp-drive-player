@@ -9,6 +9,7 @@ import Authorize from "./Authorize";
 
 import AudioPlayer from "../audio/player";
 import { File } from "../file";
+import styled from "styled-components";
 
 /**
  * react component root.
@@ -56,8 +57,17 @@ const MusicPlayer: React.FC = () => {
       element: <DriveFiles signIn={signIn} addFile={addFile} />,
     });
 
-  return <Menu authorize={authorize} items={menuItems} />;
+  return (
+    <Styled>
+      <Menu authorize={authorize} items={menuItems} />
+    </Styled>
+  );
 };
+
+const Styled = styled.div`
+  color: green;
+  background-color: yellow;
+`;
 
 const usePlayer = () => {
   const [paused, setPaused] = useState(true);

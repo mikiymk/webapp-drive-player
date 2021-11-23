@@ -11,7 +11,7 @@
     "watch": "webpack --watch",
     "server": "http-server",
     "start": "run-s lint format build:dev server",
-    "format": "prettier -w src index.html",
+    "format": "prettier -w src css index.html",
     "lint": "eslint src"
   },
   "repository": {
@@ -31,6 +31,7 @@
     "@types/node": "^14.17.14",
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
+    "@types/styled-components": "^5.1.15",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@webpack-cli/generators": "^1.1.0",
@@ -49,10 +50,11 @@
     "webpack": "^5.52.0",
     "webpack-cli": "^4.8.0",
     "webpack-merge": "^5.8.0",
-    "workbox-webpack-plugin": "^6.2.4"
+    "workbox-webpack-plugin": "^6.1.5"
   },
   "dependencies": {
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "styled-components": "^5.3.3"
   }
 }
