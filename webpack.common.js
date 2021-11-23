@@ -2,9 +2,6 @@
 
 const path = require("path");
 
-//MiniCssExtractPlugin の読み込み
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
 module.exports = {
   mode: "development",
   entry: "./src/index.tsx",
@@ -27,11 +24,6 @@ module.exports = {
 
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
-      {
-        test: /\.js$/,
-        enforce: "pre",
-        use: ["source-map-loader"],
-      },
     ],
   },
   resolve: {
