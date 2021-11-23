@@ -18,12 +18,12 @@ const Menu: React.FC<{
   ));
 
   return (
-    <div>
-      <ul>
+    <div className="menu-container">
+      <ul className="menu-left">
         {menuList}
         <li>{authorize}</li>
       </ul>
-      {items.get(selected)?.element ?? null}
+      <div className="menu-right">{items.get(selected)?.element ?? null}</div>
     </div>
   );
 };

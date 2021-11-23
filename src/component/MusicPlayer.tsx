@@ -4,12 +4,11 @@ import PlayingInfo from "./Playing/index";
 import MusicList from "./MusicLibrary/index";
 import DriveFiles from "./GoogleDrive/index";
 
-import Menu from "./Menu";
+import Menu from "./Menu/index";
 import Authorize from "./Authorize";
 
 import AudioPlayer from "../audio/player";
 import { File } from "../file";
-import styled from "styled-components";
 
 /**
  * react component root.
@@ -57,17 +56,8 @@ const MusicPlayer: React.FC = () => {
       element: <DriveFiles signIn={signIn} addFile={addFile} />,
     });
 
-  return (
-    <Styled>
-      <Menu authorize={authorize} items={menuItems} />
-    </Styled>
-  );
+  return <Menu authorize={authorize} items={menuItems} />;
 };
-
-const Styled = styled.div`
-  color: green;
-  background-color: yellow;
-`;
 
 const usePlayer = () => {
   const [paused, setPaused] = useState(true);

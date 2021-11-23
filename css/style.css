@@ -1,0 +1,35 @@
+@import url("./destyle.css");
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+
+div {
+  color: green;
+  background-color: yellow;
+}
+
+.menu-container {
+  display: flex;
+
+  height: 100%;
+  width: 100%;
+}
+
+.menu-left {
+  height: 100%;
+  width: 10rem;
+
+  color: rgb(91, 95, 102);
+  background-color: rgb(165, 165, 165);
+}
+
+.menu-left > li {
+  margin: 0.5rem;
+}
+
+.menu-right {
+  background-color: rgb(207, 207, 207);
+}

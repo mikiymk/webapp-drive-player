@@ -22,10 +22,6 @@ parserOptions:
 plugins: [react, "@typescript-eslint"]
 
 rules:
-  indent: [error, 2]
-  linebreak-style: [error, unix]
-  quotes: [error, double]
-  semi: [error, always]
   no-constant-condition: [error, { checkLoops: false }]
   camelcase: error
   eqeqeq: error
