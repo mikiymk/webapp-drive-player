@@ -27,9 +27,13 @@ const MusicPlayer: React.FC = () => {
   };
 
   const authorize = <Authorize signIn={signIn} setSignIn={setSignIn} />;
-  const menuItems = new Map<string, { name: string; element: JSX.Element }>()
+  const menuItems = new Map<
+    string,
+    { name: string; icon: string; element: JSX.Element }
+  >()
     .set("playing", {
       name: "Now Playing",
+      icon: "play_arrow",
       element: (
         <PlayingInfo
           title={status.title}
@@ -49,10 +53,12 @@ const MusicPlayer: React.FC = () => {
     })
     .set("library", {
       name: "Library",
+      icon: "list",
       element: <MusicList files={files} play={playWithIndex} />,
     })
     .set("drive", {
       name: "Google Drive",
+      icon: "cloud",
       element: <DriveFiles signIn={signIn} addFile={addFile} />,
     });
 

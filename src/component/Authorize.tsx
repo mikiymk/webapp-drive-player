@@ -1,5 +1,6 @@
 import React from "react";
 import { signOut, signIn, loadAndInit } from "../google-api/init";
+import Icon from "./Icon";
 
 /**
  * authorize sign in or sign out button and error message
@@ -28,9 +29,15 @@ const Authorize: React.FC<{
 
 const AuthorizeButton: React.FC<{ isSignedIn: boolean }> = ({ isSignedIn }) =>
   isSignedIn ? (
-    <button onClick={signOut}>Sign Out</button>
+    <button onClick={signOut}>
+      <Icon id="logout" />
+      Sign Out
+    </button>
   ) : (
-    <button onClick={signIn}>Authorize</button>
+    <button onClick={signIn}>
+      <Icon id="login" />
+      Authorize
+    </button>
   );
 
 const ErrorMessage: React.FC<{ message: string }> = ({ message }) =>

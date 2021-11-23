@@ -1,19 +1,22 @@
 import React from "react";
 
+import Icon from "../Icon";
+
 /**
  * menu list click menu and change view
  */
 const Menu: React.FC<{
-  items: Map<string, { name: string; element: JSX.Element }>;
+  items: Map<string, { name: string; icon: string; element: JSX.Element }>;
   authorize: JSX.Element;
 }> = ({ authorize, items }) => {
   const [selected, setSelected] = React.useState("playing");
 
-  const menuList = Array.from(items).map(([id, { name }]) => (
-    <li key={id} id={id}>
-      <a href={"#" + id} onClick={() => setSelected(id)}>
+  const menuList = Array.from(items).map(([id, { name, icon }]) => (
+    <li key={id}>
+      <button onClick={() => setSelected(id)}>
+        <Icon id={icon} />
         {name}
-      </a>
+      </button>
     </li>
   ));
 
