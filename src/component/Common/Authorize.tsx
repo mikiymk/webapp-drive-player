@@ -2,13 +2,15 @@ import React from "react";
 import { signOut, signIn, loadAndInit } from "../../google-api/init";
 import Icon from "./Icon";
 
+type Props = {
+  signIn: boolean;
+  setSignIn: (signIn: boolean) => void;
+};
+
 /**
  * authorize sign in or sign out button and error message
  */
-const Authorize: React.FC<{
-  signIn: boolean;
-  setSignIn: (signIn: boolean) => void;
-}> = ({ signIn, setSignIn }) => {
+const Authorize: React.FC<Props> = ({ signIn, setSignIn }) => {
   const [errorMessage, setErrorMessage] = React.useState("");
 
   // init at first
@@ -30,12 +32,12 @@ const Authorize: React.FC<{
 const AuthorizeButton: React.FC<{ isSignedIn: boolean }> = ({ isSignedIn }) =>
   isSignedIn ? (
     <button onClick={signOut}>
-      <Icon id="logout" />
+      <Icon icon="logout" />
       Sign Out
     </button>
   ) : (
     <button onClick={signIn}>
-      <Icon id="login" />
+      <Icon icon="login" />
       Authorize
     </button>
   );

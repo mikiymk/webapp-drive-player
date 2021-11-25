@@ -1,9 +1,11 @@
 import React from "react";
 
-const Icon: React.FC<{
-  id: string;
-}> = ({ id }) => {
-  return <span className="material-icons-sharp">{id}</span>;
+type Props = {
+  icon: string;
+};
+
+const Icon: React.FC<Props> = ({ icon }) => {
+  return <span className="material-icons-sharp">{icon}</span>;
 };
 
 export default Icon;

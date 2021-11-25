@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-export const SeekBar: React.FC<{
+type Props = {
   duration: number;
   time: number;
   seek: (time: number) => void;
-}> = ({ duration, time, seek }) => {
+};
+
+const SeekBar: React.FC<Props> = ({ duration, time, seek }) => {
   const [seekTime, setSeekTime] = useState(0);
   const [click, setClick] = useState(false);
 
@@ -42,3 +44,5 @@ export const SeekBar: React.FC<{
     />
   );
 };
+
+export default SeekBar;

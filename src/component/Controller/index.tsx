@@ -1,13 +1,13 @@
 import React from "react";
 
-import { PlayButton } from "./PlayButton";
-import { SeekBar } from "./SeekBar";
-import { ToggleLoop } from "./ToggleLoop";
+import PlayButton from "./PlayButton";
+import SeekBar from "./SeekBar";
+import ToggleLoop from "./ToggleLoop";
 
 import { formatTime } from "../../format";
 import IconButton from "../Common/IconButton";
 
-const Controller: React.FC<{
+type Props = {
   duration: number;
   currentTime: number;
   paused: boolean;
@@ -18,7 +18,9 @@ const Controller: React.FC<{
   playNext: () => void;
   playPrev: () => void;
   setLoop: (loop: "no" | "one" | "all") => void;
-}> = ({
+};
+
+const Controller: React.FC<Props> = ({
   duration,
   currentTime,
   paused,

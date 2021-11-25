@@ -1,14 +1,16 @@
 import React from "react";
 
-/**
- * now playing audio info view
- */
-const PlayingInfo: React.FC<{
+type Props = {
   title: string;
   artist: string;
   album: string;
   jacket: string;
-}> = ({ title, artist, album, jacket }) => {
+};
+
+/**
+ * now playing audio info view
+ */
+const PlayingInfo: React.FC<Props> = ({ title, artist, album, jacket }) => {
   return (
     <div>
       <p>TITLE: {title}</p>

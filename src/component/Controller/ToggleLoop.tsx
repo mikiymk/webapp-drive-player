@@ -1,9 +1,11 @@
 import React from "react";
 
-export const ToggleLoop: React.FC<{
+type Props = {
   loop: "no" | "one" | "all";
   setLoop: (loop: "no" | "one" | "all") => void;
-}> = ({ loop, setLoop }) => {
+};
+
+const ToggleLoop: React.FC<Props> = ({ loop, setLoop }) => {
   const onClick = () => setLoop(toggleLoop(loop));
 
   return (
@@ -24,3 +26,5 @@ const toggleLoop = (loop: "no" | "one" | "all") => {
   }
   return "one";
 };
+
+export default ToggleLoop;

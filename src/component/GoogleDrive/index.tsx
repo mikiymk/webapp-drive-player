@@ -5,13 +5,15 @@ import { Item } from "./Item";
 
 import { getAllMusics, getAllFolders, File } from "../../file";
 
+type Props = {
+  signIn: boolean;
+  addFile: (file: File) => void;
+};
+
 /**
  * get files from google drive
  */
-const DriveFiles: React.FC<{
-  signIn: boolean;
-  addFile: (file: File) => void;
-}> = ({ signIn, addFile }) => {
+const DriveFiles: React.FC<Props> = ({ signIn, addFile }) => {
   const [parents, setParents] = React.useState<File[]>([
     { name: "root", id: "root" },
   ]);
@@ -27,10 +29,11 @@ const DriveFiles: React.FC<{
   }, [signIn, parents]);
 
   const addParents = (folder: File) => setParents(parents.concat([folder]));
+  const move = (index: number) => setParents(parents.slice(0, index + 1));
 
   return (
     <>
-      <Breadcrumbs parents={parents} setParents={setParents} />
+      <Breadcrumbs parents={parents} move={move} />
       <ul>
         {folders.map(file => (
           <Item key={file.id} file={file} click={addParents} folder />

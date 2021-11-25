@@ -2,13 +2,15 @@ import React from "react";
 
 import Icon from "./Icon";
 
-const IconButton: React.FC<{
+type Props = {
   icon: string;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
-}> = ({ icon, onClick }) => {
+};
+
+const IconButton: React.FC<Props> = ({ icon, onClick }) => {
   return (
     <button onClick={onClick}>
-      <Icon id={icon} />
+      <Icon icon={icon} />
     </button>
   );
 };

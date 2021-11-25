@@ -2,19 +2,21 @@ import React from "react";
 
 import Icon from "../Common/Icon";
 
+type Props = {
+  items: Map<string, { name: string; icon: string; element: JSX.Element }>;
+  authorize: JSX.Element;
+};
+
 /**
  * menu list click menu and change view
  */
-const Menu: React.FC<{
-  items: Map<string, { name: string; icon: string; element: JSX.Element }>;
-  authorize: JSX.Element;
-}> = ({ authorize, items }) => {
+const Menu: React.FC<Props> = ({ authorize, items }) => {
   const [selected, setSelected] = React.useState("playing");
 
   const menuList = Array.from(items).map(([id, { name, icon }]) => (
     <li key={id}>
       <button onClick={() => setSelected(id)}>
-        <Icon id={icon} />
+        <Icon icon={icon} />
         {name}
       </button>
     </li>

@@ -1,15 +1,19 @@
 import React from "react";
 import { File } from "../../file";
 
-export const Item: React.FC<{
+type Props = {
   file: File;
   click: (file: File) => void;
   folder?: boolean;
-}> = ({ file, click, folder }) => (
-  <li>
-    <a onClick={() => click(file)}>
-      {folder && "Folder:"}
-      {file.name}({file.id})
-    </a>
-  </li>
-);
+};
+
+export const Item: React.FC<Props> = ({ file, click, folder }) => {
+  return (
+    <li>
+      <a onClick={() => click(file)}>
+        {folder && "Folder:"}
+        {file.name}({file.id})
+      </a>
+    </li>
+  );
+};
