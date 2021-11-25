@@ -181,7 +181,7 @@ class AudioPlayer {
    * not loaded, load and play.
    * and, load next buffer.
    */
-  private skipToNext() {
+  skipToNext() {
     this.stop();
     this.index = this.nextIndex;
     if (this.loadedNextBuffer) {
@@ -192,6 +192,18 @@ class AudioPlayer {
     } else {
       this.playAndLoad();
     }
+  }
+
+  /**
+   * start to play previous music
+   */
+  playPrev() {
+    this.stop();
+    this.index = this.index - 1;
+    if (this.index === -1) {
+      this.index = this.musicIds.length - 1;
+    }
+    this.playAndLoad();
   }
 
   /**

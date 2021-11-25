@@ -2,25 +2,27 @@ div.player-container {
   display: flex;
   flex-direction: column;
 
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
 
-div.player-bottom-controller {
-  flex: 0 1 1.5rem;
+div.player-controller {
+  flex: 0 0 3.5rem;
+
+  background-color: rgb(173, 173, 173);
+  border-bottom: rgb(93, 93, 93) solid 0.1rem;
 }
 
 div.menu-container {
   display: flex;
 
-  flex: 1 0 max-content;
+  flex: 1 0 calc(100vh - 3.5rem);
 }
 
 ul.menu-left {
   flex: 0 0 max-content;
   padding-top: 4rem;
 
-  color: rgb(91, 95, 102);
   background-color: rgb(165, 165, 165);
 
   overflow-y: scroll;

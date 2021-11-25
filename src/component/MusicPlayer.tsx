@@ -6,6 +6,7 @@ import DriveFiles from "./GoogleDrive/index";
 
 import Menu from "./Menu/index";
 import Authorize from "./Authorize";
+import Controller from "./Controller/index";
 
 import AudioPlayer from "../audio/player";
 import { File } from "../file";
@@ -40,14 +41,6 @@ const MusicPlayer: React.FC = () => {
           artist={status.artist}
           album={status.album}
           jacket={status.jacket}
-          duration={status.duration}
-          currentTime={status.currentTime}
-          paused={status.paused}
-          loop={status.loop}
-          seek={time => player?.seek(time)}
-          play={() => player?.play()}
-          pause={() => player?.pause()}
-          setLoop={loop => player?.setLoop(loop)}
         />
       ),
     })
@@ -64,15 +57,20 @@ const MusicPlayer: React.FC = () => {
 
   return (
     <div className="player-container">
+      <Controller
+        duration={status.duration}
+        currentTime={status.currentTime}
+        paused={status.paused}
+        loop={status.loop}
+        seek={time => player?.seek(time)}
+        play={() => player?.play()}
+        pause={() => player?.pause()}
+        setLoop={loop => player?.setLoop(loop)}
+      />
       <Menu authorize={authorize} items={menuItems} />
-      <BottomController />
     </div>
   );
 };
-
-const BottomController: React.FC = () => (
-  <div className="player-bottom-controller">controll</div>
-);
 
 const usePlayer = () => {
   const [paused, setPaused] = useState(true);
