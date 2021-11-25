@@ -1,6 +1,6 @@
 import React from "react";
 
-import Icon from "../Icon";
+import Icon from "../Common/Icon";
 
 /**
  * menu list click menu and change view

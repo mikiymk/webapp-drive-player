@@ -1,12 +1,14 @@
 import React from "react";
 
+import IconButton from "../Common/IconButton";
+
 export const PlayButton: React.FC<{
   isPaused: boolean;
   play: () => void;
   pause: () => void;
 }> = ({ isPaused, play, pause }) =>
   isPaused ? (
-    <button onClick={play}>play</button>
+    <IconButton icon="play_arrow" onClick={play} />
   ) : (
-    <button onClick={pause}>pause</button>
+    <IconButton icon="pause" onClick={pause} />
   );

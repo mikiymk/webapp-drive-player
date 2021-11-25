@@ -1,5 +1,5 @@
 import React from "react";
-import { signOut, signIn, loadAndInit } from "../google-api/init";
+import { signOut, signIn, loadAndInit } from "../../google-api/init";
 import Icon from "./Icon";
 
 /**

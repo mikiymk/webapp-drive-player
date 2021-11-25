@@ -5,7 +5,7 @@ import MusicList from "./MusicLibrary/index";
 import DriveFiles from "./GoogleDrive/index";
 
 import Menu from "./Menu/index";
-import Authorize from "./Authorize";
+import Authorize from "./Common/Authorize";
 import Controller from "./Controller/index";
 
 import AudioPlayer from "../audio/player";
@@ -65,6 +65,8 @@ const MusicPlayer: React.FC = () => {
         seek={time => player?.seek(time)}
         play={() => player?.play()}
         pause={() => player?.pause()}
+        playNext={() => player?.skipToNext()}
+        playPrev={() => player?.playPrev()}
         setLoop={loop => player?.setLoop(loop)}
       />
       <Menu authorize={authorize} items={menuItems} />
