@@ -1,0 +1,26 @@
+.common-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.common-icon span {
+  font-size: inherit;
+}
+
+.common-icon-button > .common-icon {
+  font-size: 2rem;
+  height: 3rem;
+  width: 3rem;
+}
+
+.common-label-icon-button > .common-icon {
+  font-size: 1rem;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.common-icon-button:hover,
+.common-label-icon-button:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}

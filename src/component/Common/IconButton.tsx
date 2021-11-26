@@ -5,11 +5,12 @@ import Icon from "./Icon";
 type Props = {
   icon: string;
   onClick: React.MouseEventHandler<HTMLButtonElement>;
+  className?: string;
 };
 
-const IconButton: React.FC<Props> = ({ icon, onClick }) => {
+const IconButton: React.FC<Props> = ({ icon, onClick, className }) => {
   return (
-    <button onClick={onClick}>
+    <button onClick={onClick} className={"common-icon-button " + className}>
       <Icon icon={icon} />
     </button>
   );

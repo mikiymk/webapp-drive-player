@@ -1,4 +1,4 @@
-div.player-container {
+.player-container {
   display: flex;
   flex-direction: column;
 
@@ -6,20 +6,20 @@ div.player-container {
   height: 100%;
 }
 
-div.player-controller {
-  flex: 0 0 3.5rem;
+.player-controller {
+  flex: 1 0 1.5rem;
 
   background-color: rgb(173, 173, 173);
   border-bottom: rgb(93, 93, 93) solid 0.1rem;
 }
 
-div.menu-container {
+.menu-container {
   display: flex;
 
   flex: 1 0 calc(100vh - 3.5rem);
 }
 
-ul.menu-left {
+.menu-left {
   flex: 0 0 max-content;
   padding-top: 4rem;
 
