@@ -29,7 +29,16 @@
 }
 
 .menu-left > li {
-  margin: 0.5rem;
+  margin: 0.3rem 0rem;
+  padding: 0.2rem 0.5rem;
+}
+
+.menu-left > li:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.menu-left .common-label-icon-button:hover {
+  background: none;
 }
 
 .menu-right {
