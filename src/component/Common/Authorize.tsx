@@ -1,6 +1,8 @@
 import React from "react";
+
+import LabelIconButton from "./LabelIconButton";
+
 import { signOut, signIn, loadAndInit } from "../../google-api/init";
-import Icon from "./Icon";
 
 type Props = {
   signIn: boolean;
@@ -31,15 +33,9 @@ const Authorize: React.FC<Props> = ({ signIn, setSignIn }) => {
 
 const AuthorizeButton: React.FC<{ isSignedIn: boolean }> = ({ isSignedIn }) =>
   isSignedIn ? (
-    <button onClick={signOut}>
-      <Icon icon="logout" />
-      Sign Out
-    </button>
+    <LabelIconButton icon="logout" text="Sign Out" onClick={signOut} />
   ) : (
-    <button onClick={signIn}>
-      <Icon icon="login" />
-      Authorize
-    </button>
+    <LabelIconButton icon="login" text="Sign In" onClick={signIn} />
   );
 
 const ErrorMessage: React.FC<{ message: string }> = ({ message }) =>

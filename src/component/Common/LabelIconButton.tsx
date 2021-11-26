@@ -18,7 +18,7 @@ const LabelIconButton: React.FC<Props> = ({
   return (
     <button
       onClick={onClick}
-      className={"common-label-icon-button " + className}>
+      className={"common-label-icon-button " + (className ?? "")}>
       <Icon icon={icon} />
       <span className="common-label-icon-button-label">{text}</span>
     </button>

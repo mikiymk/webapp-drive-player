@@ -1,6 +1,6 @@
 import React from "react";
 
-import Icon from "../Common/Icon";
+import LabelIconButton from "../Common/LabelIconButton";
 
 type Props = {
   items: Map<string, { name: string; icon: string; element: JSX.Element }>;
@@ -15,10 +15,11 @@ const Menu: React.FC<Props> = ({ authorize, items }) => {
 
   const menuList = Array.from(items).map(([id, { name, icon }]) => (
     <li key={id}>
-      <button onClick={() => setSelected(id)}>
-        <Icon icon={icon} />
-        {name}
-      </button>
+      <LabelIconButton
+        icon={icon}
+        text={name}
+        onClick={() => setSelected(id)}
+      />
     </li>
   ));
 

@@ -10,7 +10,9 @@ type Props = {
 
 const IconButton: React.FC<Props> = ({ icon, onClick, className }) => {
   return (
-    <button onClick={onClick} className={"common-icon-button " + className}>
+    <button
+      onClick={onClick}
+      className={"common-icon-button " + (className ?? "")}>
       <Icon icon={icon} />
     </button>
   );
