@@ -1,6 +1,6 @@
 import React from "react";
 
-import Icon from "./Icon";
+import LabelIcon from "./LabelIcon";
 
 type Props = {
   icon: string;
@@ -19,8 +19,7 @@ const LabelIconButton: React.FC<Props> = ({
     <button
       onClick={onClick}
       className={"common-label-icon-button " + (className ?? "")}>
-      <Icon icon={icon} />
-      <span className="common-label-icon-button-label">{text}</span>
+      <LabelIcon icon={icon} text={text} />
     </button>
   );
 };

@@ -41,6 +41,14 @@
   background: none;
 }
 
+.menu-left-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.menu-left-selected:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
 .menu-right {
   flex: 1 1 content;
 

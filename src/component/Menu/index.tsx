@@ -1,25 +1,26 @@
 import React from "react";
 
-import LabelIconButton from "../Common/LabelIconButton";
+import LabelIcon from "../Common/LabelIcon";
+import Authorize from "./Authorize";
 
 type Props = {
   items: Map<string, { name: string; icon: string; element: JSX.Element }>;
-  authorize: JSX.Element;
+  signIn: boolean;
+  setSignIn: (signIn: boolean) => void;
 };
 
 /**
  * menu list click menu and change view
  */
-const Menu: React.FC<Props> = ({ authorize, items }) => {
+const Menu: React.FC<Props> = ({ items, signIn, setSignIn }) => {
   const [selected, setSelected] = React.useState("playing");
 
   const menuList = Array.from(items).map(([id, { name, icon }]) => (
-    <li key={id}>
-      <LabelIconButton
-        icon={icon}
-        text={name}
-        onClick={() => setSelected(id)}
-      />
+    <li
+      key={id}
+      className={id === selected ? "menu-left-selected" : ""}
+      onClick={() => setSelected(id)}>
+      <LabelIcon icon={icon} text={name} />
     </li>
   ));
 
@@ -27,7 +28,7 @@ const Menu: React.FC<Props> = ({ authorize, items }) => {
     <div className="menu-container">
       <ul className="menu-left">
         {menuList}
-        <li>{authorize}</li>
+        <Authorize signIn={signIn} setSignIn={setSignIn} />
       </ul>
       <div className="menu-right">{items.get(selected)?.element ?? null}</div>
     </div>

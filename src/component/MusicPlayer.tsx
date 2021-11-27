@@ -5,7 +5,6 @@ import MusicList from "./MusicLibrary/index";
 import DriveFiles from "./GoogleDrive/index";
 
 import Menu from "./Menu/index";
-import Authorize from "./Common/Authorize";
 import Controller from "./Controller/index";
 
 import AudioPlayer from "../audio/player";
@@ -27,7 +26,6 @@ const MusicPlayer: React.FC = () => {
     );
   };
 
-  const authorize = <Authorize signIn={signIn} setSignIn={setSignIn} />;
   const menuItems = new Map<
     string,
     { name: string; icon: string; element: JSX.Element }
@@ -69,7 +67,7 @@ const MusicPlayer: React.FC = () => {
         playPrev={() => player?.playPrev()}
         setLoop={loop => player?.setLoop(loop)}
       />
-      <Menu authorize={authorize} items={menuItems} />
+      <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
     </div>
   );
 };
