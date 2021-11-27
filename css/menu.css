@@ -10,7 +10,15 @@
   flex: 1 0 1.5rem;
 
   background-color: rgb(173, 173, 173);
-  border-bottom: rgb(93, 93, 93) solid 0.1rem;
+}
+
+.player-seekbar {
+  background-color: rgb(79, 81, 99);
+}
+
+.player-seekbar:focus,
+.player-seekbar:active {
+  outline: none;
 }
 
 .menu-container {

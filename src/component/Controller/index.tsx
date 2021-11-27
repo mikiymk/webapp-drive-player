@@ -33,14 +33,16 @@ const Controller: React.FC<Props> = ({
   setLoop,
 }) => {
   return (
-    <div className="player-controller">
-      <IconButton icon="skip_previous" onClick={playPrev} />
-      <PlayButton isPaused={paused} play={play} pause={pause} />
-      <IconButton icon="skip_next" onClick={playNext} />
+    <>
+      <div className="player-controller">
+        <IconButton icon="skip_previous" onClick={playPrev} />
+        <PlayButton isPaused={paused} play={play} pause={pause} />
+        <IconButton icon="skip_next" onClick={playNext} />
+        <ToggleLoop loop={loop} setLoop={setLoop} />
+        {formatTime(currentTime)}/{formatTime(duration)}
+      </div>
       <SeekBar duration={duration} time={currentTime} seek={seek} />
-      <ToggleLoop loop={loop} setLoop={setLoop} />
-      {formatTime(currentTime)}/{formatTime(duration)}
-    </div>
+    </>
   );
 };
 

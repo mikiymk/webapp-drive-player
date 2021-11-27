@@ -31,6 +31,7 @@ const SeekBar: React.FC<Props> = ({ duration, time, seek }) => {
 
   return (
     <input
+      className="player-seekbar"
       type="range"
       min="0"
       max={duration * 1000}
