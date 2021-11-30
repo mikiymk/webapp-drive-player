@@ -2,35 +2,36 @@ import React from "react";
 
 import IconButton from "../Common/IconButton";
 import PlayButton from "./PlayButton";
-import LoopButton from "./LoopButton";
+import RepeatButton from "./RepeatButton";
 import SeekBar from "./SeekBar";
 
 import { formatTime } from "../../format";
+import Repeat from "audio/repeat";
 
 type Props = {
   duration: number;
   currentTime: number;
   paused: boolean;
-  loop: "no" | "one" | "all";
+  repeat: Repeat;
   seek: (time: number) => void;
   play: () => void;
   pause: () => void;
   playNext: () => void;
   playPrev: () => void;
-  setLoop: (loop: "no" | "one" | "all") => void;
+  setRepeat: (repeat: Repeat) => void;
 };
 
 const Controller: React.FC<Props> = ({
   duration,
   currentTime,
   paused,
-  loop,
+  repeat,
   seek,
   play,
   pause,
   playNext,
   playPrev,
-  setLoop,
+  setRepeat,
 }) => {
   return (
     <>
@@ -38,7 +39,7 @@ const Controller: React.FC<Props> = ({
         <IconButton icon="skip_previous" onClick={playPrev} />
         <PlayButton isPaused={paused} play={play} pause={pause} />
         <IconButton icon="skip_next" onClick={playNext} />
-        <LoopButton loop={loop} setLoop={setLoop} />
+        <RepeatButton repeat={repeat} setRepeat={setRepeat} />
         {formatTime(currentTime)}/{formatTime(duration)}
       </div>
       <SeekBar duration={duration} time={currentTime} seek={seek} />

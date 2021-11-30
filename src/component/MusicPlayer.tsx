@@ -9,6 +9,7 @@ import Controller from "./Controller/index";
 
 import AudioPlayer from "../audio/player";
 import { File } from "../file";
+import Repeat from "../audio/repeat";
 
 /**
  * react component root.
@@ -59,13 +60,13 @@ const MusicPlayer: React.FC = () => {
         duration={status.duration}
         currentTime={status.currentTime}
         paused={status.paused}
-        loop={status.loop}
+        repeat={status.repeat}
         seek={time => player?.seek(time)}
         play={() => player?.play()}
         pause={() => player?.pause()}
         playNext={() => player?.skipToNext()}
         playPrev={() => player?.playPrev()}
-        setLoop={loop => player?.setLoop(loop)}
+        setRepeat={repeat => player?.setRepeat(repeat)}
       />
       <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
     </div>
@@ -76,7 +77,7 @@ const usePlayer = () => {
   const [paused, setPaused] = useState(true);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const [loop, setLoop] = useState<"no" | "one" | "all">("no");
+  const [repeat, setRepeat] = useState(new Repeat());
 
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
@@ -92,7 +93,7 @@ const usePlayer = () => {
     player.current.onSetPause = paused => setPaused(paused);
     player.current.onSetCurrentTime = currentTime =>
       setCurrentTime(currentTime);
-    player.current.onSetLoop = loop => setLoop(loop);
+    player.current.onSetRepeat = repeat => setRepeat(repeat);
 
     player.current.onSetTitle = title => setTitle(title);
     player.current.onSetArtist = artist => setArtist(artist);
@@ -106,7 +107,7 @@ const usePlayer = () => {
       paused,
       duration,
       currentTime,
-      loop,
+      repeat,
       title,
       artist,
       album,

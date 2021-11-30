@@ -1,5 +1,6 @@
 import { readTagFromData } from "../tag/index";
 import { downloadFile } from "../google-api/file";
+import Repeat from "./repeat";
 
 /**
  * play audio manager
@@ -29,12 +30,9 @@ class AudioPlayer {
   private intervalID = 0;
 
   /**
-   * loop
-   * - "no" not loop, play through all musics in list once and stop on end.
-   * - "one" loop only one music plays.
-   * - "all" loop all musics, all music plays and start play first on end.
+   * repeat
    */
-  loop: "no" | "one" | "all" = "no";
+  repeat: Repeat = new Repeat();
 
   /** play music duration second */
   duration = 0;
@@ -66,9 +64,9 @@ class AudioPlayer {
     // change isPaused
   };
 
-  /** called on loop change with new loop state */
-  onSetLoop: (loop: "no" | "one" | "all") => void = () => {
-    // change loop
+  /** called on repeat change with new repeat state */
+  onSetRepeat: (repeat: Repeat) => void = () => {
+    // change repeat
   };
 
   onSetTitle: (title: string) => void = () => {
@@ -230,9 +228,9 @@ class AudioPlayer {
     this.playAndLoad();
   }
 
-  /** next index. if loop "all", last to first */
+  /** next index. if repeat "repeat on", last to first */
   get nextIndex() {
-    if (this.loop === "all") {
+    if (this.repeat.value === "repeat on") {
       return (this.index + 1) % this.musicIds.length;
     } else {
       return this.index + 1;
@@ -250,34 +248,32 @@ class AudioPlayer {
     this.node.buffer = this.buffer;
     this.node.connect(this.context.destination);
     this.setDuration(this.buffer.duration);
-    this.setLoop(this.loop);
+    this.setRepeat(this.repeat);
   }
 
   /**
-   * set loop and on end
-   * @param loop new loop
+   * set repeat and on end
+   * @param repeat new repeat
    */
-  setLoop(loop: "no" | "one" | "all") {
-    this.loop = loop;
+  setRepeat(repeat: Repeat) {
+    this.repeat = repeat.copy();
     this.node.loop = false;
     this.node.onended = () => {
       console.log("ended", this.currentTime, this.duration);
       if (this.duration - this.currentTime <= 1) {
-        ({
-          no: () => {
+        switch (this.repeat.value) {
+          case "repeat off":
+          case "repeat on":
             this.skipToNext();
-          },
-          one: () => {
+            break;
+          case "repeat one":
             this.stop();
             this.start();
-          },
-          all: () => {
-            this.skipToNext();
-          },
-        }[loop]());
+            break;
+        }
       }
     };
-    this.onSetLoop(loop);
+    this.onSetRepeat(repeat);
   }
 
   private setDuration(duration: number) {
