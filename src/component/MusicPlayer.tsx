@@ -3,13 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 import PlayingInfo from "./Playing/index";
 import MusicList from "./MusicLibrary/index";
 import DriveFiles from "./GoogleDrive/index";
-
 import Menu from "./Menu/index";
 import Controller from "./Controller/index";
 
-import AudioPlayer from "../audio/player";
-import { File } from "../file";
-import Repeat from "../audio/repeat";
+import AudioPlayer from "audio/player";
+import Repeat from "audio/repeat";
+import { File } from "file";
 
 /**
  * react component root.

@@ -1,6 +1,7 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require("path");
+const TsConfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -29,5 +30,6 @@ module.exports = {
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
     modules: ["node_modules"],
+    plugins: [new TsConfigPathsPlugin()],
   },
 };

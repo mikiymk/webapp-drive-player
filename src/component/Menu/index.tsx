@@ -1,6 +1,7 @@
 import React from "react";
 
-import LabelIcon from "../Common/LabelIcon";
+import LabelIcon from "component/Common/LabelIcon";
+
 import Authorize from "./Authorize";
 
 type Props = {

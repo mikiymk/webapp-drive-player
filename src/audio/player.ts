@@ -1,6 +1,6 @@
-import { readTagFromData } from "../tag/index";
-import { downloadFile } from "../google-api/file";
-import Repeat from "./repeat";
+import { readTagFromData } from "tag/index";
+import { downloadFile } from "google-api/file";
+import Repeat from "audio/repeat";
 
 /**
  * play audio manager

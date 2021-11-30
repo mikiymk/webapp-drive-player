@@ -1,6 +1,6 @@
 import React from "react";
 
-import LabelIcon from "./LabelIcon";
+import LabelIcon from "component/Common/LabelIcon";
 
 type Props = {
   icon: string;

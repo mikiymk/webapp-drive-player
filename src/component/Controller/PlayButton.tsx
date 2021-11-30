@@ -1,6 +1,6 @@
 import React from "react";
 
-import IconButton from "../Common/IconButton";
+import IconButton from "component/Common/IconButton";
 
 type Props = {
   isPaused: boolean;

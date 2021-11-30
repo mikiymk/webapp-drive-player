@@ -1,6 +1,8 @@
 import React from "react";
-import { File } from "../../file";
+
 import { Item } from "./Item";
+
+import { File } from "file";
 
 type Props = {
   files: File[];

@@ -1,11 +1,12 @@
 import React from "react";
 
-import IconButton from "../Common/IconButton";
+import IconButton from "component/Common/IconButton";
+
 import PlayButton from "./PlayButton";
 import RepeatButton from "./RepeatButton";
 import SeekBar from "./SeekBar";
 
-import { formatTime } from "../../format";
+import { formatTime } from "format";
 import Repeat from "audio/repeat";
 
 type Props = {

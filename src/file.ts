@@ -1,4 +1,4 @@
-import { getList } from "./google-api/file";
+import { getList } from "google-api/file";
 
 export type File = {
   name: string;

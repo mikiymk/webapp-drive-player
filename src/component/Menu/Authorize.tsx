@@ -1,8 +1,8 @@
 import React from "react";
 
-import { signOut, signIn, loadAndInit } from "../../google-api/init";
+import LabelIcon from "component/Common/LabelIcon";
 
-import LabelIcon from "../Common/LabelIcon";
+import { signOut, signIn, loadAndInit } from "google-api/init";
 
 type Props = {
   signIn: boolean;

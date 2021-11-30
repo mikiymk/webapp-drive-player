@@ -1,6 +1,8 @@
-import IconButton from "../Common/IconButton";
 import React from "react";
-import Repeat from "../../audio/repeat";
+
+import IconButton from "component/Common/IconButton";
+
+import Repeat from "audio/repeat";
 
 type Props = {
   repeat: Repeat;

@@ -1,5 +1,5 @@
-import { downloadFile } from "../google-api/file";
-import { File as Music } from "../file";
+import { downloadFile } from "google-api/file";
+import { File as Music } from "file";
 
 const BUFFER_MAX_SIZE = 5;
 

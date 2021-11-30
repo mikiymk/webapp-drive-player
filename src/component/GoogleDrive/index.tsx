@@ -3,7 +3,7 @@ import React from "react";
 import { Breadcrumbs } from "./Breakcrumbs";
 import { Item } from "./Item";
 
-import { getAllMusics, getAllFolders, File } from "../../file";
+import { getAllMusics, getAllFolders, File } from "file";
 
 type Props = {
   signIn: boolean;
