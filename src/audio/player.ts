@@ -49,6 +49,8 @@ class AudioPlayer {
   /** play music paused */
   isPaused = true;
 
+  jacketURL = "";
+
   /** called on duration change with new duration */
   onSetDuration: (duration: number) => void = () => {
     // change duration
@@ -114,18 +116,18 @@ class AudioPlayer {
    */
   private async downloadAudio(id: string) {
     const fileData = await downloadFile(id);
-    const dataArray = Array.from(fileData).map(c => c.charCodeAt(0));
-    const arrayBuffer = new Uint8Array(dataArray).buffer;
-    const audioBuffer = await this.context.decodeAudioData(
-      arrayBuffer.slice(0)
-    );
-
-    this.setInfo(arrayBuffer);
+    const blob = new Blob([fileData], { type: "text/plain" });
+    const arrayBuffer = await blob.arrayBuffer();
+    const abCopy = arrayBuffer.slice(0);
+    const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
+    this.setInfo(abCopy);
 
     return audioBuffer;
   }
 
   async setInfo(data: ArrayBuffer) {
+    URL.revokeObjectURL(this.jacketURL);
+
     const tag = readTagFromData(data);
 
     let title = "",
@@ -137,15 +139,16 @@ class AudioPlayer {
       artist = tag.v2.tags.find(({ id }) => id === "TPE1")?.data.text;
       album = tag.v2.tags.find(({ id }) => id === "TALB")?.data.text;
       const apic = tag.v2.tags.find(({ id }) => id === "APIC")?.data;
-      jacket = `data:${apic.mimetype};base64,${btoa(
-        String.fromCharCode(...apic.pictureData)
-      )}`;
+      jacket = URL.createObjectURL(
+        new Blob([apic.pictureData], { type: apic.mimetype })
+      );
     } else if (tag.v1 !== undefined) {
       title = tag.v1.title;
       artist = tag.v1.artist;
       album = tag.v1.album;
     }
 
+    this.jacketURL = jacket;
     this.onSetTitle(title);
     this.onSetArtist(artist);
     this.onSetAlbum(album);
