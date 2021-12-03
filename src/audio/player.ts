@@ -112,17 +112,26 @@ class AudioPlayer {
   /**
    * download music data from google drive
    * @param id music id
-   * @returns decoded audio buffer
+   * @returns decoded audio buffer, null if error
    */
   private async downloadAudio(id: string) {
-    const fileData = await downloadFile(id);
-    const blob = new Blob([fileData], { type: "text/plain" });
-    const arrayBuffer = await blob.arrayBuffer();
-    const abCopy = arrayBuffer.slice(0);
-    const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
-    this.setInfo(abCopy);
+    try {
+      const fileData = await downloadFile(id);
 
-    return audioBuffer;
+      if (fileData === null) {
+        return null;
+      }
+
+      const arrayBuffer = await fileData.arrayBuffer();
+      const abCopy = arrayBuffer.slice(0);
+      const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
+      this.setInfo(abCopy);
+
+      return audioBuffer;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
   }
 
   async setInfo(data: ArrayBuffer) {

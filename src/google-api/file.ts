@@ -26,15 +26,18 @@ export const getList = async (query: string, token?: string) => {
 export const downloadFile = async (fileId: string) => {
   console.log(`download file ID ${fileId}`);
   try {
-    const response = await gapi.client.drive.files.get({
-      fileId,
-      alt: "media",
+    const token = gapi.client.getToken().access_token;
+    const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     console.log(`downloaded ${fileId}`);
-    return response.body;
+    return response;
   } catch (error) {
     console.error(error);
-    return "";
+    return null;
   }
 };
