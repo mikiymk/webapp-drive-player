@@ -1,6 +1,7 @@
 import { readTagFromData } from "tag/index";
 import { downloadFile } from "google-api/file";
 import Repeat from "audio/repeat";
+import ShuffleArray from "audio/shuffleArray";
 
 /**
  * play audio manager
@@ -21,7 +22,7 @@ class AudioPlayer {
   private loadedNextBuffer = false;
 
   /** play music ids list */
-  private musicIds: string[] = [];
+  private musicIds: ShuffleArray<string> = new ShuffleArray([], false);
 
   /** play music ids index */
   private index = NaN;
@@ -197,7 +198,7 @@ class AudioPlayer {
     if (this.loadedNextBuffer) {
       this.buffer = this.nextBuffer;
       this.setBuffer();
-      this.loadNextBuffer(this.musicIds[this.nextIndex]);
+      this.loadNextBuffer(this.musicIds.get(this.nextIndex));
       this.start();
     } else {
       this.playAndLoad();
@@ -222,8 +223,8 @@ class AudioPlayer {
    * id by music id list and index
    */
   async playAndLoad() {
-    await this.playWithId(this.musicIds[this.index]);
-    this.loadNextBuffer(this.musicIds[this.nextIndex]);
+    await this.playWithId(this.musicIds.get(this.index));
+    this.loadNextBuffer(this.musicIds.get(this.nextIndex));
   }
 
   /**
@@ -234,7 +235,7 @@ class AudioPlayer {
    * @param index start index
    */
   playWithIdList(ids: string[], index: number) {
-    this.musicIds = ids;
+    this.musicIds = new ShuffleArray(ids, false);
     this.index = index;
 
     this.playAndLoad();
