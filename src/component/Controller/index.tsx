@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import IconButton from "component/Common/IconButton";
 
@@ -8,6 +8,7 @@ import SeekBar from "./SeekBar";
 
 import { formatTime } from "format";
 import Repeat from "audio/repeat";
+import ShuffleButton from "./ShuffleButton";
 
 type Props = {
   duration: number;
@@ -34,6 +35,7 @@ const Controller: React.FC<Props> = ({
   playPrev,
   setRepeat,
 }) => {
+  const [shuffle, setShuffle] = useState(false);
   return (
     <>
       <div className="player-controller">
@@ -41,6 +43,7 @@ const Controller: React.FC<Props> = ({
         <PlayButton isPaused={paused} play={play} pause={pause} />
         <IconButton icon="skip_next" onClick={playNext} />
         <RepeatButton repeat={repeat} setRepeat={setRepeat} />
+        <ShuffleButton shuffle={shuffle} setShuffle={setShuffle} />
         {formatTime(currentTime)}/{formatTime(duration)}
       </div>
       <SeekBar duration={duration} time={currentTime} seek={seek} />
