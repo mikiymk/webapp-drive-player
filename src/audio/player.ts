@@ -2,6 +2,7 @@ import { readTagFromData } from "tag/index";
 import { downloadFile } from "google-api/file";
 import Repeat from "audio/repeat";
 import ShuffleArray from "audio/shuffleArray";
+import { File } from "file";
 
 /**
  * play audio manager
@@ -22,7 +23,7 @@ class AudioPlayer {
   private loadedNextBuffer = false;
 
   /** play music ids list */
-  private musicIds: ShuffleArray<string> = new ShuffleArray([], false);
+  musicIds: ShuffleArray<File> = new ShuffleArray([], false);
 
   /** play music ids index */
   private index = NaN;
@@ -70,6 +71,10 @@ class AudioPlayer {
   /** called on repeat change with new repeat state */
   onSetRepeat: (repeat: Repeat) => void = () => {
     // change repeat
+  };
+
+  onSetShuffle: (shuffle: boolean) => void = () => {
+    // change shuffle
   };
 
   onSetTitle: (title: string) => void = () => {
@@ -198,7 +203,7 @@ class AudioPlayer {
     if (this.loadedNextBuffer) {
       this.buffer = this.nextBuffer;
       this.setBuffer();
-      this.loadNextBuffer(this.musicIds.get(this.nextIndex));
+      this.loadNextBuffer(this.musicIds.get(this.nextIndex).id);
       this.start();
     } else {
       this.playAndLoad();
@@ -223,8 +228,8 @@ class AudioPlayer {
    * id by music id list and index
    */
   async playAndLoad() {
-    await this.playWithId(this.musicIds.get(this.index));
-    this.loadNextBuffer(this.musicIds.get(this.nextIndex));
+    await this.playWithId(this.musicIds.get(this.index).id);
+    this.loadNextBuffer(this.musicIds.get(this.nextIndex).id);
   }
 
   /**
@@ -234,7 +239,7 @@ class AudioPlayer {
    * @param ids music id list
    * @param index start index
    */
-  playWithIdList(ids: string[], index: number) {
+  playWithIdList(ids: File[], index: number) {
     this.musicIds = new ShuffleArray(ids, false);
     this.index = index;
 
@@ -287,6 +292,11 @@ class AudioPlayer {
       }
     };
     this.onSetRepeat(repeat);
+  }
+
+  setShuffle(shuffle: boolean) {
+    this.musicIds.shuffle = shuffle;
+    this.onSetShuffle(shuffle);
   }
 
   private setDuration(duration: number) {

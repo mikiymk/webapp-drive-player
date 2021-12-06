@@ -20,10 +20,7 @@ const MusicPlayer: React.FC = () => {
 
   const addFile = (newFiles: File) => setFiles(files.concat(newFiles));
   const playWithIndex = (index: number) => {
-    player?.playWithIdList(
-      files.map(file => file.id),
-      index
-    );
+    player?.playWithIdList(files, index);
   };
 
   const menuItems = new Map<
@@ -39,6 +36,7 @@ const MusicPlayer: React.FC = () => {
           artist={status.artist}
           album={status.album}
           jacket={status.jacket}
+          playingList={player?.musicIds ?? []}
         />
       ),
     })
@@ -60,12 +58,14 @@ const MusicPlayer: React.FC = () => {
         currentTime={status.currentTime}
         paused={status.paused}
         repeat={status.repeat}
+        shuffle={status.shuffle}
         seek={time => player?.seek(time)}
         play={() => player?.play()}
         pause={() => player?.pause()}
         playNext={() => player?.skipToNext()}
         playPrev={() => player?.playPrev()}
         setRepeat={repeat => player?.setRepeat(repeat)}
+        setShuffle={shuffle => player?.setShuffle(shuffle)}
       />
       <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
     </div>
@@ -77,6 +77,7 @@ const usePlayer = () => {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [repeat, setRepeat] = useState(new Repeat());
+  const [shuffle, setShuffle] = useState(false);
 
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
@@ -93,6 +94,7 @@ const usePlayer = () => {
     player.current.onSetCurrentTime = currentTime =>
       setCurrentTime(currentTime);
     player.current.onSetRepeat = repeat => setRepeat(repeat);
+    player.current.onSetShuffle = shuffle => setShuffle(shuffle);
 
     player.current.onSetTitle = title => setTitle(title);
     player.current.onSetArtist = artist => setArtist(artist);
@@ -107,6 +109,7 @@ const usePlayer = () => {
       duration,
       currentTime,
       repeat,
+      shuffle,
       title,
       artist,
       album,

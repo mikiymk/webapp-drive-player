@@ -15,12 +15,14 @@ type Props = {
   currentTime: number;
   paused: boolean;
   repeat: Repeat;
+  shuffle: boolean;
   seek: (time: number) => void;
   play: () => void;
   pause: () => void;
   playNext: () => void;
   playPrev: () => void;
   setRepeat: (repeat: Repeat) => void;
+  setShuffle: (shuffle: boolean) => void;
 };
 
 const Controller: React.FC<Props> = ({
@@ -28,14 +30,15 @@ const Controller: React.FC<Props> = ({
   currentTime,
   paused,
   repeat,
+  shuffle,
   seek,
   play,
   pause,
   playNext,
   playPrev,
   setRepeat,
+  setShuffle,
 }) => {
-  const [shuffle, setShuffle] = useState(false);
   return (
     <>
       <div className="player-controller">
