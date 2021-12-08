@@ -3,6 +3,8 @@ import { downloadFile } from "google-api/file";
 import Repeat from "audio/repeat";
 import ShuffleArray from "audio/shuffleArray";
 import { File } from "file";
+import BufferLoader from "./bufferLoader";
+import AudioInfo from "./audioInfo";
 
 /**
  * play audio manager
@@ -13,14 +15,13 @@ class AudioPlayer {
   private node: AudioBufferSourceNode;
 
   /** audio buffer playing */
-  private buffer: AudioBuffer | null = null;
+  private readonly buffer = new BufferLoader(this.context);
 
   /**
    * audio buffer next playing.
    * null if will load and not loaded.
    */
-  private nextBuffer: AudioBuffer | null = null;
-  private loadedNextBuffer = false;
+  private readonly nextBuffer = new BufferLoader(this.context);
 
   /** play music ids list */
   musicIds: ShuffleArray<File> = new ShuffleArray([], false);
@@ -50,8 +51,6 @@ class AudioPlayer {
 
   /** play music paused */
   isPaused = true;
-
-  jacketURL = "";
 
   /** called on duration change with new duration */
   onSetDuration: (duration: number) => void = () => {
@@ -106,70 +105,8 @@ class AudioPlayer {
    */
   async playWithId(id: string) {
     this.stop();
-
-    if (!id) return;
-    const audioBuffer = await this.downloadAudio(id);
-
-    this.buffer = audioBuffer;
-
+    await this.buffer.load(id);
     this.start();
-  }
-
-  /**
-   * download music data from google drive
-   * @param id music id
-   * @returns decoded audio buffer, null if error
-   */
-  private async downloadAudio(id: string) {
-    try {
-      const fileData = await downloadFile(id);
-
-      if (fileData === null) {
-        return null;
-      }
-
-      const arrayBuffer = await fileData.arrayBuffer();
-      const abCopy = arrayBuffer.slice(0);
-      const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
-      this.setInfo(abCopy);
-
-      return audioBuffer;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
-  }
-
-  async setInfo(data: ArrayBuffer) {
-    URL.revokeObjectURL(this.jacketURL);
-
-    const tag = readTagFromData(data);
-
-    let title = "",
-      artist = "",
-      album = "",
-      jacket = "";
-    if (tag.v2 !== undefined) {
-      title = tag.v2.tags.find(({ id }) => id === "TIT2")?.data.text;
-      artist = tag.v2.tags.find(({ id }) => id === "TPE1")?.data.text;
-      album = tag.v2.tags.find(({ id }) => id === "TALB")?.data.text;
-      const apic = tag.v2.tags.find(({ id }) => id === "APIC")?.data;
-      jacket = URL.createObjectURL(
-        new Blob([apic.pictureData], { type: apic.mimetype })
-      );
-    } else if (tag.v1 !== undefined) {
-      title = tag.v1.title;
-      artist = tag.v1.artist;
-      album = tag.v1.album;
-    }
-
-    this.jacketURL = jacket;
-    this.onSetTitle(title);
-    this.onSetArtist(artist);
-    this.onSetAlbum(album);
-    this.onSetJacket(jacket);
-
-    console.log(tag);
   }
 
   /**
@@ -177,17 +114,7 @@ class AudioPlayer {
    * @param id music id
    */
   private loadNextBuffer(id: string) {
-    this.loadedNextBuffer = false;
-    this.nextBuffer = null;
-
-    if (!id) return;
-
-    this.downloadAudio(id).then(buffer => {
-      if (!this.loadedNextBuffer) {
-        this.nextBuffer = buffer;
-        this.loadedNextBuffer = true;
-      }
-    });
+    this.nextBuffer.load(id);
   }
 
   /**
@@ -200,8 +127,8 @@ class AudioPlayer {
   skipToNext() {
     this.stop();
     this.index = this.nextIndex;
-    if (this.loadedNextBuffer) {
-      this.buffer = this.nextBuffer;
+    if (this.nextBuffer.isLoaded) {
+      this.buffer.copyFrom(this.nextBuffer);
       this.setBuffer();
       this.loadNextBuffer(this.musicIds.get(this.nextIndex).id);
       this.start();
@@ -262,11 +189,24 @@ class AudioPlayer {
     this.node.disconnect();
     this.node = this.context.createBufferSource();
 
-    if (this.buffer === null) return;
-    this.node.buffer = this.buffer;
+    if (this.buffer.buffer === null) {
+      return;
+    }
+
+    this.node.buffer = this.buffer.buffer;
     this.node.connect(this.context.destination);
-    this.setDuration(this.buffer.duration);
+    this.setDuration(this.buffer.buffer.duration);
     this.setRepeat(this.repeat);
+    this.setInfo(this.buffer.info);
+  }
+
+  setInfo(info: AudioInfo) {
+    this.onSetTitle(info.title ?? "");
+    this.onSetArtist(info.artist ?? "");
+    this.onSetAlbum(info.album ?? "");
+    this.onSetJacket(info.jacket ?? "");
+
+    console.log(info);
   }
 
   /**
@@ -358,53 +298,57 @@ class AudioPlayer {
 
   /** play start at begin */
   start() {
-    if (this.isPaused) {
-      this.setStartAt(this.context.currentTime);
-      this.setStopAt(0);
-      this.setPause(false);
+    if (!this.isPaused) return;
 
-      this.setInterval();
+    this.setStartAt(this.context.currentTime);
+    this.setStopAt(0);
+    this.setPause(false);
 
-      this.setBuffer();
-      this.node.start(this.context.currentTime, 0);
-    }
+    this.setInterval();
+
+    this.setBuffer();
+    if (this.node.buffer === null) return;
+
+    this.node.start(this.context.currentTime, 0);
   }
 
   /** play stop and jump to begin */
   stop() {
-    if (!this.isPaused) {
-      this.setStopAt(0);
-      this.setPause(true);
+    if (this.isPaused) return;
 
-      this.unsetInterval();
+    this.setStopAt(0);
+    this.setPause(true);
 
-      this.node.stop(this.context.currentTime);
-    }
+    this.unsetInterval();
+
+    this.node.stop(this.context.currentTime);
   }
 
   /** play start at pause time */
   play() {
-    if (this.isPaused) {
-      this.setStartAt(this.context.currentTime - this.stopAt);
-      this.setPause(false);
+    if (!this.isPaused) return;
 
-      this.setInterval();
+    this.setStartAt(this.context.currentTime - this.stopAt);
+    this.setPause(false);
 
-      this.setBuffer();
-      this.node.start(this.context.currentTime, this.stopAt);
-    }
+    this.setInterval();
+
+    this.setBuffer();
+    if (this.node.buffer === null) return;
+
+    this.node.start(this.context.currentTime, this.stopAt);
   }
 
   /** play stop and save pause time */
   pause() {
-    if (!this.isPaused) {
-      this.setStopAt((this.context.currentTime - this.startAt) % this.duration);
-      this.setPause(true);
+    if (this.isPaused) return;
 
-      this.unsetInterval();
+    this.setStopAt((this.context.currentTime - this.startAt) % this.duration);
+    this.setPause(true);
 
-      this.node.stop(this.context.currentTime);
-    }
+    this.unsetInterval();
+
+    this.node.stop(this.context.currentTime);
   }
 
   /** jump time */
