@@ -32,9 +32,6 @@ const MusicPlayer: React.FC = () => {
       icon: "play_arrow",
       element: (
         <PlayingInfo
-          title={status.title}
-          artist={status.artist}
-          album={status.album}
           jacket={status.jacket}
           playingList={player?.musicIds ?? []}
         />
@@ -54,6 +51,9 @@ const MusicPlayer: React.FC = () => {
   return (
     <div className="player-container">
       <Controller
+        title={status.title}
+        artist={status.artist}
+        album={status.album}
         duration={status.duration}
         currentTime={status.currentTime}
         paused={status.paused}

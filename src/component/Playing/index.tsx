@@ -3,9 +3,6 @@ import React from "react";
 import { File } from "file";
 
 type Props = {
-  title: string;
-  artist: string;
-  album: string;
   jacket: string;
   playingList: Iterable<File>;
 };
@@ -13,18 +10,9 @@ type Props = {
 /**
  * now playing audio info view
  */
-const PlayingInfo: React.FC<Props> = ({
-  title,
-  artist,
-  album,
-  jacket,
-  playingList,
-}) => {
+const PlayingInfo: React.FC<Props> = ({ jacket, playingList }) => {
   return (
     <div>
-      <p>TITLE: {title}</p>
-      <p>ARTIST: {artist}</p>
-      <p>ALBUM: {album}</p>
       <img src={jacket} alt="album jacket" />
       <ol>
         {Array.from(playingList).map(({ name, id }, index) => (

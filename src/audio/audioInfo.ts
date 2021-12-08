@@ -39,11 +39,10 @@ class AudioInfo {
     readonly album?: string,
     readonly jacket?: string
   ) {
-    console.log(`
-    TITLE : ${title}
-    ARTIST: ${artist}
-    ALBUM : ${album}
-    JACKET: ${jacket}`);
+    console.log(`TITLE : ${title}`);
+    console.log(`ARTIST: ${artist}`);
+    console.log(`ALBUM : ${album}`);
+    console.log(`JACKET: ${jacket}`);
   }
 
   close() {

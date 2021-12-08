@@ -4,13 +4,18 @@ import IconButton from "component/Common/IconButton";
 
 import PlayButton from "./PlayButton";
 import RepeatButton from "./RepeatButton";
+import ShuffleButton from "./ShuffleButton";
+import MusicTitle from "./MusicTitle";
 import SeekBar from "./SeekBar";
 
 import { formatTime } from "format";
 import Repeat from "audio/repeat";
-import ShuffleButton from "./ShuffleButton";
+import MusicTime from "./MusicTime";
 
 type Props = {
+  title: string;
+  artist: string;
+  album: string;
   duration: number;
   currentTime: number;
   paused: boolean;
@@ -26,6 +31,9 @@ type Props = {
 };
 
 const Controller: React.FC<Props> = ({
+  title,
+  artist,
+  album,
   duration,
   currentTime,
   paused,
@@ -45,9 +53,10 @@ const Controller: React.FC<Props> = ({
         <IconButton icon="skip_previous" onClick={playPrev} />
         <PlayButton isPaused={paused} play={play} pause={pause} />
         <IconButton icon="skip_next" onClick={playNext} />
+        <MusicTitle title={title} artist={artist} album={album} />
         <RepeatButton repeat={repeat} setRepeat={setRepeat} />
         <ShuffleButton shuffle={shuffle} setShuffle={setShuffle} />
-        {formatTime(currentTime)}/{formatTime(duration)}
+        <MusicTime duration={duration} currentTime={currentTime} />
       </div>
       <SeekBar duration={duration} time={currentTime} seek={seek} />
     </>
