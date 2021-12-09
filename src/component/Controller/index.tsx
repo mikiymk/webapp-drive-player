@@ -15,7 +15,6 @@ import MusicTime from "./MusicTime";
 type Props = {
   title: string;
   artist: string;
-  album: string;
   duration: number;
   currentTime: number;
   paused: boolean;
@@ -33,7 +32,6 @@ type Props = {
 const Controller: React.FC<Props> = ({
   title,
   artist,
-  album,
   duration,
   currentTime,
   paused,
@@ -53,7 +51,7 @@ const Controller: React.FC<Props> = ({
         <IconButton icon="skip_previous" onClick={playPrev} />
         <PlayButton isPaused={paused} play={play} pause={pause} />
         <IconButton icon="skip_next" onClick={playNext} />
-        <MusicTitle title={title} artist={artist} album={album} />
+        <MusicTitle title={title} artist={artist} />
         <RepeatButton repeat={repeat} setRepeat={setRepeat} />
         <ShuffleButton shuffle={shuffle} setShuffle={setShuffle} />
         <MusicTime duration={duration} currentTime={currentTime} />

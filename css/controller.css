@@ -1,0 +1,19 @@
+.player-controller {
+  display: flex;
+  justify-content: center;
+}
+
+.player-controller-title {
+  flex: 1 0 calc(100vw - 30rem);
+
+  display: flex;
+  flex-direction: column;
+}
+
+.player-controller-title-title {
+  flex: 1 1 1rem;
+}
+
+.player-controller-time {
+  margin: 0.9rem 0;
+}
