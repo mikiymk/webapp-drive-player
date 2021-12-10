@@ -9,6 +9,7 @@ import Controller from "./Controller/index";
 import AudioPlayer from "audio/player";
 import Repeat from "audio/repeat";
 import { File } from "file";
+import AudioInfo from "audio/audioInfo";
 
 /**
  * react component root.
@@ -32,8 +33,8 @@ const MusicPlayer: React.FC = () => {
       icon: "play_arrow",
       element: (
         <PlayingInfo
-          album={status.album}
-          jacket={status.jacket}
+          album={status.info.album}
+          jacket={status.info.jacket}
           playingList={player?.musicIds ?? []}
         />
       ),
@@ -52,8 +53,8 @@ const MusicPlayer: React.FC = () => {
   return (
     <div className="player-container">
       <Controller
-        title={status.title}
-        artist={status.artist}
+        title={status.info.title}
+        artist={status.info.artist}
         duration={status.duration}
         currentTime={status.currentTime}
         paused={status.paused}
@@ -79,10 +80,7 @@ const usePlayer = () => {
   const [repeat, setRepeat] = useState(new Repeat());
   const [shuffle, setShuffle] = useState(false);
 
-  const [title, setTitle] = useState("");
-  const [artist, setArtist] = useState("");
-  const [album, setAlbum] = useState("");
-  const [jacket, setJacket] = useState("");
+  const [info, setInfo] = useState(new AudioInfo());
 
   const player = useRef<AudioPlayer | null>(null);
 
@@ -96,10 +94,7 @@ const usePlayer = () => {
     player.current.onSetRepeat = repeat => setRepeat(repeat);
     player.current.onSetShuffle = shuffle => setShuffle(shuffle);
 
-    player.current.onSetTitle = title => setTitle(title);
-    player.current.onSetArtist = artist => setArtist(artist);
-    player.current.onSetAlbum = album => setAlbum(album);
-    player.current.onSetJacket = jacket => setJacket(jacket);
+    player.current.onSetInfo = info => setInfo(info);
   }, []);
 
   return {
@@ -110,10 +105,7 @@ const usePlayer = () => {
       currentTime,
       repeat,
       shuffle,
-      title,
-      artist,
-      album,
-      jacket,
+      info,
     },
   };
 };

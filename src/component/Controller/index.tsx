@@ -13,8 +13,8 @@ import Repeat from "audio/repeat";
 import MusicTime from "./MusicTime";
 
 type Props = {
-  title: string;
-  artist: string;
+  title?: string;
+  artist?: string;
   duration: number;
   currentTime: number;
   paused: boolean;

@@ -10,20 +10,13 @@ import AudioInfo from "./audioInfo";
  * play audio manager
  */
 class AudioPlayer {
-  /** audio context and source node */
   private context = new AudioContext();
   private node: AudioBufferSourceNode;
 
-  /** audio buffer playing */
   private readonly buffer = new BufferLoader(this.context);
-
-  /**
-   * audio buffer next playing.
-   * null if will load and not loaded.
-   */
   private readonly nextBuffer = new BufferLoader(this.context);
 
-  /** play music ids list */
+  /** play music file list */
   musicIds: ShuffleArray<File> = new ShuffleArray([], false);
 
   /** play music ids index */
@@ -32,61 +25,34 @@ class AudioPlayer {
   /** set and clear interval id */
   private intervalID = 0;
 
-  /**
-   * repeat
-   */
   repeat: Repeat = new Repeat();
-
-  /** play music duration second */
   duration = 0;
-
-  /** play music current play time second */
   currentTime = 0;
-
-  /** play music start at time second */
   startAt = 0;
-
-  /** play music paused */
   isPaused = true;
 
-  /** called on duration change with new duration */
   onSetDuration: (duration: number) => void = () => {
-    // change duration
+    // empty
   };
 
-  /** called on current time change with new current time */
   onSetCurrentTime: (currentTime: number) => void = () => {
-    // change currentTime
+    // empty
   };
 
-  /** called on pause change with new pause state */
   onSetPause: (isPaused: boolean) => void = () => {
-    // change isPaused
+    // empty
   };
 
-  /** called on repeat change with new repeat state */
   onSetRepeat: (repeat: Repeat) => void = () => {
     // change repeat
   };
 
   onSetShuffle: (shuffle: boolean) => void = () => {
-    // change shuffle
+    // empty
   };
 
-  onSetTitle: (title: string) => void = () => {
-    // change title
-  };
-
-  onSetArtist: (artist: string) => void = () => {
-    // change artist
-  };
-
-  onSetAlbum: (album: string) => void = () => {
-    // change album
-  };
-
-  onSetJacket: (jacket: string) => void = () => {
-    // change jacket
+  onSetInfo: (info: AudioInfo) => void = () => {
+    // empty
   };
 
   constructor() {
@@ -198,10 +164,7 @@ class AudioPlayer {
   }
 
   setInfo(info: AudioInfo) {
-    this.onSetTitle(info.title ?? "");
-    this.onSetArtist(info.artist ?? "");
-    this.onSetAlbum(info.album ?? "");
-    this.onSetJacket(info.jacket ?? "");
+    this.onSetInfo(info);
 
     console.log(info);
   }
