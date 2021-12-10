@@ -7,9 +7,9 @@ type Props = {
 
 const Marquee: React.FC<Props> = ({ className, children }) => {
   return (
-    <div className={"common-marquee " + (className ?? "")}>
-      <div className={"common-marquee-inner"}>{children}</div>
-    </div>
+    <span className={"common-marquee " + (className ?? "")}>
+      <span className={"common-marquee-inner"}>{children}</span>
+    </span>
   );
 };
 

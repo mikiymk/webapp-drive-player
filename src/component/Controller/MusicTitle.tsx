@@ -10,8 +10,8 @@ type Props = {
 const MusicTitle: React.FC<Props> = ({ title, artist }) => {
   return (
     <span className="player-controller-title">
-      <span className="player-controller-title-title">{title}</span>
-      <span className="player-controller-title-artist">{artist}</span>
+      <Marquee className="player-controller-title-title">{title}</Marquee>
+      <Marquee className="player-controller-title-artist">{artist}</Marquee>
     </span>
   );
 };
