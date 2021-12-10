@@ -46,9 +46,6 @@ class AudioPlayer {
   /** play music start at time second */
   startAt = 0;
 
-  /** play music stop at second */
-  stopAt = 0;
-
   /** play music paused */
   isPaused = true;
 
@@ -253,10 +250,6 @@ class AudioPlayer {
     this.startAt = startAt;
   }
 
-  private setStopAt(stopAt: number) {
-    this.stopAt = stopAt;
-  }
-
   private setPause(isPaused: boolean) {
     this.isPaused = isPaused;
     this.onSetPause(this.isPaused);
@@ -266,9 +259,7 @@ class AudioPlayer {
    * time has passed.
    */
   private updateTime() {
-    if (this.isPaused) {
-      this.setCurrentTime(this.stopAt);
-    } else {
+    if (!this.isPaused) {
       this.setCurrentTime(this.context.currentTime - this.startAt);
     }
   }
@@ -301,7 +292,6 @@ class AudioPlayer {
     if (!this.isPaused) return;
 
     this.setStartAt(this.context.currentTime);
-    this.setStopAt(0);
     this.setPause(false);
 
     this.setInterval();
@@ -316,7 +306,6 @@ class AudioPlayer {
   stop() {
     if (this.isPaused) return;
 
-    this.setStopAt(0);
     this.setPause(true);
 
     this.unsetInterval();
@@ -328,7 +317,7 @@ class AudioPlayer {
   play() {
     if (!this.isPaused) return;
 
-    this.setStartAt(this.context.currentTime - this.stopAt);
+    this.setStartAt(this.context.currentTime - this.currentTime);
     this.setPause(false);
 
     this.setInterval();
@@ -336,14 +325,16 @@ class AudioPlayer {
     this.setBuffer();
     if (this.node.buffer === null) return;
 
-    this.node.start(this.context.currentTime, this.stopAt);
+    this.node.start(this.context.currentTime, this.currentTime);
   }
 
   /** play stop and save pause time */
   pause() {
     if (this.isPaused) return;
 
-    this.setStopAt((this.context.currentTime - this.startAt) % this.duration);
+    this.setCurrentTime(
+      (this.context.currentTime - this.startAt) % this.duration
+    );
     this.setPause(true);
 
     this.unsetInterval();
@@ -354,10 +345,10 @@ class AudioPlayer {
   /** jump time */
   seek(time: number) {
     if (this.isPaused) {
-      this.setStopAt(time % this.duration);
+      this.setCurrentTime(time % this.duration);
     } else {
       this.stop();
-      this.setStopAt(time % this.duration);
+      this.setCurrentTime(time % this.duration);
       this.play();
     }
   }
