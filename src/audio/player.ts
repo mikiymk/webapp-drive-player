@@ -10,11 +10,10 @@ import AudioInfo from "./audioInfo";
  * play audio manager
  */
 class AudioPlayer {
-  private context = new AudioContext();
-  private node: AudioBufferSourceNode;
+  private audio = new Audio();
 
-  private readonly buffer = new BufferLoader(this.context);
-  private readonly nextBuffer = new BufferLoader(this.context);
+  private readonly buffer = new BufferLoader();
+  private readonly nextBuffer = new BufferLoader();
 
   /** play music file list */
   musicIds: ShuffleArray<File> = new ShuffleArray([], false);
@@ -22,13 +21,7 @@ class AudioPlayer {
   /** play music ids index */
   private index = NaN;
 
-  /** set and clear interval id */
-  private intervalID = 0;
-
   repeat: Repeat = new Repeat();
-  duration = 0;
-  currentTime = 0;
-  startAt = 0;
   isPaused = true;
 
   onSetDuration: (duration: number) => void = () => {
@@ -56,9 +49,9 @@ class AudioPlayer {
   };
 
   constructor() {
-    this.node = this.context.createBufferSource();
+    this.audio.addEventListener("timeupdate", () => this.updateTime());
+    this.audio.addEventListener("durationchange", () => this.updateDuration());
   }
-
   /**
    * play music with id.
    *
@@ -149,16 +142,16 @@ class AudioPlayer {
    * buffer source node recreate and set node
    */
   private setBuffer() {
-    this.node.disconnect();
-    this.node = this.context.createBufferSource();
-
-    if (this.buffer.buffer === null) {
+    if (this.buffer.url === "") {
       return;
     }
 
-    this.node.buffer = this.buffer.buffer;
-    this.node.connect(this.context.destination);
-    this.setDuration(this.buffer.buffer.duration);
+    if (this.buffer.url === this.audio.src) {
+      return;
+    }
+
+    this.audio.src = this.buffer.url;
+    this.audio.load();
     this.setRepeat(this.repeat);
     this.setInfo(this.buffer.info);
   }
@@ -175,22 +168,18 @@ class AudioPlayer {
    */
   setRepeat(repeat: Repeat) {
     this.repeat = repeat.copy();
-    this.node.loop = false;
-    this.node.onended = () => {
-      console.log("ended", this.currentTime, this.duration);
-      if (this.duration - this.currentTime <= 1) {
-        switch (this.repeat.value) {
-          case "repeat off":
-          case "repeat on":
-            this.skipToNext();
-            break;
-          case "repeat one":
-            this.stop();
-            this.start();
-            break;
-        }
+    this.audio.loop = false;
+    this.audio.addEventListener("ended", () => {
+      switch (this.repeat.value) {
+        case "repeat off":
+        case "repeat on":
+          this.skipToNext();
+          break;
+        case "repeat one":
+          this.audio.loop = true;
+          break;
       }
-    };
+    });
     this.onSetRepeat(repeat);
   }
 
@@ -200,17 +189,12 @@ class AudioPlayer {
   }
 
   private setDuration(duration: number) {
-    this.duration = duration;
-    this.onSetDuration(this.duration);
+    this.onSetDuration(duration);
   }
 
   private setCurrentTime(currentTime: number) {
-    this.currentTime = currentTime;
-    this.onSetCurrentTime(this.currentTime);
-  }
-
-  private setStartAt(startAt: number) {
-    this.startAt = startAt;
+    this.audio.currentTime = currentTime;
+    this.onSetCurrentTime(this.audio.currentTime);
   }
 
   private setPause(isPaused: boolean) {
@@ -222,96 +206,52 @@ class AudioPlayer {
    * time has passed.
    */
   private updateTime() {
-    if (!this.isPaused) {
-      this.setCurrentTime(this.context.currentTime - this.startAt);
-    }
+    this.onSetCurrentTime(this.audio.currentTime);
   }
 
-  /**
-   * time passes, update time every second
-   */
-  private setInterval() {
-    if (this.intervalID) {
-      throw new Error("interval has already set");
-    } else {
-      this.intervalID = window.setInterval(() => this.updateTime(), 1000 / 24);
-    }
-  }
-
-  /**
-   * on paused, not update
-   */
-  private unsetInterval() {
-    if (!this.intervalID) {
-      throw new Error("interval is no set");
-    } else {
-      window.clearInterval(this.intervalID);
-      this.intervalID = 0;
-    }
+  private updateDuration() {
+    this.onSetDuration(this.audio.duration);
   }
 
   /** play start at begin */
   start() {
     if (!this.isPaused) return;
-
-    this.setStartAt(this.context.currentTime);
-    this.setPause(false);
-
-    this.setInterval();
-
-    this.setBuffer();
-    if (this.node.buffer === null) return;
-
-    this.node.start(this.context.currentTime, 0);
+    this.setCurrentTime(0);
+    this.play();
   }
 
   /** play stop and jump to begin */
   stop() {
     if (this.isPaused) return;
-
-    this.setPause(true);
-
-    this.unsetInterval();
-
-    this.node.stop(this.context.currentTime);
+    this.pause();
+    this.setCurrentTime(0);
   }
 
   /** play start at pause time */
   play() {
     if (!this.isPaused) return;
-
-    this.setStartAt(this.context.currentTime - this.currentTime);
     this.setPause(false);
 
-    this.setInterval();
-
     this.setBuffer();
-    if (this.node.buffer === null) return;
+    if (this.audio.src === "") return;
 
-    this.node.start(this.context.currentTime, this.currentTime);
+    this.audio.play();
   }
 
   /** play stop and save pause time */
   pause() {
     if (this.isPaused) return;
-
-    this.setCurrentTime(
-      (this.context.currentTime - this.startAt) % this.duration
-    );
     this.setPause(true);
-
-    this.unsetInterval();
-
-    this.node.stop(this.context.currentTime);
+    this.audio.pause();
   }
 
   /** jump time */
   seek(time: number) {
     if (this.isPaused) {
-      this.setCurrentTime(time % this.duration);
+      this.setCurrentTime(time);
     } else {
       this.stop();
-      this.setCurrentTime(time % this.duration);
+      this.setCurrentTime(time);
       this.play();
     }
   }
