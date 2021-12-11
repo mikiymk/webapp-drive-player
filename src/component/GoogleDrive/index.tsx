@@ -23,6 +23,8 @@ const DriveFiles: React.FC<Props> = ({ signIn, addFile }) => {
   React.useEffect(() => {
     if (signIn) {
       const parentId = parents[parents.length - 1].id;
+      setFolders([]);
+      setFiles([]);
       getAllFolders(parentId).then(setFolders);
       getAllMusics(parentId).then(setFiles);
     }
