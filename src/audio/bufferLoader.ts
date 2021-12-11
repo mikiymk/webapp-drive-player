@@ -2,68 +2,67 @@ import { downloadFile } from "google-api/file";
 import AudioInfo from "./audioInfo";
 
 class BufferLoader {
-  buffer: AudioBuffer | null = null;
+  url = "";
   info = new AudioInfo();
-
-  private context: AudioContext;
 
   private loadedID = "";
   private willLoadID = "";
 
-  constructor(context: AudioContext) {
-    this.context = context;
-  }
-
   /**
    * download music data from google drive
    * @param id music file id
-   * @returns audio data or null if error
+   * @returns audio file url or empty string if error
    */
-  async load(id: string): Promise<AudioBuffer | null> {
+  async load(id: string): Promise<string> {
     this.willLoadID = id;
     if (this.isLoaded) {
-      return this.buffer;
+      return this.url;
     }
-    this.buffer = null;
+    URL.revokeObjectURL(this.url);
+    this.url = "";
 
     if (id === "") {
-      return null;
+      return "";
     }
 
     try {
       const fileData = await downloadFile(id);
 
       if (fileData === null) {
-        return null;
+        return "";
       }
 
-      const arrayBuffer = await fileData.arrayBuffer();
-      const arrayBufferCopy = arrayBuffer.slice(0);
-      const audioBuffer = await this.context.decodeAudioData(arrayBuffer);
+      const blob = await fileData.blob();
+      const arrayBuffer = await blob.slice().arrayBuffer();
 
       if (this.willLoadID === id) {
         this.info.close();
 
         this.loadedID = id;
-        this.buffer = audioBuffer;
-        this.info = await AudioInfo.getInfo(arrayBufferCopy);
-        return this.buffer;
+        URL.revokeObjectURL(this.url);
+        this.url = URL.createObjectURL(blob);
+        this.info = await AudioInfo.getInfo(arrayBuffer);
+        return this.url;
       } else {
-        return null;
+        return "";
       }
     } catch (error) {
       console.error(error);
-      return null;
+      return "";
     }
   }
 
   copyFrom(other: BufferLoader) {
     this.info.close();
+    URL.revokeObjectURL(this.url);
 
     this.willLoadID = other.willLoadID;
-    this.buffer = other.buffer;
+    this.url = other.url;
     this.info = other.info;
     this.loadedID = other.loadedID;
+
+    other.url = "";
+    other.loadedID = "";
   }
 
   get isLoaded() {
