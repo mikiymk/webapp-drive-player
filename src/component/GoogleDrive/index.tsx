@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Breadcrumbs } from "./Breakcrumbs";
+import { Breadcrumbs } from "./Breadcrumbs";
 import { Item } from "./Item";
 
 import { getAllMusics, getAllFolders, File } from "file";

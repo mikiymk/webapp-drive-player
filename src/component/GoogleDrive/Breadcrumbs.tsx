@@ -11,12 +11,13 @@ export const Breadcrumbs: React.FC<Props> = ({ parents, move }) => {
   return (
     <div>
       {parents
-        .map((parent, index) => (
+        .map((parent, index) => [
+          index !== 0 && <span key={index}>&gt;</span>,
           <a key={parent.id} onClick={() => move(index)}>
             {parent.name}
-          </a>
-        ))
-        .flatMap((value, index) => [index !== 0 && <span>&gt;</span>, value])}
+          </a>,
+        ])
+        .flat()}
     </div>
   );
 };

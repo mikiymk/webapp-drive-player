@@ -1,8 +1,7 @@
-import { readTagFromData } from "tag/index";
-import { downloadFile } from "google-api/file";
-import Repeat from "audio/repeat";
-import ShuffleArray from "audio/shuffleArray";
 import { File } from "file";
+
+import Repeat from "./repeat";
+import ShuffleArray from "./shuffleArray";
 import BufferLoader from "./bufferLoader";
 import AudioInfo from "./audioInfo";
 
