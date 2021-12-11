@@ -80,7 +80,7 @@ const usePlayer = () => {
   const [repeat, setRepeat] = useState(new Repeat());
   const [shuffle, setShuffle] = useState(false);
 
-  const [info, setInfo] = useState(new AudioInfo());
+  const [info, setInfo] = useState(() => new AudioInfo());
 
   const player = useRef<AudioPlayer | null>(null);
 
@@ -93,7 +93,6 @@ const usePlayer = () => {
       setCurrentTime(currentTime);
     player.current.onSetRepeat = repeat => setRepeat(repeat);
     player.current.onSetShuffle = shuffle => setShuffle(shuffle);
-
     player.current.onSetInfo = info => setInfo(info);
   }, []);
 
