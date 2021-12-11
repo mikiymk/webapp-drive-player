@@ -12,6 +12,7 @@ export const getList = async (query: string, token?: string) => {
     fields: "nextPageToken, files(id, name)",
     pageSize: GET_PAGE_SIZE,
     pageToken: token,
+    orderBy: "name",
     q: query,
   });
 
@@ -21,7 +22,7 @@ export const getList = async (query: string, token?: string) => {
 /**
  * get file data at file id from google drive
  * @param fileId google drive file id
- * @returns file data string
+ * @returns file data
  */
 export const downloadFile = async (fileId: string) => {
   console.log(`download file ID ${fileId}`);
