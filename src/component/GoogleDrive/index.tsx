@@ -34,9 +34,9 @@ const DriveFiles: React.FC<Props> = ({ signIn, addFile }) => {
   const move = (index: number) => setParents(parents.slice(0, index + 1));
 
   return (
-    <>
+    <div className="drive-container">
       <Breadcrumbs parents={parents} move={move} />
-      <ul>
+      <ul className="drive-list">
         {folders.map(file => (
           <Item key={file.id} file={file} click={addParents} folder />
         ))}
@@ -44,7 +44,7 @@ const DriveFiles: React.FC<Props> = ({ signIn, addFile }) => {
           <Item key={file.id} file={file} click={addFile} />
         ))}
       </ul>
-    </>
+    </div>
   );
 };
 
