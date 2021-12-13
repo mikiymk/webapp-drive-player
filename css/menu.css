@@ -7,12 +7,14 @@
 }
 
 .player-controller {
-  flex: 1 0 1.5rem;
+  flex: 0 0 1.5rem;
 
   background-color: rgb(173, 173, 173);
 }
 
 .player-seekbar {
+  flex: 0 0 0.5rem;
+
   background-color: rgb(79, 81, 99);
 }
 
@@ -24,7 +26,9 @@
 .menu-container {
   display: flex;
 
-  flex: 1 0 calc(100vh - 3.5rem);
+  flex: 0 1 100vh;
+
+  overflow: hidden;
 }
 
 .menu-left {
