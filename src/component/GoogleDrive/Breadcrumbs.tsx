@@ -9,15 +9,12 @@ type Props = {
 
 export const Breadcrumbs: React.FC<Props> = ({ parents, move }) => {
   return (
-    <div>
-      {parents
-        .map((parent, index) => [
-          index !== 0 && <span key={index}>&gt;</span>,
-          <a key={parent.id} onClick={() => move(index)}>
-            {parent.name}
-          </a>,
-        ])
-        .flat()}
-    </div>
+    <ul className="drive-bread">
+      {parents.map((parent, index) => (
+        <li key={parent.id} onClick={() => move(index)}>
+          {parent.name}
+        </li>
+      ))}
+    </ul>
   );
 };

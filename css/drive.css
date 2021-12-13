@@ -5,3 +5,31 @@
   overflow-y: scroll;
   height: 100%;
 }
+
+.drive-bread {
+  flex: 0 0 1.2rem;
+  display: flex;
+}
+
+.drive-bread li:hover {
+  cursor: pointer;
+}
+
+.drive-bread li + li::before {
+  content: ">";
+  padding: 0.2rem;
+  cursor: default;
+}
+
+.drive-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.drive-list-item {
+  flex: 0 0 1.2rem;
+  display: flex;
+  justify-items: center;
+
+  font-size: 1rem;
+}
