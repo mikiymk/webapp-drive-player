@@ -2,8 +2,6 @@ import React from "react";
 
 import IconButton from "component/Common/IconButton";
 
-import Repeat from "audio/repeat";
-
 type Props = {
   shuffle: boolean;
   setShuffle: (shuffle: boolean) => void;

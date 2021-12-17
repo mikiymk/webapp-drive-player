@@ -23,7 +23,7 @@ class AudioInfo {
       artist = tag.v2.tags.find(({ id }) => id === "TPE1")?.data?.text;
       album = tag.v2.tags.find(({ id }) => id === "TALB")?.data?.text;
       const apic = tag.v2.tags.find(({ id }) => id === "APIC")?.data;
-      if (apic !== undefined) {
+      if (apic !== null && apic !== undefined) {
         jacket = URL.createObjectURL(
           new Blob([apic.pictureData], { type: apic.mimetype })
         );

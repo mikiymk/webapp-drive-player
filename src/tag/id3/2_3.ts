@@ -1,3 +1,5 @@
+import { ID3v2, ID3v2Frame } from "./type";
+
 export const readID3v23 = (data: Uint8Array): ID3v2 => {
   const hasExtendHeader = readBit(data, 5, 6);
 
@@ -21,6 +23,10 @@ export const readID3v23 = (data: Uint8Array): ID3v2 => {
     tags.push(converted);
 
     index += 10 + frameSize;
+
+    if (size < index) {
+      console.warn("tag is size over");
+    }
   }
 
   return {

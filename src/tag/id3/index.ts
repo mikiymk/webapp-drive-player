@@ -1,4 +1,5 @@
 import { readID3v23 } from "./2_3";
+import { TagInfo, ID3v1, ID3v11, ID3v2 } from "./type";
 
 export const readTagFromData = (data: ArrayBuffer): TagInfo => {
   let v1;
