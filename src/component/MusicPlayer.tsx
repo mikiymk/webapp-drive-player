@@ -32,11 +32,7 @@ const MusicPlayer: React.FC = () => {
       name: "Now Playing",
       icon: "play_arrow",
       element: (
-        <PlayingInfo
-          album={status.info.album}
-          jacket={status.info.jacket}
-          playingList={player?.musicIds ?? []}
-        />
+        <PlayingInfo info={status.info} playingList={player?.musicIds ?? []} />
       ),
     })
     .set("library", {
@@ -53,8 +49,7 @@ const MusicPlayer: React.FC = () => {
   return (
     <div className="player-container">
       <Controller
-        title={status.info.title}
-        artist={status.info.artist}
+        info={status.info}
         duration={status.duration}
         currentTime={status.currentTime}
         paused={status.paused}
@@ -80,7 +75,7 @@ const usePlayer = () => {
   const [repeat, setRepeat] = useState(new Repeat());
   const [shuffle, setShuffle] = useState(false);
 
-  const [info, setInfo] = useState(() => new AudioInfo());
+  const [info, setInfo] = useState(() => AudioInfo.getEmptyInfo());
 
   const player = useRef<AudioPlayer | null>(null);
 

@@ -1,19 +1,17 @@
 import React from "react";
 
 import Marquee from "component/Common/Marquee";
+import AudioInfo from "audio/audioInfo";
 
 type Props = {
-  title?: string;
-  artist?: string;
+  info: AudioInfo;
 };
 
-const MusicTitle: React.FC<Props> = ({ title, artist }) => {
+const MusicTitle: React.FC<Props> = ({ info: { title, artist } }) => {
   return (
     <span className="player-controller-title">
-      <Marquee className="player-controller-title-title">{title ?? ""}</Marquee>
-      <Marquee className="player-controller-title-artist">
-        {artist ?? ""}
-      </Marquee>
+      <Marquee className="player-controller-title-title">{title}</Marquee>
+      <Marquee className="player-controller-title-artist">{artist}</Marquee>
     </span>
   );
 };

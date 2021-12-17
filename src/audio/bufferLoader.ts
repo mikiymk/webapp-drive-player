@@ -3,7 +3,7 @@ import AudioInfo from "./audioInfo";
 
 class BufferLoader {
   url = "";
-  info = new AudioInfo();
+  info = AudioInfo.getEmptyInfo();
 
   private loadedID = "";
   private willLoadID = "";
