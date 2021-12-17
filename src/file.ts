@@ -1,9 +1,10 @@
 import { getList } from "google-api/file";
 
-export type File = {
-  name: string;
-  id: string;
-};
+export class File {
+  constructor(public readonly id: string, public readonly name: string) {
+    //
+  }
+}
 
 type Result = [File[], string | undefined];
 
@@ -14,9 +15,10 @@ const getPagedFiles = async (
   const result = await getList(query, token);
 
   const rowFiles = result.files ?? [];
-  const files = rowFiles
-    .map(({ id, name }) => ({ id, name }))
-    .filter((obj): obj is File => !!(obj.id && obj.name));
+  const files = rowFiles.flatMap(({ id, name }) => {
+    if (id !== undefined && name !== undefined) return [new File(id, name)];
+    else return [];
+  });
   const nextToken = result.nextPageToken;
 
   return [files, nextToken];
