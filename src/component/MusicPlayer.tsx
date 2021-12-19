@@ -58,8 +58,8 @@ const MusicPlayer: React.FC = () => {
         seek={time => player?.seek(time)}
         play={() => player?.play()}
         pause={() => player?.pause()}
-        playNext={() => player?.skipToNext()}
-        playPrev={() => player?.playPrev()}
+        playNext={() => player?.playToNext()}
+        playPrev={() => player?.playToPrev()}
         setRepeat={repeat => player?.setRepeat(repeat)}
         setShuffle={shuffle => player?.setShuffle(shuffle)}
       />

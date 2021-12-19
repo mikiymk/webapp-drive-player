@@ -48,6 +48,7 @@ class AudioPlayer {
   };
 
   constructor() {
+    this.audio.addEventListener("ended", () => this.onEnd());
     this.audio.addEventListener("timeupdate", () => this.updateTime());
     this.audio.addEventListener("durationchange", () => this.updateDuration());
   }
@@ -58,18 +59,16 @@ class AudioPlayer {
    * if plays, stop
    * @param id music id
    */
-  async playWithId(id: string) {
-    this.stop();
-    await this.buffer.load(id);
-    this.start();
+  private async loadBuffer() {
+    return await this.buffer.load(this.musicIds.get(this.index).id);
   }
 
   /**
    * load audio buffer and set to next buffer
    * @param id music id
    */
-  private loadNextBuffer(id: string) {
-    this.nextBuffer.load(id);
+  private async loadNextBuffer() {
+    return await this.nextBuffer.load(this.musicIds.get(this.nextIndex).id);
   }
 
   /**
@@ -79,13 +78,13 @@ class AudioPlayer {
    * not loaded, load and play.
    * and, load next buffer.
    */
-  skipToNext() {
+  playToNext() {
     this.stop();
     this.index = this.nextIndex;
     if (this.nextBuffer.isLoaded) {
       this.buffer.copyFrom(this.nextBuffer);
       this.setBuffer();
-      this.loadNextBuffer(this.musicIds.get(this.nextIndex).id);
+      this.loadNextBuffer();
       this.start();
     } else {
       this.playAndLoad();
@@ -95,7 +94,7 @@ class AudioPlayer {
   /**
    * start to play previous music
    */
-  playPrev() {
+  playToPrev() {
     this.stop();
     this.index = this.index - 1;
     if (this.index === -1) {
@@ -110,8 +109,10 @@ class AudioPlayer {
    * id by music id list and index
    */
   async playAndLoad() {
-    await this.playWithId(this.musicIds.get(this.index).id);
-    this.loadNextBuffer(this.musicIds.get(this.nextIndex).id);
+    this.stop();
+    await this.loadBuffer();
+    this.loadNextBuffer();
+    this.start();
   }
 
   /**
@@ -167,28 +168,15 @@ class AudioPlayer {
    */
   setRepeat(repeat: Repeat) {
     this.repeat = repeat.copy();
-    this.audio.loop = false;
-    this.audio.addEventListener("ended", () => {
-      switch (this.repeat.value) {
-        case "repeat off":
-        case "repeat on":
-          this.skipToNext();
-          break;
-        case "repeat one":
-          this.audio.loop = true;
-          break;
-      }
-    });
+    this.audio.loop = repeat.value === "repeat one";
     this.onSetRepeat(repeat);
+    this.loadNextBuffer();
   }
 
   setShuffle(shuffle: boolean) {
     this.musicIds.shuffle = shuffle;
     this.onSetShuffle(shuffle);
-  }
-
-  private setDuration(duration: number) {
-    this.onSetDuration(duration);
+    this.loadNextBuffer();
   }
 
   private setCurrentTime(currentTime: number) {
@@ -210,6 +198,17 @@ class AudioPlayer {
 
   private updateDuration() {
     this.onSetDuration(this.audio.duration);
+  }
+
+  private onEnd() {
+    switch (this.repeat.value) {
+      case "repeat off":
+      case "repeat on":
+        this.playToNext();
+        break;
+      case "repeat one":
+        break;
+    }
   }
 
   /** play start at begin */
@@ -249,7 +248,7 @@ class AudioPlayer {
     if (this.isPaused) {
       this.setCurrentTime(time);
     } else {
-      this.stop();
+      this.pause();
       this.setCurrentTime(time);
       this.play();
     }
