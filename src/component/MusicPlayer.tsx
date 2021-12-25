@@ -72,7 +72,7 @@ const usePlayer = () => {
   const [paused, setPaused] = useState(true);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const [repeat, setRepeat] = useState(new Repeat());
+  const [repeat, setRepeat] = useState(Repeat.get());
   const [shuffle, setShuffle] = useState(false);
 
   const [info, setInfo] = useState(() => AudioInfo.getEmptyInfo());

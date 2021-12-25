@@ -1,31 +1,42 @@
 type RepeatType = "repeat off" | "repeat one" | "repeat on";
 
 class Repeat {
+  static readonly ON = new Repeat("repeat on");
+  static readonly OFF = new Repeat("repeat off");
+  static readonly ONE = new Repeat("repeat one");
+
+  static get(repeat?: RepeatType) {
+    switch (repeat) {
+      case "repeat on":
+        return Repeat.ON;
+      case "repeat one":
+        return Repeat.ONE;
+      case "repeat off":
+      case undefined:
+        return Repeat.OFF;
+      default:
+        throw new Error("no value repeat " + Object.toString.bind(repeat));
+    }
+  }
+
   readonly value: RepeatType;
 
-  constructor(repeat?: RepeatType) {
-    this.value = repeat ?? "repeat off";
+  private constructor(repeat: RepeatType) {
+    this.value = repeat;
   }
 
   /**
    * toggle off -> on -> one -> off
    */
   toggle(): Repeat {
-    if (this.value === "repeat off") {
-      return new Repeat("repeat on");
-    } else if (this.value === "repeat on") {
-      return new Repeat("repeat one");
-    } else if (this.value === "repeat one") {
-      return new Repeat("repeat off");
+    switch (this.value) {
+      case "repeat off":
+        return Repeat.ON;
+      case "repeat on":
+        return Repeat.ONE;
+      case "repeat one":
+        return Repeat.OFF;
     }
-    return new Repeat("repeat off");
-  }
-
-  /**
-   * @returns same value object
-   */
-  copy(): Repeat {
-    return new Repeat(this.value);
   }
 }
 

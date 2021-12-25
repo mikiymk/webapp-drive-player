@@ -20,7 +20,7 @@ class AudioPlayer {
   /** play music ids index */
   private index = NaN;
 
-  repeat: Repeat = new Repeat();
+  repeat: Repeat = Repeat.get();
   isPaused = true;
 
   onSetDuration: (duration: number) => void = () => {
@@ -167,7 +167,7 @@ class AudioPlayer {
    * @param repeat new repeat
    */
   setRepeat(repeat: Repeat) {
-    this.repeat = repeat.copy();
+    this.repeat = repeat;
     this.audio.loop = repeat.value === "repeat one";
     this.onSetRepeat(repeat);
     this.loadNextBuffer();
