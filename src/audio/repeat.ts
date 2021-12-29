@@ -1,11 +1,15 @@
 type RepeatType = "repeat off" | "repeat one" | "repeat on";
 
+/**
+ * 「なし→全部→１つ→なし」の切り替えをする
+ */
 class Repeat {
   static readonly ON = new Repeat("repeat on");
   static readonly OFF = new Repeat("repeat off");
   static readonly ONE = new Repeat("repeat one");
 
   static get(repeat?: RepeatType) {
+    // TODO ちゃんと使ってないから消す
     switch (repeat) {
       case "repeat on":
         return Repeat.ON;
@@ -26,7 +30,7 @@ class Repeat {
   }
 
   /**
-   * toggle off -> on -> one -> off
+   * １つ切り替える
    */
   toggle(): Repeat {
     switch (this.value) {

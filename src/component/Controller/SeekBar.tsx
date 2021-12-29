@@ -6,6 +6,7 @@ type Props = {
   seek: (time: number) => void;
 };
 
+/** 現在位置が左から右にいって時間を表す */
 const SeekBar: React.FC<Props> = ({ duration, time, seek }) => {
   const [seekTime, setSeekTime] = useState(0);
   const [click, setClick] = useState(false);

@@ -2,12 +2,13 @@ import { getList } from "google-api/file";
 
 export class File {
   constructor(public readonly id: string, public readonly name: string) {
-    //
+    // EMPTY
   }
 }
 
 type Result = [File[], string | undefined];
 
+/** ファイルリストの一部を入手 */
 const getPagedFiles = async (
   query: string,
   token?: string
@@ -24,6 +25,7 @@ const getPagedFiles = async (
   return [files, nextToken];
 };
 
+/** ファイルリストをまとめて全ファイルリストを入手 */
 const getAllFiles = async (query: string) => {
   let token = undefined;
   let isFirst = true;
@@ -41,8 +43,8 @@ const getAllFiles = async (query: string) => {
 };
 
 /**
- * get folders in parent folder
- * @param parent parent folder id
+ * 全フォルダの一覧を入手
+ * @param parent 親フォルダID
  * @returns folders list in parent folder
  */
 export const getAllFolders = async (parent?: string) =>
@@ -53,8 +55,8 @@ export const getAllFolders = async (parent?: string) =>
   );
 
 /**
- * get music files in parent folder
- * @param parent parent folder id
+ * 全音楽ファイルの一覧を入手
+ * @param parent 親フォルダID
  * @returns music files list in parent folder
  */
 export const getAllMusics = async (parent?: string) =>

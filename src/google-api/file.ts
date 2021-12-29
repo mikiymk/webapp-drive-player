@@ -1,11 +1,9 @@
 const GET_PAGE_SIZE = 100;
 
 /**
- * get file list from google drive
- * @param query file search query string
- * see https://developers.google.com/drive/api/v3/ref-search-terms
- * @param token next page token
- * @returns files
+ * Google Drive からファイルリストを入手
+ * @param query 検索クエリ文字列 https://developers.google.com/drive/api/v3/ref-search-terms
+ * @param token ページトークン
  */
 export const getList = async (query: string, token?: string) => {
   const response = await gapi.client.drive.files.list({
@@ -16,13 +14,12 @@ export const getList = async (query: string, token?: string) => {
     q: query,
   });
 
-  return response.result;
+  return response.result; // TODO １つにまとめる
 };
 
 /**
- * get file data at file id from google drive
- * @param fileId google drive file id
- * @returns file data
+ * Google Drive からファイルをダウンロードする
+ * @returns エラーなら `null`
  */
 export const downloadFile = async (fileId: string) => {
   console.log(`download file ID ${fileId}`);

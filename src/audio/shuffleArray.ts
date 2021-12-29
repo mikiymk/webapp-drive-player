@@ -1,3 +1,6 @@
+/**
+ * 元の並びを維持したままランダム並び替えをする配列
+ */
 class ShuffleArray<T> implements Iterable<T> {
   private readonly _array: T[];
   private _indexArray: number[];
@@ -10,10 +13,11 @@ class ShuffleArray<T> implements Iterable<T> {
     }
   }
 
+  /** シャッフル状態の切り替え */
   set shuffle(value: boolean) {
     this._indexArray = makeArray(this.length);
     if (value) {
-      shuffle(this._indexArray);
+      shuffle(this._indexArray); // TODO 関数にする
     }
   }
 
@@ -30,6 +34,7 @@ class ShuffleArray<T> implements Iterable<T> {
   }
 }
 
+/** ShuffleArray のイテレータ */
 class ShuffleIterator<T> implements Iterator<T, undefined> {
   private readonly _array: ShuffleArray<T>;
   private _index = 0;
@@ -53,14 +58,17 @@ class ShuffleIterator<T> implements Iterator<T, undefined> {
   }
 }
 
+/** 0 <= n < length の配列を作る */
 const makeArray = (length: number): number[] => {
   return Array.from({ length }).map((_, i) => i);
 };
 
+/** 0 <= n < limit の整数乱数 */
 const random = (limit: number): number => {
   return Math.floor(Math.random() * limit);
 };
 
+/** Fisher–Yates shuffle */
 const shuffle = <T>(array: T[]): T[] => {
   const len = array.length;
   for (let i = len - 1; i > 0; i--) {

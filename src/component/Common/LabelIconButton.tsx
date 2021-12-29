@@ -9,6 +9,7 @@ type Props = {
   className?: string;
 };
 
+/** Google Material Icon テキスト付きボタン */
 const LabelIconButton: React.FC<Props> = ({
   icon,
   text,

@@ -7,6 +7,7 @@ type Props = {
   info: AudioInfo;
 };
 
+/** タイトルとアーティストをマーキーで表示 */
 const MusicTitle: React.FC<Props> = ({ info: { title, artist } }) => {
   return (
     <span className="player-controller-title">

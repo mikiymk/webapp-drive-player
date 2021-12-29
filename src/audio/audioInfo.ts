@@ -5,6 +5,10 @@ class AudioInfo {
     return new AudioInfo();
   }
 
+  /**
+   * @param data オーディオファイルデータ
+   * @returns データから読み取ったオーディオ情報
+   */
   static async getInfo(data?: ArrayBuffer) {
     if (data === undefined) {
       return new AudioInfo();
@@ -59,6 +63,9 @@ class AudioInfo {
     this.jacket = jacket ?? "";
   }
 
+  /**
+   * 消す前に呼ぶ
+   */
   close() {
     if (this.jacket !== undefined) {
       URL.revokeObjectURL(this.jacket);

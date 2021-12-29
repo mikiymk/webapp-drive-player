@@ -28,6 +28,9 @@ type Props = {
   setShuffle: (shuffle: boolean) => void;
 };
 
+/**
+ * 曲の再生・停止などのコントロールする
+ */
 const Controller: React.FC<Props> = ({
   info,
   duration,

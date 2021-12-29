@@ -6,7 +6,7 @@ import BufferLoader from "./bufferLoader";
 import AudioInfo from "./audioInfo";
 
 /**
- * play audio manager
+ * 音楽再生の管理
  */
 class AudioPlayer {
   private audio = new Audio();
@@ -24,27 +24,27 @@ class AudioPlayer {
   isPaused = true;
 
   onSetDuration: (duration: number) => void = () => {
-    // empty
+    // TODO 実装の分離
   };
 
   onSetCurrentTime: (currentTime: number) => void = () => {
-    // empty
+    //
   };
 
   onSetPause: (isPaused: boolean) => void = () => {
-    // empty
+    //
   };
 
   onSetRepeat: (repeat: Repeat) => void = () => {
-    // change repeat
+    //
   };
 
   onSetShuffle: (shuffle: boolean) => void = () => {
-    // empty
+    //
   };
 
   onSetInfo: (info: AudioInfo) => void = () => {
-    // empty
+    //
   };
 
   constructor() {
@@ -53,30 +53,22 @@ class AudioPlayer {
     this.audio.addEventListener("durationchange", () => this.updateDuration());
   }
   /**
-   * play music with id.
-   *
-   * music download with id and play
-   * if plays, stop
-   * @param id music id
+   * 今の曲の再生バッファをロード
    */
   private async loadBuffer() {
     return await this.buffer.load(this.musicIds.get(this.index).id);
   }
 
   /**
-   * load audio buffer and set to next buffer
-   * @param id music id
+   * 次の曲の再生バッファをロード
    */
   private async loadNextBuffer() {
     return await this.nextBuffer.load(this.musicIds.get(this.nextIndex).id);
   }
 
   /**
-   * play to next music play start
-   *
-   * if next buffer loaded, set to buffer.
-   * not loaded, load and play.
-   * and, load next buffer.
+   * 次の曲のバッファがロード済みならそれを設定
+   * 未ロードならロードして再生
    */
   playToNext() {
     this.stop();
@@ -92,7 +84,8 @@ class AudioPlayer {
   }
 
   /**
-   * start to play previous music
+   * 前の曲に戻して再生
+   * 最初の前は最後
    */
   playToPrev() {
     this.stop();
@@ -104,9 +97,7 @@ class AudioPlayer {
   }
 
   /**
-   * play now music, and load next music
-   *
-   * id by music id list and index
+   * ロードと再生をまとめて行う
    */
   async playAndLoad() {
     this.stop();
@@ -116,11 +107,7 @@ class AudioPlayer {
   }
 
   /**
-   * play music
-   *
-   * set music list and index, and play music
-   * @param ids music id list
-   * @param index start index
+   * リストと最初のインデックスを渡して再生を始める
    */
   playWithIdList(ids: File[], index: number) {
     this.musicIds = new ShuffleArray(ids, false);
@@ -129,7 +116,7 @@ class AudioPlayer {
     this.playAndLoad();
   }
 
-  /** next index. if repeat "repeat on", last to first */
+  /** リピートが `"repeat on"` なら最後の次は最初 */
   get nextIndex() {
     if (this.repeat.value === "repeat on") {
       return (this.index + 1) % this.musicIds.length;
@@ -139,7 +126,9 @@ class AudioPlayer {
   }
 
   /**
-   * buffer source node recreate and set node
+   * オーディオオブジェクトにバッファをセットする
+   * 必要がなければ何もしない
+   * オーディオ情報も一緒に設定
    */
   private setBuffer() {
     if (this.buffer.url === "") {
@@ -152,7 +141,7 @@ class AudioPlayer {
 
     this.audio.src = this.buffer.url;
     this.audio.load();
-    this.setRepeat(this.repeat);
+    this.setRepeat(this.repeat); // TODO いらない
     this.setInfo(this.buffer.info);
   }
 
@@ -162,10 +151,6 @@ class AudioPlayer {
     console.log(info);
   }
 
-  /**
-   * set repeat and on end
-   * @param repeat new repeat
-   */
   setRepeat(repeat: Repeat) {
     this.repeat = repeat;
     this.audio.loop = repeat.value === "repeat one";
@@ -189,17 +174,17 @@ class AudioPlayer {
     this.onSetPause(this.isPaused);
   }
 
-  /**
-   * time has passed.
-   */
+  /** コールバック用 曲を再生して現在の再生位置が変わった時 */
   private updateTime() {
     this.onSetCurrentTime(this.audio.currentTime);
   }
 
+  /** コールバック用 新しい曲をロードして曲の長さが変わった時 */
   private updateDuration() {
     this.onSetDuration(this.audio.duration);
   }
 
+  /** コールバック用 曲が終わった時 */
   private onEnd() {
     switch (this.repeat.value) {
       case "repeat off":
@@ -211,21 +196,21 @@ class AudioPlayer {
     }
   }
 
-  /** play start at begin */
+  /** 先頭から再生 */
   start() {
     if (!this.isPaused) return;
     this.setCurrentTime(0);
     this.play();
   }
 
-  /** play stop and jump to begin */
+  /** 停止して停止位置を先頭に戻す */
   stop() {
     if (this.isPaused) return;
     this.pause();
     this.setCurrentTime(0);
   }
 
-  /** play start at pause time */
+  /** 記録された停止位置から再生 */
   play() {
     if (!this.isPaused) return;
     this.setPause(false);
@@ -236,14 +221,14 @@ class AudioPlayer {
     this.audio.play();
   }
 
-  /** play stop and save pause time */
+  /** 停止して現在の位置を停止位置として記録 */
   pause() {
     if (this.isPaused) return;
     this.setPause(true);
     this.audio.pause();
   }
 
-  /** jump time */
+  /** 再生位置を指定のものに変更 */
   seek(time: number) {
     if (this.isPaused) {
       this.setCurrentTime(time);

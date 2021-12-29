@@ -9,6 +9,7 @@ type Props = {
   setRepeat: (repeat: Repeat) => void;
 };
 
+/** `Repeat` からアイコンへ */
 const RepeatButton: React.FC<Props> = ({ repeat, setRepeat }) => {
   const onClick = () => setRepeat(repeat.toggle());
 

@@ -7,6 +7,7 @@ type Props = {
   currentTime: number;
 };
 
+/** 時間をフォーマットして表示 */
 const MusicTitle: React.FC<Props> = ({ duration, currentTime }) => {
   return (
     <span className="player-controller-time">

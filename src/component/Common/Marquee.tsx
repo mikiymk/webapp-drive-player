@@ -5,6 +5,7 @@ type Props = {
   children: React.ReactNode;
 };
 
+/** CSSで横に動く */
 const Marquee: React.FC<Props> = ({ className, children }) => {
   return (
     <span className={"common-marquee " + (className ?? "")}>

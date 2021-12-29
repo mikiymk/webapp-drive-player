@@ -7,6 +7,7 @@ type Props = {
   setShuffle: (shuffle: boolean) => void;
 };
 
+/** シャッフル状態で切り替えるボタン */
 const ShuffleButton: React.FC<Props> = ({ shuffle, setShuffle }) => {
   const onClick = () => setShuffle(!shuffle);
   const icon = shuffle ? "shuffle_on" : "shuffle";

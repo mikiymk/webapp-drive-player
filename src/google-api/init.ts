@@ -1,9 +1,8 @@
 import { API_KEY, CLIENT_ID, DISCOVERY_DOCS, SCOPES } from "./key";
 
 /**
- * initialize gapi client and if succeed update status
- * @param updateSigninStatus on update signin status, called
- * @param onError if error when sign in, called
+ * gapiの初期化
+ * @param updateSigninStatus ログイン状態変化のコールバック
  */
 export const loadAndInit = (
   updateSigninStatus: (isSignedIn: boolean) => void,
@@ -32,14 +31,6 @@ export const loadAndInit = (
   });
 };
 
-/**
- * sign in to google
- */
 export const signIn = () => gapi.auth2.getAuthInstance().signIn();
-
-/**
- * sign out to google
- */
 export const signOut = () => gapi.auth2.getAuthInstance().signOut();
-
 export const getAccessToken = () => gapi.client.getToken().access_token;

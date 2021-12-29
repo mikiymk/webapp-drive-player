@@ -1,17 +1,27 @@
 import { downloadFile } from "google-api/file";
 import AudioInfo from "./audioInfo";
 
+/**
+ * 非同期なダウンロードを管理する
+ */
 class BufferLoader {
+  /** 保持しているファイルのBLOB URL */
   url = "";
   info = AudioInfo.getEmptyInfo();
 
+  /** 保持しているファイルID */
   private loadedID = "";
+
+  /** 最後に送られたファイルID */
   private willLoadID = "";
 
   /**
-   * download music data from google drive
-   * @param id music file id
-   * @returns audio file url or empty string if error
+   * ダウンロードする
+   *
+   * 最後に送られたIDのファイルのみ保持
+   *
+   * @param id ファイルID
+   * @returns ファイルがない場合は空文字列
    */
   async load(id: string): Promise<string> {
     this.willLoadID = id;
@@ -52,6 +62,11 @@ class BufferLoader {
     }
   }
 
+  /**
+   * 別のローダーから情報を持ってくる
+   *
+   * 勝手に close されないように別の情報は消しておく
+   */
   copyFrom(other: BufferLoader) {
     this.info.close();
     URL.revokeObjectURL(this.url);
@@ -63,6 +78,7 @@ class BufferLoader {
 
     other.url = "";
     other.loadedID = "";
+    // TODO info消す
   }
 
   get isLoaded() {

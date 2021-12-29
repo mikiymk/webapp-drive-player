@@ -119,6 +119,6 @@
 
 ## スタイル
 
-- [ ] CSS を使う
+- [x] CSS を使う
 - [ ] SCSS を使う
 - [ ] styled component を使う

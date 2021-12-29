@@ -8,6 +8,7 @@ type Props = {
   className?: string;
 };
 
+/** Google Material Icon テキスト付き */
 const LabelIcon: React.FC<Props> = ({ icon, text, className }) => {
   return (
     <span className={"common-label-icon " + (className ?? "")}>

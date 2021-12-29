@@ -8,12 +8,13 @@ type Props = {
   className?: string;
 };
 
+/** Google Material Icon ボタン */
 const IconButton: React.FC<Props> = ({ icon, onClick, className }) => {
   return (
     <button
       onClick={onClick}
       className={"common-icon-button " + (className ?? "")}>
-      <Icon icon={icon} />
+      <Icon icon={icon} /> // TODO span + class で書く
     </button>
   );
 };

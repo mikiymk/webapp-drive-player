@@ -5,6 +5,7 @@ type Props = {
   className?: string;
 };
 
+/** Google Material Icon */
 const Icon: React.FC<Props> = ({ icon, className }) => {
   return (
     <span className={"common-icon " + (className ?? "")}>
