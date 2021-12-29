@@ -14,7 +14,7 @@ const IconButton: React.FC<Props> = ({ icon, onClick, className }) => {
     <button
       onClick={onClick}
       className={"common-icon-button " + (className ?? "")}>
-      <Icon icon={icon} /> // TODO span + class で書く
+      <Icon icon={icon} /> {/* // TODO span + class で書く */}
     </button>
   );
 };
