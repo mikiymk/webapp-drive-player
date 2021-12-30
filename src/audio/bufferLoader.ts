@@ -78,7 +78,7 @@ class BufferLoader {
 
     other.url = "";
     other.loadedID = "";
-    // TODO info消す
+    other.info = AudioInfo.getEmptyInfo();
   }
 
   get isLoaded() {

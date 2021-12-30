@@ -8,19 +8,8 @@ class Repeat {
   static readonly OFF = new Repeat("repeat off");
   static readonly ONE = new Repeat("repeat one");
 
-  static get(repeat?: RepeatType) {
-    // TODO ちゃんと使ってないから消す
-    switch (repeat) {
-      case "repeat on":
-        return Repeat.ON;
-      case "repeat one":
-        return Repeat.ONE;
-      case "repeat off":
-      case undefined:
-        return Repeat.OFF;
-      default:
-        throw new Error("no value repeat " + Object.toString.bind(repeat));
-    }
+  static get DEFAULT() {
+    return Repeat.OFF;
   }
 
   readonly value: RepeatType;

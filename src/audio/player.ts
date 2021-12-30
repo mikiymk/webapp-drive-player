@@ -5,6 +5,10 @@ import ShuffleArray from "./shuffleArray";
 import BufferLoader from "./bufferLoader";
 import AudioInfo from "./audioInfo";
 
+const emptyFunction = () => {
+  // EMPTY
+};
+
 /**
  * 音楽再生の管理
  */
@@ -20,32 +24,15 @@ class AudioPlayer {
   /** play music ids index */
   private index = NaN;
 
-  repeat: Repeat = Repeat.get();
+  repeat: Repeat = Repeat.DEFAULT;
   isPaused = true;
 
-  onSetDuration: (duration: number) => void = () => {
-    // TODO 実装の分離
-  };
-
-  onSetCurrentTime: (currentTime: number) => void = () => {
-    //
-  };
-
-  onSetPause: (isPaused: boolean) => void = () => {
-    //
-  };
-
-  onSetRepeat: (repeat: Repeat) => void = () => {
-    //
-  };
-
-  onSetShuffle: (shuffle: boolean) => void = () => {
-    //
-  };
-
-  onSetInfo: (info: AudioInfo) => void = () => {
-    //
-  };
+  onSetDuration: (duration: number) => void = emptyFunction;
+  onSetCurrentTime: (currentTime: number) => void = emptyFunction;
+  onSetPause: (isPaused: boolean) => void = emptyFunction;
+  onSetRepeat: (repeat: Repeat) => void = emptyFunction;
+  onSetShuffle: (shuffle: boolean) => void = emptyFunction;
+  onSetInfo: (info: AudioInfo) => void = emptyFunction;
 
   constructor() {
     this.audio.addEventListener("ended", () => this.onEnd());
@@ -141,7 +128,6 @@ class AudioPlayer {
 
     this.audio.src = this.buffer.url;
     this.audio.load();
-    this.setRepeat(this.repeat); // TODO いらない
     this.setInfo(this.buffer.info);
   }
 

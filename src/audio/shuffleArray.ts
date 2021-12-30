@@ -7,18 +7,12 @@ class ShuffleArray<T> implements Iterable<T> {
 
   constructor(array: Iterable<T> | ArrayLike<T>, shuffled: boolean) {
     this._array = Array.from(array);
-    this._indexArray = makeArray(this._array.length);
-    if (shuffled) {
-      shuffle(this._indexArray);
-    }
+    this._indexArray = makeShuffledArray(this._array.length, shuffled);
   }
 
   /** シャッフル状態の切り替え */
   set shuffle(value: boolean) {
-    this._indexArray = makeArray(this.length);
-    if (value) {
-      shuffle(this._indexArray); // TODO 関数にする
-    }
+    this._indexArray = makeShuffledArray(this.length, value);
   }
 
   get length() {
@@ -80,6 +74,14 @@ const shuffle = <T>(array: T[]): T[] => {
   }
 
   return array;
+};
+
+const makeShuffledArray = (length: number, shuffled: boolean) => {
+  if (shuffled) {
+    return shuffle(makeArray(length));
+  } else {
+    return makeArray(length);
+  }
 };
 
 export default ShuffleArray;

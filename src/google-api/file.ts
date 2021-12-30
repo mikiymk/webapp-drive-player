@@ -14,7 +14,7 @@ export const getList = async (query: string, token?: string) => {
     q: query,
   });
 
-  return response.result; // TODO １つにまとめる
+  return response.result;
 };
 
 /**
