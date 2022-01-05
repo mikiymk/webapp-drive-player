@@ -48,6 +48,7 @@ const MusicPlayer: React.FC = () => {
 
   return (
     <div className="player-container">
+      <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
       <Controller
         info={status.info}
         duration={status.duration}
@@ -63,7 +64,6 @@ const MusicPlayer: React.FC = () => {
         setRepeat={repeat => player?.setRepeat(repeat)}
         setShuffle={shuffle => player?.setShuffle(shuffle)}
       />
-      <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
     </div>
   );
 };

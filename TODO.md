@@ -120,5 +120,14 @@
 ## スタイル
 
 - [x] CSS を使う
-- [ ] SCSS を使う
-- [ ] styled component を使う
+
+## ライブラリとか
+
+- [x] Webpack
+- Babel
+- [x] TypeScript
+- [x] React
+- PReact
+- SCSS
+- styled component
+- linaria
