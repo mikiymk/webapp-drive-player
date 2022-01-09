@@ -1,158 +1,229 @@
-import { API_KEY, downloadFile, getAccessToken } from "../api";
+import { File } from "file";
 
-const context = new AudioContext();
+import Repeat from "./repeat";
+import ShuffleArray from "./shuffleArray";
+import BufferLoader from "./bufferLoader";
+import AudioInfo from "./audioInfo";
 
-export class AudioPlayer {
-  private node: AudioBufferSourceNode;
+const emptyFunction = () => {
+  // EMPTY
+};
 
-  private intervalID = 0;
+/**
+ * 音楽再生の管理
+ */
+class AudioPlayer {
+  private audio = new Audio();
 
-  duration = 0;
-  currentTime = 0;
-  startAt = 0;
-  stopAt = 0;
+  private readonly buffer = new BufferLoader();
+  private readonly nextBuffer = new BufferLoader();
+
+  /** play music file list */
+  musicIds: ShuffleArray<File> = new ShuffleArray([], false);
+
+  /** play music ids index */
+  private index = NaN;
+
+  repeat: Repeat = Repeat.DEFAULT;
   isPaused = true;
 
-  onSetDuration = (duration: number) => {};
-  onSetCurrentTime = (currentTime: number) => {};
-  onSetStartAt = (startAt: number) => {};
-  onSetStopAt = (stopAt: number) => {};
-  onSetPause = (isPaused: boolean) => {};
-
-  onEnd = () => {};
+  onSetDuration: (duration: number) => void = emptyFunction;
+  onSetCurrentTime: (currentTime: number) => void = emptyFunction;
+  onSetPause: (isPaused: boolean) => void = emptyFunction;
+  onSetRepeat: (repeat: Repeat) => void = emptyFunction;
+  onSetShuffle: (shuffle: boolean) => void = emptyFunction;
+  onSetInfo: (info: AudioInfo) => void = emptyFunction;
 
   constructor() {
-    this.node = context.createBufferSource();
+    this.audio.addEventListener("ended", () => this.onEnd());
+    this.audio.addEventListener("timeupdate", () => this.updateTime());
+    this.audio.addEventListener("durationchange", () => this.updateDuration());
+  }
+  /**
+   * 今の曲の再生バッファをロード
+   */
+  private async loadBuffer() {
+    return await this.buffer.load(this.musicIds.get(this.index).id);
   }
 
-  setBuffer(buffer: AudioBuffer) {
-    this.setDuration(buffer.duration);
+  /**
+   * 次の曲の再生バッファをロード
+   */
+  private async loadNextBuffer() {
+    return await this.nextBuffer.load(this.musicIds.get(this.nextIndex).id);
+  }
+
+  /**
+   * 次の曲のバッファがロード済みならそれを設定
+   * 未ロードならロードして再生
+   */
+  playToNext() {
     this.stop();
+    this.index = this.nextIndex;
+    if (this.nextBuffer.isLoaded) {
+      this.buffer.copyFrom(this.nextBuffer);
+      this.setBuffer();
+      this.loadNextBuffer();
+      this.start();
+    } else {
+      this.playAndLoad();
+    }
+  }
 
-    this.node = context.createBufferSource();
-    this.node.buffer = buffer;
-    this.node.connect(context.destination);
+  /**
+   * 前の曲に戻して再生
+   * 最初の前は最後
+   */
+  playToPrev() {
+    this.stop();
+    this.index = this.index - 1;
+    if (this.index === -1) {
+      this.index = this.musicIds.length - 1;
+    }
+    this.playAndLoad();
+  }
 
+  /**
+   * ロードと再生をまとめて行う
+   */
+  async playAndLoad() {
+    this.stop();
+    await this.loadBuffer();
+    this.loadNextBuffer();
     this.start();
   }
 
-  private setDuration(duration: number) {
-    console.log("set duration", duration);
+  /**
+   * リストと最初のインデックスを渡して再生を始める
+   */
+  playWithIdList(ids: File[], index: number) {
+    this.musicIds = new ShuffleArray(ids, false);
+    this.index = index;
 
-    this.duration = duration;
-    this.onSetDuration(duration);
+    this.playAndLoad();
+  }
+
+  /** リピートが `"repeat on"` なら最後の次は最初 */
+  get nextIndex() {
+    if (this.repeat.value === "repeat on") {
+      return (this.index + 1) % this.musicIds.length;
+    } else {
+      return this.index + 1;
+    }
+  }
+
+  /**
+   * オーディオオブジェクトにバッファをセットする
+   * 必要がなければ何もしない
+   * オーディオ情報も一緒に設定
+   */
+  private setBuffer() {
+    if (this.buffer.url === "") {
+      return;
+    }
+
+    if (this.buffer.url === this.audio.src) {
+      return;
+    }
+
+    this.audio.src = this.buffer.url;
+    this.audio.load();
+    this.setInfo(this.buffer.info);
+  }
+
+  setInfo(info: AudioInfo) {
+    this.onSetInfo(info);
+
+    console.log(info);
+  }
+
+  setRepeat(repeat: Repeat) {
+    this.repeat = repeat;
+    this.audio.loop = repeat.value === "repeat one";
+    this.onSetRepeat(repeat);
+    this.loadNextBuffer();
+  }
+
+  setShuffle(shuffle: boolean) {
+    this.musicIds.shuffle = shuffle;
+    this.onSetShuffle(shuffle);
+    this.loadNextBuffer();
   }
 
   private setCurrentTime(currentTime: number) {
-    console.log("set current time", currentTime);
-
-    this.currentTime = currentTime;
-    this.onSetCurrentTime(currentTime);
-  }
-
-  private setStartAt(startAt: number) {
-    console.log("set start at", startAt);
-
-    this.startAt = startAt;
-    this.onSetStartAt(startAt);
-  }
-
-  private setStopAt(stopAt: number) {
-    console.log("set stop at", stopAt);
-
-    this.stopAt = stopAt;
-    this.onSetStopAt(stopAt);
+    this.audio.currentTime = currentTime;
+    this.onSetCurrentTime(this.audio.currentTime);
   }
 
   private setPause(isPaused: boolean) {
-    console.log("set pause", isPaused);
-
     this.isPaused = isPaused;
-    this.onSetPause(isPaused);
+    this.onSetPause(this.isPaused);
   }
 
+  /** コールバック用 曲を再生して現在の再生位置が変わった時 */
   private updateTime() {
-    if (this.isPaused) {
-      this.setCurrentTime(this.stopAt);
-    } else {
-      this.setCurrentTime(context.currentTime - this.startAt);
+    this.onSetCurrentTime(this.audio.currentTime);
+  }
+
+  /** コールバック用 新しい曲をロードして曲の長さが変わった時 */
+  private updateDuration() {
+    this.onSetDuration(this.audio.duration);
+  }
+
+  /** コールバック用 曲が終わった時 */
+  private onEnd() {
+    switch (this.repeat.value) {
+      case "repeat off":
+      case "repeat on":
+        this.playToNext();
+        break;
+      case "repeat one":
+        break;
     }
   }
 
+  /** 先頭から再生 */
   start() {
-    if (this.isPaused) {
-      console.log("player start");
-
-      this.setStartAt(this.currentTime);
-      this.setStopAt(0);
-      this.setPause(false);
-
-      this.intervalID = window.setInterval(() => this.updateTime(), 250);
-
-      this.node.start(context.currentTime, 0);
-    }
+    if (!this.isPaused) return;
+    this.setCurrentTime(0);
+    this.play();
   }
 
+  /** 停止して停止位置を先頭に戻す */
   stop() {
-    if (!this.isPaused) {
-      console.log("player stop");
-
-      this.setStopAt(0);
-      this.setPause(true);
-
-      window.clearInterval(this.intervalID);
-
-      this.node.stop(context.currentTime);
-    }
+    if (this.isPaused) return;
+    this.pause();
+    this.setCurrentTime(0);
   }
 
+  /** 記録された停止位置から再生 */
   play() {
-    if (this.isPaused) {
-      console.log("player play");
+    if (!this.isPaused) return;
+    this.setPause(false);
 
-      this.setStartAt(context.currentTime - this.stopAt);
-      this.setPause(false);
+    this.setBuffer();
+    if (this.audio.src === "") return;
 
-      this.intervalID = window.setInterval(() => this.updateTime(), 250);
-
-      this.node.start(context.currentTime, this.stopAt);
-    }
+    this.audio.play();
   }
 
+  /** 停止して現在の位置を停止位置として記録 */
   pause() {
-    if (!this.isPaused) {
-      console.log("player pause");
-
-      this.setStopAt(context.currentTime - this.startAt);
-      this.setPause(true);
-
-      window.clearInterval(this.intervalID);
-
-      this.node.stop(context.currentTime);
-    }
+    if (this.isPaused) return;
+    this.setPause(true);
+    this.audio.pause();
   }
 
+  /** 再生位置を指定のものに変更 */
   seek(time: number) {
     if (this.isPaused) {
-      console.log("player seek", time);
-
-      this.setStopAt(time);
+      this.setCurrentTime(time);
     } else {
-      this.node.stop();
-      this.node.start(context.currentTime, time);
+      this.pause();
+      this.setCurrentTime(time);
+      this.play();
     }
   }
 }
 
-export const playWithUrl = async (id: string) => {
-  const fileData = await downloadFile(id);
-  const dataArray = Array.from(fileData).map(c => c.charCodeAt(0));
-  const arrayBuffer = new Uint8Array(dataArray).buffer;
-  const audioBuffer = await context.decodeAudioData(arrayBuffer);
-
-  const node = context.createBufferSource();
-  node.loop = true;
-  node.buffer = audioBuffer;
-  node.connect(context.destination);
-  node.start(context.currentTime, 0);
-};
+export default AudioPlayer;

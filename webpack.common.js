@@ -1,14 +1,15 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require("path");
+const TsConfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 module.exports = {
   mode: "development",
   entry: "./src/index.tsx",
-  devtool: 'source-map',
+  devtool: "source-map",
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, "javascript"),
+    filename: "bundle.js",
+    path: path.resolve(__dirname, "dist"),
   },
   plugins: [
     // Add your plugins here
@@ -24,15 +25,11 @@ module.exports = {
 
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
-      {
-        test: /\.js$/,
-        enforce: "pre",
-        use: ["source-map-loader"],
-      },
     ],
   },
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
-    modules: ['node_modules'],
+    modules: ["node_modules"],
+    plugins: [new TsConfigPathsPlugin()],
   },
 };

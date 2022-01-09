@@ -1,77 +1,107 @@
-import React from "react";
-import { getFiles } from "../api";
-import { File } from "../type";
-import { PlayingInfo } from "./PlayManager";
-import { MusicList } from "./MusicList";
-import { NowPlayingList } from "./PlayingList";
-import { Authorize } from "./Authorize";
-import { playWithUrl } from "../audio/player";
+import React, { useState, useEffect, useRef } from "react";
+
+import PlayingInfo from "./Playing/index";
+import MusicList from "./MusicLibrary/index";
+import DriveFiles from "./GoogleDrive/index";
+import Menu from "./Menu/index";
+import Controller from "./Controller/index";
+
+import AudioPlayer from "audio/player";
+import Repeat from "audio/repeat";
+import { File } from "file";
+import AudioInfo from "audio/audioInfo";
 
 /**
  * react component root.
  */
-export class MusicPlayer extends React.Component<
-  {},
-  {
-    isSignedIn: boolean;
-    files: File[];
-    paused: boolean;
-    duration: number;
-    currentTime: number;
-  }
-> {
-  constructor(props: {}) {
-    super(props);
-    const files: File[] = [];
-    this.state = {
-      isSignedIn: false,
-      files,
-      paused: true,
-      duration: 0,
-      currentTime: 0,
-    };
-  }
+const MusicPlayer: React.FC = () => {
+  const [signIn, setSignIn] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const { player, status } = usePlayer();
 
-  /**
-   * called when sign in at google
-   */
-  onSignIn() {
-    getFiles(files =>
-      this.setState(state => {
-        state.files.push(...files);
-        return state;
-      })
-    );
-  }
+  const addFile = (newFiles: File) => setFiles(files.concat(newFiles));
+  const playWithIndex = (index: number) => {
+    player?.playWithIdList(files, index);
+  };
 
-  playWithIndex(index: number) {
-    const item = this.state.files[index];
-    if (!item) {
-      console.log("no item");
-      return;
-    }
-    playWithUrl(item.id);
-  }
+  const menuItems = new Map<
+    string,
+    { name: string; icon: string; element: JSX.Element }
+  >()
+    .set("playing", {
+      name: "Now Playing",
+      icon: "play_arrow",
+      element: (
+        <PlayingInfo info={status.info} playingList={player?.musicIds ?? []} />
+      ),
+    })
+    .set("library", {
+      name: "Library",
+      icon: "list",
+      element: <MusicList files={files} play={playWithIndex} />,
+    })
+    .set("drive", {
+      name: "Google Drive",
+      icon: "cloud",
+      element: <DriveFiles signIn={signIn} addFile={addFile} />,
+    });
 
-  render() {
-    return (
-      <div>
-        <PlayingInfo
-          name={""}
-          duration={this.state.duration}
-          currentTime={this.state.currentTime}
-          paused={this.state.paused}
-          seek={() => console.log("cannnot seek")}
-          play={() => console.log("cannnot  play")}
-          pause={() => console.log("cannnot pause")}
-        />
-        <Authorize onSignIn={() => this.onSignIn()} />
-        <MusicList
-          files={this.state.files}
-          play={index => this.playWithIndex(index)}
-        />
-        <NowPlayingList list={[]} playingIndex={0} />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="player-container">
+      <Controller
+        info={status.info}
+        duration={status.duration}
+        currentTime={status.currentTime}
+        paused={status.paused}
+        repeat={status.repeat}
+        shuffle={status.shuffle}
+        seek={time => player?.seek(time)}
+        play={() => player?.play()}
+        pause={() => player?.pause()}
+        playNext={() => player?.playToNext()}
+        playPrev={() => player?.playToPrev()}
+        setRepeat={repeat => player?.setRepeat(repeat)}
+        setShuffle={shuffle => player?.setShuffle(shuffle)}
+      />
+      <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
+    </div>
+  );
+};
+
+const usePlayer = () => {
+  const [paused, setPaused] = useState(true);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [repeat, setRepeat] = useState(Repeat.DEFAULT);
+  const [shuffle, setShuffle] = useState(false);
+
+  const [info, setInfo] = useState(() => AudioInfo.getEmptyInfo());
+
+  const player = useRef<AudioPlayer | null>(null);
+
+  useEffect(() => {
+    player.current = new AudioPlayer();
+
+    player.current.onSetDuration = duration => setDuration(duration);
+    player.current.onSetPause = paused => setPaused(paused);
+    player.current.onSetCurrentTime = currentTime =>
+      setCurrentTime(currentTime);
+    player.current.onSetRepeat = repeat => setRepeat(repeat);
+    player.current.onSetShuffle = shuffle => setShuffle(shuffle);
+    player.current.onSetInfo = info => setInfo(info);
+  }, []);
+
+  return {
+    player: player.current,
+    status: {
+      paused,
+      duration,
+      currentTime,
+      repeat,
+      shuffle,
+      info,
+    },
+  };
+};
+
+export default MusicPlayer;
