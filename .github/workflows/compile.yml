@@ -43,7 +43,7 @@ jobs:
       - run: git fetch
       - run: git checkout -b pages-build origin/pages-build
 
-      - run: git rm -r javascript/* dist/* $(find src -type f)
+      - run: git rm -r javascript/* $(find src -type f)
       - run: git commit -m "delete now files"
 
       - run: git merge --no-ff --allow-unrelated-histories -Xtheirs origin/main
