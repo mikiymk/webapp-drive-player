@@ -40,7 +40,7 @@ jobs:
       - run: git rm -r javascript/* $(find src -type f)
       - run: git commit -m "delete now files"
 
-      - run: git merge --no-ff --allow-unrelated-histories -Xtheirs origin/${GITHUB_REF##*/}
+      - run: git merge --no-ff --allow-unrelated-histories -Xtheirs origin/main
 
       - run: find src -type f
 
@@ -52,7 +52,7 @@ jobs:
       - name: git commit and push
         run: |
           git add .
-          git add -f javascript
+          git add -f dist
           git commit -m "compile typescript"
           git push origin pages-build
 
