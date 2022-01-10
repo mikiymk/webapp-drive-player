@@ -37,17 +37,16 @@ jobs:
       - run: git fetch
       - run: git checkout -b pages-build origin/pages-build
 
-      - run: git rm -r javascript/* $(find src -type f)
-      - run: git commit -m "delete now files"
-
       - run: git merge --no-ff --allow-unrelated-histories -Xtheirs origin/main
 
-      - run: find src -type f
+      - run: git rm -r dist/*
 
       - run: npm ci
 
       - name: compile
         run: npm run build:prod
+
+      - run: git rm -r $(find src -type f)
 
       - name: git commit and push
         run: |
