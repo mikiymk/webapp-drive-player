@@ -11,43 +11,54 @@ import Repeat from "audio/repeat";
 import { File } from "file";
 import AudioInfo from "audio/audioInfo";
 
+export type Files = {
+  [name: string]: File & Partial<AudioInfo>;
+};
+
 /**
  * react component root.
  */
 const MusicPlayer: React.FC = () => {
   const [signIn, setSignIn] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<Files>({});
   const { player, status } = usePlayer();
 
-  const addFile = (newFiles: File) => setFiles(files.concat(newFiles));
-  const playWithIndex = (index: number) => {
-    player?.playWithIdList(files, index);
+  const addFile = (newFiles: File) =>
+    setFiles(files => ({ ...files, [newFiles.id]: newFiles }));
+
+  const playWithIdList = (idList: string[], index: number) => {
+    player?.playWithIdList(idList, index);
   };
 
-  const menuItems = new Map<
-    string,
-    { name: string; icon: string; element: JSX.Element }
-  >()
-    .set("playing", {
+  const menuItems: {
+    [name: string]: { name: string; icon: string; element: JSX.Element };
+  } = {
+    playing: {
       name: "Now Playing",
       icon: "play_arrow",
       element: (
-        <PlayingInfo info={status.info} playingList={player?.musicIds ?? []} />
+        <PlayingInfo
+          info={status.info}
+          files={files}
+          playingList={player?.musicIds ?? []}
+        />
       ),
-    })
-    .set("library", {
+    },
+    library: {
       name: "Library",
       icon: "list",
-      element: <MusicList files={files} play={playWithIndex} />,
-    })
-    .set("drive", {
+      element: <MusicList files={files} play={playWithIdList} />,
+    },
+    drive: {
       name: "Google Drive",
       icon: "cloud",
       element: <DriveFiles signIn={signIn} addFile={addFile} />,
-    });
+    },
+  };
 
   return (
     <div className="player-container">
+      <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
       <Controller
         info={status.info}
         duration={status.duration}
@@ -63,7 +74,6 @@ const MusicPlayer: React.FC = () => {
         setRepeat={repeat => player?.setRepeat(repeat)}
         setShuffle={shuffle => player?.setShuffle(shuffle)}
       />
-      <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
     </div>
   );
 };

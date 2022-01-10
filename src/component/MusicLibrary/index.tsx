@@ -3,10 +3,11 @@ import React from "react";
 import { Item } from "./Item";
 
 import { File } from "file";
+import { Files } from "component/MusicPlayer";
 
 type Props = {
-  files: File[];
-  play: (index: number) => void;
+  files: Files;
+  play: (idList: string[], index: number) => void;
 };
 
 /**
@@ -15,8 +16,12 @@ type Props = {
 const MusicList: React.FC<Props> = ({ files, play }) => {
   return (
     <ul>
-      {files.map((file, index) => (
-        <Item key={file.id} file={file} play={play} index={index} />
+      {Object.values(files).map(({ id, name }, index) => (
+        <Item
+          key={id}
+          name={name}
+          play={() => play(Object.keys(files), index)}
+        />
       ))}
     </ul>
   );

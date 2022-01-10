@@ -3,18 +3,17 @@ import React from "react";
 import { File } from "file";
 
 type Props = {
-  file: File;
-  play: (index: number) => void;
-  index: number;
+  name: string;
+  play: () => void;
 };
 
 /**
  * item of musics list
  */
-export const Item: React.FC<Props> = ({ file: { name, id }, play, index }) => {
+export const Item: React.FC<Props> = ({ name, play }) => {
   return (
     <li>
-      {name}({id})<button onClick={() => play(index)}>play</button>
+      {name} <button onClick={play}>play</button>{" "}
     </li>
   );
 };

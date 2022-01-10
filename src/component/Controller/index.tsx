@@ -48,6 +48,7 @@ const Controller: React.FC<Props> = ({
 }) => {
   return (
     <>
+      <SeekBar duration={duration} time={currentTime} seek={seek} />
       <div className="player-controller">
         <IconButton icon="skip_previous" onClick={playPrev} />
         <PlayButton isPaused={paused} play={play} pause={pause} />
@@ -57,7 +58,6 @@ const Controller: React.FC<Props> = ({
         <ShuffleButton shuffle={shuffle} setShuffle={setShuffle} />
         <MusicTime duration={duration} currentTime={currentTime} />
       </div>
-      <SeekBar duration={duration} time={currentTime} seek={seek} />
     </>
   );
 };

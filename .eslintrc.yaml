@@ -26,7 +26,8 @@ rules:
   camelcase: error
   eqeqeq: error
   max-statements: [error, 30]
-  no-empty-function: error
+  no-empty-function: warn
+  "@typescript-eslint/no-empty-function": off
   no-eval: error
   no-implied-eval: error
   no-throw-literal: error

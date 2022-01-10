@@ -5,10 +5,6 @@ import ShuffleArray from "./shuffleArray";
 import BufferLoader from "./bufferLoader";
 import AudioInfo from "./audioInfo";
 
-const emptyFunction = () => {
-  // EMPTY
-};
-
 /**
  * 音楽再生の管理
  */
@@ -19,7 +15,7 @@ class AudioPlayer {
   private readonly nextBuffer = new BufferLoader();
 
   /** play music file list */
-  musicIds: ShuffleArray<File> = new ShuffleArray([], false);
+  musicIds: ShuffleArray<string> = new ShuffleArray([], false);
 
   /** play music ids index */
   private index = NaN;
@@ -27,12 +23,12 @@ class AudioPlayer {
   repeat: Repeat = Repeat.DEFAULT;
   isPaused = true;
 
-  onSetDuration: (duration: number) => void = emptyFunction;
-  onSetCurrentTime: (currentTime: number) => void = emptyFunction;
-  onSetPause: (isPaused: boolean) => void = emptyFunction;
-  onSetRepeat: (repeat: Repeat) => void = emptyFunction;
-  onSetShuffle: (shuffle: boolean) => void = emptyFunction;
-  onSetInfo: (info: AudioInfo) => void = emptyFunction;
+  onSetDuration: (duration: number) => void = () => {};
+  onSetCurrentTime: (currentTime: number) => void = () => {};
+  onSetPause: (isPaused: boolean) => void = () => {};
+  onSetRepeat: (repeat: Repeat) => void = () => {};
+  onSetShuffle: (shuffle: boolean) => void = () => {};
+  onSetInfo: (info: AudioInfo) => void = () => {};
 
   constructor() {
     this.audio.addEventListener("ended", () => this.onEnd());
@@ -43,14 +39,14 @@ class AudioPlayer {
    * 今の曲の再生バッファをロード
    */
   private async loadBuffer() {
-    return await this.buffer.load(this.musicIds.get(this.index).id);
+    return await this.buffer.load(this.musicIds.get(this.index));
   }
 
   /**
    * 次の曲の再生バッファをロード
    */
   private async loadNextBuffer() {
-    return await this.nextBuffer.load(this.musicIds.get(this.nextIndex).id);
+    return await this.nextBuffer.load(this.musicIds.get(this.nextIndex));
   }
 
   /**
@@ -96,7 +92,7 @@ class AudioPlayer {
   /**
    * リストと最初のインデックスを渡して再生を始める
    */
-  playWithIdList(ids: File[], index: number) {
+  playWithIdList(ids: string[], index: number) {
     this.musicIds = new ShuffleArray(ids, false);
     this.index = index;
 

@@ -5,7 +5,9 @@ import LabelIcon from "component/Common/LabelIcon";
 import Authorize from "./Authorize";
 
 type Props = {
-  items: Map<string, { name: string; icon: string; element: JSX.Element }>;
+  items: {
+    [name: string]: { name: string; icon: string; element: JSX.Element };
+  };
   signIn: boolean;
   setSignIn: (signIn: boolean) => void;
 };
@@ -16,7 +18,7 @@ type Props = {
 const Menu: React.FC<Props> = ({ items, signIn, setSignIn }) => {
   const [selected, setSelected] = React.useState("playing");
 
-  const menuList = Array.from(items).map(([id, { name, icon }]) => (
+  const menuList = Object.entries(items).map(([id, { name, icon }]) => (
     <li
       key={id}
       className={id === selected ? "menu-left-selected" : ""}
@@ -31,7 +33,7 @@ const Menu: React.FC<Props> = ({ items, signIn, setSignIn }) => {
         {menuList}
         <Authorize signIn={signIn} setSignIn={setSignIn} />
       </ul>
-      <div className="menu-right">{items.get(selected)?.element ?? null}</div>
+      <div className="menu-right">{items[selected]?.element ?? null}</div>
     </div>
   );
 };
