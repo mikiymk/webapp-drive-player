@@ -3,4 +3,9 @@ import ReactDOM from "react-dom";
 
 import MusicPlayer from "component/MusicPlayer";
 
-ReactDOM.render(<MusicPlayer />, document.getElementById("root"));
+ReactDOM.render(
+  <React.StrictMode>
+    <MusicPlayer />
+  </React.StrictMode>,
+  document.getElementById("root")
+);

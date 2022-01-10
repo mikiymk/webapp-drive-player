@@ -1,17 +1,19 @@
 import React from "react";
 
-import { File } from "file";
 import AudioInfo from "audio/audioInfo";
+import { Files } from "component/MusicPlayer";
 
 type Props = {
   info: AudioInfo;
-  playingList: Iterable<File>;
+  files: Files;
+  playingList: Iterable<string>;
 };
 
 /**
  * now playing audio info view
  */
 const PlayingInfo: React.FC<Props> = ({
+  files,
   info: { album, jacket },
   playingList,
 }) => {
@@ -20,10 +22,8 @@ const PlayingInfo: React.FC<Props> = ({
       <span>{album}</span>
       <img src={jacket} alt="album jacket" />
       <ol>
-        {Array.from(playingList).map(({ name, id }, index) => (
-          <li key={index}>
-            {name}({id})
-          </li>
+        {Array.from(playingList).map((id, index) => (
+          <li key={index}>{files[id].name}</li>
         ))}
       </ol>
     </div>
