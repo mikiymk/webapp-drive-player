@@ -1,3 +1,30 @@
+# Google Driveにある音楽ファイルをブラウザで再生できる音楽プレイヤー
+
+**Google Driveにある音楽ファイルをブラウザで再生できる音楽プレイヤー**は
+[Google Drive](https://drive.google.com)
+に保存されている音楽ファイル(mp3, ogg等)を
+ブラウザ(Google Chrome、Mozilla Firefox等)を使用して
+オンラインで再生できる音楽プレイヤーです。
+
+# 使い方
+
+1. サーバー上の `index.html` にアクセスする。
+1. Sign in ボタンを押してGoogleアカウントにサインインする。
+1. Google Drive ページから音楽ファイルを選択する。
+1. 選択された音楽ファイルの曲が流れます。
+
+# サーバーを作る
+
+1. Github のファイルをコピーする。
+1. 次のコマンドを入力
+
+```sh
+$ npm install
+$ npm run start
+```
+
+1. サーバーが作られます。
+
 # drive-player
 
 music files in google drive play on browser
