@@ -31,7 +31,7 @@ class BufferLoader {
     URL.revokeObjectURL(this.url);
     this.url = "";
 
-    if (id == null || id === "") {
+    if (id === null || id === undefined || id === "") {
       return "";
     }
 

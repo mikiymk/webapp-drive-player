@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`icon component test 1`] = `
+<span
+  className="common-icon test-class-name"
+>
+  <span
+    className="material-icons-sharp"
+  >
+    icon
+  </span>
+</span>
+`;
