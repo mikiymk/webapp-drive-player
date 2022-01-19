@@ -29,33 +29,16 @@ jobs:
         with:
           node-version: "14"
 
-      - name: git config
-        run: |
-          git config --global user.email "github@example.com"
-          git config --global user.name "github-actions"
-
-      - run: git fetch
-      - run: git checkout -b pages-build origin/pages-build
-
-      - run: git rm -r javascript/* $(find src -type f)
-      - run: git commit -m "delete now files"
-
-      - run: git merge --no-ff --allow-unrelated-histories -Xtheirs origin/${GITHUB_REF##*/}
-
-      - run: find src -type f
-
       - run: npm ci
 
       - name: compile
         run: npm run build:prod
 
-      - name: git commit and push
-        run: |
-          git add .
-          git add -f javascript
-          git commit -m "compile typescript"
-          git push origin pages-build
+      - name: copy files to directory
+        run: cp index.html image dist css gh-pages
 
-      - name: always git state
-        run: git status
-        if: always()
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages
