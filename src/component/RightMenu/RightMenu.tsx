@@ -1,30 +1,39 @@
 import React from "react";
 
-type HrItem = { type: "hr" };
-type ButtonItem = { type: "button"; label: string; onClick: () => void };
-type AnchorItem = { type: "anchor"; label: string; href: string };
-type Item = HrItem | ButtonItem | AnchorItem;
+import Item from "./Item";
 
 type Props = {
   items: Item[];
-  x: number;
-  y: number;
+  top: number;
+  left: number;
 };
 
 /** show on right click */
-const RightMenu: React.FC<Props> = ({ items, x, y }) => {
+const RightMenu: React.FC<Props> = ({ items, top, left }) => {
   return (
     <div
       className="right-menu"
-      style={{ top: `${Math.trunc(x)}px`, left: `${Math.trunc(y)}px` }}>
-      {items.map(item => {
+      style={{
+        visibility: items.length !== 0 ? "visible" : "hidden",
+        top: `${Math.trunc(top)}px`,
+        left: `${Math.trunc(left)}px`,
+      }}>
+      {items.map((item, index) => {
         if (item.type === "hr") {
-          return <hr></hr>;
+          return <hr key={`h-${index}`}></hr>;
         } else if (item.type === "button") {
-          return <button onClick={item.onClick}>{item.label}</button>;
+          return (
+            <button key={`b-${item.label}`} onClick={item.onClick}>
+              {item.label}
+            </button>
+          );
         } else if (item.type === "anchor") {
           return (
-            <a href={item.href} target="_blank">
+            <a
+              key={`a-${item.label}`}
+              href={item.href}
+              target="_blank"
+              rel="noreferrer">
               {item.label}
             </a>
           );
