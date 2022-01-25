@@ -1,17 +1,3 @@
-.common-icon {
-  font-size: 2rem;
-  height: 3rem;
-  width: 3rem;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.common-icon span {
-  font-size: inherit;
-}
-
 .common-label-icon {
   display: flex;
   justify-items: center;
