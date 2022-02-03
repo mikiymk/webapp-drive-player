@@ -2,7 +2,7 @@
 
 exports[`icon component test 1`] = `
 <span
-  className="common-icon test-class-name"
+  className="style-class"
 >
   <span
     className="material-icons-sharp"
