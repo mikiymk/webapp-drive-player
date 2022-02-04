@@ -12,10 +12,19 @@ import { File } from "file";
 import AudioInfo from "audio/audioInfo";
 import RightMenuContext from "./RightMenu/Context";
 import useRightMenuContext from "./RightMenu/useRightMenuContext";
+import { css } from "@linaria/core";
 
 export type Files = {
   [name: string]: File & Partial<AudioInfo>;
 };
+
+const style = css`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100%;
+`;
 
 /**
  * react component root.
@@ -62,7 +71,7 @@ const MusicPlayer: React.FC = () => {
 
   return (
     <RightMenuContext.Provider value={value.setRightMenu}>
-      <div className="player-container">
+      <div className={style}>
         <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
         <Controller
           info={status.info}

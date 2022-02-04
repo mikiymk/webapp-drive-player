@@ -1,4 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { css } from "@linaria/core";
+
+const style = css`
+  flex: 0 0 0.5rem;
+
+  background-color: rgb(79, 81, 99);
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
+`;
 
 type Props = {
   duration: number;
@@ -32,7 +44,7 @@ const SeekBar: React.FC<Props> = ({ duration, time, seek }) => {
 
   return (
     <input
-      className="player-seekbar"
+      className={style}
       type="range"
       min="0"
       max={duration * 1000}

@@ -2,12 +2,8 @@
 
 exports[`icon component test 1`] = `
 <span
-  className="style-class"
+  className="material-icons-sharp style-class"
 >
-  <span
-    className="material-icons-sharp"
-  >
-    icon
-  </span>
+  icon
 </span>
 `;

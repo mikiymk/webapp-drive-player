@@ -2,19 +2,8 @@ import React from "react";
 import { css } from "@linaria/core";
 
 const style = css`
-  font-size: 1rem;
-  height: 1rem;
-  width: 1rem;
-
-  padding: 0rem 1rem;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  & span {
-    font-size: inherit;
-  }
+  font-size: inherit;
+  color: inherit;
 `;
 
 type Props = {
@@ -23,12 +12,13 @@ type Props = {
 };
 
 /** Google Material Icon */
-const Icon: React.FC<Props> = ({ icon }) => {
-  return (
-    <span className={style}>
-      <span className={"material-icons-sharp"}>{icon}</span>
-    </span>
-  );
+const Icon: React.FC<Props> = ({ icon, className }) => {
+  let classes = `material-icons-sharp ${style}`;
+  if (className !== undefined) {
+    classes = `material-icons-sharp ${style} ${className}`;
+  }
+
+  return <span className={classes}>{icon}</span>;
 };
 
 export default Icon;
