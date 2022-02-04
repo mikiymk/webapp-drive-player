@@ -1,6 +1,30 @@
 import React from "react";
+import { css } from "@linaria/core";
 
 import Item from "./Item";
+
+const style = css`
+  position: fixed;
+  visibility: hidden;
+  top: 0px;
+  left: 0px;
+
+  background-color: white;
+  border-color: gray;
+  border-style: solid;
+  border-width: 0.1rem;
+
+  min-width: 10rem;
+
+  & button,
+  & a {
+    margin: 0.5rem;
+  }
+
+  & hr {
+    margin: 0.2rem;
+  }
+`;
 
 type Props = {
   items: Item[];
@@ -12,7 +36,7 @@ type Props = {
 const RightMenu: React.FC<Props> = ({ items, top, left }) => {
   return (
     <div
-      className="right-menu"
+      className={style}
       style={{
         visibility: items.length !== 0 ? "visible" : "hidden",
         top: `${Math.trunc(top)}px`,

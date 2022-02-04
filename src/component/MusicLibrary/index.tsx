@@ -1,9 +1,13 @@
 import React from "react";
+import { css } from "@linaria/core";
 
 import { Item } from "./Item";
 
-import { File } from "file";
 import { Files } from "component/MusicPlayer";
+
+const style = css`
+  
+`;
 
 type Props = {
   files: Files;

@@ -10,7 +10,7 @@ jest.mock("@linaria/core", () => {
 
 test("icon component test", () => {
   const component = renderer.create(
-    React.createElement(Icon, { icon: "icon", className: "test-class-name" })
+    React.createElement(Icon, { icon: "icon" })
   );
   const tree = component.toJSON();
   expect(tree).toMatchSnapshot();

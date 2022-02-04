@@ -1,9 +1,15 @@
 import React from "react";
+import { css } from "@linaria/core";
 
 import { Breadcrumbs } from "./Breadcrumbs";
 import { Item } from "./Item";
 
 import { getAllMusics, getAllFolders, File } from "file";
+
+const style = css`
+  overflow-y: scroll;
+  height: 100%;
+`;
 
 type Props = {
   signIn: boolean;
@@ -34,7 +40,7 @@ const DriveFiles: React.FC<Props> = ({ signIn, addFile }) => {
   const move = (index: number) => setParents(parents.slice(0, index + 1));
 
   return (
-    <div className="drive-container">
+    <div className={style}>
       <Breadcrumbs parents={parents} move={move} />
       <ul className="drive-list">
         {folders.map(file => (

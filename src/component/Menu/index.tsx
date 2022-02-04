@@ -1,8 +1,44 @@
 import React from "react";
+import { css } from "@linaria/core";
 
 import LabelIcon from "component/Common/LabelIcon";
 
 import Authorize from "./Authorize";
+
+const style = css`
+  display: flex;
+  flex: 0 1 100vh;
+  overflow: hidden;
+
+  &-left {
+    flex: 0 0 max-content;
+    padding-top: 4rem;
+    background-color: rgb(165, 165, 165);
+    overflow-y: scroll;
+
+    &-item {
+      cursor: pointer;
+      margin: 0.3rem 0rem;
+      padding: 0.2rem 0.5rem;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      &-selected {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  &-right {
+    flex: 1 1 content;
+
+    background-color: rgb(207, 207, 207);
+
+    overflow-wrap: anywhere;
+  }
+`;
 
 type Props = {
   items: {
@@ -21,19 +57,27 @@ const Menu: React.FC<Props> = ({ items, signIn, setSignIn }) => {
   const menuList = Object.entries(items).map(([id, { name, icon }]) => (
     <li
       key={id}
-      className={id === selected ? "menu-left-selected" : ""}
+      className={
+        id === selected
+          ? `${style}-left-item ${style}-left-item-selected`
+          : `${style}-left-item`
+      }
       onClick={() => setSelected(id)}>
       <LabelIcon icon={icon} text={name} />
     </li>
   ));
 
   return (
-    <div className="menu-container">
-      <ul className="menu-left">
+    <div className={style}>
+      <ul className={`${style}-left`}>
         {menuList}
-        <Authorize signIn={signIn} setSignIn={setSignIn} />
+        <Authorize
+          signIn={signIn}
+          setSignIn={setSignIn}
+          style={`${style}-left-item`}
+        />
       </ul>
-      <div className="menu-right">{items[selected]?.element ?? null}</div>
+      <div className={`${style}-right`}>{items[selected]?.element ?? null}</div>
     </div>
   );
 };
