@@ -5,9 +5,7 @@ import { Item } from "./Item";
 
 import { Files } from "component/MusicPlayer";
 
-const style = css`
-  
-`;
+const style = css``;
 
 type Props = {
   files: Files;
