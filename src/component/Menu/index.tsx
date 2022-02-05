@@ -14,7 +14,6 @@ const style = css`
     flex: 0 0 max-content;
     padding-top: 4rem;
     background-color: rgb(165, 165, 165);
-    overflow-y: scroll;
 
     &-item {
       cursor: pointer;
