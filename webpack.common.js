@@ -3,6 +3,8 @@
 const path = require("path");
 const TsConfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -12,6 +14,7 @@ module.exports = {
     filename: "bundle.js",
     publicPath: "/dist/",
     path: path.resolve(__dirname, "dist"),
+    clean: true,
   },
   plugins: [
     // Add your plugins here
@@ -19,6 +22,8 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "styles.css",
     }),
+    new FaviconsWebpackPlugin("./src/img/icon.svg"),
+    new HtmlWebpackPlugin(),
   ],
   module: {
     rules: [
