@@ -1,13 +1,7 @@
-/*
- * destyle css
- * https://nicolas-cusan.github.io/destyle.css/
- */
+/* destyle css https://nicolas-cusan.github.io/destyle.css/ */
 @import url("https://unpkg.com/destyle.css@3.0.0/destyle.min.css");
 
-/*
- * google material icon
- * https://fonts.google.com/icons
- */
+/* google material icon https://fonts.google.com/icons */
 @import url("https://fonts.googleapis.com/css?family=Material+Icons+Sharp");
 
 html,
