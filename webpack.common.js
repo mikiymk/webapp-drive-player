@@ -2,6 +2,8 @@
 
 const path = require("path");
 const TsConfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -10,10 +12,13 @@ module.exports = {
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
+    clean: true,
   },
   plugins: [
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
+    new FaviconsWebpackPlugin("./src/img/icon.svg"),
+    new HtmlWebpackPlugin(),
   ],
   module: {
     rules: [
