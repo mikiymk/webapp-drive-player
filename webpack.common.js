@@ -12,7 +12,6 @@ module.exports = {
   devtool: "source-map",
   output: {
     filename: "bundle.js",
-    publicPath: "/dist/",
     path: path.resolve(__dirname, "dist"),
     clean: true,
   },
@@ -23,7 +22,9 @@ module.exports = {
       filename: "styles.css",
     }),
     new FaviconsWebpackPlugin("./src/img/icon.svg"),
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: "index.html",
+    }),
   ],
   module: {
     rules: [
