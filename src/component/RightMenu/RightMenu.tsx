@@ -1,6 +1,8 @@
+import IconButton from "component/Common/IconButton";
 import React from "react";
 
 import Item from "./Item";
+import useRightMenu from "./useRightMenu";
 
 type Props = {
   items: Item[];
@@ -18,6 +20,8 @@ const RightMenu: React.FC<Props> = ({ items, top, left }) => {
         top: `${Math.trunc(top)}px`,
         left: `${Math.trunc(left)}px`,
       }}>
+      <IconButton icon="close" onClick={useRightMenu([])} />
+      <hr></hr>
       {items.map((item, index) => {
         if (item.type === "hr") {
           return <hr key={`h-${index}`}></hr>;
