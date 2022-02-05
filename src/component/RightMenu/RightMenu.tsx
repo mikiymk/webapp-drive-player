@@ -1,7 +1,9 @@
+import IconButton from "component/Common/IconButton";
 import React from "react";
 import { css } from "@linaria/core";
 
 import Item from "./Item";
+import useRightMenu from "./useRightMenu";
 
 const style = css`
   position: fixed;
@@ -42,6 +44,8 @@ const RightMenu: React.FC<Props> = ({ items, top, left }) => {
         top: `${Math.trunc(top)}px`,
         left: `${Math.trunc(left)}px`,
       }}>
+      <IconButton icon="close" onClick={useRightMenu([])} />
+      <hr></hr>
       {items.map((item, index) => {
         if (item.type === "hr") {
           return <hr key={`h-${index}`}></hr>;
