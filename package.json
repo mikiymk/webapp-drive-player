@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "webpack --config=webpack.prod.js --mode=production --node-env=production",
-    "build:dev": "webpack --config=webpack.dev.js --mode=development",
-    "build:prod": "webpack --config=webpack.prod.js --mode=production --node-env=production",
-    "watch": "webpack --watch --config=webpack.dev.js --mode=development",
-    "server": "http-server ./dist",
-    "start": "run-s lint format test build:dev server",
+    "build": "run-s lint format test build:prod",
+    "build:prod": "webpack --config=webpack.prod.js --node-env=production",
+    "build:dev": "webpack --config=webpack.dev.js",
+    "watch": "webpack --watch --config=webpack.dev.js",
+    "server": "webpack serve --config=webpack.dev.js",
+    "start": "run-s lint format test server",
     "format": "prettier -w src index.html",
     "lint": "eslint src"
   },
@@ -59,6 +59,7 @@
     "typescript": "^4.5.5",
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4",
     "webpack-html-plugin": "^0.1.1",
     "webpack-merge": "^5.8.0",
     "workbox-webpack-plugin": "^6.4.2"
