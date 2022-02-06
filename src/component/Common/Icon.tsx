@@ -1,4 +1,10 @@
 import React from "react";
+import { css } from "@linaria/core";
+
+const style = css`
+  font-size: inherit;
+  color: inherit;
+`;
 
 type Props = {
   icon: string;
@@ -7,11 +13,12 @@ type Props = {
 
 /** Google Material Icon */
 const Icon: React.FC<Props> = ({ icon, className }) => {
-  return (
-    <span className={"common-icon " + (className ?? "")}>
-      <span className={"material-icons-sharp"}>{icon}</span>
-    </span>
-  );
+  let classes = `material-icons-sharp ${style}`;
+  if (className !== undefined) {
+    classes = `material-icons-sharp ${style} ${className}`;
+  }
+
+  return <span className={classes}>{icon}</span>;
 };
 
 export default Icon;

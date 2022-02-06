@@ -2,6 +2,7 @@
 
 const path = require("path");
 const TsConfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
@@ -17,19 +18,52 @@ module.exports = {
   plugins: [
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
+    new MiniCssExtractPlugin({
+      filename: "styles.css",
+    }),
     new FaviconsWebpackPlugin("./src/img/icon.svg"),
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: "index.html",
+    }),
   ],
   module: {
     rules: [
-      {
-        test: /\.(ts|tsx)$/i,
-        loader: "ts-loader",
-        exclude: ["/node_modules/"],
-      },
-
       // Add your rules for custom modules here
       // Learn more about loaders from https://webpack.js.org/loaders/
+
+      {
+        test: /\.tsx?$/i,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              sourceMap: process.env.NODE_ENV !== "production",
+            },
+          },
+          {
+            loader: "@linaria/webpack-loader",
+            options: {
+              sourceMap: process.env.NODE_ENV !== "production",
+            },
+          },
+        ],
+      },
+
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: process.env.NODE_ENV !== "production",
+            },
+          },
+        ],
+      },
     ],
   },
   resolve: {
