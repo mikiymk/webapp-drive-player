@@ -4,7 +4,11 @@ import { css } from "@linaria/core";
 import Icon from "component/Common/Icon";
 
 const style = css`
-  vertical-align: middle;
+  vertical-align: bottom;
+
+  &-label {
+    margin-left: 0.5em;
+  }
 `;
 
 type Props = {
@@ -15,9 +19,9 @@ type Props = {
 /** Google Material Icon テキスト付き */
 const LabelIcon: React.FC<Props> = ({ icon, text }) => {
   return (
-    <span className={style}>
-      <Icon icon={icon} />
-      {text}
+    <span>
+      <Icon icon={icon} className={style} />
+      <span className={`${style} ${style}-label`}>{text}</span>
     </span>
   );
 };
