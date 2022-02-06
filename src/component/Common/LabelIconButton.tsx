@@ -1,6 +1,13 @@
 import React from "react";
+import { css } from "@linaria/core";
 
 import LabelIcon from "component/Common/LabelIcon";
+
+const style = css`
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+`;
 
 type Props = {
   icon: string;
@@ -16,10 +23,12 @@ const LabelIconButton: React.FC<Props> = ({
   onClick,
   className,
 }) => {
+  let classes = `${style}`;
+  if (className !== undefined) {
+    classes = `${style} ${className}`;
+  }
   return (
-    <button
-      onClick={onClick}
-      className={"common-label-icon-button " + (className ?? "")}>
+    <button onClick={onClick} className={classes}>
       <LabelIcon icon={icon} text={text} />
     </button>
   );

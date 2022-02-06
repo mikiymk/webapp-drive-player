@@ -1,0 +1,6 @@
+{
+  "eslint.options": {
+    "ignorePattern": "webpack.*.js"
+  },
+  "svg.preview.background": "dark-transparent"
+}
