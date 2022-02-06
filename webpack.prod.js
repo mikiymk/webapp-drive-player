@@ -4,5 +4,6 @@ const WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 
 module.exports = merge(common, {
   mode: "production",
+  devtool: "source-map",
   plugins: [new WorkboxWebpackPlugin.GenerateSW()],
 });
