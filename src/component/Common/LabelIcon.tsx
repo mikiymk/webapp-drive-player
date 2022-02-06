@@ -1,19 +1,27 @@
 import React from "react";
+import { css } from "@linaria/core";
 
 import Icon from "component/Common/Icon";
+
+const style = css`
+  vertical-align: bottom;
+
+  &-label {
+    margin-left: 0.5em;
+  }
+`;
 
 type Props = {
   icon: string;
   text: string;
-  className?: string;
 };
 
 /** Google Material Icon テキスト付き */
-const LabelIcon: React.FC<Props> = ({ icon, text, className }) => {
+const LabelIcon: React.FC<Props> = ({ icon, text }) => {
   return (
-    <span className={"common-label-icon " + (className ?? "")}>
-      <Icon icon={icon} />
-      <span className="common-label-icon-label">{text}</span>
+    <span>
+      <Icon icon={icon} className={style} />
+      <span className={`${style} ${style}-label`}>{text}</span>
     </span>
   );
 };
