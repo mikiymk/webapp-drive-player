@@ -5,6 +5,7 @@ const TsConfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
+const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 
 module.exports = {
   mode: "development",
@@ -24,6 +25,10 @@ module.exports = {
     new FaviconsWebpackPlugin("./src/img/icon.svg"),
     new HtmlWebpackPlugin({
       template: "index.html",
+    }),
+    new WasmPackPlugin({
+      crateDirectory: path.resolve(__dirname, "./src/audio/crate"),
+      extraArgs: "--target bundler --mode normal",
     }),
   ],
   module: {
@@ -70,5 +75,8 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js"],
     modules: ["node_modules"],
     plugins: [new TsConfigPathsPlugin()],
+  },
+  experiments: {
+    asyncWebAssembly: true,
   },
 };

@@ -17,6 +17,13 @@ class AudioInfo {
     const tag = readTagFromData(data);
     console.log(tag);
 
+    import("./crate/pkg").then(module => {
+      const array = new Uint8Array(data);
+      const tagString = module.read_from_slice(array);
+      // const tagObject = JSON.parse(tagString);
+      console.log(tagString);
+    });
+
     let title;
     let artist;
     let album;
