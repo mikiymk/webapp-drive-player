@@ -1,3 +1,4 @@
+import { parseBuffer } from "music-metadata-browser";
 import { readTagFromData } from "tag/index";
 
 class AudioInfo {
@@ -17,12 +18,13 @@ class AudioInfo {
     const tag = readTagFromData(data);
     console.log(tag);
 
-    import("./crate/pkg").then(module => {
-      const array = new Uint8Array(data);
-      const tagString = module.read_from_slice(array);
-      // const tagObject = JSON.parse(tagString);
-      console.log(tagString);
-    });
+    try {
+      const metadata = await parseBuffer(new Uint8Array(data));
+      console.log(metadata);
+    } catch (error) {
+      console.log("music metadata error");
+      console.log(error);
+    }
 
     let title;
     let artist;

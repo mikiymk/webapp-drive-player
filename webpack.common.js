@@ -1,11 +1,11 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require("path");
+const webpack = require("webpack");
 const TsConfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
-const WasmPackPlugin = require("@wasm-tool/wasm-pack-plugin");
 
 module.exports = {
   mode: "development",
@@ -26,9 +26,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "index.html",
     }),
-    new WasmPackPlugin({
-      crateDirectory: path.resolve(__dirname, "./src/audio/crate"),
-      extraArgs: "--target bundler --mode normal",
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"],
+    }),
+    new webpack.ProvidePlugin({
+      process: "process/browser",
     }),
   ],
   module: {
@@ -75,8 +77,5 @@ module.exports = {
     extensions: [".tsx", ".ts", ".js"],
     modules: ["node_modules"],
     plugins: [new TsConfigPathsPlugin()],
-  },
-  experiments: {
-    asyncWebAssembly: true,
   },
 };
