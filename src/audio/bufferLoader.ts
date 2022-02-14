@@ -1,4 +1,5 @@
 import { downloadFile } from "google-api/file";
+import { parseBlob } from "music-metadata-browser";
 import AudioInfo from "./audioInfo";
 
 /**
@@ -43,15 +44,14 @@ class BufferLoader {
       }
 
       const blob = await fileData.blob();
-      const arrayBuffer = await blob.slice().arrayBuffer();
 
       if (this.willLoadID === id) {
         this.info.close();
 
         this.loadedID = id;
         URL.revokeObjectURL(this.url);
+        this.info = await AudioInfo.getInfo(blob.slice());
         this.url = URL.createObjectURL(blob);
-        this.info = await AudioInfo.getInfo(arrayBuffer);
         return this.url;
       } else {
         return "";
