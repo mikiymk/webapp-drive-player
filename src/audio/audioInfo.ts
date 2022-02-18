@@ -1,8 +1,83 @@
 import { parseBlob } from "music-metadata-browser";
 
+type Nullable<T extends object> = {
+  [K in keyof T]: T[K] | null;
+};
+
+type DeepPartial<T> = T extends object
+  ? { [P in keyof T]?: DeepPartial<T[P]> | undefined }
+  : T;
+
+type AudioInfoNumber = { of: number; no: number };
+type AudioInfoBase = {
+  readonly title: string;
+  readonly artist: string;
+  readonly artists: string[];
+  readonly album: string;
+  readonly albumartist: string;
+
+  readonly track: Nullable<AudioInfoNumber>;
+  readonly disk: Nullable<AudioInfoNumber>;
+  readonly date: string | null;
+  readonly genre: string[];
+};
+
+type AudioInfoAdditional = {
+  composer: string[];
+  lyricist: string[];
+  writer: string[];
+  conductor: string[];
+  remixer: string[];
+  arranger: string[];
+  engineer: string[];
+  producer: string[];
+  technician: string[];
+  djmixer: string[];
+  mixer: string[];
+
+  lyrics: string[];
+  picture: Uint8Array[];
+
+  comment: string[];
+  work: string;
+  label: string[];
+  grouping: string;
+  subtitle: string[];
+  discsubtitle: string[];
+  totaltracks: string;
+  totaldiscs: string;
+  compilation: boolean;
+  rating: number[];
+  bpm: number;
+  mood: string;
+  media: string;
+  catalognumber: string[];
+  website: string;
+  notes: string[];
+  key: string;
+
+  original: AudioInfoOriginal;
+  sort: AudioInfoSort;
+};
+
+type AudioInfoOriginal = {
+  originalalbum: string;
+  originalartist: string;
+  originaldate: string;
+  originalyear: number;
+};
+
+type AudioInfoSort = {
+  albumsort: string;
+  titlesort: string;
+  artistsort: string;
+  albumartistsort: string;
+  composersort: string;
+};
+
 class AudioInfo {
   static getEmptyInfo() {
-    return new AudioInfo();
+    return new AudioInfo({});
   }
 
   /**
@@ -103,7 +178,7 @@ class AudioInfo {
       mixer,
 
       lyrics,
-      picture,
+      picture: picture?.map(value => value.data),
 
       comment,
       work,
@@ -114,7 +189,7 @@ class AudioInfo {
       totaltracks,
       totaldiscs,
       compilation,
-      rating,
+      rating: rating?.map(value => value.rating),
       bpm,
       mood,
       media,
@@ -146,23 +221,42 @@ class AudioInfo {
       );
     }
 
-    return new AudioInfo(title, artists?.join(", "), album, jacket);
+    return new AudioInfo(base, additional, jacket);
   }
 
-  readonly title: string;
-  readonly artist: string;
-  readonly album: string;
+  readonly base: AudioInfoBase;
+  readonly additional: DeepPartial<AudioInfoAdditional>;
+
   readonly jacket: string;
 
   private constructor(
-    title?: string,
-    artist?: string,
-    album?: string,
+    {
+      title,
+      artist,
+      artists,
+      album,
+      albumartist,
+      track,
+      disk,
+      date,
+      genre,
+    }: Partial<AudioInfoBase>,
+    additional?: DeepPartial<AudioInfoAdditional>,
     jacket?: string
   ) {
-    this.title = title ?? "";
-    this.artist = artist ?? "";
-    this.album = album ?? "";
+    this.base = {
+      title: title ?? "",
+      artist: artist ?? "",
+      artists: artists ?? [""],
+      album: album ?? "",
+      albumartist: albumartist ?? "",
+      track: { no: track?.no ?? null, of: track?.of ?? null },
+      disk: { no: disk?.no ?? null, of: disk?.of ?? null },
+      date: date ?? null,
+      genre: genre ?? [],
+    };
+
+    this.additional = additional ?? { original: {}, sort: {} };
     this.jacket = jacket ?? "";
   }
 

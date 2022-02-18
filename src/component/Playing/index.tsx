@@ -14,12 +14,12 @@ type Props = {
  */
 const PlayingInfo: React.FC<Props> = ({
   files,
-  info: { album, jacket },
+  info: { base, jacket },
   playingList,
 }) => {
   return (
     <div>
-      <span>{album}</span>
+      <span>{base.album}</span>
       <img src={jacket} alt="album jacket" />
       <ol>
         {Array.from(playingList).map((id, index) => (
