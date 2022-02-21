@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 
 import AudioInfo from "audio/audioInfo";
 import { Files } from "component/MusicPlayer";
+import useJacket from "./useJacket";
 
 type Props = {
   info: AudioInfo;
@@ -17,23 +18,14 @@ const PlayingInfo: React.FC<Props> = ({
   info: { base, additional },
   playingList,
 }) => {
-  const [jacketUrl, setJacketUrl] = useState("");
-  const defaultBuffer = useRef(new ArrayBuffer(0));
-  const picture =
-    (additional.picture ? additional.picture[0] : undefined) ??
-    defaultBuffer.current;
-  useEffect(() => {
-    if (jacketUrl !== "") {
-      URL.revokeObjectURL(jacketUrl);
-    }
-
-    setJacketUrl(URL.createObjectURL(new Blob([picture])));
-  }, [picture]);
+  const jacket = useJacket(
+    additional.picture ? additional.picture[0] : undefined
+  );
 
   return (
     <div>
       <span>{base.album}</span>
-      <img src={jacketUrl} alt="album jacket" />
+      <img src={jacket} alt="album jacket" />
       <ol>
         {Array.from(playingList).map((id, index) => (
           <li key={index}>{files[id].name}</li>
