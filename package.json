@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "run-s lint format test build:prod",
+    "build": "npm run build:prod",
     "build:prod": "webpack --config=webpack.prod.js --node-env=production",
     "build:dev": "webpack --config=webpack.dev.js",
+    "dev": "run-s lint format test build:dev",
     "watch": "webpack --watch --config=webpack.dev.js",
     "server": "webpack serve --config=webpack.dev.js",
     "start": "run-s lint format test server",

@@ -4,10 +4,6 @@ type Nullable<T extends object> = {
   [K in keyof T]: T[K] | null;
 };
 
-type DeepPartial<T> = T extends object
-  ? { [P in keyof T]?: DeepPartial<T[P]> | undefined }
-  : T;
-
 type AudioInfoNumber = { of: number; no: number };
 type AudioInfoBase = {
   readonly title: string;
@@ -36,7 +32,7 @@ type AudioInfoAdditional = {
   mixer: string[];
 
   lyrics: string[];
-  picture: Uint8Array[];
+  picture: ArrayBuffer[];
 
   comment: string[];
   work: string;
@@ -55,9 +51,6 @@ type AudioInfoAdditional = {
   website: string;
   notes: string[];
   key: string;
-
-  original: AudioInfoOriginal;
-  sort: AudioInfoSort;
 };
 
 type AudioInfoOriginal = {
@@ -178,7 +171,7 @@ class AudioInfo {
       mixer,
 
       lyrics,
-      picture: picture?.map(value => value.data),
+      picture: picture?.map(value => value.data.buffer),
 
       comment,
       work,
@@ -197,37 +190,30 @@ class AudioInfo {
       website,
       notes,
       key,
-
-      original: {
-        originalalbum,
-        originalartist,
-        originaldate,
-        originalyear,
-      },
-
-      sort: {
-        albumsort,
-        titlesort,
-        artistsort,
-        albumartistsort,
-        composersort,
-      },
     };
 
-    let jacket;
-    if (picture !== undefined && picture.length >= 1) {
-      jacket = URL.createObjectURL(
-        new Blob([picture[0].data], { type: picture[0].format })
-      );
-    }
+    const original = {
+      originalalbum,
+      originalartist,
+      originaldate,
+      originalyear,
+    };
 
-    return new AudioInfo(base, additional, jacket);
+    const sort = {
+      albumsort,
+      titlesort,
+      artistsort,
+      albumartistsort,
+      composersort,
+    };
+
+    return new AudioInfo(base, additional, original, sort);
   }
 
   readonly base: AudioInfoBase;
-  readonly additional: DeepPartial<AudioInfoAdditional>;
-
-  readonly jacket: string;
+  readonly additional: Partial<AudioInfoAdditional>;
+  readonly original: Partial<AudioInfoOriginal>;
+  readonly sort: Partial<AudioInfoSort>;
 
   private constructor(
     {
@@ -241,8 +227,9 @@ class AudioInfo {
       date,
       genre,
     }: Partial<AudioInfoBase>,
-    additional?: DeepPartial<AudioInfoAdditional>,
-    jacket?: string
+    additional?: Partial<AudioInfoAdditional>,
+    original?: Partial<AudioInfoOriginal>,
+    sort?: Partial<AudioInfoSort>
   ) {
     this.base = {
       title: title ?? "",
@@ -256,17 +243,9 @@ class AudioInfo {
       genre: genre ?? [],
     };
 
-    this.additional = additional ?? { original: {}, sort: {} };
-    this.jacket = jacket ?? "";
-  }
-
-  /**
-   * 消す前に呼ぶ
-   */
-  close() {
-    if (this.jacket !== undefined) {
-      URL.revokeObjectURL(this.jacket);
-    }
+    this.additional = additional ?? {};
+    this.original = original ?? {};
+    this.sort = sort ?? {};
   }
 }
 
