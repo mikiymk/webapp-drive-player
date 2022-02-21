@@ -43,15 +43,12 @@ class BufferLoader {
       }
 
       const blob = await fileData.blob();
-      const arrayBuffer = await blob.slice().arrayBuffer();
 
       if (this.willLoadID === id) {
-        this.info.close();
-
         this.loadedID = id;
         URL.revokeObjectURL(this.url);
+        this.info = await AudioInfo.getInfo(blob.slice());
         this.url = URL.createObjectURL(blob);
-        this.info = await AudioInfo.getInfo(arrayBuffer);
         return this.url;
       } else {
         return "";
@@ -68,7 +65,6 @@ class BufferLoader {
    * 勝手に close されないように別の情報は消しておく
    */
   copyFrom(other: BufferLoader) {
-    this.info.close();
     URL.revokeObjectURL(this.url);
 
     this.willLoadID = other.willLoadID;

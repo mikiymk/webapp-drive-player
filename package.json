@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "run-s lint format test build:prod",
+    "build": "npm run build:prod",
     "build:prod": "webpack --config=webpack.prod.js --node-env=production",
     "build:dev": "webpack --config=webpack.dev.js",
+    "dev": "run-s lint format test build:dev",
     "watch": "webpack --watch --config=webpack.dev.js",
     "server": "webpack serve --config=webpack.dev.js",
     "start": "run-s lint format test server",
@@ -69,6 +70,7 @@
     "@linaria/core": "^3.0.0-beta.15",
     "@linaria/react": "^3.0.0-beta.15",
     "@linaria/shaker": "^3.0.0-beta.15",
+    "music-metadata-browser": "^2.5.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   }
