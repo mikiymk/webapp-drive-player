@@ -26,7 +26,11 @@ type Props = {
 };
 
 /** タイトルとアーティストをマーキーで表示 */
-const MusicTitle: React.FC<Props> = ({ info: { title, artist } }) => {
+const MusicTitle: React.FC<Props> = ({
+  info: {
+    base: { title, artist },
+  },
+}) => {
   return (
     <span className={style}>
       <Marquee className={`${style}-title`}>{title}</Marquee>
