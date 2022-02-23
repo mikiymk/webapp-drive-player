@@ -13,9 +13,10 @@ import AudioInfo from "audio/audioInfo";
 import RightMenuContext from "./RightMenu/Context";
 import useRightMenuContext from "./RightMenu/useRightMenuContext";
 import { css } from "@linaria/core";
+import Settings from "./Settings";
 
 export type Files = {
-  [name: string]: File & { info?: AudioInfo };
+  [name: string]: File;
 };
 
 const style = css`
@@ -60,6 +61,11 @@ const MusicPlayer: React.FC = () => {
       name: "Google Drive",
       icon: "cloud",
       element: <DriveFiles signIn={signIn} addFile={addFile} />,
+    },
+    settings: {
+      name: "Settings",
+      icon: "settings",
+      element: <Settings files={Object.values(files)} />,
     },
   };
 

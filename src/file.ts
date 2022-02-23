@@ -1,7 +1,18 @@
-import { getList } from "google-api/file";
+import {
+  createAppDataJson,
+  getAppDataList,
+  getList,
+  uploadAppDataJson,
+} from "google-api/file";
+
+import AudioInfo from "audio/audioInfo";
 
 export class File {
-  constructor(public readonly id: string, public readonly name: string) {
+  constructor(
+    public readonly id: string,
+    public readonly name: string,
+    public info?: AudioInfo
+  ) {
     // EMPTY
   }
 }
@@ -63,3 +74,25 @@ export const getAllMusics = async (parent?: string) =>
   getAllFiles(
     `mimeType contains 'audio/' and parents in '${parent ?? "root"}'`
   );
+
+const getLibraryID = async (): Promise<string | undefined> =>
+  getAppDataList("name = 'library.json'").then(result => {
+    console.log(result);
+    return result.files ? result.files[0]?.id : undefined;
+  });
+
+export const uploadLibraryData = async (files: File[]) => {
+  const filesData = files.map(file => ({
+    id: file.id,
+    name: file.name,
+    ...file.info?.base,
+  }));
+
+  const id = await getLibraryID();
+
+  if (id !== undefined) {
+    return uploadAppDataJson(id, filesData);
+  } else {
+    return createAppDataJson("library.json", filesData);
+  }
+};

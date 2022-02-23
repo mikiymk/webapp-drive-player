@@ -125,7 +125,7 @@ class AudioPlayer {
 
     this.audio.src = this.buffer.url;
     this.audio.load();
-    this.onChangeMusic(this.buffer.loadedID)
+    this.onChangeMusic(this.buffer.loadedID);
   }
 
   setRepeat(repeat: Repeat) {
