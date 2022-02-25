@@ -32,7 +32,7 @@ const style = css`
  */
 const MusicPlayer: React.FC = () => {
   const [signIn, setSignIn] = useState(false);
-  const { files, addFile, player, status } = usePlayer();
+  const { files, addFile, addFiles, player, status } = usePlayer();
 
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
@@ -65,7 +65,7 @@ const MusicPlayer: React.FC = () => {
     settings: {
       name: "Settings",
       icon: "settings",
-      element: <Settings files={Object.values(files)} />,
+      element: <Settings files={Object.values(files)} addFiles={addFiles} />,
     },
   };
 
@@ -134,12 +134,19 @@ const usePlayer = () => {
     }
   }, [files]);
 
+  const addFiles = (newFiles: File[]) =>
+    setFiles(files => ({
+      ...files,
+      ...Object.fromEntries(newFiles.map(newFile => [newFile.id, newFile])),
+    }));
+
   const addFile = (newFiles: File) =>
     setFiles(files => ({ ...files, [newFiles.id]: newFiles }));
 
   return {
     files,
     addFile,
+    addFiles,
     player: player.current,
     status: {
       paused,

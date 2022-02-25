@@ -5,7 +5,7 @@ type Nullable<T extends object> = {
 };
 
 type AudioInfoNumber = { of: number; no: number };
-type AudioInfoBase = {
+export type AudioInfoBase = {
   readonly title: string;
   readonly artist: string;
   readonly artists: string[];
@@ -208,6 +208,10 @@ class AudioInfo {
     };
 
     return new AudioInfo(id, base, additional, original, sort);
+  }
+
+  static getBaseInfo(id: string, base: AudioInfoBase) {
+    return new AudioInfo(id, base);
   }
 
   readonly id: string;

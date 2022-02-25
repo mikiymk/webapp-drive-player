@@ -1,32 +1,21 @@
-import Icon from "component/Common/Icon";
-import LabelIcon from "component/Common/LabelIcon";
-import { uploadLibraryData, File } from "file";
-import React, { useState } from "react";
+import { File } from "file";
+import React from "react";
+import Download from "./Download";
+import Upload from "./Upload";
 
 type Props = {
   files: File[];
+  addFiles: (file: File[]) => void;
 };
 
 /**
  * now playing audio info view
  */
-const Settings: React.FC<Props> = ({ files }) => {
-  const [status, setStatus] = useState("");
+const Settings: React.FC<Props> = ({ files, addFiles }) => {
   return (
     <div>
-      <button
-        onClick={() => {
-          setStatus("pending_actions");
-          uploadLibraryData(files).then(response =>
-            setStatus(response.status === 200 ? "done" : "error")
-          );
-        }}>
-        <LabelIcon
-          icon="file_upload"
-          text="send library data to google drive"
-        />
-      </button>
-      <Icon icon={status} />
+      <Upload files={files} />
+      <Download addFiles={addFiles} />
     </div>
   );
 };

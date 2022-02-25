@@ -10,7 +10,7 @@ const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 module.exports = {
   mode: "development",
   entry: "./src/index.tsx",
-  devtool: "source-map",
+  devtool: "inline-source-map",
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),

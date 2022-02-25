@@ -1,11 +1,12 @@
 import {
   createAppDataJson,
+  downloadFile,
   getAppDataList,
   getList,
   uploadAppDataJson,
 } from "google-api/file";
 
-import AudioInfo from "audio/audioInfo";
+import AudioInfo, { AudioInfoBase } from "audio/audioInfo";
 
 export class File {
   constructor(
@@ -85,7 +86,7 @@ export const uploadLibraryData = async (files: File[]) => {
   const filesData = files.map(file => ({
     id: file.id,
     name: file.name,
-    ...file.info?.base,
+    info: file.info?.base,
   }));
 
   const id = await getLibraryID();
@@ -95,4 +96,45 @@ export const uploadLibraryData = async (files: File[]) => {
   } else {
     return createAppDataJson("library.json", filesData);
   }
+};
+
+export const downloadLibraryData = async (): Promise<File[] | undefined> => {
+  const id = await getLibraryID();
+
+  if (id === undefined) {
+    return;
+  }
+  const response = await downloadFile(id);
+  if (response === null) {
+    return;
+  }
+  const json = await response.json();
+
+  if (!Array.isArray(json)) {
+    return;
+  }
+
+  const files = json
+    .filter(
+      (
+        file: unknown
+      ): file is {
+        id: string;
+        name: string;
+        info: AudioInfoBase;
+      } => {
+        if (typeof file !== "object") {
+          return false;
+        } else if (file === null) {
+          return false;
+        }
+        return "id" in file && "name" in file && "info" in file;
+      }
+    )
+    .map(
+      file =>
+        new File(file.id, file.name, AudioInfo.getBaseInfo(file.id, file.info))
+    );
+  console.log(files);
+  return files;
 };
