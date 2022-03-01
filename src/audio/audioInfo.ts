@@ -5,7 +5,7 @@ type Nullable<T extends object> = {
 };
 
 type AudioInfoNumber = { of: number; no: number };
-type AudioInfoBase = {
+export type AudioInfoBase = {
   readonly title: string;
   readonly artist: string;
   readonly artists: string[];
@@ -70,14 +70,14 @@ type AudioInfoSort = {
 
 class AudioInfo {
   static getEmptyInfo() {
-    return new AudioInfo({});
+    return new AudioInfo("", {});
   }
 
   /**
    * @param data オーディオファイルデータ
    * @returns データから読み取ったオーディオ情報
    */
-  static async getInfo(data: Blob) {
+  static async getInfo(id: string, data: Blob) {
     let metadata;
     try {
       metadata = await parseBlob(data);
@@ -207,15 +207,21 @@ class AudioInfo {
       composersort,
     };
 
-    return new AudioInfo(base, additional, original, sort);
+    return new AudioInfo(id, base, additional, original, sort);
   }
 
+  static getBaseInfo(id: string, base: AudioInfoBase) {
+    return new AudioInfo(id, base);
+  }
+
+  readonly id: string;
   readonly base: AudioInfoBase;
   readonly additional: Partial<AudioInfoAdditional>;
   readonly original: Partial<AudioInfoOriginal>;
   readonly sort: Partial<AudioInfoSort>;
 
   private constructor(
+    id: string,
     {
       title,
       artist,
@@ -231,6 +237,7 @@ class AudioInfo {
     original?: Partial<AudioInfoOriginal>,
     sort?: Partial<AudioInfoSort>
   ) {
+    this.id = id;
     this.base = {
       title: title ?? "",
       artist: artist ?? "",
