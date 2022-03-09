@@ -19,6 +19,9 @@ const MakePlaylistButton: React.FC<Props> = ({ makePlaylist }) => {
     }
     try {
       makePlaylist(name);
+      if (ref.current !== null) {
+        ref.current.value = "";
+      }
     } catch (error) {
       console.log(error);
     }
@@ -27,7 +30,13 @@ const MakePlaylistButton: React.FC<Props> = ({ makePlaylist }) => {
   return (
     <span className={style}>
       <button onClick={addPlaylist}>add playlist</button>
-      <input type="text" ref={ref} />
+      <input
+        type="text"
+        ref={ref}
+        onKeyPress={event => {
+          if (event.key === "Enter") addPlaylist();
+        }}
+      />
     </span>
   );
 };

@@ -18,7 +18,7 @@ const usePlaylist = () => {
   const deletePlaylist = (playlist: string) => {
     setPlaylists(playlists =>
       Object.fromEntries(
-        Object.entries(playlists).filter(([name]) => name === playlist)
+        Object.entries(playlists).filter(([name]) => name !== playlist)
       )
     );
   };

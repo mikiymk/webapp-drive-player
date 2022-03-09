@@ -12,12 +12,11 @@ type Props = {
  * item of musics list
  */
 export const Item: React.FC<Props> = ({ name, play }) => {
-  let a: React.MouseEventHandler<HTMLButtonElement>;
   return (
     <li>
       {name} <button onClick={play}>play</button>
       <button
-        onClick={useRightMenu([
+        onClick={useRightMenu()([
           { type: "button", label: "play", onClick: play },
           { type: "hr" },
         ])}>

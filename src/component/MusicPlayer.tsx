@@ -14,7 +14,7 @@ import RightMenuContext from "./RightMenu/Context";
 import useRightMenuContext from "./RightMenu/useRightMenuContext";
 import { css } from "@linaria/core";
 import Settings from "./Settings";
-import PlayList from "./PlayList/PlayList";
+import Playlists from "./Playlists/Playlists";
 
 export type Files = {
   [name: string]: File;
@@ -61,7 +61,7 @@ const MusicPlayer: React.FC = () => {
     playlist: {
       name: "Playlist",
       icon: "queue_music",
-      element: <PlayList />,
+      element: <Playlists />,
     },
     drive: {
       name: "Google Drive",

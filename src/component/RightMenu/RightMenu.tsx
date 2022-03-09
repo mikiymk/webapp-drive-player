@@ -44,7 +44,7 @@ const RightMenu: React.FC<Props> = ({ items, top, left }) => {
         top: `${Math.trunc(top)}px`,
         left: `${Math.trunc(left)}px`,
       }}>
-      <IconButton icon="close" onClick={useRightMenu([])} />
+      <IconButton icon="close" onClick={useRightMenu()([])} />
       <hr></hr>
       {items.map((item, index) => {
         if (item.type === "hr") {
