@@ -1,17 +1,25 @@
 import React, { useState } from "react";
-import usePlaylist from "hooks/usePlaylist";
 import PlaylistList from "./PlaylistList";
 import Playlist from "./Playlist";
 import { File } from "file";
 
 type Props = {
   files: Record<string, File>;
+  playlist: {
+    playlists: Record<string, string[]>;
+    makePlaylist: (playlist: string) => void;
+    deletePlaylist: (playlist: string) => void;
+    addToPlaylist: (playlist: string, audioId: string) => void;
+    removeFromPlaylist: (playlist: string, index: number) => void;
+  };
 };
 
 /** show on right click */
-const Playlists: React.FC<Props> = ({ files }) => {
+const Playlists: React.FC<Props> = ({
+  files,
+  playlist: { playlists, makePlaylist, deletePlaylist },
+}) => {
   const [selectedPlaylist, setSelectedPlaylist] = useState("");
-  const { playlists, makePlaylist, deletePlaylist } = usePlaylist();
 
   return selectedPlaylist === "" ? (
     <PlaylistList

@@ -15,6 +15,7 @@ import useRightMenuContext from "./RightMenu/useRightMenuContext";
 import { css } from "@linaria/core";
 import Settings from "./Settings";
 import Playlists from "./Playlists/Playlists";
+import usePlaylist from "hooks/usePlaylist";
 
 export type Files = {
   [name: string]: File;
@@ -34,6 +35,7 @@ const style = css`
 const MusicPlayer: React.FC = () => {
   const [signIn, setSignIn] = useState(false);
   const { files, addFile, addFiles, player, status } = usePlayer();
+  const playlist = usePlaylist();
 
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
@@ -61,7 +63,12 @@ const MusicPlayer: React.FC = () => {
     playlist: {
       name: "Playlist",
       icon: "queue_music",
-      element: <Playlists files={files} />,
+      element: (
+        <Playlists
+          files={files}
+          playlist={playlist}
+        />
+      ),
     },
     drive: {
       name: "Google Drive",
