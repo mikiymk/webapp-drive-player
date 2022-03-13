@@ -1,46 +1,32 @@
-import React from "react";
-import { css } from "@linaria/core";
+import React, { useState } from "react";
 import usePlaylist from "hooks/usePlaylist";
-import MakePlaylistButton from "./MakePlaylistButton";
-import useRightMenu from "component/RightMenu/useRightMenu";
-import IconButton from "component/Common/IconButton";
+import PlaylistList from "./PlaylistList";
+import Playlist from "./Playlist";
+import { File } from "file";
 
-const style = css``;
-
-type Props = {};
+type Props = {
+  files: Record<string, File>;
+};
 
 /** show on right click */
-const Playlists: React.FC<Props> = () => {
+const Playlists: React.FC<Props> = ({ files }) => {
+  const [selectedPlaylist, setSelectedPlaylist] = useState("");
   const { playlists, makePlaylist, deletePlaylist } = usePlaylist();
-  const rightMenu = useRightMenu();
 
-  return (
-    <div className={style}>
-      <ul>
-        {Object.entries(playlists).map(([name]) => (
-          <li key={name}>
-            {name}
-            <IconButton
-              icon="more_horiz"
-              onClick={rightMenu([
-                { type: "button", label: "open playlist", onClick: () => {} },
-                {
-                  type: "button",
-                  label: "delete playlist",
-                  onClick: event => {
-                    deletePlaylist(name);
-                    rightMenu([])(event);
-                  },
-                },
-              ])}
-            />
-          </li>
-        ))}
-        <li>
-          <MakePlaylistButton makePlaylist={makePlaylist} />
-        </li>
-      </ul>
-    </div>
+  return selectedPlaylist === "" ? (
+    <PlaylistList
+      playlists={playlists}
+      makePlaylist={makePlaylist}
+      deletePlaylist={deletePlaylist}
+      select={setSelectedPlaylist}
+    />
+  ) : (
+    <Playlist
+      files={files}
+      name={selectedPlaylist}
+      audioIDs={playlists[selectedPlaylist]}
+      reset={() => setSelectedPlaylist("")}
+    />
   );
 };
 
