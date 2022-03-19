@@ -58,17 +58,19 @@ const MusicPlayer: React.FC = () => {
     library: {
       name: "Library",
       icon: "list",
-      element: <MusicList files={files} play={playWithIdList} />,
+      element: (
+        <MusicList
+          files={files}
+          play={playWithIdList}
+          playlist={playlist.playlists}
+          addToPlaylist={playlist.addToPlaylist}
+        />
+      ),
     },
     playlist: {
       name: "Playlist",
       icon: "queue_music",
-      element: (
-        <Playlists
-          files={files}
-          playlist={playlist}
-        />
-      ),
+      element: <Playlists files={files} playlist={playlist} />,
     },
     drive: {
       name: "Google Drive",

@@ -5,6 +5,7 @@ type ButtonItem = {
   onClick: (event: React.MouseEvent) => void;
 };
 type AnchorItem = { type: "anchor"; label: string; href: string };
-type Item = HrItem | ButtonItem | AnchorItem;
+type ListItem = { type: "list"; label: string; list: Item[] };
+type Item = HrItem | ButtonItem | AnchorItem | ListItem;
 
 export default Item;

@@ -19,9 +19,14 @@ const Playlist: React.FC<Props> = ({ files, name, audioIDs, reset }) => {
       <h3>{name}</h3>
       <button onClick={reset}>back to list</button>
       <ul>
-        {audioIDs.map(id => (
-          <li key={id}>{files[id].info?.base?.title ?? files[id].name}</li>
-        ))}
+        {audioIDs
+          .map(id => ({
+            id,
+            name: files[id].info?.base?.title ?? files[id].name,
+          }))
+          .map(({ id, name }, index) => (
+            <li key={id + index}>{name}</li>
+          ))}
       </ul>
     </div>
   );
