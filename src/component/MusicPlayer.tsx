@@ -70,7 +70,13 @@ const MusicPlayer: React.FC = () => {
     playlist: {
       name: "Playlist",
       icon: "queue_music",
-      element: <Playlists files={files} playlist={playlist} />,
+      element: (
+        <Playlists
+          files={files}
+          playlist={playlist}
+          playsList={playWithIdList}
+        />
+      ),
     },
     drive: {
       name: "Google Drive",

@@ -10,14 +10,22 @@ type Props = {
   audioIDs: string[];
 
   reset: () => void;
+  playsList: (list: string[], index: number) => void;
 };
 
 /** show on right click */
-const Playlist: React.FC<Props> = ({ files, name, audioIDs, reset }) => {
+const Playlist: React.FC<Props> = ({
+  files,
+  name,
+  audioIDs,
+  reset,
+  playsList,
+}) => {
   return (
     <div className={style}>
       <h3>{name}</h3>
       <button onClick={reset}>back to list</button>
+      <button onClick={() => playsList(audioIDs, 0)}>play this playlist</button>
       <ul>
         {audioIDs
           .map(id => ({

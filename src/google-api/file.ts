@@ -45,6 +45,16 @@ export const downloadFile = async (fileId: string) => {
       },
     });
 
+    if (!response.ok) {
+      throw new Error(
+        response.status +
+          " " +
+          response.statusText +
+          " " +
+          JSON.stringify(await response.json(), null, 2)
+      );
+    }
+
     console.log(`downloaded ${fileId}`);
     return response;
   } catch (error) {

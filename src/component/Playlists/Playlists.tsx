@@ -12,12 +12,15 @@ type Props = {
     addToPlaylist: (playlist: string, audioId: string) => void;
     removeFromPlaylist: (playlist: string, index: number) => void;
   };
+
+  playsList: (list: string[], index: number) => void;
 };
 
 /** show on right click */
 const Playlists: React.FC<Props> = ({
   files,
   playlist: { playlists, makePlaylist, deletePlaylist },
+  playsList,
 }) => {
   const [selectedPlaylist, setSelectedPlaylist] = useState("");
 
@@ -34,6 +37,7 @@ const Playlists: React.FC<Props> = ({
       name={selectedPlaylist}
       audioIDs={playlists[selectedPlaylist]}
       reset={() => setSelectedPlaylist("")}
+      playsList={playsList}
     />
   );
 };
