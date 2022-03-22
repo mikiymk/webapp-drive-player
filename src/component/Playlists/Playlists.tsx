@@ -19,7 +19,7 @@ type Props = {
 /** show on right click */
 const Playlists: React.FC<Props> = ({
   files,
-  playlist: { playlists, makePlaylist, deletePlaylist },
+  playlist: { playlists, makePlaylist, deletePlaylist, removeFromPlaylist },
   playsList,
 }) => {
   const [selectedPlaylist, setSelectedPlaylist] = useState("");
@@ -38,6 +38,7 @@ const Playlists: React.FC<Props> = ({
       audioIDs={playlists[selectedPlaylist]}
       reset={() => setSelectedPlaylist("")}
       playsList={playsList}
+      remove={index => removeFromPlaylist(selectedPlaylist, index)}
     />
   );
 };
