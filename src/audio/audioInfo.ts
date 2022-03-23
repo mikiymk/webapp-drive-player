@@ -1,75 +1,258 @@
-import { readTagFromData } from "tag/index";
+import { parseBlob } from "music-metadata-browser";
+
+type Nullable<T extends object> = {
+  [K in keyof T]: T[K] | null;
+};
+
+type AudioInfoNumber = { of: number; no: number };
+export type AudioInfoBase = {
+  readonly title: string;
+  readonly artist: string;
+  readonly artists: string[];
+  readonly album: string;
+  readonly albumartist: string;
+
+  readonly track: Nullable<AudioInfoNumber>;
+  readonly disk: Nullable<AudioInfoNumber>;
+  readonly date: string | null;
+  readonly genre: string[];
+};
+
+type AudioInfoAdditional = {
+  composer: string[];
+  lyricist: string[];
+  writer: string[];
+  conductor: string[];
+  remixer: string[];
+  arranger: string[];
+  engineer: string[];
+  producer: string[];
+  technician: string[];
+  djmixer: string[];
+  mixer: string[];
+
+  lyrics: string[];
+  picture: ArrayBuffer[];
+
+  comment: string[];
+  work: string;
+  label: string[];
+  grouping: string;
+  subtitle: string[];
+  discsubtitle: string[];
+  totaltracks: string;
+  totaldiscs: string;
+  compilation: boolean;
+  rating: number[];
+  bpm: number;
+  mood: string;
+  media: string;
+  catalognumber: string[];
+  website: string;
+  notes: string[];
+  key: string;
+};
+
+type AudioInfoOriginal = {
+  originalalbum: string;
+  originalartist: string;
+  originaldate: string;
+  originalyear: number;
+};
+
+type AudioInfoSort = {
+  albumsort: string;
+  titlesort: string;
+  artistsort: string;
+  albumartistsort: string;
+  composersort: string;
+};
 
 class AudioInfo {
   static getEmptyInfo() {
-    return new AudioInfo();
+    return new AudioInfo("", {});
   }
 
   /**
    * @param data オーディオファイルデータ
    * @returns データから読み取ったオーディオ情報
    */
-  static async getInfo(data?: ArrayBuffer) {
-    if (data === undefined) {
-      return new AudioInfo();
+  static async getInfo(id: string, data: Blob) {
+    let metadata;
+    try {
+      metadata = await parseBlob(data);
+      console.log(metadata);
+    } catch (error) {
+      console.log("error");
+      console.log(error);
+
+      return AudioInfo.getEmptyInfo();
     }
 
-    const tag = readTagFromData(data);
-    console.log(tag);
+    const {
+      title,
+      artist,
+      artists,
+      album,
+      albumartist,
+      year,
+      track,
+      disk,
+      date,
+      genre,
+      comment,
+      composer,
+      lyricist,
+      writer,
+      conductor,
+      remixer,
+      arranger,
+      engineer,
+      producer,
+      technician,
+      djmixer,
+      mixer,
 
-    let title;
-    let artist;
-    let album;
-    let jacket;
+      lyrics,
+      picture,
 
-    if (tag.v2 !== undefined) {
-      title = tag.v2.tags.find(({ id }) => id === "TIT2")?.data?.text;
-      artist = tag.v2.tags.find(({ id }) => id === "TPE1")?.data?.text;
-      album = tag.v2.tags.find(({ id }) => id === "TALB")?.data?.text;
-      const apic = tag.v2.tags.find(({ id }) => id === "APIC")?.data;
-      if (apic !== null && apic !== undefined) {
-        jacket = URL.createObjectURL(
-          new Blob([apic.pictureData], { type: apic.mimetype })
-        );
-      }
-    } else if (tag.v1 !== undefined) {
-      title = tag.v1.title;
-      artist = tag.v1.artist;
-      album = tag.v1.album;
-    }
+      albumsort,
+      titlesort,
+      artistsort,
+      albumartistsort,
+      composersort,
 
-    console.log(`TITLE : ${title}`);
-    console.log(`ARTIST: ${artist}`);
-    console.log(`ALBUM : ${album}`);
-    console.log(`JACKET: ${jacket}`);
+      work,
+      label,
+      grouping,
+      subtitle,
+      discsubtitle,
+      totaltracks,
+      totaldiscs,
+      compilation,
+      rating,
+      bpm,
+      mood,
+      media,
+      catalognumber,
+      website,
+      notes,
+      key,
+      originalalbum,
+      originalartist,
+      originaldate,
+      originalyear,
+    } = metadata.common;
 
-    return new AudioInfo(title, artist, album, jacket);
+    const base = {
+      title,
+      artist,
+      artists,
+      album,
+      albumartist,
+      year,
+      track,
+      disk,
+      date,
+      genre,
+    };
+
+    const additional = {
+      composer,
+      lyricist,
+      writer,
+      conductor,
+      remixer,
+      arranger,
+      engineer,
+      producer,
+      technician,
+      djmixer,
+      mixer,
+
+      lyrics,
+      picture: picture?.map(value => value.data.buffer),
+
+      comment,
+      work,
+      label,
+      grouping,
+      subtitle,
+      discsubtitle,
+      totaltracks,
+      totaldiscs,
+      compilation,
+      rating: rating?.map(value => value.rating),
+      bpm,
+      mood,
+      media,
+      catalognumber,
+      website,
+      notes,
+      key,
+    };
+
+    const original = {
+      originalalbum,
+      originalartist,
+      originaldate,
+      originalyear,
+    };
+
+    const sort = {
+      albumsort,
+      titlesort,
+      artistsort,
+      albumartistsort,
+      composersort,
+    };
+
+    return new AudioInfo(id, base, additional, original, sort);
   }
 
-  readonly title: string;
-  readonly artist: string;
-  readonly album: string;
-  readonly jacket: string;
+  static getBaseInfo(id: string, base: AudioInfoBase) {
+    return new AudioInfo(id, base);
+  }
+
+  readonly id: string;
+  readonly base: AudioInfoBase;
+  readonly additional: Partial<AudioInfoAdditional>;
+  readonly original: Partial<AudioInfoOriginal>;
+  readonly sort: Partial<AudioInfoSort>;
 
   private constructor(
-    title?: string,
-    artist?: string,
-    album?: string,
-    jacket?: string
+    id: string,
+    {
+      title,
+      artist,
+      artists,
+      album,
+      albumartist,
+      track,
+      disk,
+      date,
+      genre,
+    }: Partial<AudioInfoBase>,
+    additional?: Partial<AudioInfoAdditional>,
+    original?: Partial<AudioInfoOriginal>,
+    sort?: Partial<AudioInfoSort>
   ) {
-    this.title = title ?? "";
-    this.artist = artist ?? "";
-    this.album = album ?? "";
-    this.jacket = jacket ?? "";
-  }
+    this.id = id;
+    this.base = {
+      title: title ?? "",
+      artist: artist ?? "",
+      artists: artists ?? [""],
+      album: album ?? "",
+      albumartist: albumartist ?? "",
+      track: { no: track?.no ?? null, of: track?.of ?? null },
+      disk: { no: disk?.no ?? null, of: disk?.of ?? null },
+      date: date ?? null,
+      genre: genre ?? [],
+    };
 
-  /**
-   * 消す前に呼ぶ
-   */
-  close() {
-    if (this.jacket !== undefined) {
-      URL.revokeObjectURL(this.jacket);
-    }
+    this.additional = additional ?? {};
+    this.original = original ?? {};
+    this.sort = sort ?? {};
   }
 }
 

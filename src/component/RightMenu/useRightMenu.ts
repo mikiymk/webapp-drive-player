@@ -1,9 +1,8 @@
 import { useContext } from "react";
 import Context from "./Context";
-import Item from "./Item";
 
-const useRightMenu = (items: Item[]) => {
-  return useContext(Context)(items);
+const useRightMenu = () => {
+  return useContext(Context);
 };
 
 export default useRightMenu;

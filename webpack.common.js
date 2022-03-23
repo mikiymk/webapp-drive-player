@@ -1,6 +1,7 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require("path");
+const webpack = require("webpack");
 const TsConfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -9,7 +10,7 @@ const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 module.exports = {
   mode: "development",
   entry: "./src/index.tsx",
-  devtool: "source-map",
+  devtool: "inline-source-map",
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
@@ -24,6 +25,12 @@ module.exports = {
     new FaviconsWebpackPlugin("./src/img/icon.svg"),
     new HtmlWebpackPlugin({
       template: "index.html",
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"],
+    }),
+    new webpack.ProvidePlugin({
+      process: "process/browser",
     }),
   ],
   module: {
@@ -46,6 +53,9 @@ module.exports = {
             options: {
               sourceMap: process.env.NODE_ENV !== "production",
             },
+          },
+          {
+            loader: "ts-loader",
           },
         ],
       },

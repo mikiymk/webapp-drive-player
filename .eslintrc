@@ -13,6 +13,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "ignorePatterns": ["**/crate/*"],
 
   "plugins": ["react", "@typescript-eslint"],
 
