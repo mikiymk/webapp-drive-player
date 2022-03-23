@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@linaria/core";
 
-import Icon from "component/Common/Icon";
+import Icon from "components/GoogleIcon";
 
 import { File } from "file";
 

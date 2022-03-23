@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Item from "./Item";
-import RightMenu from "./RightMenu";
+import Item from "components/RightMenu/Item";
+import RightMenu from "components/RightMenu/RightMenu";
 
 const useRightMenuContext = () => {
   const [items, setItems] = useState<Item[]>([]);

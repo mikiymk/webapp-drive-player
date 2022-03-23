@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import Icon from "component/Common/Icon";
-import LabelIcon from "component/Common/LabelIcon";
+import Icon from "components/GoogleIcon";
+import LabelIcon from "components/LabelIcon";
 import { downloadLibraryData, File } from "file";
 
 type Props = {

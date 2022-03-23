@@ -3,7 +3,7 @@ import { css } from "@linaria/core";
 
 import { Item } from "./Item";
 
-import { Files } from "component/MusicPlayer";
+import { Files } from "components/MusicPlayer";
 
 const style = css``;
 

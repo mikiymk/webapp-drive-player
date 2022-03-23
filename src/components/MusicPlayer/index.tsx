@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 
-import PlayingInfo from "./Playing/index";
-import MusicList from "./MusicLibrary/index";
-import DriveFiles from "./GoogleDrive/index";
-import Menu from "./Menu/index";
-import Controller from "./Controller/index";
+import PlayingInfo from "../Playing/index";
+import MusicList from "../MusicLibrary/index";
+import DriveFiles from "../GoogleDrive/index";
+import Menu from "../Menu/index";
+import Controller from "../Controller/index";
 
 import AudioPlayer from "audio/player";
 import Repeat from "audio/repeat";
 import { File } from "file";
 import AudioInfo from "audio/audioInfo";
-import RightMenuContext from "./RightMenu/Context";
-import useRightMenuContext from "./RightMenu/useRightMenuContext";
+import RightMenuContext from "components/RightMenu/Context";
+import useRightMenuContext from "hooks/useRightMenuContext";
 import { css } from "@linaria/core";
-import Settings from "./Settings";
-import Playlists from "./Playlists/Playlists";
+import Settings from "../Settings";
+import Playlists from "../Playlists/Playlists";
 import usePlaylist from "hooks/usePlaylist";
 
 export type Files = {

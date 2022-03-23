@@ -1,9 +1,9 @@
-import IconButton from "component/Common/IconButton";
+import IconButton from "components/IconButton";
 import React from "react";
 import { css } from "@linaria/core";
 
 import Item from "./Item";
-import useRightMenu from "./useRightMenu";
+import useRightMenu from "hooks/useRightMenu";
 import RightMenuItem from "./RightMenuItem";
 
 const style = css`

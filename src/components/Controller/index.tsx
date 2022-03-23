@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@linaria/core";
 
-import IconButton from "component/Common/IconButton";
+import IconButton from "components/IconButton";
 
 import MusicTitle from "./MusicTitle";
 import MusicTime from "./MusicTime";

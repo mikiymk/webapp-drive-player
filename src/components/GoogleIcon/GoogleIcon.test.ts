@@ -1,6 +1,6 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import Icon from "../component/Common/Icon";
+import Icon from "./index";
 
 jest.mock("@linaria/core", () => {
   return {

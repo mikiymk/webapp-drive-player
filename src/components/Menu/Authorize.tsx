@@ -1,6 +1,6 @@
 import React from "react";
 
-import LabelIcon from "component/Common/LabelIcon";
+import LabelIcon from "components/LabelIcon";
 
 import { signOut, signIn, loadAndInit } from "google-api/init";
 

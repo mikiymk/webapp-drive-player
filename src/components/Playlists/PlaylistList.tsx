@@ -1,8 +1,8 @@
 import React from "react";
 import { css } from "@linaria/core";
 import MakePlaylistButton from "./MakePlaylistButton";
-import useRightMenu from "component/RightMenu/useRightMenu";
-import IconButton from "component/Common/IconButton";
+import useRightMenu from "hooks/useRightMenu";
+import IconButton from "components/IconButton";
 
 const style = css``;
 

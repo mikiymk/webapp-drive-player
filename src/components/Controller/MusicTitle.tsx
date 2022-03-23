@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@linaria/core";
 
-import Marquee from "component/Common/Marquee";
+import Marquee from "components/Marquee";
 import AudioInfo from "audio/audioInfo";
 
 const style = css`

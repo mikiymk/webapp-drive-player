@@ -1,7 +1,7 @@
 import React from "react";
 import { css } from "@linaria/core";
 
-import LabelIcon from "component/Common/LabelIcon";
+import LabelIcon from "components/LabelIcon";
 
 import Authorize from "./Authorize";
 

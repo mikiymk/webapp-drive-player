@@ -1,5 +1,5 @@
-import Icon from "component/Common/Icon";
-import LabelIcon from "component/Common/LabelIcon";
+import Icon from "components/GoogleIcon";
+import LabelIcon from "components/LabelIcon";
 import { uploadLibraryData, File } from "file";
 import React, { useState } from "react";
 

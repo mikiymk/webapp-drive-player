@@ -1,8 +1,8 @@
 import React from "react";
 import { css } from "@linaria/core";
 import { File } from "file";
-import Icon from "component/Common/Icon";
-import useRightMenu from "component/RightMenu/useRightMenu";
+import Icon from "components/GoogleIcon";
+import useRightMenu from "hooks/useRightMenu";
 
 const style = css``;
 
