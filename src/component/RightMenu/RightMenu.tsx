@@ -4,6 +4,7 @@ import { css } from "@linaria/core";
 
 import Item from "./Item";
 import useRightMenu from "./useRightMenu";
+import RightMenuItem from "./RightMenuItem";
 
 const style = css`
   position: fixed;
@@ -17,15 +18,6 @@ const style = css`
   border-width: 0.1rem;
 
   min-width: 10rem;
-
-  & button,
-  & a {
-    margin: 0.5rem;
-  }
-
-  & hr {
-    margin: 0.2rem;
-  }
 `;
 
 type Props = {
@@ -44,31 +36,11 @@ const RightMenu: React.FC<Props> = ({ items, top, left }) => {
         top: `${Math.trunc(top)}px`,
         left: `${Math.trunc(left)}px`,
       }}>
-      <IconButton icon="close" onClick={useRightMenu([])} />
+      <IconButton icon="close" onClick={useRightMenu()([])} />
       <hr></hr>
-      {items.map((item, index) => {
-        if (item.type === "hr") {
-          return <hr key={`h-${index}`}></hr>;
-        } else if (item.type === "button") {
-          return (
-            <button key={`b-${item.label}`} onClick={item.onClick}>
-              {item.label}
-            </button>
-          );
-        } else if (item.type === "anchor") {
-          return (
-            <a
-              key={`a-${item.label}`}
-              href={item.href}
-              target="_blank"
-              rel="noreferrer">
-              {item.label}
-            </a>
-          );
-        } else {
-          return null;
-        }
-      })}
+      {items.map((item, index) => (
+        <RightMenuItem item={item} key={item.type + index} />
+      ))}
     </div>
   );
 };

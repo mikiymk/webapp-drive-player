@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import AudioInfo from "audio/audioInfo";
 import { Files } from "component/MusicPlayer";
+import useJacket from "./useJacket";
 
 type Props = {
   info: AudioInfo;
@@ -14,12 +15,16 @@ type Props = {
  */
 const PlayingInfo: React.FC<Props> = ({
   files,
-  info: { album, jacket },
+  info: { base, additional },
   playingList,
 }) => {
+  const jacket = useJacket(
+    additional.picture ? additional.picture[0] : undefined
+  );
+
   return (
     <div>
-      <span>{album}</span>
+      <span>{base.album}</span>
       <img src={jacket} alt="album jacket" />
       <ol>
         {Array.from(playingList).map((id, index) => (

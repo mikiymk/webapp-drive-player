@@ -7,13 +7,19 @@ import AudioInfo from "./audioInfo";
 class BufferLoader {
   /** 保持しているファイルのBLOB URL */
   url = "";
-  info = AudioInfo.getEmptyInfo();
 
   /** 保持しているファイルID */
-  private loadedID = "";
+  loadedID = "";
 
   /** 最後に送られたファイルID */
   private willLoadID = "";
+
+  /**  */
+  private setInfo: (info: AudioInfo) => void;
+
+  constructor(setInfo: (info: AudioInfo) => void) {
+    this.setInfo = setInfo;
+  }
 
   /**
    * ダウンロードする
@@ -43,15 +49,13 @@ class BufferLoader {
       }
 
       const blob = await fileData.blob();
-      const arrayBuffer = await blob.slice().arrayBuffer();
+      const info = await AudioInfo.getInfo(id, blob.slice());
 
       if (this.willLoadID === id) {
-        this.info.close();
-
         this.loadedID = id;
         URL.revokeObjectURL(this.url);
+        this.setInfo(info);
         this.url = URL.createObjectURL(blob);
-        this.info = await AudioInfo.getInfo(arrayBuffer);
         return this.url;
       } else {
         return "";
@@ -68,17 +72,14 @@ class BufferLoader {
    * 勝手に close されないように別の情報は消しておく
    */
   copyFrom(other: BufferLoader) {
-    this.info.close();
     URL.revokeObjectURL(this.url);
 
     this.willLoadID = other.willLoadID;
     this.url = other.url;
-    this.info = other.info;
     this.loadedID = other.loadedID;
 
     other.url = "";
     other.loadedID = "";
-    other.info = AudioInfo.getEmptyInfo();
   }
 
   get isLoaded() {

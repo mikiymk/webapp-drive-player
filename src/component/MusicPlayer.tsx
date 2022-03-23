@@ -13,9 +13,12 @@ import AudioInfo from "audio/audioInfo";
 import RightMenuContext from "./RightMenu/Context";
 import useRightMenuContext from "./RightMenu/useRightMenuContext";
 import { css } from "@linaria/core";
+import Settings from "./Settings";
+import Playlists from "./Playlists/Playlists";
+import usePlaylist from "hooks/usePlaylist";
 
 export type Files = {
-  [name: string]: File & Partial<AudioInfo>;
+  [name: string]: File;
 };
 
 const style = css`
@@ -31,11 +34,8 @@ const style = css`
  */
 const MusicPlayer: React.FC = () => {
   const [signIn, setSignIn] = useState(false);
-  const [files, setFiles] = useState<Files>({});
-  const { player, status } = usePlayer();
-
-  const addFile = (newFiles: File) =>
-    setFiles(files => ({ ...files, [newFiles.id]: newFiles }));
+  const { files, addFile, addFiles, player, status } = usePlayer();
+  const playlist = usePlaylist();
 
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
@@ -58,12 +58,35 @@ const MusicPlayer: React.FC = () => {
     library: {
       name: "Library",
       icon: "list",
-      element: <MusicList files={files} play={playWithIdList} />,
+      element: (
+        <MusicList
+          files={files}
+          play={playWithIdList}
+          playlist={playlist.playlists}
+          addToPlaylist={playlist.addToPlaylist}
+        />
+      ),
+    },
+    playlist: {
+      name: "Playlist",
+      icon: "queue_music",
+      element: (
+        <Playlists
+          files={files}
+          playlist={playlist}
+          playsList={playWithIdList}
+        />
+      ),
     },
     drive: {
       name: "Google Drive",
       icon: "cloud",
       element: <DriveFiles signIn={signIn} addFile={addFile} />,
+    },
+    settings: {
+      name: "Settings",
+      icon: "settings",
+      element: <Settings files={Object.values(files)} addFiles={addFiles} />,
     },
   };
 
@@ -95,13 +118,15 @@ const MusicPlayer: React.FC = () => {
 };
 
 const usePlayer = () => {
+  const [files, setFiles] = useState<Files>({});
+
   const [paused, setPaused] = useState(true);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [repeat, setRepeat] = useState(Repeat.DEFAULT);
   const [shuffle, setShuffle] = useState(false);
 
-  const [info, setInfo] = useState(() => AudioInfo.getEmptyInfo());
+  const [info, setInfo] = useState(AudioInfo.getEmptyInfo());
 
   const player = useRef<AudioPlayer | null>(null);
 
@@ -114,10 +139,35 @@ const usePlayer = () => {
       setCurrentTime(currentTime);
     player.current.onSetRepeat = repeat => setRepeat(repeat);
     player.current.onSetShuffle = shuffle => setShuffle(shuffle);
-    player.current.onSetInfo = info => setInfo(info);
+
+    player.current.onLoadInfo = (info: AudioInfo) =>
+      setFiles(files => {
+        const newfile = { ...files };
+        newfile[info.id].info = info;
+        return newfile;
+      });
   }, []);
 
+  useEffect(() => {
+    if (player.current !== null) {
+      player.current.onChangeMusic = id =>
+        setInfo(files[id].info ?? AudioInfo.getEmptyInfo());
+    }
+  }, [files]);
+
+  const addFiles = (newFiles: File[]) =>
+    setFiles(files => ({
+      ...files,
+      ...Object.fromEntries(newFiles.map(newFile => [newFile.id, newFile])),
+    }));
+
+  const addFile = (newFiles: File) =>
+    setFiles(files => ({ ...files, [newFiles.id]: newFiles }));
+
   return {
+    files,
+    addFile,
+    addFiles,
     player: player.current,
     status: {
       paused,

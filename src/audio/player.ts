@@ -11,8 +11,8 @@ import AudioInfo from "./audioInfo";
 class AudioPlayer {
   private audio = new Audio();
 
-  private readonly buffer = new BufferLoader();
-  private readonly nextBuffer = new BufferLoader();
+  private readonly buffer = new BufferLoader(info => this.loadInfo(info));
+  private readonly nextBuffer = new BufferLoader(info => this.loadInfo(info));
 
   /** play music file list */
   musicIds: ShuffleArray<string> = new ShuffleArray([], false);
@@ -28,7 +28,8 @@ class AudioPlayer {
   onSetPause: (isPaused: boolean) => void = () => {};
   onSetRepeat: (repeat: Repeat) => void = () => {};
   onSetShuffle: (shuffle: boolean) => void = () => {};
-  onSetInfo: (info: AudioInfo) => void = () => {};
+  onLoadInfo: (info: AudioInfo) => void = () => {};
+  onChangeMusic: (id: string) => void = () => {};
 
   constructor() {
     this.audio.addEventListener("ended", () => this.onEnd());
@@ -124,13 +125,7 @@ class AudioPlayer {
 
     this.audio.src = this.buffer.url;
     this.audio.load();
-    this.setInfo(this.buffer.info);
-  }
-
-  setInfo(info: AudioInfo) {
-    this.onSetInfo(info);
-
-    console.log(info);
+    this.onChangeMusic(this.buffer.loadedID);
   }
 
   setRepeat(repeat: Repeat) {
@@ -154,6 +149,10 @@ class AudioPlayer {
   private setPause(isPaused: boolean) {
     this.isPaused = isPaused;
     this.onSetPause(this.isPaused);
+  }
+
+  private loadInfo(info: AudioInfo) {
+    this.onLoadInfo(info);
   }
 
   /** コールバック用 曲を再生して現在の再生位置が変わった時 */
