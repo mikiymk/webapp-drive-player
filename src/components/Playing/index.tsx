@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 
 import AudioInfo from "audio/audioInfo";
 import { Files } from "components/MusicPlayer";
 import useJacket from "hooks/useJacket";
+import { style } from "./style";
 
 type Props = {
   info: AudioInfo;
@@ -23,7 +24,7 @@ const PlayingInfo: React.FC<Props> = ({
   );
 
   return (
-    <div>
+    <div className={style}>
       <span>{base.album}</span>
       <img src={jacket} alt="album jacket" />
       <ol>

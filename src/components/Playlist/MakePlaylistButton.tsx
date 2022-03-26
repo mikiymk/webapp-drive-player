@@ -1,7 +1,5 @@
 import React, { useRef } from "react";
-import { css } from "@linaria/core";
-
-const style = css``;
+import { styleMakePlaylist } from "./style";
 
 type Props = {
   makePlaylist: (playlist: string) => void;
@@ -28,7 +26,7 @@ const MakePlaylistButton: React.FC<Props> = ({ makePlaylist }) => {
   };
 
   return (
-    <span className={style}>
+    <span className={styleMakePlaylist}>
       <button onClick={addPlaylist}>add playlist</button>
       <input
         type="text"

@@ -1,16 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { css } from "@linaria/core";
-
-const style = css`
-  flex: 0 0 0.5rem;
-
-  background-color: rgb(79, 81, 99);
-
-  &:focus,
-  &:active {
-    outline: none;
-  }
-`;
+import { styleSeekBar } from "./style";
 
 type Props = {
   duration: number;
@@ -44,7 +33,7 @@ const SeekBar: React.FC<Props> = ({ duration, time, seek }) => {
 
   return (
     <input
-      className={style}
+      className={styleSeekBar}
       type="range"
       min="0"
       max={duration * 1000}

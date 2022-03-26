@@ -1,10 +1,5 @@
 import React from "react";
-import { css } from "@linaria/core";
-
-const style = css`
-  font-size: inherit;
-  color: inherit;
-`;
+import { style } from "./style";
 
 type Props = {
   icon: string;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 
 import PlayingInfo from "../Playing/index";
 import MusicList from "../MusicLibrary/index";
@@ -6,35 +6,25 @@ import DriveFiles from "../GoogleDrive/index";
 import Menu from "../Menu/index";
 import Controller from "../Controller/index";
 
-import AudioPlayer from "audio/player";
-import Repeat from "audio/repeat";
 import { File } from "file";
-import AudioInfo from "audio/audioInfo";
 import RightMenuContext from "components/RightMenu/Context";
 import useRightMenuContext from "hooks/useRightMenuContext";
-import { css } from "@linaria/core";
 import Settings from "../Settings";
-import Playlists from "../Playlists/Playlists";
+import Playlists from "../Playlist";
 import usePlaylist from "hooks/usePlaylist";
+import { style } from "./style";
+import useMusicPlayer from "hooks/useMusicPlayer";
 
 export type Files = {
   [name: string]: File;
 };
-
-const style = css`
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  height: 100%;
-`;
 
 /**
  * react component root.
  */
 const MusicPlayer: React.FC = () => {
   const [signIn, setSignIn] = useState(false);
-  const { files, addFile, addFiles, player, status } = usePlayer();
+  const { files, addFile, addFiles, player, status } = useMusicPlayer();
   const playlist = usePlaylist();
 
   const playWithIdList = (idList: string[], index: number) => {
@@ -115,69 +105,6 @@ const MusicPlayer: React.FC = () => {
       </div>
     </RightMenuContext.Provider>
   );
-};
-
-const usePlayer = () => {
-  const [files, setFiles] = useState<Files>({});
-
-  const [paused, setPaused] = useState(true);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [repeat, setRepeat] = useState(Repeat.DEFAULT);
-  const [shuffle, setShuffle] = useState(false);
-
-  const [info, setInfo] = useState(AudioInfo.getEmptyInfo());
-
-  const player = useRef<AudioPlayer | null>(null);
-
-  useEffect(() => {
-    player.current = new AudioPlayer();
-
-    player.current.onSetDuration = duration => setDuration(duration);
-    player.current.onSetPause = paused => setPaused(paused);
-    player.current.onSetCurrentTime = currentTime =>
-      setCurrentTime(currentTime);
-    player.current.onSetRepeat = repeat => setRepeat(repeat);
-    player.current.onSetShuffle = shuffle => setShuffle(shuffle);
-
-    player.current.onLoadInfo = (info: AudioInfo) =>
-      setFiles(files => {
-        const newfile = { ...files };
-        newfile[info.id].info = info;
-        return newfile;
-      });
-  }, []);
-
-  useEffect(() => {
-    if (player.current !== null) {
-      player.current.onChangeMusic = id =>
-        setInfo(files[id].info ?? AudioInfo.getEmptyInfo());
-    }
-  }, [files]);
-
-  const addFiles = (newFiles: File[]) =>
-    setFiles(files => ({
-      ...files,
-      ...Object.fromEntries(newFiles.map(newFile => [newFile.id, newFile])),
-    }));
-
-  const addFile = (newFiles: File) =>
-    setFiles(files => ({ ...files, [newFiles.id]: newFiles }));
-
-  return {
-    files,
-    addFile,
-    addFiles,
-    player: player.current,
-    status: {
-      paused,
-      duration,
-      currentTime,
-      repeat,
-      shuffle,
-      info,
-    },
-  };
 };
 
 export default MusicPlayer;

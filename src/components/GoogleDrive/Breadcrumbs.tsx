@@ -1,19 +1,7 @@
 import React from "react";
-import { css } from "@linaria/core";
 
 import { File } from "file";
-
-const style = css`
-  background-color: gray;
-
-  &-item {
-    display: inline;
-
-    &:hover {
-      cursor: pointer;
-    }
-  }
-`;
+import { styleBread, styleBreadcrumbs } from "./style";
 
 type Props = {
   parents: File[];
@@ -22,12 +10,12 @@ type Props = {
 
 export const Breadcrumbs: React.FC<Props> = ({ parents, move }) => {
   return (
-    <ul className={style}>
+    <ul className={styleBreadcrumbs}>
       {parents
         .map((parent, index) => (
           <li
             key={parent.id}
-            className={`${style}-item`}
+            className={styleBread}
             onClick={() => move(index)}>
             {parent.name}
           </li>

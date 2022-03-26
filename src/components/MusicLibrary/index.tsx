@@ -1,11 +1,10 @@
 import React from "react";
-import { css } from "@linaria/core";
 
 import { Item } from "./Item";
 
 import { Files } from "components/MusicPlayer";
 
-const style = css``;
+import { style } from "./style";
 
 type Props = {
   files: Files;
@@ -24,7 +23,7 @@ const MusicList: React.FC<Props> = ({
   addToPlaylist,
 }) => {
   return (
-    <ul>
+    <ul className={style}>
       {Object.values(files).map(({ id, name }, index) => (
         <Item
           key={id}

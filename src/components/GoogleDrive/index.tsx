@@ -1,15 +1,10 @@
 import React from "react";
-import { css } from "@linaria/core";
 
 import { Breadcrumbs } from "./Breadcrumbs";
 import { Item } from "./Item";
 
 import { getAllMusics, getAllFolders, File } from "file";
-
-const style = css`
-  overflow-y: scroll;
-  height: 100%;
-`;
+import { style } from "./style";
 
 type Props = {
   signIn: boolean;

@@ -2,6 +2,7 @@ import Icon from "components/GoogleIcon";
 import LabelIcon from "components/LabelIcon";
 import { uploadLibraryData, File } from "file";
 import React, { useState } from "react";
+import { styleUpload } from "./style";
 
 type Props = {
   files: File[];
@@ -13,7 +14,7 @@ type Props = {
 const Upload: React.FC<Props> = ({ files }) => {
   const [status, setStatus] = useState("");
   return (
-    <div>
+    <div className={styleUpload}>
       <button
         onClick={() => {
           setStatus("pending_actions");

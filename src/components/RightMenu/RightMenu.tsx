@@ -1,24 +1,10 @@
 import IconButton from "components/IconButton";
 import React from "react";
-import { css } from "@linaria/core";
 
 import Item from "./Item";
 import useRightMenu from "hooks/useRightMenu";
 import RightMenuItem from "./RightMenuItem";
-
-const style = css`
-  position: fixed;
-  visibility: hidden;
-  top: 0px;
-  left: 0px;
-
-  background-color: white;
-  border-color: gray;
-  border-style: solid;
-  border-width: 0.1rem;
-
-  min-width: 10rem;
-`;
+import { style } from "./style";
 
 type Props = {
   items: Item[];

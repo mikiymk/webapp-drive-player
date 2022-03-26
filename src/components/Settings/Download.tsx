@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Icon from "components/GoogleIcon";
 import LabelIcon from "components/LabelIcon";
 import { downloadLibraryData, File } from "file";
+import { styleDownload } from "./style";
 
 type Props = {
   addFiles: (file: File[]) => void;
@@ -14,7 +15,7 @@ type Props = {
 const Download: React.FC<Props> = ({ addFiles }) => {
   const [status, setStatus] = useState("");
   return (
-    <div>
+    <div className={styleDownload}>
       <button
         onClick={() => {
           setStatus("pending_actions");

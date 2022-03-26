@@ -1,25 +1,8 @@
 import React from "react";
-import { css } from "@linaria/core";
 
 import Marquee from "components/Marquee";
 import AudioInfo from "audio/audioInfo";
-
-const style = css`
-  flex: 1 0 calc(100vw - 30rem);
-
-  display: flex;
-  flex-direction: column;
-
-  &-title {
-    flex: 3 1 1rem;
-    font-size: 1.5rem;
-  }
-
-  &-artist {
-    flex: 2 1 1rem;
-    font-size: 0.8rem;
-  }
-`;
+import { styleArtist, styleTitle, styleTitleView } from "./style";
 
 type Props = {
   info: AudioInfo;
@@ -32,9 +15,9 @@ const MusicTitle: React.FC<Props> = ({
   },
 }) => {
   return (
-    <span className={style}>
-      <Marquee className={`${style}-title`}>{title}</Marquee>
-      <Marquee className={`${style}-artist`}>{artist}</Marquee>
+    <span className={styleTitleView}>
+      <Marquee className={styleTitle}>{title}</Marquee>
+      <Marquee className={styleArtist}>{artist}</Marquee>
     </span>
   );
 };

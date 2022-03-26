@@ -1,10 +1,8 @@
 import React from "react";
-import { css } from "@linaria/core";
 import MakePlaylistButton from "./MakePlaylistButton";
 import useRightMenu from "hooks/useRightMenu";
 import IconButton from "components/IconButton";
-
-const style = css``;
+import { stylePlaylists } from "./style";
 
 type Props = {
   playlists: Record<string, string[]>;
@@ -25,7 +23,7 @@ const PlaylistList: React.FC<Props> = ({
   const rightMenu = useRightMenu();
 
   return (
-    <ul className={style}>
+    <ul className={stylePlaylists}>
       {Object.entries(playlists).map(([name]) => (
         <li key={name}>
           {name}

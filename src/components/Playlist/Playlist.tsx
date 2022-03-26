@@ -1,10 +1,8 @@
 import React from "react";
-import { css } from "@linaria/core";
 import { File } from "file";
 import Icon from "components/GoogleIcon";
 import useRightMenu from "hooks/useRightMenu";
-
-const style = css``;
+import { stylePlaylist } from "./style";
 
 type Props = {
   files: Record<string, File>;
@@ -27,7 +25,7 @@ const Playlist: React.FC<Props> = ({
 }) => {
   const rightMenu = useRightMenu();
   return (
-    <div className={style}>
+    <div className={stylePlaylist}>
       <h3>{name}</h3>
       <button onClick={reset}>back to list</button>
       <button onClick={() => playsList(audioIDs, 0)}>play this playlist</button>

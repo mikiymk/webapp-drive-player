@@ -1,5 +1,4 @@
 import React from "react";
-import { css } from "@linaria/core";
 
 import IconButton from "components/IconButton";
 
@@ -9,21 +8,7 @@ import SeekBar from "./SeekBar";
 
 import Repeat from "audio/repeat";
 import AudioInfo from "audio/audioInfo";
-
-const style = css`
-  display: flex;
-  justify-content: center;
-
-  flex: 0 0 1.5rem;
-
-  font-size: 2rem;
-  background-color: rgb(173, 173, 173);
-
-  &-icon {
-    height: 3rem;
-    width: 3rem;
-  }
-`;
+import { style, styleIcon } from "./style";
 
 type Props = {
   info: AudioInfo;
@@ -77,28 +62,24 @@ const Controller: React.FC<Props> = ({
         <IconButton
           icon="skip_previous"
           onClick={playPrev}
-          className={`${style}-icon`}
+          className={styleIcon}
         />
         <IconButton
           icon={playIconName}
           onClick={onClickPlayPause}
-          className={`${style}-icon`}
+          className={styleIcon}
         />
-        <IconButton
-          icon="skip_next"
-          onClick={playNext}
-          className={`${style}-icon`}
-        />
+        <IconButton icon="skip_next" onClick={playNext} className={styleIcon} />
         <MusicTitle info={info} />
         <IconButton
           icon={repeatIconName}
           onClick={onClickRepeat}
-          className={`${style}-icon`}
+          className={styleIcon}
         />
         <IconButton
           icon={shuffleIconName}
           onClick={onClickShuffle}
-          className={`${style}-icon`}
+          className={styleIcon}
         />
         <MusicTime duration={duration} currentTime={currentTime} />
       </div>

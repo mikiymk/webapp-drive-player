@@ -1,15 +1,7 @@
 import React from "react";
-import { css } from "@linaria/core";
 
 import Item from "./Item";
-
-const style = css`
-  margin: 0.5rem;
-`;
-
-const styleHr = css`
-  margin: 0.2rem;
-`;
+import { styleHorizon, styleItem } from "./style";
 
 type Props = {
   item: Item;
@@ -18,22 +10,26 @@ type Props = {
 /** show on right click */
 const RightMenuItem: React.FC<Props> = ({ item }) => {
   if (item.type === "hr") {
-    return <hr className={styleHr}></hr>;
+    return <hr className={styleHorizon}></hr>;
   } else if (item.type === "button") {
     return (
-      <button className={style} onClick={item.onClick}>
+      <button className={styleItem} onClick={item.onClick}>
         {item.label}
       </button>
     );
   } else if (item.type === "anchor") {
     return (
-      <a className={style} href={item.href} target="_blank" rel="noreferrer">
+      <a
+        className={styleItem}
+        href={item.href}
+        target="_blank"
+        rel="noreferrer">
         {item.label}
       </a>
     );
   } else if (item.type === "list") {
     return (
-      <div className={style}>
+      <div className={styleItem}>
         {item.label}
         <div className="inner-list">
           {item.list.map((item, index) => (
