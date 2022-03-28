@@ -24,7 +24,7 @@ module.exports = {
     }),
     new FaviconsWebpackPlugin("./src/img/icon.svg"),
     new HtmlWebpackPlugin({
-      template: "index.html",
+      template: "src/index.html",
     }),
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"],
