@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { formatTime } from "format";
 import { styleTime } from "./style";
@@ -9,12 +9,12 @@ type Props = {
 };
 
 /** 時間をフォーマットして表示 */
-const MusicTitle: React.FC<Props> = ({ duration, currentTime }) => {
+const MusicTitle: React.FC<Props> = memo(({ duration, currentTime }) => {
   return (
     <span className={styleTime}>
       {formatTime(currentTime)}/{formatTime(duration)}
     </span>
   );
-};
+});
 
 export default MusicTitle;

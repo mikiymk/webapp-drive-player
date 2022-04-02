@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useCallback } from "react";
 
 import MusicTitle from "./MusicTitle";
 import MusicTime from "./MusicTime";
@@ -32,38 +32,46 @@ type Props = {
 /**
  * 曲の再生・停止などのコントロールする
  */
-const Controller: React.FC<Props> = ({
-  info,
-  duration,
-  currentTime,
-  paused,
-  repeat,
-  shuffle,
-  seek,
-  play,
-  pause,
-  playNext,
-  playPrev,
-  setRepeat,
-  setShuffle,
-}) => {
-  const toggleRepeat = () => setRepeat(repeat.toggle());
-  const toggleShuffle = () => setShuffle(!shuffle);
+const Controller: React.FC<Props> = memo(
+  ({
+    info,
+    duration,
+    currentTime,
+    paused,
+    repeat,
+    shuffle,
+    seek,
+    play,
+    pause,
+    playNext,
+    playPrev,
+    setRepeat,
+    setShuffle,
+  }) => {
+    const toggleRepeat = useCallback(
+      () => setRepeat(repeat.toggle()),
+      [repeat, setRepeat]
+    );
+    const toggleShuffle = useCallback(
+      () => setShuffle(!shuffle),
+      [shuffle, setShuffle]
+    );
 
-  return (
-    <>
-      <SeekBar duration={duration} time={currentTime} seek={seek} />
-      <div className={style}>
-        <PrevButton prev={playPrev} />
-        <PlayButton isPlaying={!paused} play={play} pause={pause} />
-        <NextButton next={playNext} />
-        <MusicTitle info={info} />
-        <RepeatButton repeat={repeat} toggleRepeat={toggleRepeat} />
-        <ShuffleButton isShuffled={shuffle} toggleShuffle={toggleShuffle} />
-        <MusicTime duration={duration} currentTime={currentTime} />
-      </div>
-    </>
-  );
-};
+    return (
+      <>
+        <SeekBar duration={duration} time={currentTime} seek={seek} />
+        <div className={style}>
+          <PrevButton prev={playPrev} />
+          <PlayButton isPlaying={!paused} play={play} pause={pause} />
+          <NextButton next={playNext} />
+          <MusicTitle info={info} />
+          <RepeatButton repeat={repeat} toggleRepeat={toggleRepeat} />
+          <ShuffleButton isShuffled={shuffle} toggleShuffle={toggleShuffle} />
+          <MusicTime duration={duration} currentTime={currentTime} />
+        </div>
+      </>
+    );
+  }
+);
 
 export default Controller;

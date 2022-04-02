@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { styleSeekBar } from "./style";
 import useSeekTime from "./useSeekTime";
 
@@ -9,7 +9,7 @@ type Props = {
 };
 
 /** 現在位置が左から右にいって時間を表す */
-const SeekBar: React.FC<Props> = ({ duration, time, seek }) => {
+const SeekBar: React.FC<Props> = memo(({ duration, time, seek }) => {
   const { seekTime, onChange, onClickDown, onClickUp } = useSeekTime(
     time,
     seek
@@ -30,6 +30,6 @@ const SeekBar: React.FC<Props> = ({ duration, time, seek }) => {
       onTouchEnd={onClickUp}
     />
   );
-};
+});
 
 export default SeekBar;

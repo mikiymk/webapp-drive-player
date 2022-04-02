@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import IconButton from "components/IconButton";
 
@@ -10,12 +10,12 @@ type Props = {
   pause: () => void;
 };
 
-const PlayButton: React.FC<Props> = ({ isPlaying, play, pause }) => {
+const PlayButton: React.FC<Props> = memo(({ isPlaying, play, pause }) => {
   return isPlaying ? (
     <IconButton icon={"pause"} onClick={pause} className={styleIcon} />
   ) : (
     <IconButton icon={"play_arrow"} onClick={play} className={styleIcon} />
   );
-};
+});
 
 export default PlayButton;

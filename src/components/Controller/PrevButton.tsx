@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import IconButton from "components/IconButton";
 
@@ -8,10 +8,10 @@ type Props = {
   prev: () => void;
 };
 
-const PrevButton: React.FC<Props> = ({ prev }) => {
+const PrevButton: React.FC<Props> = memo(({ prev }) => {
   return (
     <IconButton icon="skip_previous" onClick={prev} className={styleIcon} />
   );
-};
+});
 
 export default PrevButton;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import Repeat from "audio/repeat";
 import IconButton from "components/IconButton";
@@ -16,7 +16,7 @@ const iconName = {
   "repeat on": "repeat_on",
 } as const;
 
-const RepeatButton: React.FC<Props> = ({ repeat, toggleRepeat }) => {
+const RepeatButton: React.FC<Props> = memo(({ repeat, toggleRepeat }) => {
   return (
     <IconButton
       icon={iconName[repeat.value]}
@@ -24,6 +24,6 @@ const RepeatButton: React.FC<Props> = ({ repeat, toggleRepeat }) => {
       className={styleIcon}
     />
   );
-};
+});
 
 export default RepeatButton;
