@@ -1,14 +1,17 @@
 import React from "react";
 
-import IconButton from "components/IconButton";
-
 import MusicTitle from "./MusicTitle";
 import MusicTime from "./MusicTime";
 import SeekBar from "./SeekBar";
 
 import Repeat from "audio/repeat";
 import AudioInfo from "audio/audioInfo";
-import { style, styleIcon } from "./style";
+import { style } from "./style";
+import PrevButton from "./PrevButton";
+import NextButton from "./NextButton";
+import PlayButton from "./PlayButton";
+import RepeatButton from "./RepeatButton";
+import ShuffleButton from "./ShuffleButton";
 
 type Props = {
   info: AudioInfo;
@@ -44,43 +47,19 @@ const Controller: React.FC<Props> = ({
   setRepeat,
   setShuffle,
 }) => {
-  const onClickPlayPause = paused ? play : pause;
-  const onClickRepeat = () => setRepeat(repeat.toggle());
-  const onClickShuffle = () => setShuffle(!shuffle);
-  const playIconName = paused ? "play_arrow" : "pause";
-  const repeatIconName = {
-    "repeat off": "repeat",
-    "repeat one": "repeat_one_on",
-    "repeat on": "repeat_on",
-  }[repeat.value];
-  const shuffleIconName = shuffle ? "shuffle_on" : "shuffle";
+  const toggleRepeat = () => setRepeat(repeat.toggle());
+  const toggleShuffle = () => setShuffle(!shuffle);
 
   return (
     <>
       <SeekBar duration={duration} time={currentTime} seek={seek} />
       <div className={style}>
-        <IconButton
-          icon="skip_previous"
-          onClick={playPrev}
-          className={styleIcon}
-        />
-        <IconButton
-          icon={playIconName}
-          onClick={onClickPlayPause}
-          className={styleIcon}
-        />
-        <IconButton icon="skip_next" onClick={playNext} className={styleIcon} />
+        <PrevButton prev={playPrev} />
+        <PlayButton isPlaying={!paused} play={play} pause={pause} />
+        <NextButton next={playNext} />
         <MusicTitle info={info} />
-        <IconButton
-          icon={repeatIconName}
-          onClick={onClickRepeat}
-          className={styleIcon}
-        />
-        <IconButton
-          icon={shuffleIconName}
-          onClick={onClickShuffle}
-          className={styleIcon}
-        />
+        <RepeatButton repeat={repeat} toggleRepeat={toggleRepeat} />
+        <ShuffleButton isShuffled={shuffle} toggleShuffle={toggleShuffle} />
         <MusicTime duration={duration} currentTime={currentTime} />
       </div>
     </>
