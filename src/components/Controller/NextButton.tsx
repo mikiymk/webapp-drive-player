@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 
 import IconButton from "components/IconButton";
 
@@ -8,8 +8,8 @@ type Props = {
   next: () => void;
 };
 
-const NextButton: React.FC<Props> = memo(({ next }) => {
+const NextButton: React.FC<Props> = ({ next }) => {
   return <IconButton icon="skip_next" onClick={next} className={styleIcon} />;
-});
+};
 
 export default NextButton;

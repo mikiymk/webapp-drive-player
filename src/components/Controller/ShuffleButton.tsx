@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 
 import IconButton from "components/IconButton";
 
@@ -9,11 +9,11 @@ type Props = {
   toggleShuffle: () => void;
 };
 
-const ShuffleButton: React.FC<Props> = memo(({ isShuffled, toggleShuffle }) => {
+const ShuffleButton: React.FC<Props> = ({ isShuffled, toggleShuffle }) => {
   const icon = isShuffled ? "shuffle_on" : "shuffle";
   return (
     <IconButton icon={icon} onClick={toggleShuffle} className={styleIcon} />
   );
-});
+};
 
 export default ShuffleButton;

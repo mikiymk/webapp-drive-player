@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 const useSeekTime = (time: number, seek: (time: number) => void) => {
   const [seekTime, setSeekTime] = useState(0);
@@ -10,21 +10,18 @@ const useSeekTime = (time: number, seek: (time: number) => void) => {
     }
   }, [time]);
 
-  const onClickDown = useCallback(() => {
+  const onClickDown = () => {
     setClick(true);
-  }, []);
+  };
 
-  const onClickUp = useCallback(() => {
+  const onClickUp = () => {
     setClick(false);
     seek(seekTime / 1000);
-  }, [seek, seekTime]);
+  };
 
-  const onChange: React.ChangeEventHandler<HTMLInputElement> = useCallback(
-    event => {
-      setSeekTime(parseInt(event.target.value, 10));
-    },
-    []
-  );
+  const onChange: React.ChangeEventHandler<HTMLInputElement> = event => {
+    setSeekTime(parseInt(event.target.value, 10));
+  };
 
   return {
     seekTime,
