@@ -13,16 +13,24 @@ export const Breadcrumbs: React.FC<Props> = ({ parents, move }) => {
     <ul className={styleBreadcrumbs}>
       {parents
         .map((parent, index) => (
-          <li
-            key={parent.id}
-            className={styleBread}
-            onClick={() => move(index)}>
-            {parent.name}
-          </li>
+          <Bread key={parent.id} parent={parent} move={() => move(index)} />
         ))
         .flatMap((element, index) =>
           index === 0 ? [element] : [" > ", element]
         )}
     </ul>
+  );
+};
+
+type PropsBread = {
+  parent: File;
+  move: () => void;
+};
+
+const Bread: React.FC<PropsBread> = ({ parent, move }) => {
+  return (
+    <li className={styleBread} onClick={move}>
+      {parent.name}
+    </li>
   );
 };
