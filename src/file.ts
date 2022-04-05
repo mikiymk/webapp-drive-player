@@ -6,7 +6,7 @@ import {
   uploadAppDataJson,
 } from "google-api/file";
 
-import AudioInfo, { AudioInfoBase } from "audio/audioInfo";
+import AudioInfo from "audio/audioInfo";
 
 export class File {
   constructor(
@@ -86,7 +86,7 @@ export const uploadLibraryData = async (files: File[]) => {
   const filesData = files.map(file => ({
     id: file.id,
     name: file.name,
-    info: file.info?.base,
+    info: file.info,
   }));
 
   const id = await getLibraryID();
@@ -121,7 +121,7 @@ export const downloadLibraryData = async (): Promise<File[] | undefined> => {
       ): file is {
         id: string;
         name: string;
-        info: AudioInfoBase;
+        info: AudioInfo;
       } => {
         if (typeof file !== "object") {
           return false;
@@ -131,10 +131,7 @@ export const downloadLibraryData = async (): Promise<File[] | undefined> => {
         return "id" in file && "name" in file && "info" in file;
       }
     )
-    .map(
-      file =>
-        new File(file.id, file.name, AudioInfo.getBaseInfo(file.id, file.info))
-    );
+    .map(({ id, name, info }) => new File(id, name, AudioInfo.copyInfo(info)));
   console.log(files);
   return files;
 };

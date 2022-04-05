@@ -33,7 +33,7 @@ const Playlist: React.FC<Props> = ({
         {audioIDs
           .map(id => ({
             id,
-            name: files[id].info?.base?.title ?? files[id].name,
+            name: files[id].info?.title ?? files[id].name,
           }))
           .map(({ id, name }, index) => (
             <li key={id + index}>

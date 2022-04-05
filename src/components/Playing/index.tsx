@@ -14,18 +14,12 @@ type Props = {
 /**
  * now playing audio info view
  */
-const PlayingInfo: React.FC<Props> = ({
-  files,
-  info: { base, additional },
-  playingList,
-}) => {
-  const jacket = useJacket(
-    additional.picture ? additional.picture[0] : undefined
-  );
+const PlayingInfo: React.FC<Props> = ({ files, info, playingList }) => {
+  const jacket = useJacket(info.picture?.[0]);
 
   return (
     <div className={style}>
-      <span>{base.album}</span>
+      <span>{info.album}</span>
       <img src={jacket} alt="album jacket" />
       <ol>
         {Array.from(playingList).map((id, index) => (

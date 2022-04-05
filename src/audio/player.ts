@@ -11,8 +11,12 @@ import AudioInfo from "./audioInfo";
 class AudioPlayer {
   private audio = new Audio();
 
-  private readonly buffer = new BufferLoader(info => this.loadInfo(info));
-  private readonly nextBuffer = new BufferLoader(info => this.loadInfo(info));
+  private readonly buffer = new BufferLoader((id, info) =>
+    this.loadInfo(id, info)
+  );
+  private readonly nextBuffer = new BufferLoader((id, info) =>
+    this.loadInfo(id, info)
+  );
 
   /** play music file list */
   musicIds: ShuffleArray<string> = new ShuffleArray([], false);
@@ -28,7 +32,7 @@ class AudioPlayer {
   onSetPause: (isPaused: boolean) => void = () => {};
   onSetRepeat: (repeat: Repeat) => void = () => {};
   onSetShuffle: (shuffle: boolean) => void = () => {};
-  onLoadInfo: (info: AudioInfo) => void = () => {};
+  onLoadInfo: (id: string, info: AudioInfo) => void = () => {};
   onChangeMusic: (id: string) => void = () => {};
 
   constructor() {
@@ -151,8 +155,8 @@ class AudioPlayer {
     this.onSetPause(this.isPaused);
   }
 
-  private loadInfo(info: AudioInfo) {
-    this.onLoadInfo(info);
+  private loadInfo(id: string, info: AudioInfo) {
+    this.onLoadInfo(id, info);
   }
 
   /** コールバック用 曲を再生して現在の再生位置が変わった時 */

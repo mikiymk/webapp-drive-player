@@ -29,10 +29,10 @@ const useMusicPlayer = () => {
     player.current.onSetRepeat = repeat => setRepeat(repeat);
     player.current.onSetShuffle = shuffle => setShuffle(shuffle);
 
-    player.current.onLoadInfo = (info: AudioInfo) =>
+    player.current.onLoadInfo = (id: string, info: AudioInfo) =>
       setFiles(files => {
         const newfile = { ...files };
-        newfile[info.id].info = info;
+        newfile[id].info = info;
         return newfile;
       });
   }, []);

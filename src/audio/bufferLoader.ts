@@ -15,9 +15,9 @@ class BufferLoader {
   private willLoadID = "";
 
   /**  */
-  private setInfo: (info: AudioInfo) => void;
+  private setInfo: (id: string, info: AudioInfo) => void;
 
-  constructor(setInfo: (info: AudioInfo) => void) {
+  constructor(setInfo: (id: string, info: AudioInfo) => void) {
     this.setInfo = setInfo;
   }
 
@@ -49,12 +49,12 @@ class BufferLoader {
       }
 
       const blob = await fileData.blob();
-      const info = await AudioInfo.getInfo(id, blob.slice());
+      const info = await AudioInfo.getInfo(blob.slice());
 
       if (this.willLoadID === id) {
         this.loadedID = id;
         URL.revokeObjectURL(this.url);
-        this.setInfo(info);
+        this.setInfo(id, info);
         this.url = URL.createObjectURL(blob);
         return this.url;
       } else {
