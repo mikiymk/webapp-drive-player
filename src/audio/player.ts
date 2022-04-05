@@ -1,7 +1,5 @@
-import { File } from "file";
-
 import Repeat from "./repeat";
-import ShuffleArray from "./shuffleArray";
+import ShufflableAudios from "./shufflableAudios";
 import BufferLoader from "./bufferLoader";
 import AudioInfo from "./audioInfo";
 
@@ -19,7 +17,7 @@ class AudioPlayer {
   );
 
   /** play music file list */
-  musicIds: ShuffleArray<string> = new ShuffleArray([], false);
+  musicIds = new ShufflableAudios([], false);
 
   /** play music ids index */
   private index = NaN;
@@ -98,7 +96,7 @@ class AudioPlayer {
    * リストと最初のインデックスを渡して再生を始める
    */
   playWithIdList(ids: string[], index: number) {
-    this.musicIds = new ShuffleArray(ids, false);
+    this.musicIds = new ShufflableAudios(ids, false);
     this.index = index;
 
     this.playAndLoad();

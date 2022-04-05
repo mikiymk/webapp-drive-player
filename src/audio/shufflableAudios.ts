@@ -1,11 +1,11 @@
 /**
  * 元の並びを維持したままランダム並び替えをする配列
  */
-class ShuffleArray<T> implements Iterable<T> {
-  private readonly _array: T[];
+class ShufflableAudios implements Iterable<string> {
+  private readonly _array: string[];
   private _indexArray: number[];
 
-  constructor(array: Iterable<T> | ArrayLike<T>, shuffled: boolean) {
+  constructor(array: string[], shuffled: boolean) {
     this._array = Array.from(array);
     this._indexArray = makeShuffledArray(this._array.length, shuffled);
   }
@@ -23,21 +23,21 @@ class ShuffleArray<T> implements Iterable<T> {
     return this._array[this._indexArray[index]];
   }
 
-  [Symbol.iterator](): ShuffleIterator<T> {
+  [Symbol.iterator](): ShuffleIterator {
     return new ShuffleIterator(this);
   }
 }
 
 /** ShuffleArray のイテレータ */
-class ShuffleIterator<T> implements Iterator<T, undefined> {
-  private readonly _array: ShuffleArray<T>;
+class ShuffleIterator implements Iterator<string, undefined> {
+  private readonly _array: ShufflableAudios;
   private _index = 0;
 
-  constructor(array: ShuffleArray<T>) {
+  constructor(array: ShufflableAudios) {
     this._array = array;
   }
 
-  next(): IteratorResult<T, undefined> {
+  next(): IteratorResult<string, undefined> {
     if (this._index < this._array.length) {
       return {
         done: false,
@@ -84,4 +84,4 @@ const makeShuffledArray = (length: number, shuffled: boolean) => {
   }
 };
 
-export default ShuffleArray;
+export default ShufflableAudios;
