@@ -6,7 +6,7 @@ import AudioInfo from "./audioInfo";
  */
 class BufferLoader {
   /** 保持しているファイルのBLOB URL */
-  url = "";
+  public loaded: Blob | null = null;
 
   /** 保持しているファイルID */
   loadedID = "";
@@ -14,7 +14,6 @@ class BufferLoader {
   /** 最後に送られたファイルID */
   private willLoadID = "";
 
-  /**  */
   private setInfo: (id: string, info: AudioInfo) => void;
 
   constructor(setInfo: (id: string, info: AudioInfo) => void) {
@@ -29,23 +28,22 @@ class BufferLoader {
    * @param id ファイルID
    * @returns ファイルがない場合は空文字列
    */
-  async load(id: string): Promise<string> {
+  async load(id: string): Promise<Blob | null> {
     this.willLoadID = id;
     if (this.isLoaded) {
-      return this.url;
+      return this.loaded;
     }
-    URL.revokeObjectURL(this.url);
-    this.url = "";
+    this.loaded = null;
 
     if (id === null || id === undefined || id === "") {
-      return "";
+      return this.loaded;
     }
 
     try {
       const fileData = await downloadFile(id);
 
       if (fileData === null) {
-        return "";
+        return this.loaded;
       }
 
       const blob = await fileData.blob();
@@ -53,16 +51,15 @@ class BufferLoader {
 
       if (this.willLoadID === id) {
         this.loadedID = id;
-        URL.revokeObjectURL(this.url);
         this.setInfo(id, info);
-        this.url = URL.createObjectURL(blob);
-        return this.url;
+        this.loaded = blob;
+        return this.loaded;
       } else {
-        return "";
+        return null;
       }
     } catch (error) {
       console.error(error);
-      return "";
+      return null;
     }
   }
 
@@ -72,13 +69,10 @@ class BufferLoader {
    * 勝手に close されないように別の情報は消しておく
    */
   copyFrom(other: BufferLoader) {
-    URL.revokeObjectURL(this.url);
-
     this.willLoadID = other.willLoadID;
-    this.url = other.url;
+    this.loaded = other.loaded;
     this.loadedID = other.loadedID;
 
-    other.url = "";
     other.loadedID = "";
   }
 

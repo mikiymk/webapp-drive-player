@@ -1,5 +1,3 @@
-import { parseBlob } from "music-metadata-browser";
-
 type AudioInfoNumber = { of: number | null; no: number | null };
 
 type AudioInfoSort = {
@@ -12,7 +10,7 @@ type AudioInfoSort = {
 
 class AudioInfo {
   static getEmptyInfo() {
-    return new AudioInfo("", "");
+    return new AudioInfo();
   }
 
   /**
@@ -22,6 +20,7 @@ class AudioInfo {
   static async getInfo(data: Blob) {
     let metadata;
     try {
+      const { parseBlob } = await import("music-metadata-browser");
       metadata = await parseBlob(data);
       console.log(metadata);
     } catch (error) {

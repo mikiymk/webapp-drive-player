@@ -119,15 +119,17 @@ class AudioPlayer {
    * オーディオ情報も一緒に設定
    */
   private setBuffer() {
-    if (this.buffer.url === "") {
+    if (this.buffer.loaded === null) {
+      return;
+    }
+    URL.revokeObjectURL(this.audio.src);
+    const src = URL.createObjectURL(this.buffer.loaded);
+
+    if (src === this.audio.src) {
       return;
     }
 
-    if (this.buffer.url === this.audio.src) {
-      return;
-    }
-
-    this.audio.src = this.buffer.url;
+    this.audio.src = src;
     this.audio.load();
     this.onChangeMusic(this.buffer.loadedID);
   }
