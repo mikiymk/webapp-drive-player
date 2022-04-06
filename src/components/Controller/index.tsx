@@ -4,14 +4,14 @@ import MusicTitle from "./MusicTitle";
 import MusicTime from "./MusicTime";
 import SeekBar from "./SeekBar";
 
-import Repeat from "audio/repeat";
-import AudioInfo from "audio/audioInfo";
 import { style } from "./style";
 import PrevButton from "./PrevButton";
 import NextButton from "./NextButton";
 import PlayButton from "./PlayButton";
 import RepeatButton from "./RepeatButton";
 import ShuffleButton from "./ShuffleButton";
+import Repeat from "audio/Repeat";
+import AudioInfo from "audio/AudioInfo";
 
 type Props = {
   info: AudioInfo;

@@ -1,21 +1,24 @@
-import { File } from "file";
-
-import Repeat from "./repeat";
-import ShuffleArray from "./shuffleArray";
-import BufferLoader from "./bufferLoader";
-import AudioInfo from "./audioInfo";
+import Repeat from "./Repeat";
+import ShuffleArray from "./ShuffleArray";
+import BufferLoader from "./BufferLoader";
+import AudioInfo from "./AudioInfo";
+import AudioPlayer from "./AudioPlayer";
 
 /**
  * 音楽再生の管理
  */
-class AudioPlayer {
-  private audio = new Audio();
+class AudioManager {
+  private player: AudioPlayer;
 
-  private readonly buffer = new BufferLoader(info => this.loadInfo(info));
-  private readonly nextBuffer = new BufferLoader(info => this.loadInfo(info));
+  private readonly buffer = new BufferLoader((id, info) =>
+    this.loadInfo(id, info)
+  );
+  private readonly nextBuffer = new BufferLoader((id, info) =>
+    this.loadInfo(id, info)
+  );
 
   /** play music file list */
-  musicIds: ShuffleArray<string> = new ShuffleArray([], false);
+  musicIds = new ShuffleArray([], false);
 
   /** play music ids index */
   private index = NaN;
@@ -28,14 +31,17 @@ class AudioPlayer {
   onSetPause: (isPaused: boolean) => void = () => {};
   onSetRepeat: (repeat: Repeat) => void = () => {};
   onSetShuffle: (shuffle: boolean) => void = () => {};
-  onLoadInfo: (info: AudioInfo) => void = () => {};
+  onLoadInfo: (id: string, info: AudioInfo) => void = () => {};
   onChangeMusic: (id: string) => void = () => {};
 
-  constructor() {
-    this.audio.addEventListener("ended", () => this.onEnd());
-    this.audio.addEventListener("timeupdate", () => this.updateTime());
-    this.audio.addEventListener("durationchange", () => this.updateDuration());
+  constructor(player: AudioPlayer) {
+    this.player = player;
+    player.onEnd = () => this.onEnd();
+    player.changePause = pause => this.onSetPause(pause);
+    player.updateTime = time => this.onSetCurrentTime(time);
+    player.updateDuration = duration => this.onSetDuration(duration);
   }
+
   /**
    * 今の曲の再生バッファをロード
    */
@@ -115,22 +121,17 @@ class AudioPlayer {
    * オーディオ情報も一緒に設定
    */
   private setBuffer() {
-    if (this.buffer.url === "") {
+    if (this.buffer.loaded === null) {
       return;
     }
 
-    if (this.buffer.url === this.audio.src) {
-      return;
-    }
-
-    this.audio.src = this.buffer.url;
-    this.audio.load();
+    this.player.setBuffer(this.buffer.loaded);
     this.onChangeMusic(this.buffer.loadedID);
   }
 
   setRepeat(repeat: Repeat) {
     this.repeat = repeat;
-    this.audio.loop = repeat.value === "repeat one";
+    this.player.setLoop(repeat.value === "repeat one");
     this.onSetRepeat(repeat);
     this.loadNextBuffer();
   }
@@ -141,28 +142,8 @@ class AudioPlayer {
     this.loadNextBuffer();
   }
 
-  private setCurrentTime(currentTime: number) {
-    this.audio.currentTime = currentTime;
-    this.onSetCurrentTime(this.audio.currentTime);
-  }
-
-  private setPause(isPaused: boolean) {
-    this.isPaused = isPaused;
-    this.onSetPause(this.isPaused);
-  }
-
-  private loadInfo(info: AudioInfo) {
-    this.onLoadInfo(info);
-  }
-
-  /** コールバック用 曲を再生して現在の再生位置が変わった時 */
-  private updateTime() {
-    this.onSetCurrentTime(this.audio.currentTime);
-  }
-
-  /** コールバック用 新しい曲をロードして曲の長さが変わった時 */
-  private updateDuration() {
-    this.onSetDuration(this.audio.duration);
+  private loadInfo(id: string, info: AudioInfo) {
+    this.onLoadInfo(id, info);
   }
 
   /** コールバック用 曲が終わった時 */
@@ -177,48 +158,27 @@ class AudioPlayer {
     }
   }
 
-  /** 先頭から再生 */
   start() {
-    if (!this.isPaused) return;
-    this.setCurrentTime(0);
-    this.play();
-  }
-
-  /** 停止して停止位置を先頭に戻す */
-  stop() {
-    if (this.isPaused) return;
-    this.pause();
-    this.setCurrentTime(0);
-  }
-
-  /** 記録された停止位置から再生 */
-  play() {
-    if (!this.isPaused) return;
-    this.setPause(false);
-
     this.setBuffer();
-    if (this.audio.src === "") return;
-
-    this.audio.play();
+    this.player.start();
   }
 
-  /** 停止して現在の位置を停止位置として記録 */
+  stop() {
+    this.player.stop();
+  }
+
+  play() {
+    this.setBuffer();
+    this.player.play();
+  }
+
   pause() {
-    if (this.isPaused) return;
-    this.setPause(true);
-    this.audio.pause();
+    this.player.pause();
   }
 
-  /** 再生位置を指定のものに変更 */
   seek(time: number) {
-    if (this.isPaused) {
-      this.setCurrentTime(time);
-    } else {
-      this.pause();
-      this.setCurrentTime(time);
-      this.play();
-    }
+    this.player.seek(time);
   }
 }
 
-export default AudioPlayer;
+export default AudioManager;
