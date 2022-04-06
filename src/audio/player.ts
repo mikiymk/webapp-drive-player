@@ -1,13 +1,14 @@
 import Repeat from "./repeat";
-import ShufflableAudios from "./shufflableAudios";
+import ShuffleArray from "./ShuffleArray";
 import BufferLoader from "./bufferLoader";
 import AudioInfo from "./audioInfo";
+import IPlayer from "./IPlayer";
 
 /**
  * 音楽再生の管理
  */
 class AudioPlayer {
-  private audio = new Audio();
+  private player: IPlayer;
 
   private readonly buffer = new BufferLoader((id, info) =>
     this.loadInfo(id, info)
@@ -17,7 +18,7 @@ class AudioPlayer {
   );
 
   /** play music file list */
-  musicIds = new ShufflableAudios([], false);
+  musicIds = new ShuffleArray([], false);
 
   /** play music ids index */
   private index = NaN;
@@ -33,11 +34,14 @@ class AudioPlayer {
   onLoadInfo: (id: string, info: AudioInfo) => void = () => {};
   onChangeMusic: (id: string) => void = () => {};
 
-  constructor() {
-    this.audio.addEventListener("ended", () => this.onEnd());
-    this.audio.addEventListener("timeupdate", () => this.updateTime());
-    this.audio.addEventListener("durationchange", () => this.updateDuration());
+  constructor(player: IPlayer) {
+    this.player = player;
+    player.onEnd = () => this.onEnd();
+    player.changePause = pause => this.onSetPause(pause);
+    player.updateTime = time => this.onSetCurrentTime(time);
+    player.updateDuration = duration => this.onSetDuration(duration);
   }
+
   /**
    * 今の曲の再生バッファをロード
    */
@@ -96,7 +100,7 @@ class AudioPlayer {
    * リストと最初のインデックスを渡して再生を始める
    */
   playWithIdList(ids: string[], index: number) {
-    this.musicIds = new ShufflableAudios(ids, false);
+    this.musicIds = new ShuffleArray(ids, false);
     this.index = index;
 
     this.playAndLoad();
@@ -120,21 +124,14 @@ class AudioPlayer {
     if (this.buffer.loaded === null) {
       return;
     }
-    URL.revokeObjectURL(this.audio.src);
-    const src = URL.createObjectURL(this.buffer.loaded);
 
-    if (src === this.audio.src) {
-      return;
-    }
-
-    this.audio.src = src;
-    this.audio.load();
+    this.player.setBuffer(this.buffer.loaded);
     this.onChangeMusic(this.buffer.loadedID);
   }
 
   setRepeat(repeat: Repeat) {
     this.repeat = repeat;
-    this.audio.loop = repeat.value === "repeat one";
+    this.player.setLoop(repeat.value === "repeat one");
     this.onSetRepeat(repeat);
     this.loadNextBuffer();
   }
@@ -145,28 +142,8 @@ class AudioPlayer {
     this.loadNextBuffer();
   }
 
-  private setCurrentTime(currentTime: number) {
-    this.audio.currentTime = currentTime;
-    this.onSetCurrentTime(this.audio.currentTime);
-  }
-
-  private setPause(isPaused: boolean) {
-    this.isPaused = isPaused;
-    this.onSetPause(this.isPaused);
-  }
-
   private loadInfo(id: string, info: AudioInfo) {
     this.onLoadInfo(id, info);
-  }
-
-  /** コールバック用 曲を再生して現在の再生位置が変わった時 */
-  private updateTime() {
-    this.onSetCurrentTime(this.audio.currentTime);
-  }
-
-  /** コールバック用 新しい曲をロードして曲の長さが変わった時 */
-  private updateDuration() {
-    this.onSetDuration(this.audio.duration);
   }
 
   /** コールバック用 曲が終わった時 */
@@ -181,47 +158,26 @@ class AudioPlayer {
     }
   }
 
-  /** 先頭から再生 */
   start() {
-    if (!this.isPaused) return;
-    this.setCurrentTime(0);
-    this.play();
-  }
-
-  /** 停止して停止位置を先頭に戻す */
-  stop() {
-    if (this.isPaused) return;
-    this.pause();
-    this.setCurrentTime(0);
-  }
-
-  /** 記録された停止位置から再生 */
-  play() {
-    if (!this.isPaused) return;
-    this.setPause(false);
-
     this.setBuffer();
-    if (this.audio.src === "") return;
-
-    this.audio.play();
+    this.player.start();
   }
 
-  /** 停止して現在の位置を停止位置として記録 */
+  stop() {
+    this.player.stop();
+  }
+
+  play() {
+    this.setBuffer();
+    this.player.play();
+  }
+
   pause() {
-    if (this.isPaused) return;
-    this.setPause(true);
-    this.audio.pause();
+    this.player.pause();
   }
 
-  /** 再生位置を指定のものに変更 */
   seek(time: number) {
-    if (this.isPaused) {
-      this.setCurrentTime(time);
-    } else {
-      this.pause();
-      this.setCurrentTime(time);
-      this.play();
-    }
+    this.player.seek(time);
   }
 }
 

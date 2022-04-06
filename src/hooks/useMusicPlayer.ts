@@ -5,6 +5,7 @@ import Repeat from "audio/repeat";
 import { File } from "file";
 import AudioInfo from "audio/audioInfo";
 import { Files } from "components/MusicPlayer";
+import AudioElementPlayer from "audio/ElementPlayer";
 
 const useMusicPlayer = () => {
   const [files, setFiles] = useState<Files>({});
@@ -17,19 +18,20 @@ const useMusicPlayer = () => {
 
   const [info, setInfo] = useState(AudioInfo.getEmptyInfo());
 
-  const player = useRef<AudioPlayer | null>(null);
+  const manager = useRef<AudioPlayer | null>(null);
 
   useEffect(() => {
-    player.current = new AudioPlayer();
+    const player = new AudioElementPlayer();
+    manager.current = new AudioPlayer(player);
 
-    player.current.onSetDuration = duration => setDuration(duration);
-    player.current.onSetPause = paused => setPaused(paused);
-    player.current.onSetCurrentTime = currentTime =>
+    manager.current.onSetDuration = duration => setDuration(duration);
+    manager.current.onSetPause = paused => setPaused(paused);
+    manager.current.onSetCurrentTime = currentTime =>
       setCurrentTime(currentTime);
-    player.current.onSetRepeat = repeat => setRepeat(repeat);
-    player.current.onSetShuffle = shuffle => setShuffle(shuffle);
+    manager.current.onSetRepeat = repeat => setRepeat(repeat);
+    manager.current.onSetShuffle = shuffle => setShuffle(shuffle);
 
-    player.current.onLoadInfo = (id: string, info: AudioInfo) =>
+    manager.current.onLoadInfo = (id: string, info: AudioInfo) =>
       setFiles(files => {
         const newfile = { ...files };
         newfile[id].info = info;
@@ -38,8 +40,8 @@ const useMusicPlayer = () => {
   }, []);
 
   useEffect(() => {
-    if (player.current !== null) {
-      player.current.onChangeMusic = id =>
+    if (manager.current !== null) {
+      manager.current.onChangeMusic = id =>
         setInfo(files[id].info ?? AudioInfo.getEmptyInfo());
     }
   }, [files]);
@@ -57,7 +59,7 @@ const useMusicPlayer = () => {
     files,
     addFile,
     addFiles,
-    player: player.current,
+    player: manager.current,
     status: {
       paused,
       duration,

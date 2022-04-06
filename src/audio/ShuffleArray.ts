@@ -1,7 +1,7 @@
 /**
  * 元の並びを維持したままランダム並び替えをする配列
  */
-class ShufflableAudios implements Iterable<string> {
+class ShuffleArray implements Iterable<string> {
   private readonly _array: string[];
   private _indexArray: number[];
 
@@ -30,10 +30,10 @@ class ShufflableAudios implements Iterable<string> {
 
 /** ShuffleArray のイテレータ */
 class ShuffleIterator implements Iterator<string, undefined> {
-  private readonly _array: ShufflableAudios;
+  private readonly _array: ShuffleArray;
   private _index = 0;
 
-  constructor(array: ShufflableAudios) {
+  constructor(array: ShuffleArray) {
     this._array = array;
   }
 
@@ -84,4 +84,4 @@ const makeShuffledArray = (length: number, shuffled: boolean) => {
   }
 };
 
-export default ShufflableAudios;
+export default ShuffleArray;
