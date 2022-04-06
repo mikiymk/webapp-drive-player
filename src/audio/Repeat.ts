@@ -29,6 +29,8 @@ class Repeat {
         return Repeat.ONE;
       case "repeat one":
         return Repeat.OFF;
+      default:
+        return Repeat.DEFAULT;
     }
   }
 }

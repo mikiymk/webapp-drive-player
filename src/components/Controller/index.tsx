@@ -6,8 +6,8 @@ import MusicTitle from "./MusicTitle";
 import MusicTime from "./MusicTime";
 import SeekBar from "./SeekBar";
 
-import Repeat from "audio/repeat";
-import AudioInfo from "audio/audioInfo";
+import Repeat from "audio/Repeat";
+import AudioInfo from "audio/AudioInfo";
 import { style, styleIcon } from "./style";
 
 type Props = {
