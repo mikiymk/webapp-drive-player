@@ -1,6 +1,6 @@
 import React from "react";
 
-import AudioInfo from "audio/audioInfo";
+import AudioInfo from "audio/AudioInfo";
 import { Files } from "components/MusicPlayer";
 import useJacket from "hooks/useJacket";
 import { style } from "./style";

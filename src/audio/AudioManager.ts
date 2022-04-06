@@ -1,14 +1,14 @@
-import Repeat from "./repeat";
+import Repeat from "./Repeat";
 import ShuffleArray from "./ShuffleArray";
-import BufferLoader from "./bufferLoader";
-import AudioInfo from "./audioInfo";
-import IPlayer from "./IPlayer";
+import BufferLoader from "./BufferLoader";
+import AudioInfo from "./AudioInfo";
+import AudioPlayer from "./AudioPlayer";
 
 /**
  * 音楽再生の管理
  */
-class AudioPlayer {
-  private player: IPlayer;
+class AudioManager {
+  private player: AudioPlayer;
 
   private readonly buffer = new BufferLoader((id, info) =>
     this.loadInfo(id, info)
@@ -34,7 +34,7 @@ class AudioPlayer {
   onLoadInfo: (id: string, info: AudioInfo) => void = () => {};
   onChangeMusic: (id: string) => void = () => {};
 
-  constructor(player: IPlayer) {
+  constructor(player: AudioPlayer) {
     this.player = player;
     player.onEnd = () => this.onEnd();
     player.changePause = pause => this.onSetPause(pause);
@@ -181,4 +181,4 @@ class AudioPlayer {
   }
 }
 
-export default AudioPlayer;
+export default AudioManager;

@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 
-import AudioPlayer from "audio/player";
-import Repeat from "audio/repeat";
+import AudioManager from "audio/AudioManager";
+import Repeat from "audio/Repeat";
 import { File } from "file";
-import AudioInfo from "audio/audioInfo";
+import AudioInfo from "audio/AudioInfo";
 import { Files } from "components/MusicPlayer";
-import AudioElementPlayer from "audio/ElementPlayer";
+import AudioElementPlayer from "audio/AudioElementPlayer";
 
 const useMusicPlayer = () => {
   const [files, setFiles] = useState<Files>({});
@@ -18,11 +18,11 @@ const useMusicPlayer = () => {
 
   const [info, setInfo] = useState(AudioInfo.getEmptyInfo());
 
-  const manager = useRef<AudioPlayer | null>(null);
+  const manager = useRef<AudioManager | null>(null);
 
   useEffect(() => {
     const player = new AudioElementPlayer();
-    manager.current = new AudioPlayer(player);
+    manager.current = new AudioManager(player);
 
     manager.current.onSetDuration = duration => setDuration(duration);
     manager.current.onSetPause = paused => setPaused(paused);

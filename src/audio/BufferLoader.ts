@@ -1,5 +1,5 @@
 import { downloadFile } from "google-api/file";
-import AudioInfo from "./audioInfo";
+import AudioInfo from "./AudioInfo";
 
 /**
  * 非同期なダウンロードを管理する

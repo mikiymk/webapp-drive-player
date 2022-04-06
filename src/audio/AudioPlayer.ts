@@ -1,4 +1,4 @@
-interface IPlayer {
+interface AudioPlayer {
   onEnd: (() => void) | undefined;
   changePause: ((pause: boolean) => void) | undefined;
   updateTime: ((time: number) => void) | undefined;
@@ -24,4 +24,4 @@ interface IPlayer {
   seek(time: number): void;
 }
 
-export default IPlayer;
+export default AudioPlayer;

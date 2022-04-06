@@ -1,6 +1,6 @@
-import IPlayer from "./IPlayer";
+import AudioPlayer from "./AudioPlayer";
 
-class AudioElementPlayer implements IPlayer {
+class AudioElementPlayer implements AudioPlayer {
   private audio = new Audio();
 
   private blob = new Blob();

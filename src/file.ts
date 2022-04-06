@@ -6,7 +6,7 @@ import {
   uploadAppDataJson,
 } from "google-api/file";
 
-import AudioInfo from "audio/audioInfo";
+import AudioInfo from "audio/AudioInfo";
 
 export class File {
   constructor(
