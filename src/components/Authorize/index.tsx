@@ -2,22 +2,14 @@ import React from "react";
 
 import LabelIcon from "components/LabelIcon";
 
-import { signOut, signIn, loadAndInit } from "google-api/init";
+import useSignIn from "hooks/useSignIn";
 
 type Props = {
-  signIn: boolean;
-  setSignIn: (signIn: boolean) => void;
   style: string;
 };
 
-/**
- * authorize sign in or sign out button and error message
- */
-const Authorize: React.FC<Props> = ({ signIn: isSignIn, setSignIn, style }) => {
-  // init at first
-  React.useEffect(() => {
-    loadAndInit(isSignedIn => setSignIn(isSignedIn));
-  }, []);
+const Authorize: React.FC<Props> = ({ style }) => {
+  const { isSignIn, signOut, signIn } = useSignIn();
 
   const onClick = isSignIn ? signOut : signIn;
 

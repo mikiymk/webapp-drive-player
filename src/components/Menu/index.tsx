@@ -15,14 +15,12 @@ type Props = {
   items: {
     [name: string]: { name: string; icon: string; element: JSX.Element };
   };
-  signIn: boolean;
-  setSignIn: (signIn: boolean) => void;
 };
 
 /**
  * menu list click menu and change view
  */
-const Menu: React.FC<Props> = ({ items, signIn, setSignIn }) => {
+const Menu: React.FC<Props> = ({ items }) => {
   const [selected, setSelected] = React.useState("playing");
 
   const menuList = Object.entries(items).map(([id, { name, icon }]) => (
@@ -40,7 +38,7 @@ const Menu: React.FC<Props> = ({ items, signIn, setSignIn }) => {
     <div className={style}>
       <ul className={styleNav}>
         {menuList}
-        <Authorize signIn={signIn} setSignIn={setSignIn} style={styleNavItem} />
+        <Authorize style={styleNavItem} />
       </ul>
       <div className={styleContent}>{items[selected]?.element ?? null}</div>
     </div>

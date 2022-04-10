@@ -72,7 +72,7 @@ const MusicPlayer: React.FC = () => {
     drive: {
       name: "Google Drive",
       icon: "cloud",
-      element: <DriveFiles signIn={signIn} addFile={addFile} />,
+      element: <DriveFiles addFile={addFile} />,
     },
     settings: {
       name: "Settings",
@@ -87,7 +87,7 @@ const MusicPlayer: React.FC = () => {
     <RightMenuContext.Provider value={value.setRightMenu}>
       <div className={style}>
         {/* <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} /> */}
-        <RouteMenu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
+        <RouteMenu items={menuItems} />
 
         <Controller
           info={status.info}

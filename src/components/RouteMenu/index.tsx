@@ -10,19 +10,18 @@ import {
   styleNavItem,
   styleNavSelected,
 } from "./style";
+import Authorize from "components/Authorize";
 
 type Props = {
   items: {
     [name: string]: { name: string; icon: string; element: JSX.Element };
   };
-  signIn: boolean;
-  setSignIn: (signIn: boolean) => void;
 };
 
 /**
  * menu list click menu and change view
  */
-const RouteMenu: React.FC<Props> = ({ items, signIn, setSignIn }) => {
+const RouteMenu: React.FC<Props> = ({ items }) => {
   const [selected, setSelected] = React.useState("playing");
 
   const menuList = Object.entries(items).map(([id, { name, icon }]) => (
@@ -43,7 +42,10 @@ const RouteMenu: React.FC<Props> = ({ items, signIn, setSignIn }) => {
   return (
     <BrowserRouter>
       <div className={style}>
-        <nav className={styleNav}>{menuList}</nav>
+        <nav className={styleNav}>
+          {menuList}
+          <Authorize style={styleNavItem} />
+        </nav>
         <div className={styleContent}>
           <Routes>{itemList}</Routes>
         </div>
