@@ -12,7 +12,7 @@
     "start": "webpack serve --config=webpack.dev.js",
     "dev": "run-s check build:dev",
     "check": "run-p lint format test",
-    "format": "prettier -w src index.html",
+    "format": "prettier -w src",
     "lint": "eslint src"
   },
   "repository": {
@@ -73,6 +73,7 @@
     "@linaria/shaker": "^3.0.0-beta.15",
     "music-metadata-browser": "^2.5.5",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.3.0"
   }
 }

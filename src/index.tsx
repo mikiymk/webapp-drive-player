@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 import "css/style.css";
 
-import MusicPlayer from "component/MusicPlayer";
+import MusicPlayer from "components/MusicPlayer";
 
 ReactDOM.render(
   <React.StrictMode>
