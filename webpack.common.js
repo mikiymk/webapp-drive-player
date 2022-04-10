@@ -81,4 +81,8 @@ module.exports = {
     modules: ["node_modules"],
     plugins: [new TsConfigPathsPlugin()],
   },
+
+  devServer: {
+    historyApiFallback: true,
+  },
 };

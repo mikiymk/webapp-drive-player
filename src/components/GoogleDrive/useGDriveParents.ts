@@ -2,7 +2,6 @@ import { File } from "file";
 import { useState, useEffect } from "react";
 
 export const useGDriveParents = (
-  signIn: boolean,
   getAllFolders: (parent?: string | undefined) => Promise<File[]>,
   getAllMusics: (parent?: string | undefined) => Promise<File[]>
 ) => {
@@ -13,14 +12,12 @@ export const useGDriveParents = (
   const [folders, setFolders] = useState<File[]>([]);
 
   useEffect(() => {
-    if (signIn) {
-      const parentId = parents[parents.length - 1].id;
-      setFolders([]);
-      setFiles([]);
-      getAllFolders(parentId).then(setFolders);
-      getAllMusics(parentId).then(setFiles);
-    }
-  }, [signIn, parents]);
+    const parentId = parents[parents.length - 1].id;
+    setFolders([]);
+    setFiles([]);
+    getAllFolders(parentId).then(setFolders).catch(console.log);
+    getAllMusics(parentId).then(setFiles).catch(console.log);
+  }, [parents]);
 
   const addParents = (folder: File) => setParents(parents.concat([folder]));
   const move = (index: number) => setParents(parents.slice(0, index + 1));

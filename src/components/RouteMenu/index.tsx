@@ -1,8 +1,8 @@
 import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 import LabelIcon from "components/LabelIcon";
 
-import Authorize from "../Authorize";
 import {
   style,
   styleContent,
@@ -10,6 +10,7 @@ import {
   styleNavItem,
   styleNavSelected,
 } from "./style";
+import Authorize from "components/Authorize";
 
 type Props = {
   items: {
@@ -20,29 +21,37 @@ type Props = {
 /**
  * menu list click menu and change view
  */
-const Menu: React.FC<Props> = ({ items }) => {
+const RouteMenu: React.FC<Props> = ({ items }) => {
   const [selected, setSelected] = React.useState("playing");
 
   const menuList = Object.entries(items).map(([id, { name, icon }]) => (
-    <li
+    <Link
       key={id}
       className={
         id === selected ? `${styleNavItem} ${styleNavSelected}` : styleNavItem
       }
-      onClick={() => setSelected(id)}>
+      to={id}>
       <LabelIcon icon={icon} text={name} />
-    </li>
+    </Link>
+  ));
+
+  const itemList = Object.entries(items).map(([id, { element }]) => (
+    <Route key={id} path={id} element={element} />
   ));
 
   return (
-    <div className={style}>
-      <ul className={styleNav}>
-        {menuList}
-        <Authorize style={styleNavItem} />
-      </ul>
-      <div className={styleContent}>{items[selected]?.element ?? null}</div>
-    </div>
+    <BrowserRouter>
+      <div className={style}>
+        <nav className={styleNav}>
+          {menuList}
+          <Authorize style={styleNavItem} />
+        </nav>
+        <div className={styleContent}>
+          <Routes>{itemList}</Routes>
+        </div>
+      </div>
+    </BrowserRouter>
   );
 };
 
-export default Menu;
+export default RouteMenu;
