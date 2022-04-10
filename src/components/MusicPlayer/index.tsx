@@ -14,6 +14,7 @@ import Playlists from "../Playlist";
 import usePlaylist from "hooks/usePlaylist";
 import { style } from "./style";
 import useMusicPlayer from "hooks/useMusicPlayer";
+import RouteMenu from "components/RouteMenu";
 
 export type Files = {
   [name: string]: File;
@@ -85,7 +86,9 @@ const MusicPlayer: React.FC = () => {
   return (
     <RightMenuContext.Provider value={value.setRightMenu}>
       <div className={style}>
-        <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
+        {/* <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} /> */}
+        <RouteMenu items={menuItems} signIn={signIn} setSignIn={setSignIn} />
+
         <Controller
           info={status.info}
           duration={status.duration}
