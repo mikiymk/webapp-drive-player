@@ -2,7 +2,7 @@ import React from "react";
 
 import LabelIcon from "components/LabelIcon";
 
-import Authorize from "./Authorize";
+import Authorize from "../Authorize";
 import {
   style,
   styleContent,
