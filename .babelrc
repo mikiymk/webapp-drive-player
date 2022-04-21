@@ -9,5 +9,6 @@
       }
     ],
     "@linaria"
-  ]
+  ],
+  "plugins": ["@vanilla-extract/babel-plugin"]
 }

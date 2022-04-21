@@ -6,6 +6,7 @@ const TsConfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
+const { VanillaExtractPlugin } = require("@vanilla-extract/webpack-plugin");
 
 module.exports = {
   mode: "development",
@@ -26,6 +27,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "src/index.html",
     }),
+    new VanillaExtractPlugin(),
     new webpack.ProvidePlugin({
       Buffer: ["buffer", "Buffer"],
     }),
