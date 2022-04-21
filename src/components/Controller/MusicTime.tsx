@@ -1,7 +1,7 @@
 import React from "react";
 
 import { formatTime } from "format";
-import { styleTime } from "./style";
+import { styleTime } from "./style.css";
 
 type Props = {
   duration: number;

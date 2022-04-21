@@ -4,7 +4,7 @@ import MusicTitle from "./MusicTitle";
 import MusicTime from "./MusicTime";
 import SeekBar from "./SeekBar";
 
-import { style } from "./style";
+import { styleController } from "./style.css";
 import PrevButton from "./PrevButton";
 import NextButton from "./NextButton";
 import PlayButton from "./PlayButton";
@@ -59,7 +59,7 @@ const Controller: React.FC<Props> = ({
   return (
     <>
       <SeekBar duration={duration} time={currentTime} seek={seek} />
-      <div className={style}>
+      <div className={styleController}>
         <PrevButton prev={playPrev} />
         <PlayButton isPlaying={!paused} play={play} pause={pause} />
         <NextButton next={playNext} />

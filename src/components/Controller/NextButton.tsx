@@ -2,7 +2,7 @@ import React from "react";
 
 import IconButton from "components/IconButton";
 
-import { styleIcon } from "./style";
+import { styleIcon } from "./style.css";
 
 type Props = {
   next: () => void;
