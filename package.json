@@ -11,7 +11,7 @@
     "watch": "webpack --watch --config=webpack.dev.js",
     "start": "webpack serve --config=webpack.dev.js",
     "dev": "run-s check build:dev",
-    "check": "run-p lint format test",
+    "check": "run-s lint format test",
     "format": "prettier -w src",
     "lint": "eslint src"
   },
@@ -30,7 +30,6 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
     "@babel/preset-typescript": "^7.16.7",
-    "@linaria/webpack-loader": "^3.0.0-beta.16",
     "@types/gapi": "^0.0.41",
     "@types/gapi.auth2": "^0.0.56",
     "@types/gapi.client.drive": "^3.0.13",
@@ -69,10 +68,6 @@
     "workbox-webpack-plugin": "^6.5.1"
   },
   "dependencies": {
-    "@linaria/babel-preset": "^3.0.0-beta.15",
-    "@linaria/core": "^3.0.0-beta.15",
-    "@linaria/react": "^3.0.0-beta.15",
-    "@linaria/shaker": "^3.0.0-beta.15",
     "@vanilla-extract/css": "^1.7.0",
     "music-metadata-browser": "^2.5.5",
     "react": "^17.0.2",

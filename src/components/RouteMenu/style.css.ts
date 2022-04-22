@@ -1,4 +1,3 @@
-import { css } from "@linaria/core";
 import { style } from "@vanilla-extract/css";
 
 export const styleMenu = style({
