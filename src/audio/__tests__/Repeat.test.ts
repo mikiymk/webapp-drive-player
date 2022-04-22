@@ -1,4 +1,4 @@
-import Repeat from "audio/Repeat";
+import Repeat from "../Repeat";
 
 const list = [Repeat.DEFAULT, Repeat.OFF, Repeat.ON, Repeat.ONE];
 
