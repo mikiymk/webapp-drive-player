@@ -3,7 +3,7 @@ import React from "react";
 import { Breadcrumbs } from "./Breadcrumbs";
 
 import { getAllMusics, getAllFolders, File } from "file";
-import { style, styleItem, styleItemIcon } from "./style";
+import { styleDrive, styleItem, styleItemIcon } from "./style.css";
 
 import Icon from "components/GoogleIcon";
 import { useGDriveParents } from "./useGDriveParents";
@@ -20,7 +20,7 @@ const DriveFiles: React.FC<Props> = ({ addFile }) => {
   const { addParents, move, folders, files } = parents;
 
   return (
-    <div className={style}>
+    <div className={styleDrive}>
       <Breadcrumbs parents={parents.parents} move={move} />
       <ul className="drive-list">
         {folders.map(file => (

@@ -1,7 +1,7 @@
 import { File } from "file";
 import React from "react";
 import Download from "./Download";
-import { style } from "./style";
+import { styleSettings } from "./style.css";
 import Upload from "./Upload";
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
  */
 const Settings: React.FC<Props> = ({ files, addFiles }) => {
   return (
-    <div className={style}>
+    <div className={styleSettings}>
       <Upload files={files} />
       <Download addFiles={addFiles} />
     </div>

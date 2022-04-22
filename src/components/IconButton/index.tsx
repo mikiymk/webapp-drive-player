@@ -1,16 +1,7 @@
 import React from "react";
-import { css } from "@linaria/core";
 
 import Icon from "components/GoogleIcon";
-
-const style = css`
-  text-align: center;
-  vertical-align: middle;
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.2);
-  }
-`;
+import { styleIcon } from "./style.css";
 
 type Props = {
   icon: string;
@@ -20,14 +11,14 @@ type Props = {
 
 /** Google Material Icon ボタン */
 const IconButton: React.FC<Props> = ({ icon, onClick, className }) => {
-  let classes = `${style}`;
+  let classes = `${styleIcon}`;
   if (className !== undefined) {
-    classes = `${style} ${className}`;
+    classes = `${styleIcon} ${className}`;
   }
 
   return (
     <button onClick={onClick} className={classes}>
-      <Icon icon={icon} className={`${style}-icon`} />
+      <Icon icon={icon} className={`${styleIcon}-icon`} />
     </button>
   );
 };

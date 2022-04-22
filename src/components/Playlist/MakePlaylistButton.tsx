@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { styleMakePlaylist } from "./style";
+import { styleMakePlaylist } from "./style.css";
 
 type Props = {
   makePlaylist: (playlist: string) => void;

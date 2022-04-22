@@ -4,12 +4,12 @@ import LabelIcon from "components/LabelIcon";
 
 import Authorize from "../Authorize";
 import {
-  style,
+  styleMenu,
   styleContent,
   styleNav,
   styleNavItem,
   styleNavSelected,
-} from "./style";
+} from "./style.css";
 
 type Props = {
   items: {
@@ -35,7 +35,7 @@ const Menu: React.FC<Props> = ({ items }) => {
   ));
 
   return (
-    <div className={style}>
+    <div className={styleMenu}>
       <ul className={styleNav}>
         {menuList}
         <Authorize style={styleNavItem} />

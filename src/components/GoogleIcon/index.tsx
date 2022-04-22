@@ -1,5 +1,5 @@
 import React from "react";
-import { style } from "./style";
+import { styleIcon } from "./style.css";
 
 type Props = {
   icon: string;
@@ -8,9 +8,9 @@ type Props = {
 
 /** Google Material Icon */
 const Icon: React.FC<Props> = ({ icon, className }) => {
-  let classes = `material-icons-sharp ${style}`;
+  let classes = `material-icons-sharp ${styleIcon}`;
   if (className !== undefined) {
-    classes = `material-icons-sharp ${style} ${className}`;
+    classes = `material-icons-sharp ${styleIcon} ${className}`;
   }
 
   return <span className={classes}>{icon}</span>;

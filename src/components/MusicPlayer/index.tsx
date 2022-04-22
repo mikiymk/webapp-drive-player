@@ -12,7 +12,7 @@ import useRightMenuContext from "hooks/useRightMenuContext";
 import Settings from "../Settings";
 import Playlists from "../Playlist";
 import usePlaylist from "hooks/usePlaylist";
-import { style } from "./style";
+import { stylePlayer } from "./style.css";
 import useMusicPlayer from "hooks/useMusicPlayer";
 import RouteMenu from "components/RouteMenu";
 
@@ -85,7 +85,7 @@ const MusicPlayer: React.FC = () => {
 
   return (
     <RightMenuContext.Provider value={value.setRightMenu}>
-      <div className={style}>
+      <div className={stylePlayer}>
         {/* <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} /> */}
         <RouteMenu items={menuItems} />
 
