@@ -7,8 +7,7 @@
           "node": "current"
         }
       }
-    ],
-    "@linaria"
+    ]
   ],
   "plugins": ["@vanilla-extract/babel-plugin"]
 }
