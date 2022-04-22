@@ -4,7 +4,7 @@ import { Item } from "./Item";
 
 import { Files } from "components/MusicPlayer";
 
-import { style } from "./style";
+import { styleLibrary } from "./style.css";
 
 type Props = {
   files: Files;
@@ -23,7 +23,7 @@ const MusicList: React.FC<Props> = ({
   addToPlaylist,
 }) => {
   return (
-    <ul className={style}>
+    <ul className={styleLibrary}>
       {Object.values(files).map(({ id, name }, index) => (
         <Item
           key={id}

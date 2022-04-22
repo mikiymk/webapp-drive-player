@@ -1,10 +1,10 @@
 import React from "react";
 import renderer from "react-test-renderer";
-import Icon from "./index";
+import Icon from "../index";
 
-jest.mock("@linaria/core", () => {
+jest.mock("@vanilla-extract/css", () => {
   return {
-    css: jest.fn(() => "style-class"),
+    style: jest.fn(() => "style-class"),
   };
 });
 

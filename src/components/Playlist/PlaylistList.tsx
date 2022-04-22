@@ -2,7 +2,7 @@ import React from "react";
 import MakePlaylistButton from "./MakePlaylistButton";
 import useRightMenu from "hooks/useRightMenu";
 import IconButton from "components/IconButton";
-import { stylePlaylists } from "./style";
+import { stylePlaylists } from "./style.css";
 
 type Props = {
   playlists: Record<string, string[]>;

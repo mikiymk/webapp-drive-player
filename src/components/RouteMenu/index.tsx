@@ -4,12 +4,12 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import LabelIcon from "components/LabelIcon";
 
 import {
-  style,
+  styleMenu,
   styleContent,
   styleNav,
   styleNavItem,
   styleNavSelected,
-} from "./style";
+} from "./style.css";
 import Authorize from "components/Authorize";
 
 type Props = {
@@ -41,7 +41,7 @@ const RouteMenu: React.FC<Props> = ({ items }) => {
 
   return (
     <BrowserRouter>
-      <div className={style}>
+      <div className={styleMenu}>
         <nav className={styleNav}>
           {menuList}
           <Authorize style={styleNavItem} />

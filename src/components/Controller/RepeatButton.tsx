@@ -3,7 +3,7 @@ import React from "react";
 import Repeat from "audio/Repeat";
 import IconButton from "components/IconButton";
 
-import { styleIcon } from "./style";
+import { styleIcon } from "./style.css";
 
 type Props = {
   repeat: Repeat;

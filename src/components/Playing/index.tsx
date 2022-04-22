@@ -3,7 +3,7 @@ import React from "react";
 import AudioInfo from "audio/AudioInfo";
 import { Files } from "components/MusicPlayer";
 import useJacket from "hooks/useJacket";
-import { style } from "./style";
+import { stylePlaying } from "./style.css";
 
 type Props = {
   info: AudioInfo;
@@ -18,7 +18,7 @@ const PlayingInfo: React.FC<Props> = ({ files, info, playingList }) => {
   const jacket = useJacket(info.picture?.[0]);
 
   return (
-    <div className={style}>
+    <div className={stylePlaying}>
       <span>{info.album}</span>
       <img src={jacket} alt="album jacket" />
       <ol>

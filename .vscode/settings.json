@@ -2,5 +2,6 @@
   "eslint.options": {
     "ignorePattern": "webpack.*.js"
   },
-  "svg.preview.background": "dark-transparent"
+  "svg.preview.background": "dark-transparent",
+  "editor.formatOnSave": true
 }

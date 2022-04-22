@@ -4,7 +4,7 @@ import React from "react";
 import Item from "./Item";
 import useRightMenu from "hooks/useRightMenu";
 import RightMenuItem from "./RightMenuItem";
-import { style } from "./style";
+import { styleRightMenu } from "./style.css";
 
 type Props = {
   items: Item[];
@@ -16,7 +16,7 @@ type Props = {
 const RightMenu: React.FC<Props> = ({ items, top, left }) => {
   return (
     <div
-      className={style}
+      className={styleRightMenu}
       style={{
         visibility: items.length !== 0 ? "visible" : "hidden",
         top: `${Math.trunc(top)}px`,

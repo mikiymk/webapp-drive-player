@@ -1,7 +1,7 @@
 import React from "react";
 
 import Item from "./Item";
-import { styleHorizon, styleItem } from "./style";
+import { styleHorizon, styleItem } from "./style.css";
 
 type Props = {
   item: Item;

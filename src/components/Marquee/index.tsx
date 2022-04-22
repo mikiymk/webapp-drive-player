@@ -1,5 +1,5 @@
 import React from "react";
-import { style, styleInner } from "./style";
+import { styleMarquee, styleInner } from "./style.css";
 
 type Props = {
   children: React.ReactNode;
@@ -8,9 +8,9 @@ type Props = {
 
 /** CSSで横に動く */
 const Marquee: React.FC<Props> = ({ children, className }) => {
-  let classes = `${style}`;
+  let classes = `${styleMarquee}`;
   if (className !== undefined) {
-    classes = `${style} ${className}`;
+    classes = `${styleMarquee} ${className}`;
   }
 
   return (

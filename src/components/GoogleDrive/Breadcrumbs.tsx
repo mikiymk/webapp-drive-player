@@ -1,7 +1,7 @@
 import React from "react";
 
 import { File } from "file";
-import { styleBread, styleBreadcrumbs } from "./style";
+import { styleBread, styleBreadcrumbs } from "./style.css";
 
 type Props = {
   parents: File[];

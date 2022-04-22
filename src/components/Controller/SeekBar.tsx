@@ -1,5 +1,5 @@
 import React from "react";
-import { styleSeekBar } from "./style";
+import { styleSeekBar } from "./style.css";
 import useSeekTime from "./useSeekTime";
 
 type Props = {

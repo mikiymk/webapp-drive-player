@@ -1,15 +1,7 @@
 import React from "react";
-import { css } from "@linaria/core";
 
 import Icon from "components/GoogleIcon";
-
-const style = css`
-  vertical-align: bottom;
-
-  &-label {
-    margin-left: 0.5em;
-  }
-`;
+import { styleIcon, styleLabel } from "./style.css";
 
 type Props = {
   icon: string;
@@ -20,8 +12,8 @@ type Props = {
 const LabelIcon: React.FC<Props> = ({ icon, text }) => {
   return (
     <span>
-      <Icon icon={icon} className={style} />
-      <span className={`${style} ${style}-label`}>{text}</span>
+      <Icon icon={icon} className={styleIcon} />
+      <span className={`${styleIcon} ${styleLabel}`}>{text}</span>
     </span>
   );
 };
