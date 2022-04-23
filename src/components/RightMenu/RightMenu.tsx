@@ -1,8 +1,8 @@
-import IconButton from "components/IconButton";
+import IconButton from "~/components/IconButton";
 import React from "react";
 
 import Item from "./Item";
-import useRightMenu from "hooks/useRightMenu";
+import useRightMenu from "~/hooks/useRightMenu";
 import RightMenuItem from "./RightMenuItem";
 import { styleRightMenu } from "./style.css";
 

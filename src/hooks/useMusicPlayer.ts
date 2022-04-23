@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 
-import AudioManager from "audio/AudioManager";
-import Repeat from "audio/Repeat";
-import { File } from "file";
-import AudioInfo from "audio/AudioInfo";
-import { Files } from "components/MusicPlayer";
-import AudioElementPlayer from "audio/AudioElementPlayer";
+import AudioManager from "~/audio/AudioManager";
+import Repeat from "~/audio/Repeat";
+import { File } from "~/file";
+import AudioInfo from "~/audio/AudioInfo";
+import { Files } from "~/components/MusicPlayer";
+import AudioElementPlayer from "~/audio/AudioElementPlayer";
 
 const useMusicPlayer = () => {
   const [files, setFiles] = useState<Files>({});

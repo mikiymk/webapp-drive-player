@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
-import Icon from "components/GoogleIcon";
-import LabelIcon from "components/LabelIcon";
-import { downloadLibraryData, File } from "file";
+import Icon from "~/components/GoogleIcon";
+import LabelIcon from "~/components/LabelIcon";
+import { downloadLibraryData, File } from "~/file";
 import { styleDownload } from "./style.css";
 
 type Props = {

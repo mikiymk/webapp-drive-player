@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PlaylistList from "./PlaylistList";
 import Playlist from "./Playlist";
-import { File } from "file";
+import { File } from "~/file";
 
 type Props = {
   files: Record<string, File>;

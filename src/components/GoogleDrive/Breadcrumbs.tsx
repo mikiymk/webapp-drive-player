@@ -1,6 +1,6 @@
 import React from "react";
 
-import { File } from "file";
+import { File } from "~/file";
 import { styleBread, styleBreadcrumbs } from "./style.css";
 
 type Props = {

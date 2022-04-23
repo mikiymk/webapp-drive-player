@@ -6,15 +6,15 @@ import DriveFiles from "../GoogleDrive/index";
 import Menu from "../Menu/index";
 import Controller from "../Controller/index";
 
-import { File } from "file";
-import RightMenuContext from "components/RightMenu/Context";
-import useRightMenuContext from "hooks/useRightMenuContext";
+import { File } from "~/file";
+import RightMenuContext from "~/components/RightMenu/Context";
+import useRightMenuContext from "~/hooks/useRightMenuContext";
 import Settings from "../Settings";
 import Playlists from "../Playlist";
-import usePlaylist from "hooks/usePlaylist";
+import usePlaylist from "~/hooks/usePlaylist";
 import { stylePlayer } from "./style.css";
-import useMusicPlayer from "hooks/useMusicPlayer";
-import RouteMenu from "components/RouteMenu";
+import useMusicPlayer from "~/hooks/useMusicPlayer";
+import RouteMenu from "~/components/RouteMenu";
 
 export type Files = {
   [name: string]: File;

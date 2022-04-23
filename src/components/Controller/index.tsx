@@ -10,8 +10,8 @@ import NextButton from "./NextButton";
 import PlayButton from "./PlayButton";
 import RepeatButton from "./RepeatButton";
 import ShuffleButton from "./ShuffleButton";
-import Repeat from "audio/Repeat";
-import AudioInfo from "audio/AudioInfo";
+import Repeat from "~/audio/Repeat";
+import AudioInfo from "~/audio/AudioInfo";
 
 type Props = {
   info: AudioInfo;

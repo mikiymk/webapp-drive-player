@@ -2,7 +2,7 @@ import React from "react";
 
 import { Item } from "./Item";
 
-import { Files } from "components/MusicPlayer";
+import { Files } from "~/components/MusicPlayer";
 
 import { styleLibrary } from "./style.css";
 

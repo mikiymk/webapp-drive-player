@@ -1,6 +1,6 @@
 import React from "react";
 
-import Icon from "components/GoogleIcon";
+import Icon from "~/components/GoogleIcon";
 import { styleIcon } from "./style.css";
 
 type Props = {

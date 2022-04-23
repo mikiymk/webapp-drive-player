@@ -1,6 +1,6 @@
 import React from "react";
 
-import LabelIcon from "components/LabelIcon";
+import LabelIcon from "~/components/LabelIcon";
 import { styleButton } from "./style.css";
 
 type Props = {

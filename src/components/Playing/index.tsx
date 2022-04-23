@@ -1,8 +1,8 @@
 import React from "react";
 
-import AudioInfo from "audio/AudioInfo";
-import { Files } from "components/MusicPlayer";
-import useJacket from "hooks/useJacket";
+import AudioInfo from "~/audio/AudioInfo";
+import { Files } from "~/components/MusicPlayer";
+import useJacket from "~/hooks/useJacket";
 import { stylePlaying } from "./style.css";
 
 type Props = {

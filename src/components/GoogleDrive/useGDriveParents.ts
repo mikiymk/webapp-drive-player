@@ -1,4 +1,4 @@
-import { File } from "file";
+import { File } from "~/file";
 import { useState, useEffect } from "react";
 
 export const useGDriveParents = (

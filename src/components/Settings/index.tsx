@@ -1,4 +1,4 @@
-import { File } from "file";
+import { File } from "~/file";
 import React from "react";
 import Download from "./Download";
 import { styleSettings } from "./style.css";
