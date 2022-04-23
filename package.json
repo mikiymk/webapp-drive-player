@@ -5,15 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "npm run build:prod",
-    "build:prod": "webpack --config=webpack.prod.js --node-env=production",
-    "build:dev": "webpack --config=webpack.dev.js",
-    "watch": "webpack --watch --config=webpack.dev.js",
-    "start": "webpack serve --config=webpack.dev.js",
-    "dev": "run-s check build:dev",
-    "check": "run-s lint format test",
-    "format": "prettier -w src",
-    "lint": "eslint src"
+    "build": "vite build",
+    "start": "vite",
+    "check": "run-s type lint format test",
+    "format": "prettier -w index.html src",
+    "lint": "eslint src",
+    "type": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
