@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
-import LabelIcon from "components/LabelIcon";
+import LabelIcon from "~/components/LabelIcon";
 
 import {
   styleMenu,
@@ -10,7 +10,7 @@ import {
   styleNavItem,
   styleNavSelected,
 } from "./style.css";
-import Authorize from "components/Authorize";
+import Authorize from "~/components/Authorize";
 
 type Props = {
   items: {

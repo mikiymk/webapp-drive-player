@@ -1,7 +1,7 @@
 import React from "react";
 
-import Icon from "components/GoogleIcon";
-import useRightMenu from "hooks/useRightMenu";
+import Icon from "~/components/GoogleIcon";
+import useRightMenu from "~/hooks/useRightMenu";
 
 type Props = {
   id: string;

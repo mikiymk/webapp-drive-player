@@ -1,8 +1,8 @@
 import React from "react";
 
-import LabelIcon from "components/LabelIcon";
+import LabelIcon from "~/components/LabelIcon";
 
-import useSignIn from "hooks/useSignIn";
+import useSignIn from "~/hooks/useSignIn";
 
 type Props = {
   style: string;

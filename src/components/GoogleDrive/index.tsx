@@ -2,10 +2,10 @@ import React from "react";
 
 import { Breadcrumbs } from "./Breadcrumbs";
 
-import { getAllMusics, getAllFolders, File } from "file";
+import { getAllMusics, getAllFolders, File } from "~/file";
 import { styleDrive, styleItem, styleItemIcon } from "./style.css";
 
-import Icon from "components/GoogleIcon";
+import Icon from "~/components/GoogleIcon";
 import { useGDriveParents } from "./useGDriveParents";
 
 type Props = {

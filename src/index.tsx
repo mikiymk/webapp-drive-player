@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import "css/style.css";
+import "~/css/style.css";
 
-import MusicPlayer from "components/MusicPlayer";
+import MusicPlayer from "~/components/MusicPlayer";
 
 ReactDOM.render(
   <React.StrictMode>
