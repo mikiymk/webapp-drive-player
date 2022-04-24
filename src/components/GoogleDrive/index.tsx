@@ -9,14 +9,15 @@ import Icon from "~/components/GoogleIcon";
 import { useGDriveParents } from "./useGDriveParents";
 
 type Props = {
+  accessToken: string;
   addFile: (file: File) => void;
 };
 
 /**
  * get files from google drive
  */
-const DriveFiles: React.FC<Props> = ({ addFile }) => {
-  const parents = useGDriveParents(getAllFolders, getAllMusics);
+const DriveFiles: React.FC<Props> = ({ accessToken, addFile }) => {
+  const parents = useGDriveParents(accessToken, getAllFolders, getAllMusics);
   const { addParents, move, folders, files } = parents;
 
   return (

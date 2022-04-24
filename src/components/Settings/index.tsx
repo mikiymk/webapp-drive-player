@@ -7,16 +7,17 @@ import Upload from "./Upload";
 type Props = {
   files: File[];
   addFiles: (file: File[]) => void;
+  accessToken: string;
 };
 
 /**
  * now playing audio info view
  */
-const Settings: React.FC<Props> = ({ files, addFiles }) => {
+const Settings: React.FC<Props> = ({ files, addFiles, accessToken }) => {
   return (
     <div className={styleSettings}>
-      <Upload files={files} />
-      <Download addFiles={addFiles} />
+      <Upload files={files} accessToken={accessToken} />
+      <Download addFiles={addFiles} accessToken={accessToken} />
     </div>
   );
 };

@@ -15,6 +15,7 @@ import usePlaylist from "~/hooks/usePlaylist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import RouteMenu from "~/components/RouteMenu";
+import useSignIn from "~/hooks/useSignIn";
 
 export type Files = {
   [name: string]: File;
@@ -24,8 +25,10 @@ export type Files = {
  * react component root.
  */
 const MusicPlayer: React.FC = () => {
-  const [signIn, setSignIn] = useState(false);
-  const { files, addFile, addFiles, player, status } = useMusicPlayer();
+  const auth = useSignIn();
+  const { files, addFile, addFiles, player, status } = useMusicPlayer(
+    auth.accessToken
+  );
   const playlist = usePlaylist();
 
   const playWithIdList = (idList: string[], index: number) => {
@@ -72,12 +75,18 @@ const MusicPlayer: React.FC = () => {
     drive: {
       name: "Google Drive",
       icon: "cloud",
-      element: <DriveFiles addFile={addFile} />,
+      element: <DriveFiles addFile={addFile} accessToken={auth.accessToken} />,
     },
     settings: {
       name: "Settings",
       icon: "settings",
-      element: <Settings files={Object.values(files)} addFiles={addFiles} />,
+      element: (
+        <Settings
+          files={Object.values(files)}
+          addFiles={addFiles}
+          accessToken={auth.accessToken}
+        />
+      ),
     },
   };
 
@@ -87,7 +96,7 @@ const MusicPlayer: React.FC = () => {
     <RightMenuContext.Provider value={value.setRightMenu}>
       <div className={stylePlayer}>
         {/* <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} /> */}
-        <RouteMenu items={menuItems} />
+        <RouteMenu items={menuItems} auth={auth} />
 
         <Controller
           info={status.info}

@@ -1,18 +1,23 @@
 import { useState, useEffect } from "react";
-
-import { signOut, signIn, loadAndInit } from "~/google-api/init";
+import { initClient } from "~/google/init";
 
 const useSignIn = () => {
-  const [isSignIn, setSignIn] = useState(false);
+  const [accessToken, setAccessToken] = useState("");
+  const [client, setClient] = useState({ requestAccessToken: () => {} });
 
   useEffect(() => {
-    loadAndInit(isSignedIn => setSignIn(isSignedIn));
+    const client = initClient(response =>
+      setAccessToken(response.access_token)
+    );
+
+    setClient(client);
   }, []);
 
   return {
-    isSignIn,
-    signIn,
-    signOut,
+    accessToken,
+    isSignIn: accessToken.length !== 0,
+    signIn: () => client.requestAccessToken(),
+    signOut: () => setAccessToken(""),
   };
 };
 

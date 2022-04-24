@@ -5,43 +5,70 @@ const GET_PAGE_SIZE = 100;
  * @param query 検索クエリ文字列 https://developers.google.com/drive/api/v3/ref-search-terms
  * @param token ページトークン
  */
-export const getList = async (query: string, token?: string) => {
-  const response = await gapi.client.drive.files.list({
-    fields: "nextPageToken, files(id, name)",
-    pageSize: GET_PAGE_SIZE,
-    pageToken: token,
-    orderBy: "name",
-    q: query,
+export const getList = async (
+  accessToken: string,
+  query: string,
+  token?: string
+) => {
+  const url =
+    "https://www.googleapis.com/drive/v3/files?" +
+    Object.entries({
+      fields: "nextPageToken, files(id, name)",
+      pageSize: GET_PAGE_SIZE,
+      pageToken: token,
+      orderBy: "name",
+      q: query,
+    })
+      .map(([key, value]) => `${key}=${encodeURIComponent(value ?? "")}`)
+      .join("&");
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
 
-  return response.result;
+  return response.json();
 };
 
-export const getAppDataList = async (query: string, token?: string) => {
-  const response = await gapi.client.drive.files.list({
-    spaces: "appDataFolder",
-    fields: "nextPageToken, files(id, name)",
-    pageSize: GET_PAGE_SIZE,
-    pageToken: token,
-    orderBy: "name",
-    q: query,
+export const getAppDataList = async (
+  accessToken: string,
+  query: string,
+  token?: string
+) => {
+  const url =
+    "https://www.googleapis.com/drive/v3/files?" +
+    Object.entries({
+      spaces: "appDataFolder",
+      fields: "nextPageToken, files(id, name)",
+      pageSize: GET_PAGE_SIZE,
+      pageToken: token,
+      orderBy: "name",
+      q: query,
+    })
+      .map(([key, value]) => `${key}=${encodeURIComponent(value ?? "")}`)
+      .join("&");
+
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
 
-  return response.result;
+  return response.json();
 };
 
 /**
  * Google Drive からファイルをダウンロードする
  * @returns エラーなら `null`
  */
-export const downloadFile = async (fileId: string) => {
+export const downloadFile = async (accessToken: string, fileId: string) => {
   console.log(`download file ID ${fileId}`);
   try {
-    const token = gapi.client.getToken().access_token;
     const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
     const response = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 
@@ -88,8 +115,11 @@ const getMultipartBody = (data: object, metadata: object) => {
   return multipartBody;
 };
 
-export const uploadAppDataJson = async (fileId: string, data: object) => {
-  const token = gapi.client.getToken().access_token;
+export const uploadAppDataJson = async (
+  accessToken: string,
+  fileId: string,
+  data: object
+) => {
   const url = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`;
 
   const multipartBody = getMultipartBody(data, {});
@@ -97,7 +127,7 @@ export const uploadAppDataJson = async (fileId: string, data: object) => {
   const response = await fetch(url, {
     method: "PATCH",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-Type": "multipart/related; boundary=_boundary",
       "Content-Length": multipartBody.length.toString(),
     },
@@ -108,8 +138,11 @@ export const uploadAppDataJson = async (fileId: string, data: object) => {
   return response;
 };
 
-export const createAppDataJson = async (fileName: string, data: object) => {
-  const token = gapi.client.getToken().access_token;
+export const createAppDataJson = async (
+  accessToken: string,
+  fileName: string,
+  data: object
+) => {
   const url =
     "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
 
@@ -121,7 +154,7 @@ export const createAppDataJson = async (fileName: string, data: object) => {
   const response = await fetch(url, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${accessToken}`,
       "Content-Type": "multipart/related; boundary=_boundary",
       "Content-Length": multipartBody.length.toString(),
     },

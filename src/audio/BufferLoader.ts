@@ -16,6 +16,8 @@ class BufferLoader {
 
   private setInfo: (id: string, info: AudioInfo) => void;
 
+  private accessToken = "";
+
   constructor(setInfo: (id: string, info: AudioInfo) => void) {
     this.setInfo = setInfo;
   }
@@ -40,7 +42,7 @@ class BufferLoader {
     }
 
     try {
-      const fileData = await downloadFile(id);
+      const fileData = await downloadFile(this.accessToken, id);
 
       if (fileData === null) {
         return this.loaded;
@@ -78,6 +80,10 @@ class BufferLoader {
 
   get isLoaded() {
     return this.loadedID === this.willLoadID;
+  }
+
+  setAccessToken(accessToken: string) {
+    this.accessToken = accessToken;
   }
 }
 

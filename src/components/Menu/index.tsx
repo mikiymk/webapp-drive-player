@@ -15,12 +15,19 @@ type Props = {
   items: {
     [name: string]: { name: string; icon: string; element: JSX.Element };
   };
+
+  auth: {
+    accessToken: string;
+    isSignIn: boolean;
+    signIn: () => void;
+    signOut: () => void;
+  };
 };
 
 /**
  * menu list click menu and change view
  */
-const Menu: React.FC<Props> = ({ items }) => {
+const Menu: React.FC<Props> = ({ items, auth }) => {
   const [selected, setSelected] = React.useState("playing");
 
   const menuList = Object.entries(items).map(([id, { name, icon }]) => (
@@ -38,7 +45,7 @@ const Menu: React.FC<Props> = ({ items }) => {
     <div className={styleMenu}>
       <ul className={styleNav}>
         {menuList}
-        <Authorize style={styleNavItem} />
+        <Authorize style={styleNavItem} auth={auth} />
       </ul>
       <div className={styleContent}>{items[selected]?.element ?? null}</div>
     </div>

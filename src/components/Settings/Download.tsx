@@ -6,20 +6,21 @@ import { downloadLibraryData, File } from "~/file";
 import { styleDownload } from "./style.css";
 
 type Props = {
+  accessToken: string;
   addFiles: (file: File[]) => void;
 };
 
 /**
  * now playing audio info view
  */
-const Download: React.FC<Props> = ({ addFiles }) => {
+const Download: React.FC<Props> = ({ accessToken, addFiles }) => {
   const [status, setStatus] = useState("");
   return (
     <div className={styleDownload}>
       <button
         onClick={() => {
           setStatus("pending_actions");
-          downloadLibraryData().then(files => {
+          downloadLibraryData(accessToken).then(files => {
             if (files !== undefined) {
               addFiles(files);
               setStatus("done");

@@ -142,6 +142,11 @@ class AudioManager {
     this.loadNextBuffer();
   }
 
+  setAccessToken(accessToken: string) {
+    this.buffer.setAccessToken(accessToken);
+    this.nextBuffer.setAccessToken(accessToken);
+  }
+
   private loadInfo(id: string, info: AudioInfo) {
     this.onLoadInfo(id, info);
   }
