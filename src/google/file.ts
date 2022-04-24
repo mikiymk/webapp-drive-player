@@ -9,7 +9,10 @@ export const getList = async (
   accessToken: string,
   query: string,
   token?: string
-) => {
+): Promise<{
+  files: { id: string; name: string }[];
+  nextPageToken?: string;
+}> => {
   const url =
     "https://www.googleapis.com/drive/v3/files?" +
     Object.entries({
@@ -27,8 +30,10 @@ export const getList = async (
       Authorization: `Bearer ${accessToken}`,
     },
   });
+  const json = await response.json();
+  console.log(json);
 
-  return response.json();
+  return json;
 };
 
 export const getAppDataList = async (

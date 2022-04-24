@@ -4,7 +4,7 @@ import {
   getAppDataList,
   getList,
   uploadAppDataJson,
-} from "~/google-api/file";
+} from "~/google/file";
 
 import AudioInfo from "~/audio/AudioInfo";
 
@@ -28,7 +28,7 @@ const getPagedFiles = async (
 ): Promise<Result> => {
   const result = await getList(accessToken, query, token);
 
-  const rowFiles: { id: string; name: string }[] = result.files ?? [];
+  const rowFiles = result.files ?? [];
   const files = rowFiles.flatMap(({ id, name }) => {
     if (id !== undefined && name !== undefined) return [new File(id, name)];
     else return [];

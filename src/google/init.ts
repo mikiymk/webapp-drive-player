@@ -1,9 +1,10 @@
 import { CLIENT_ID, SCOPES } from "./key";
+import { authResult, TokenClient } from "./TokenClient";
 
-export const initClient = (callback: (response: Responce) => void) => {
-  return google.accounts.oauth2.initTokenClient({
+export const initClient = (callback: (response: authResult) => void) => {
+  return new TokenClient({
     // eslint-disable-next-line camelcase
-    client_id: CLIENT_ID,
+    clientId: CLIENT_ID,
     scope: SCOPES,
     callback: response => {
       callback(response);
