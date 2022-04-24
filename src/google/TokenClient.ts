@@ -46,22 +46,20 @@ const setEventListener = function (tokenClient: TokenClient) {
   window.addEventListener(
     "message",
     function (b) {
-      try {
-        console.log("onmessage", b, JSON.parse(b.data));
-        if (b.data) {
-          const c = JSON.parse(b.data).params;
-          if (
-            c &&
-            tokenClient.authID &&
-            c.id === tokenClient.authID &&
-            c.clientId === tokenClient.option.clientId &&
-            "authResult" === c.type
-          ) {
-            tokenClient.authID = undefined;
-            tokenClient.callback(c.authResult);
-          }
+      console.log("onmessage", b, JSON.parse(b.data));
+      if (b.data) {
+        const c = JSON.parse(b.data).params;
+        if (
+          c &&
+          tokenClient.authID &&
+          c.id === tokenClient.authID &&
+          c.clientId === tokenClient.option.clientId &&
+          "authResult" === c.type
+        ) {
+          tokenClient.authID = undefined;
+          tokenClient.callback(c.authResult);
         }
-      } catch (d) {}
+      }
     },
     false
   );
