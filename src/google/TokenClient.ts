@@ -17,11 +17,10 @@ export class TokenClient {
   authID: string | undefined;
   isSettedListener: boolean;
 
-  callback: (result: authResult) => void;
+  resolve: ((result: authResult) => void) | undefined;
+  reject: ((error: unknown) => void) | undefined;
 
-  constructor(
-    option: TokenClientOption & { callback: (result: authResult) => void }
-  ) {
+  constructor(option: TokenClientOption) {
     this.authUrl = "https://accounts.google.com/o/oauth2/auth";
     this.option = {
       clientId: option.clientId,
@@ -29,14 +28,19 @@ export class TokenClient {
     };
     this.authID = undefined;
     this.isSettedListener = false;
-
-    this.callback = option.callback;
   }
 
-  requestAccessToken() {
+  requestAccessToken(): Promise<authResult> {
+    if (this.resolve) return Promise.reject("duplicate request is ignored");
+    const client = this;
+    const promise = new Promise<authResult>((resolve, reject) => {
+      client.resolve = value => resolve(value);
+      client.reject = reason => reject(reason);
+    });
     setEventListener(this);
     setRedirectUri(this, this.option);
     openWindow(getUrlQuery(this.authUrl, this.option));
+    return promise;
   }
 }
 
@@ -45,20 +49,30 @@ const setEventListener = function (tokenClient: TokenClient) {
   tokenClient.isSettedListener = true;
   window.addEventListener(
     "message",
-    function (b) {
-      console.log("onmessage", b, JSON.parse(b.data));
-      if (b.data) {
-        const c = JSON.parse(b.data).params;
-        if (
-          c &&
-          tokenClient.authID &&
-          c.id === tokenClient.authID &&
-          c.clientId === tokenClient.option.clientId &&
-          "authResult" === c.type
-        ) {
-          tokenClient.authID = undefined;
-          tokenClient.callback(c.authResult);
+    function (event) {
+      try {
+        console.log(event);
+
+        if (event.data) {
+          const params = JSON.parse(event.data).params;
+          console.log(params);
+          if (
+            params &&
+            tokenClient.authID &&
+            params.id === tokenClient.authID &&
+            params.clientId === tokenClient.option.clientId &&
+            "authResult" === params.type
+          ) {
+            tokenClient.authID = undefined;
+            tokenClient.resolve && tokenClient.resolve(params.authResult);
+            tokenClient.resolve = undefined;
+            tokenClient.reject = undefined;
+          }
         }
+      } catch (error) {
+        tokenClient.reject && tokenClient.reject(error);
+        tokenClient.resolve = undefined;
+        tokenClient.reject = undefined;
       }
     },
     false
@@ -74,7 +88,6 @@ const setRedirectUri = function (
   const protocol =
     0 < i ? location.protocol.substring(0, i) : location.protocol;
   option.redirectUri = `storagerelay://${protocol}/${location.host}?id=${tokenClient.authID}`;
-  console.log("seturi", option.redirectUri);
 };
 
 const pushQuery = function (arr: string[], key: string, value?: string) {
@@ -87,13 +100,12 @@ const getUrlQuery = function (url: string, option: TokenClientOption) {
   pushQuery(queryArray, "client_id", option.clientId);
   pushQuery(queryArray, "scope", option.scope);
   pushQuery(queryArray, "redirect_uri", option.redirectUri);
-  pushQuery(queryArray, "prompt", "select_account");
+  pushQuery(queryArray, "prompt", "");
   pushQuery(queryArray, "response_type", "token");
   pushQuery(queryArray, "include_granted_scopes", "true");
   pushQuery(queryArray, "enable_serial_consent", "true");
 
   const query = url + "?" + queryArray.join("&");
-  console.log("urlquery", query);
   return query;
 };
 

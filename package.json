@@ -10,7 +10,9 @@
     "check": "run-s type lint format test",
     "format": "prettier -w index.html src",
     "lint": "eslint src",
-    "type": "tsc --noEmit"
+    "type": "tsc --noEmit",
+    "watch:type": "tsc --noEmit --watch",
+    "watch": "run-p watch:type start"
   },
   "repository": {
     "type": "git",

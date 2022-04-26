@@ -1,13 +1,10 @@
 import { CLIENT_ID, SCOPES } from "./key";
-import { authResult, TokenClient } from "./TokenClient";
+import { TokenClient } from "./TokenClient";
 
-export const initClient = (callback: (response: authResult) => void) => {
+export const initClient = () => {
   return new TokenClient({
     // eslint-disable-next-line camelcase
     clientId: CLIENT_ID,
     scope: SCOPES,
-    callback: response => {
-      callback(response);
-    },
   });
 };
