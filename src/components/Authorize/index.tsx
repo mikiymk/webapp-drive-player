@@ -2,15 +2,19 @@ import React from "react";
 
 import LabelIcon from "~/components/LabelIcon";
 
-import useSignIn from "~/hooks/useSignIn";
-
 type Props = {
   style: string;
+  auth: {
+    isSignIn: boolean;
+    signIn: () => void;
+    signOut: () => void;
+  };
 };
 
-const Authorize: React.FC<Props> = ({ style }) => {
-  const { isSignIn, signOut, signIn } = useSignIn();
-
+const Authorize: React.FC<Props> = ({
+  style,
+  auth: { isSignIn, signIn, signOut },
+}) => {
   const onClick = isSignIn ? signOut : signIn;
 
   return (

@@ -4,7 +4,7 @@ import {
   getAppDataList,
   getList,
   uploadAppDataJson,
-} from "~/google-api/file";
+} from "~/google/file";
 
 import AudioInfo from "~/audio/AudioInfo";
 
@@ -22,10 +22,11 @@ type Result = [File[], string | undefined];
 
 /** ファイルリストの一部を入手 */
 const getPagedFiles = async (
+  accessToken: string,
   query: string,
   token?: string
 ): Promise<Result> => {
-  const result = await getList(query, token);
+  const result = await getList(accessToken, query, token);
 
   const rowFiles = result.files ?? [];
   const files = rowFiles.flatMap(({ id, name }) => {
@@ -38,13 +39,17 @@ const getPagedFiles = async (
 };
 
 /** ファイルリストをまとめて全ファイルリストを入手 */
-const getAllFiles = async (query: string) => {
+const getAllFiles = async (accessToken: string, query: string) => {
   let token = undefined;
   let isFirst = true;
   let allFiles: File[] = [];
 
   while (token || isFirst) {
-    const [paged, next]: Result = await getPagedFiles(query, token);
+    const [paged, next]: Result = await getPagedFiles(
+      accessToken,
+      query,
+      token
+    );
 
     allFiles = allFiles.concat(paged);
     token = next;
@@ -59,8 +64,9 @@ const getAllFiles = async (query: string) => {
  * @param parent 親フォルダID
  * @returns folders list in parent folder
  */
-export const getAllFolders = async (parent?: string) =>
+export const getAllFolders = async (accessToken: string, parent?: string) =>
   getAllFiles(
+    accessToken,
     `mimeType = 'application/vnd.google-apps.folder' and parents in '${
       parent ?? "root"
     }'`
@@ -71,40 +77,43 @@ export const getAllFolders = async (parent?: string) =>
  * @param parent 親フォルダID
  * @returns music files list in parent folder
  */
-export const getAllMusics = async (parent?: string) =>
+export const getAllMusics = async (accessToken: string, parent?: string) =>
   getAllFiles(
+    accessToken,
     `mimeType contains 'audio/' and parents in '${parent ?? "root"}'`
   );
 
-const getLibraryID = async (): Promise<string | undefined> =>
-  getAppDataList("name = 'library.json'").then(result => {
+const getLibraryID = async (accessToken: string): Promise<string | undefined> =>
+  getAppDataList(accessToken, "name = 'library.json'").then(result => {
     console.log(result);
     return result.files ? result.files[0]?.id : undefined;
   });
 
-export const uploadLibraryData = async (files: File[]) => {
+export const uploadLibraryData = async (accessToken: string, files: File[]) => {
   const filesData = files.map(file => ({
     id: file.id,
     name: file.name,
     info: file.info,
   }));
 
-  const id = await getLibraryID();
+  const id = await getLibraryID(accessToken);
 
   if (id !== undefined) {
-    return uploadAppDataJson(id, filesData);
+    return uploadAppDataJson(accessToken, id, filesData);
   } else {
-    return createAppDataJson("library.json", filesData);
+    return createAppDataJson(accessToken, "library.json", filesData);
   }
 };
 
-export const downloadLibraryData = async (): Promise<File[] | undefined> => {
-  const id = await getLibraryID();
+export const downloadLibraryData = async (
+  accessToken: string
+): Promise<File[] | undefined> => {
+  const id = await getLibraryID(accessToken);
 
   if (id === undefined) {
     return;
   }
-  const response = await downloadFile(id);
+  const response = await downloadFile(accessToken, id);
   if (response === null) {
     return;
   }

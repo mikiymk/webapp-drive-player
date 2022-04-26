@@ -7,7 +7,7 @@ import AudioInfo from "~/audio/AudioInfo";
 import { Files } from "~/components/MusicPlayer";
 import AudioElementPlayer from "~/audio/AudioElementPlayer";
 
-const useMusicPlayer = () => {
+const useMusicPlayer = (accessToken: string) => {
   const [files, setFiles] = useState<Files>({});
 
   const [paused, setPaused] = useState(true);
@@ -45,6 +45,12 @@ const useMusicPlayer = () => {
         setInfo(files[id].info ?? AudioInfo.getEmptyInfo());
     }
   }, [files]);
+
+  useEffect(() => {
+    if (manager.current !== null) {
+      manager.current.setAccessToken(accessToken);
+    }
+  }, [accessToken]);
 
   const addFiles = (newFiles: File[]) =>
     setFiles(files => ({
