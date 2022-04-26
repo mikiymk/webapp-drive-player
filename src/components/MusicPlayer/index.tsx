@@ -95,8 +95,7 @@ const MusicPlayer: React.FC = () => {
   return (
     <RightMenuContext.Provider value={value.setRightMenu}>
       <div className={stylePlayer}>
-        {/* <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} /> */}
-        <RouteMenu items={menuItems} auth={auth} />
+        <Menu items={menuItems} auth={auth} />
 
         <Controller
           info={status.info}
