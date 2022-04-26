@@ -15,10 +15,10 @@ export class TokenClient {
   option: TokenClientOption;
 
   authID: string | undefined;
-  isSettedListener: boolean;
+  isSetted: boolean;
 
-  resolve: ((result: authResult) => void) | undefined;
-  reject: ((error: unknown) => void) | undefined;
+  resolve: ((value: authResult) => void) | undefined;
+  reject: ((reason: unknown) => void) | undefined;
 
   constructor(option: TokenClientOption) {
     this.authUrl = "https://accounts.google.com/o/oauth2/auth";
@@ -27,7 +27,31 @@ export class TokenClient {
       scope: option.scope,
     };
     this.authID = undefined;
-    this.isSettedListener = false;
+    this.isSetted = false;
+  }
+
+  private onMessage(event: MessageEvent<any>) {
+    try {
+      if (event.data) {
+        const params = JSON.parse(event.data).params;
+        if (
+          params &&
+          this.authID &&
+          params.id === this.authID &&
+          params.clientId === this.option.clientId &&
+          "authResult" === params.type
+        ) {
+          this.authID = undefined;
+          this.resolve && this.resolve(params.authResult);
+        }
+      }
+    } catch (error) {
+      this.reject && this.reject(error);
+    } finally {
+      this.reject && this.reject(event);
+      this.resolve = undefined;
+      this.reject = undefined;
+    }
   }
 
   requestAccessToken(): Promise<authResult> {
@@ -37,76 +61,47 @@ export class TokenClient {
       client.resolve = value => resolve(value);
       client.reject = reason => reject(reason);
     });
-    setEventListener(this);
-    setRedirectUri(this, this.option);
-    openWindow(getUrlQuery(this.authUrl, this.option));
+
+    if (!this.isSetted) {
+      this.isSetted = true;
+      window.addEventListener("message", event => this.onMessage(event), false);
+    }
+
+    this.authID = createAuthID();
+    this.option.redirectUri = generateRedirectUri(this.authID);
+    const url = generateUrl(this.authUrl, this.option);
+
+    openWindow(url);
     return promise;
   }
 }
 
-const setEventListener = function (tokenClient: TokenClient) {
-  if (tokenClient.isSettedListener) return;
-  tokenClient.isSettedListener = true;
-  window.addEventListener(
-    "message",
-    function (event) {
-      try {
-        console.log(event);
+const createAuthID = () => "auth" + Math.floor(1e6 * Math.random() + 1);
 
-        if (event.data) {
-          const params = JSON.parse(event.data).params;
-          console.log(params);
-          if (
-            params &&
-            tokenClient.authID &&
-            params.id === tokenClient.authID &&
-            params.clientId === tokenClient.option.clientId &&
-            "authResult" === params.type
-          ) {
-            tokenClient.authID = undefined;
-            tokenClient.resolve && tokenClient.resolve(params.authResult);
-            tokenClient.resolve = undefined;
-            tokenClient.reject = undefined;
-          }
-        }
-      } catch (error) {
-        tokenClient.reject && tokenClient.reject(error);
-        tokenClient.resolve = undefined;
-        tokenClient.reject = undefined;
-      }
-    },
-    false
-  );
-};
-
-const setRedirectUri = function (
-  tokenClient: TokenClient,
-  option: TokenClientOption
-) {
-  tokenClient.authID = "auth" + Math.floor(1e6 * Math.random() + 1);
+const generateRedirectUri = (authID: string) => {
   const i = location.protocol.indexOf(":");
   const protocol =
     0 < i ? location.protocol.substring(0, i) : location.protocol;
-  option.redirectUri = `storagerelay://${protocol}/${location.host}?id=${tokenClient.authID}`;
+  return `storagerelay://${protocol}/${location.host}?id=${authID}`;
 };
 
-const pushQuery = function (arr: string[], key: string, value?: string) {
-  value && arr.push(key + "=" + encodeURIComponent(value.trim()));
+const param = (key: string, value?: string) => {
+  return value && key + "=" + encodeURIComponent(value.trim());
 };
 
-const getUrlQuery = function (url: string, option: TokenClientOption) {
-  const queryArray: string[] = [];
-  pushQuery(queryArray, "gsiwebsdk", "3");
-  pushQuery(queryArray, "client_id", option.clientId);
-  pushQuery(queryArray, "scope", option.scope);
-  pushQuery(queryArray, "redirect_uri", option.redirectUri);
-  pushQuery(queryArray, "prompt", "");
-  pushQuery(queryArray, "response_type", "token");
-  pushQuery(queryArray, "include_granted_scopes", "true");
-  pushQuery(queryArray, "enable_serial_consent", "true");
+const generateUrl = function (url: string, option: TokenClientOption) {
+  const querys = [
+    param("gsiwebsdk", "3"),
+    param("client_id", option.clientId),
+    param("scope", option.scope),
+    param("redirect_uri", option.redirectUri),
+    param("prompt", ""),
+    param("response_type", "token"),
+    param("include_granted_scopes", "true"),
+    param("enable_serial_consent", "true"),
+  ];
 
-  const query = url + "?" + queryArray.join("&");
-  return query;
+  return url + "?" + querys.filter(v => v).join("&");
 };
 
 const openWindow = function (authUrl: string) {
@@ -125,9 +120,9 @@ const openWindow = function (authUrl: string) {
     "height=" + wheight,
     "top=" + (screen.height / 2 - wheight / 2),
     "left=" + (screen.width / 2 - wwidth / 2),
-  ].join();
+  ].join(",");
 
-  const authWin = window.open(authUrl, "g_auth_token_window", features);
+  const authWin = window.open(authUrl, "auth_window", features);
   if (!authWin || authWin.closed || "undefined" === typeof authWin.closed)
     return null;
   authWin.focus();
