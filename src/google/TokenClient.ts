@@ -56,11 +56,14 @@ export class TokenClient {
 
   requestAccessToken(): Promise<authResult> {
     if (this.resolve) return Promise.reject("duplicate request is ignored");
-    const client = this;
-    const promise = new Promise<authResult>((resolve, reject) => {
-      client.resolve = value => resolve(value);
-      client.reject = reason => reject(reason);
-    });
+
+    const promise = Promise.resolve(this).then(
+      client =>
+        new Promise<authResult>((resolve, reject) => {
+          client.resolve = value => resolve(value);
+          client.reject = reason => reject(reason);
+        })
+    );
 
     if (!this.isSetted) {
       this.isSetted = true;
