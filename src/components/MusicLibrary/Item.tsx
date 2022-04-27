@@ -15,30 +15,25 @@ type Props = {
 /**
  * item of musics list
  */
-export const Item: React.FC<Props> = ({
-  id,
-  name,
-  play,
-  playlist,
-  addToPlaylist,
-}) => {
+export const Item = (props: Props) => {
+  const onClick = useRightMenu()([
+    { type: "button", label: "play", onClick: props.play },
+    { type: "hr" },
+    {
+      type: "list",
+      label: "add to playlist",
+      list: Object.keys(props.playlist).map(name => ({
+        type: "button",
+        label: name,
+        onClick: () => props.addToPlaylist(name, props.id),
+      })),
+    },
+  ]);
+
   return (
     <li>
-      {name} <button onClick={play}>play</button>
-      <button
-        onClick={useRightMenu()([
-          { type: "button", label: "play", onClick: play },
-          { type: "hr" },
-          {
-            type: "list",
-            label: "add to playlist",
-            list: Object.keys(playlist).map(name => ({
-              type: "button",
-              label: name,
-              onClick: () => addToPlaylist(name, id),
-            })),
-          },
-        ])}>
+      {props.name} <button onClick={props.play}>play</button>
+      <button onClick={onClick}>
         <Icon icon="more_horiz" />
       </button>
     </li>

@@ -8,9 +8,13 @@ type Props = {
   prev: () => void;
 };
 
-const PrevButton: React.FC<Props> = ({ prev }) => {
+const PrevButton = (props: Props) => {
   return (
-    <IconButton icon="skip_previous" onClick={prev} className={styleIcon} />
+    <IconButton
+      icon="skip_previous"
+      onClick={props.prev}
+      className={styleIcon}
+    />
   );
 };
 

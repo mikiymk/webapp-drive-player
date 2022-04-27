@@ -1,4 +1,5 @@
 import React from "react";
+import { createSignal, For, JSX } from "solid-js";
 
 import LabelIcon from "~/components/LabelIcon";
 
@@ -27,27 +28,27 @@ type Props = {
 /**
  * menu list click menu and change view
  */
-const Menu: React.FC<Props> = ({ items, auth }) => {
-  const [selected, setSelected] = React.useState("playing");
-
-  const menuList = Object.entries(items).map(([id, { name, icon }]) => (
-    <li
-      key={id}
-      className={
-        id === selected ? `${styleNavItem} ${styleNavSelected}` : styleNavItem
-      }
-      onClick={() => setSelected(id)}>
-      <LabelIcon icon={icon} text={name} />
-    </li>
-  ));
+const Menu = (props: Props) => {
+  const [selected, setSelected] = createSignal("playing");
 
   return (
     <div className={styleMenu}>
       <ul className={styleNav}>
-        {menuList}
-        <Authorize style={styleNavItem} auth={auth} />
+        <For each={Object.entries(props.items)}>
+          {([id, item]) => (
+            <li
+              classList={{
+                [styleNavItem]: true,
+                [styleNavSelected]: id === selected(),
+              }}
+              onClick={() => setSelected(id)}>
+              <LabelIcon icon={item.icon} text={item.name} />
+            </li>
+          )}
+        </For>
+        <Authorize style={styleNavItem} auth={props.auth} />
       </ul>
-      <div className={styleContent}>{items[selected]?.element ?? null}</div>
+      <div className={styleContent}>{props.items[selected()]?.element}</div>
     </div>
   );
 };

@@ -1,21 +1,22 @@
 import React from "react";
 import { styleMarquee, styleInner } from "./style.css";
+import { JSX } from "solid-js";
 
 type Props = {
-  children: React.ReactNode;
+  children: JSX.Element;
   className?: string;
 };
 
 /** CSSで横に動く */
-const Marquee: React.FC<Props> = ({ children, className }) => {
+const Marquee = (props: Props) => {
   let classes = `${styleMarquee}`;
-  if (className !== undefined) {
-    classes = `${styleMarquee} ${className}`;
+  if (props.className !== undefined) {
+    classes = `${styleMarquee} ${props.className}`;
   }
 
   return (
     <span className={classes}>
-      <span className={styleInner}>{children}</span>
+      <span className={styleInner}>{props.children}</span>
     </span>
   );
 };

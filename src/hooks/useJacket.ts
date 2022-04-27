@@ -1,23 +1,25 @@
-import { useEffect, useState, useRef } from "react";
+import { createEffect, createSignal } from "solid-js";
 
 const useJacket = (picture?: ArrayBuffer) => {
-  const [jacket, setJacket] = useState("");
-  const defaultBuffer = useRef(new ArrayBuffer(0));
-  const pictureBuffer = picture ?? defaultBuffer.current;
+  const [jacket, setJacket] = createSignal("");
+  const defaultBuffer = new ArrayBuffer(0);
+  const pictureBuffer = picture ?? defaultBuffer;
 
-  useEffect(() => {
-    if (jacket !== "") {
-      URL.revokeObjectURL(jacket);
+  createEffect(prev => {
+    if (prev === pictureBuffer) {
+      return prev;
+    }
+    if (jacket() !== "") {
+      URL.revokeObjectURL(jacket());
+      setJacket("");
+    }
+    if (pictureBuffer !== defaultBuffer) {
+      const createdUrl = URL.createObjectURL(new Blob([pictureBuffer]));
+      setJacket(createdUrl);
     }
 
-    const createdUrl = URL.createObjectURL(new Blob([pictureBuffer]));
-    setJacket(createdUrl);
-
-    return () => {
-      URL.revokeObjectURL(createdUrl);
-      setJacket("");
-    };
-  }, [pictureBuffer]);
+    return pictureBuffer;
+  });
 
   return jacket;
 };

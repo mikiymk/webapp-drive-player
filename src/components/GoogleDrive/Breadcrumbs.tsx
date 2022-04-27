@@ -1,4 +1,5 @@
 import React from "react";
+import { For, Show } from "solid-js";
 
 import { File } from "~/file";
 import { styleBread, styleBreadcrumbs } from "./style.css";
@@ -8,16 +9,17 @@ type Props = {
   move: (index: number) => void;
 };
 
-export const Breadcrumbs: React.FC<Props> = ({ parents, move }) => {
+export const Breadcrumbs = (props: Props) => {
   return (
     <ul className={styleBreadcrumbs}>
-      {parents
-        .map((parent, index) => (
-          <Bread key={parent.id} parent={parent} move={() => move(index)} />
-        ))
-        .flatMap((element, index) =>
-          index === 0 ? [element] : [" > ", element]
+      <For each={props.parents}>
+        {(parent, index) => (
+          <>
+            <Show when={index() !== 0}>{" > "}</Show>
+            <Bread parent={parent} move={() => props.move(index())} />
+          </>
         )}
+      </For>
     </ul>
   );
 };
@@ -27,10 +29,10 @@ type PropsBread = {
   move: () => void;
 };
 
-const Bread: React.FC<PropsBread> = ({ parent, move }) => {
+const Bread = (props: PropsBread) => {
   return (
-    <li className={styleBread} onClick={move}>
-      {parent.name}
+    <li className={styleBread} onClick={props.move}>
+      {props.parent.name}
     </li>
   );
 };

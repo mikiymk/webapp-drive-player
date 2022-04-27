@@ -1,56 +1,49 @@
-import { useState, useEffect, useRef } from "react";
-
 import AudioManager from "~/audio/AudioManager";
 import Repeat from "~/audio/Repeat";
 import { File } from "~/file";
 import AudioInfo from "~/audio/AudioInfo";
 import { Files } from "~/components/MusicPlayer";
 import AudioElementPlayer from "~/audio/AudioElementPlayer";
+import { createEffect, createSignal, onMount } from "solid-js";
 
 const useMusicPlayer = (accessToken: string) => {
-  const [files, setFiles] = useState<Files>({});
+  const [files, setFiles] = createSignal<Files>({});
 
-  const [paused, setPaused] = useState(true);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [repeat, setRepeat] = useState(Repeat.DEFAULT);
-  const [shuffle, setShuffle] = useState(false);
+  const [paused, setPaused] = createSignal(true);
+  const [duration, setDuration] = createSignal(0);
+  const [currentTime, setCurrentTime] = createSignal(0);
+  const [repeat, setRepeat] = createSignal(Repeat.DEFAULT);
+  const [shuffle, setShuffle] = createSignal(false);
 
-  const [info, setInfo] = useState(AudioInfo.getEmptyInfo());
+  const [info, setInfo] = createSignal(AudioInfo.getEmptyInfo());
 
-  const manager = useRef<AudioManager | null>(null);
+  const player = new AudioElementPlayer();
 
-  useEffect(() => {
-    const player = new AudioElementPlayer();
-    manager.current = new AudioManager(player);
+  const manager = new AudioManager(player);
 
-    manager.current.onSetDuration = duration => setDuration(duration);
-    manager.current.onSetPause = paused => setPaused(paused);
-    manager.current.onSetCurrentTime = currentTime =>
-      setCurrentTime(currentTime);
-    manager.current.onSetRepeat = repeat => setRepeat(repeat);
-    manager.current.onSetShuffle = shuffle => setShuffle(shuffle);
+  onMount(() => {
+    manager.onSetDuration = duration => setDuration(duration);
+    manager.onSetPause = paused => setPaused(paused);
+    manager.onSetCurrentTime = currentTime => setCurrentTime(currentTime);
+    manager.onSetRepeat = repeat => setRepeat(repeat);
+    manager.onSetShuffle = shuffle => setShuffle(shuffle);
 
-    manager.current.onLoadInfo = (id: string, info: AudioInfo) =>
+    manager.onLoadInfo = (id: string, info: AudioInfo) =>
       setFiles(files => {
         const newfile = { ...files };
         newfile[id].info = info;
         return newfile;
       });
-  }, []);
+  });
 
-  useEffect(() => {
-    if (manager.current !== null) {
-      manager.current.onChangeMusic = id =>
-        setInfo(files[id].info ?? AudioInfo.getEmptyInfo());
-    }
-  }, [files]);
+  createEffect(() => {
+    manager.onChangeMusic = id =>
+      setInfo(files()[id].info ?? AudioInfo.getEmptyInfo());
+  });
 
-  useEffect(() => {
-    if (manager.current !== null) {
-      manager.current.setAccessToken(accessToken);
-    }
-  }, [accessToken]);
+  createEffect(() => {
+    manager.setAccessToken(accessToken);
+  });
 
   const addFiles = (newFiles: File[]) =>
     setFiles(files => ({
@@ -65,7 +58,7 @@ const useMusicPlayer = (accessToken: string) => {
     files,
     addFile,
     addFiles,
-    player: manager.current,
+    player: manager,
     status: {
       paused,
       duration,

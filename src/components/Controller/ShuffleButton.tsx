@@ -9,10 +9,15 @@ type Props = {
   toggleShuffle: () => void;
 };
 
-const ShuffleButton: React.FC<Props> = ({ isShuffled, toggleShuffle }) => {
-  const icon = isShuffled ? "shuffle_on" : "shuffle";
+const ShuffleButton = (props: Props) => {
+  const icon = props.isShuffled ? "shuffle_on" : "shuffle";
+
   return (
-    <IconButton icon={icon} onClick={toggleShuffle} className={styleIcon} />
+    <IconButton
+      icon={icon}
+      onClick={props.toggleShuffle}
+      className={styleIcon}
+    />
   );
 };
 

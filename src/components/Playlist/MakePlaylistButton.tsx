@@ -6,19 +6,19 @@ type Props = {
 };
 
 /** show on right click */
-const MakePlaylistButton: React.FC<Props> = ({ makePlaylist }) => {
-  const ref = useRef<HTMLInputElement>(null);
+const MakePlaylistButton = (props: Props) => {
+  let ref: HTMLInputElement | undefined = undefined;
 
   const addPlaylist = () => {
-    const name = ref.current?.value;
+    const name = ref?.value;
     if (name === undefined || name === null || name === "") {
       console.log("input playlist name");
       return;
     }
     try {
-      makePlaylist(name);
-      if (ref.current !== null) {
-        ref.current.value = "";
+      props.makePlaylist(name);
+      if (ref !== undefined) {
+        ref.value = "";
       }
     } catch (error) {
       console.log(error);

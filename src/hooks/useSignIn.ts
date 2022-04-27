@@ -1,22 +1,22 @@
-import { useState, useEffect } from "react";
+import { createSignal, onMount } from "solid-js";
 import { initClient } from "~/google/init";
 import { TokenClient } from "~/google/TokenClient";
 
 const useSignIn = () => {
-  const [accessToken, setAccessToken] = useState("");
-  const [client, setClient] = useState<TokenClient>();
+  const [accessToken, setAccessToken] = createSignal("");
+  const [client, setClient] = createSignal<TokenClient>();
 
-  useEffect(() => {
+  onMount(() => {
     const client = initClient();
 
     setClient(client);
-  }, []);
+  });
 
   return {
-    accessToken,
-    isSignIn: accessToken.length !== 0,
+    accessToken: accessToken(),
+    isSignIn: accessToken().length !== 0,
     signIn: () =>
-      client
+      client()
         ?.requestAccessToken()
         .then(response => setAccessToken(response.access_token)),
     signOut: () => setAccessToken(""),

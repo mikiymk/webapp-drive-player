@@ -9,10 +9,10 @@ type Props = {
 };
 
 /** 時間をフォーマットして表示 */
-const MusicTitle: React.FC<Props> = ({ duration, currentTime }) => {
+const MusicTitle = (props: Props) => {
   return (
     <span className={styleTime}>
-      {formatTime(currentTime)}/{formatTime(duration)}
+      {formatTime(props.currentTime)}/{formatTime(props.duration)}
     </span>
   );
 };

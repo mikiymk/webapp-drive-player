@@ -16,11 +16,11 @@ const iconName = {
   "repeat on": "repeat_on",
 } as const;
 
-const RepeatButton: React.FC<Props> = ({ repeat, toggleRepeat }) => {
+const RepeatButton = (props: Props) => {
   return (
     <IconButton
-      icon={iconName[repeat.value]}
-      onClick={toggleRepeat}
+      icon={iconName[props.repeat.value]}
+      onClick={props.toggleRepeat}
       className={styleIcon}
     />
   );

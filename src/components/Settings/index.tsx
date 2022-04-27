@@ -3,6 +3,7 @@ import React from "react";
 import Download from "./Download";
 import { styleSettings } from "./style.css";
 import Upload from "./Upload";
+import { Component } from "solid-js";
 
 type Props = {
   files: File[];
@@ -13,11 +14,11 @@ type Props = {
 /**
  * now playing audio info view
  */
-const Settings: React.FC<Props> = ({ files, addFiles, accessToken }) => {
+const Settings = (props: Props) => {
   return (
     <div className={styleSettings}>
-      <Upload files={files} accessToken={accessToken} />
-      <Download addFiles={addFiles} accessToken={accessToken} />
+      <Upload files={props.files} accessToken={props.accessToken} />
+      <Download addFiles={props.addFiles} accessToken={props.accessToken} />
     </div>
   );
 };

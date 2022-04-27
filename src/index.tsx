@@ -1,13 +1,15 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import { render } from "solid-js/web";
 
 import "~/css/style.css";
 
 import MusicPlayer from "~/components/MusicPlayer";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <MusicPlayer />
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+const root = document.getElementById("root");
+
+if (root !== null) {
+  try {
+    render(MusicPlayer, root);
+  } catch (e) {
+    console.error(e);
+  }
+}

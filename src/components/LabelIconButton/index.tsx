@@ -2,28 +2,24 @@ import React from "react";
 
 import LabelIcon from "~/components/LabelIcon";
 import { styleButton } from "./style.css";
+import { JSX } from "solid-js";
 
 type Props = {
   icon: string;
   text: string;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  onClick: JSX.EventHandlerUnion<HTMLButtonElement, MouseEvent>;
   className?: string;
 };
 
 /** Google Material Icon テキスト付きボタン */
-const LabelIconButton: React.FC<Props> = ({
-  icon,
-  text,
-  onClick,
-  className,
-}) => {
+const LabelIconButton = (props: Props) => {
   let classes = `${styleButton}`;
-  if (className !== undefined) {
-    classes = `${styleButton} ${className}`;
+  if (props.className !== undefined) {
+    classes = `${styleButton} ${props.className}`;
   }
   return (
-    <button onClick={onClick} className={classes}>
-      <LabelIcon icon={icon} text={text} />
+    <button onClick={props.onClick} className={classes}>
+      <LabelIcon icon={props.icon} text={props.text} />
     </button>
   );
 };

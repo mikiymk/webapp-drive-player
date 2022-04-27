@@ -1,5 +1,3 @@
-import React, { useCallback } from "react";
-
 import MusicTitle from "./MusicTitle";
 import MusicTime from "./MusicTime";
 import SeekBar from "./SeekBar";
@@ -32,41 +30,32 @@ type Props = {
 /**
  * 曲の再生・停止などのコントロールする
  */
-const Controller: React.FC<Props> = ({
-  info,
-  duration,
-  currentTime,
-  paused,
-  repeat,
-  shuffle,
-  seek,
-  play,
-  pause,
-  playNext,
-  playPrev,
-  setRepeat,
-  setShuffle,
-}) => {
-  const toggleRepeat = useCallback(
-    () => setRepeat(repeat.toggle()),
-    [repeat, setRepeat]
-  );
-  const toggleShuffle = useCallback(
-    () => setShuffle(!shuffle),
-    [shuffle, setShuffle]
-  );
+const Controller = (props: Props) => {
+  const toggleRepeat = () => props.setRepeat(props.repeat.toggle());
+  const toggleShuffle = () => props.setShuffle(!props.shuffle);
 
   return (
     <>
-      <SeekBar duration={duration} time={currentTime} seek={seek} />
+      <SeekBar
+        duration={props.duration}
+        time={props.currentTime}
+        seek={props.seek}
+      />
       <div className={styleController}>
-        <PrevButton prev={playPrev} />
-        <PlayButton isPlaying={!paused} play={play} pause={pause} />
-        <NextButton next={playNext} />
-        <MusicTitle info={info} />
-        <RepeatButton repeat={repeat} toggleRepeat={toggleRepeat} />
-        <ShuffleButton isShuffled={shuffle} toggleShuffle={toggleShuffle} />
-        <MusicTime duration={duration} currentTime={currentTime} />
+        <PrevButton prev={props.playPrev} />
+        <PlayButton
+          isPlaying={!props.paused}
+          play={props.play}
+          pause={props.pause}
+        />
+        <NextButton next={props.playNext} />
+        <MusicTitle {...props.info} />
+        <RepeatButton repeat={props.repeat} toggleRepeat={toggleRepeat} />
+        <ShuffleButton
+          isShuffled={props.shuffle}
+          toggleShuffle={toggleShuffle}
+        />
+        <MusicTime duration={props.duration} currentTime={props.currentTime} />
       </div>
     </>
   );

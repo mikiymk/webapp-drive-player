@@ -3,7 +3,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:solid/typescript"
   ],
   "settings": { "react": { "version": "detect" } },
   "parser": "@typescript-eslint/parser",
@@ -15,7 +16,7 @@
   },
   "ignorePatterns": ["**/crate/*"],
 
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": ["react", "@typescript-eslint", "solid"],
 
   "rules": {
     "no-constant-condition": ["error", { "checkLoops": false }],

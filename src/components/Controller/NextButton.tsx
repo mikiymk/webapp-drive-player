@@ -8,8 +8,10 @@ type Props = {
   next: () => void;
 };
 
-const NextButton: React.FC<Props> = ({ next }) => {
-  return <IconButton icon="skip_next" onClick={next} className={styleIcon} />;
+const NextButton = (props: Props) => {
+  return (
+    <IconButton icon="skip_next" onClick={props.next} className={styleIcon} />
+  );
 };
 
 export default NextButton;

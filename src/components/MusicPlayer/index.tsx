@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 import PlayingInfo from "../Playing/index";
 import MusicList from "../MusicLibrary/index";
 import DriveFiles from "../GoogleDrive/index";
@@ -14,8 +12,8 @@ import Playlists from "../Playlist";
 import usePlaylist from "~/hooks/usePlaylist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
-import RouteMenu from "~/components/RouteMenu";
 import useSignIn from "~/hooks/useSignIn";
+import { JSX } from "solid-js";
 
 export type Files = {
   [name: string]: File;
@@ -24,7 +22,7 @@ export type Files = {
 /**
  * react component root.
  */
-const MusicPlayer: React.FC = () => {
+const MusicPlayer = () => {
   const auth = useSignIn();
   const { files, addFile, addFiles, player, status } = useMusicPlayer(
     auth.accessToken
@@ -43,8 +41,8 @@ const MusicPlayer: React.FC = () => {
       icon: "play_arrow",
       element: (
         <PlayingInfo
-          info={status.info}
-          files={files}
+          info={status.info()}
+          files={files()}
           playingList={player?.musicIds ?? []}
         />
       ),
@@ -54,9 +52,9 @@ const MusicPlayer: React.FC = () => {
       icon: "list",
       element: (
         <MusicList
-          files={files}
+          files={files()}
           play={playWithIdList}
-          playlist={playlist.playlists}
+          playlist={playlist.playlists()}
           addToPlaylist={playlist.addToPlaylist}
         />
       ),
@@ -66,8 +64,14 @@ const MusicPlayer: React.FC = () => {
       icon: "queue_music",
       element: (
         <Playlists
-          files={files}
-          playlist={playlist}
+          files={files()}
+          playlist={{
+            playlists: playlist.playlists(),
+            makePlaylist: playlist.makePlaylist,
+            deletePlaylist: playlist.deletePlaylist,
+            addToPlaylist: playlist.addToPlaylist,
+            removeFromPlaylist: playlist.removeFromPlaylist,
+          }}
           playsList={playWithIdList}
         />
       ),
@@ -98,12 +102,12 @@ const MusicPlayer: React.FC = () => {
         <Menu items={menuItems} auth={auth} />
 
         <Controller
-          info={status.info}
-          duration={status.duration}
-          currentTime={status.currentTime}
-          paused={status.paused}
-          repeat={status.repeat}
-          shuffle={status.shuffle}
+          info={status.info()}
+          duration={status.duration()}
+          currentTime={status.currentTime()}
+          paused={status.paused()}
+          repeat={status.repeat()}
+          shuffle={status.shuffle()}
           seek={time => player?.seek(time)}
           play={() => player?.play()}
           pause={() => player?.pause()}

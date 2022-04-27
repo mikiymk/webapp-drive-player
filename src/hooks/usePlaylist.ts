@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { createSignal } from "solid-js";
 
 type Playlists = { [name: string]: string[] };
 
 const usePlaylist = () => {
-  const [playlists, setPlaylists] = useState<Playlists>({});
+  const [playlists, setPlaylists] = createSignal<Playlists>({});
 
   const makePlaylist = (playlist: string) => {
     if (playlist in playlists) {

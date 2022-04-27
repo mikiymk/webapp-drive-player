@@ -5,6 +5,7 @@ import { Item } from "./Item";
 import { Files } from "~/components/MusicPlayer";
 
 import { styleLibrary } from "./style.css";
+import { For } from "solid-js";
 
 type Props = {
   files: Files;
@@ -16,24 +17,20 @@ type Props = {
 /**
  * list of musics
  */
-const MusicList: React.FC<Props> = ({
-  files,
-  play,
-  playlist,
-  addToPlaylist,
-}) => {
+const MusicList = (props: Props) => {
   return (
     <ul className={styleLibrary}>
-      {Object.values(files).map(({ id, name }, index) => (
-        <Item
-          key={id}
-          id={id}
-          name={name}
-          play={() => play(Object.keys(files), index)}
-          playlist={playlist}
-          addToPlaylist={addToPlaylist}
-        />
-      ))}
+      <For each={Object.values(props.files)}>
+        {(file, index) => (
+          <Item
+            id={file.id}
+            name={file.name}
+            play={() => props.play(Object.keys(props.files), index())}
+            playlist={props.playlist}
+            addToPlaylist={props.addToPlaylist}
+          />
+        )}
+      </For>
     </ul>
   );
 };

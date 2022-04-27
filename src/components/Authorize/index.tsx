@@ -1,4 +1,5 @@
 import React from "react";
+import { Show } from "solid-js";
 
 import LabelIcon from "~/components/LabelIcon";
 
@@ -11,19 +12,16 @@ type Props = {
   };
 };
 
-const Authorize: React.FC<Props> = ({
-  style,
-  auth: { isSignIn, signIn, signOut },
-}) => {
-  const onClick = isSignIn ? signOut : signIn;
+const Authorize = (props: Props) => {
+  const onClick = props.auth.isSignIn ? props.auth.signOut : props.auth.signIn;
 
   return (
-    <li onClick={onClick} className={style}>
-      {isSignIn ? (
+    <li onClick={onClick} className={props.style}>
+      <Show
+        when={props.auth.isSignIn}
+        fallback={<LabelIcon icon="login" text="Sign In" />}>
         <LabelIcon icon="logout" text="Sign Out" />
-      ) : (
-        <LabelIcon icon="login" text="Sign In" />
-      )}
+      </Show>
     </li>
   );
 };
