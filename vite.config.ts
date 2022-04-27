@@ -8,7 +8,7 @@ const config = defineConfig(({ command }) => ({
   build: {
     sourcemap: command === "serve",
   },
-  plugins: [vanillaExtractPlugin(), solidPlugin()],
+  plugins: [vanillaExtractPlugin(), solidPlugin(), eslintPlugin()],
   resolve: {
     alias: {
       "~/": path.join(__dirname, "src/"),

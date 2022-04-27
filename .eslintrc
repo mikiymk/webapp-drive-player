@@ -2,11 +2,10 @@
   "env": { "browser": true, "es2021": true },
   "extends": [
     "eslint:recommended",
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:solid/typescript"
   ],
-  "settings": { "react": { "version": "detect" } },
+  "settings": {},
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": { "jsx": true },
@@ -16,7 +15,7 @@
   },
   "ignorePatterns": ["**/crate/*"],
 
-  "plugins": ["react", "@typescript-eslint", "solid"],
+  "plugins": ["@typescript-eslint", "solid"],
 
   "rules": {
     "no-constant-condition": ["error", { "checkLoops": false }],
