@@ -1,6 +1,6 @@
 import { For, Match, Switch } from "solid-js";
 
-import Item from "./Item";
+import type Item from "./Item";
 import { styleHorizon, styleItem } from "./style.css";
 
 type Props = {

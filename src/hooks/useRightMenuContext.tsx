@@ -1,4 +1,4 @@
-import Item from "~/components/RightMenu/Item";
+import type Item from "~/components/RightMenu/Item";
 import RightMenu from "~/components/RightMenu/RightMenu";
 import { createSignal, JSX } from "solid-js";
 

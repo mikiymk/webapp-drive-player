@@ -1,4 +1,4 @@
-import { File } from "~/file";
+import type { File } from "~/file";
 import Icon from "~/components/GoogleIcon";
 import useRightMenu from "~/hooks/useRightMenu";
 import { stylePlaylist } from "./style.css";
@@ -41,7 +41,7 @@ const Playlist = (props: Props) => {
         <For each={props.audioIDs}>
           {(id, index) => (
             <li>
-              {props.files[id].info?.title ?? props.files[id].name}
+              {props.files[id]?.info?.title ?? props.files[id]?.name ?? ""}
               <button onClick={event => onClickIcon(index())(event)}>
                 <Icon icon="more_horiz" />
               </button>

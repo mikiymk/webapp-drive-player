@@ -1,6 +1,6 @@
 import { For, Show } from "solid-js";
 
-import { File } from "~/file";
+import type { File } from "~/file";
 import { styleBread, styleBreadcrumbs } from "./style.css";
 
 type Props = {

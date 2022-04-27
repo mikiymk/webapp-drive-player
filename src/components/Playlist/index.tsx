@@ -1,6 +1,6 @@
 import PlaylistList from "./PlaylistList";
 import Playlist from "./Playlist";
-import { File } from "~/file";
+import type { File } from "~/file";
 import { createSignal, Show } from "solid-js";
 
 type Props = {
@@ -35,7 +35,7 @@ const Playlists = (props: Props) => {
         <Playlist
           files={props.files}
           name={name}
-          audioIDs={props.playlist.playlists[name]}
+          audioIDs={props.playlist.playlists[name] ?? []}
           reset={() => setSelectedPlaylist("")}
           playsList={props.playsList}
           remove={index => props.playlist.removeFromPlaylist(name, index)}

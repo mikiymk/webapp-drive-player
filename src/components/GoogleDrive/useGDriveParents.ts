@@ -1,5 +1,5 @@
 import { Accessor, createEffect, createSignal } from "solid-js";
-import { File } from "~/file";
+import type { File } from "~/file";
 
 export const useGDriveParents = (
   accessToken: Accessor<string>,

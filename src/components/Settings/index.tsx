@@ -1,4 +1,4 @@
-import { File } from "~/file";
+import type { File } from "~/file";
 import Download from "./Download";
 import { styleSettings } from "./style.css";
 import Upload from "./Upload";

@@ -30,7 +30,7 @@ const usePlaylist = () => {
 
     setPlaylists(playlists => ({
       ...playlists,
-      [playlist]: [...playlists[playlist], audioId],
+      [playlist]: playlists[playlist]?.concat(audioId) ?? [],
     }));
   };
 
@@ -41,10 +41,10 @@ const usePlaylist = () => {
 
     setPlaylists(playlists => ({
       ...playlists,
-      [playlist]: [
-        ...playlists[playlist].slice(0, index),
-        ...playlists[playlist].slice(index + 1),
-      ],
+      [playlist]:
+        playlists[playlist]
+          ?.slice(0, index)
+          .concat(playlists[playlist]?.slice(index + 1) ?? []) ?? [],
     }));
   };
 

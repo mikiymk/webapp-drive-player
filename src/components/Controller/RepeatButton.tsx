@@ -1,4 +1,4 @@
-import Repeat from "~/audio/Repeat";
+import type Repeat from "~/audio/Repeat";
 import IconButton from "~/components/IconButton";
 
 import { styleIcon } from "./style.css";

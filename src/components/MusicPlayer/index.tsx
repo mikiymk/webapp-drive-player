@@ -4,7 +4,7 @@ import DriveFiles from "../GoogleDrive/index";
 import Menu from "../Menu/index";
 import Controller from "../Controller/index";
 
-import { File } from "~/file";
+import type { File } from "~/file";
 import RightMenuContext from "~/components/RightMenu/Context";
 import useRightMenuContext from "~/hooks/useRightMenuContext";
 import Settings from "../Settings";
@@ -13,7 +13,7 @@ import usePlaylist from "~/hooks/usePlaylist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import useSignIn from "~/hooks/useSignIn";
-import { JSX } from "solid-js";
+import type { JSX } from "solid-js";
 
 export type Files = {
   [name: string]: File;

@@ -1,8 +1,8 @@
 import AudioManager from "~/audio/AudioManager";
 import Repeat from "~/audio/Repeat";
-import { File } from "~/file";
+import type { File } from "~/file";
 import AudioInfo from "~/audio/AudioInfo";
-import { Files } from "~/components/MusicPlayer";
+import type { Files } from "~/components/MusicPlayer";
 import AudioElementPlayer from "~/audio/AudioElementPlayer";
 import { Accessor, createEffect, createSignal, onMount } from "solid-js";
 
@@ -30,16 +30,16 @@ const useMusicPlayer = (accessToken: Accessor<string>) => {
 
     manager.onLoadInfo = (id: string, info: AudioInfo) =>
       setFiles(files => {
-        const newfile = { ...files };
-        newfile[id].info = info;
-        return newfile;
+        const file = files[id];
+        if (file === undefined) return files;
+        return { ...files, [id]: { ...file, info } };
       });
   });
 
   createEffect(() => {
     const filesValue = files();
     manager.onChangeMusic = id =>
-      setInfo(filesValue[id].info ?? AudioInfo.getEmptyInfo());
+      setInfo(filesValue[id]?.info ?? AudioInfo.getEmptyInfo());
   });
 
   createEffect(() => {

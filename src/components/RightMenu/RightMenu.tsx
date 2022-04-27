@@ -1,7 +1,7 @@
 import IconButton from "~/components/IconButton";
 import { For } from "solid-js";
 
-import Item from "./Item";
+import type Item from "./Item";
 import useRightMenu from "~/hooks/useRightMenu";
 import RightMenuItem from "./RightMenuItem";
 import { styleRightMenu } from "./style.css";

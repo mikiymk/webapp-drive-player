@@ -1,5 +1,5 @@
 import { styleMarquee, styleInner } from "./style.css";
-import { JSX } from "solid-js";
+import type { JSX } from "solid-js";
 
 type Props = {
   children: JSX.Element;

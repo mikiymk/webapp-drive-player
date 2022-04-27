@@ -1,11 +1,11 @@
 type AudioInfoNumber = { of: number | null; no: number | null };
 
 type AudioInfoSort = {
-  albumsort: string;
-  titlesort: string;
-  artistsort: string;
-  albumartistsort: string;
-  composersort: string;
+  albumsort?: string | undefined;
+  titlesort?: string | undefined;
+  artistsort?: string | undefined;
+  albumartistsort?: string | undefined;
+  composersort?: string | undefined;
 };
 
 class AudioInfo {
@@ -100,7 +100,7 @@ class AudioInfo {
   readonly genre: string[];
 
   readonly picture: ArrayBuffer[];
-  readonly sort: Partial<AudioInfoSort>;
+  readonly sort: AudioInfoSort;
 
   private constructor(
     title?: string,
