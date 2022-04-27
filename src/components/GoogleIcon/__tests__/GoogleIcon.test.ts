@@ -1,5 +1,4 @@
-import React from "react";
-import renderer from "react-test-renderer";
+import { renderToString } from "solid-js/web";
 import Icon from "../index";
 
 jest.mock("@vanilla-extract/css", () => {
@@ -9,9 +8,7 @@ jest.mock("@vanilla-extract/css", () => {
 });
 
 test("icon component test", () => {
-  const component = renderer.create(
-    React.createElement(Icon, { icon: "icon" })
-  );
-  const tree = component.toJSON();
-  expect(tree).toMatchSnapshot();
+  const component = renderToString(() => Icon({ icon: "icon" }));
+
+  expect(component).toMatchSnapshot();
 });

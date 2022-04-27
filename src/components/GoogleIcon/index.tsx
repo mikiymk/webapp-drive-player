@@ -1,19 +1,18 @@
-import React from "react";
 import { styleIcon } from "./style.css";
 
 type Props = {
   icon: string;
-  className?: string;
+  class?: string;
 };
 
 /** Google Material Icon */
-const Icon: React.FC<Props> = ({ icon, className }) => {
-  let classes = `material-icons-sharp ${styleIcon}`;
-  if (className !== undefined) {
-    classes = `material-icons-sharp ${styleIcon} ${className}`;
-  }
+const Icon = (props: Props) => {
+  const classes = () =>
+    props.class
+      ? `material-icons-sharp ${styleIcon} ${props.class}`
+      : `material-icons-sharp ${styleIcon}`;
 
-  return <span className={classes}>{icon}</span>;
+  return <span class={classes()}>{props.icon}</span>;
 };
 
 export default Icon;

@@ -1,8 +1,8 @@
 import Repeat from "./Repeat";
 import ShuffleArray from "./ShuffleArray";
 import BufferLoader from "./BufferLoader";
-import AudioInfo from "./AudioInfo";
-import AudioPlayer from "./AudioPlayer";
+import type AudioInfo from "./AudioInfo";
+import type AudioPlayer from "./AudioPlayer";
 
 /**
  * 音楽再生の管理

@@ -1,8 +1,8 @@
-import { File } from "~/file";
-import { useState, useEffect } from "react";
+import { Accessor, createEffect, createSignal } from "solid-js";
+import type { File } from "~/file";
 
 export const useGDriveParents = (
-  accessToken: string,
+  accessToken: Accessor<string>,
   getAllFolders: (
     accessToken: string,
     parent?: string | undefined
@@ -12,22 +12,24 @@ export const useGDriveParents = (
     parent?: string | undefined
   ) => Promise<File[]>
 ) => {
-  const [parents, setParents] = useState<File[]>([
+  const [parents, setParents] = createSignal<File[]>([
     { name: "root", id: "root" },
   ]);
-  const [files, setFiles] = useState<File[]>([]);
-  const [folders, setFolders] = useState<File[]>([]);
+  const [files, setFiles] = createSignal<File[]>([]);
+  const [folders, setFolders] = createSignal<File[]>([]);
 
-  useEffect(() => {
-    const parentId = parents[parents.length - 1].id;
+  createEffect(() => {
+    const parentId = parents().at(-1)?.id;
     setFolders([]);
     setFiles([]);
-    getAllFolders(accessToken, parentId).then(setFolders).catch(console.log);
-    getAllMusics(accessToken, parentId).then(setFiles).catch(console.log);
-  }, [parents]);
+    getAllFolders(accessToken(), parentId).then(setFolders).catch(console.log);
+    getAllMusics(accessToken(), parentId).then(setFiles).catch(console.log);
+  });
 
-  const addParents = (folder: File) => setParents(parents.concat([folder]));
-  const move = (index: number) => setParents(parents.slice(0, index + 1));
+  const addParents = (folder: File) =>
+    setParents(parents => parents.concat([folder]));
+  const move = (index: number) =>
+    setParents(parents => parents.slice(0, index + 1));
 
   return { parents, folders, files, addParents, move };
 };

@@ -1,5 +1,3 @@
-import React from "react";
-
 import IconButton from "~/components/IconButton";
 
 import { styleIcon } from "./style.css";
@@ -9,10 +7,13 @@ type Props = {
   toggleShuffle: () => void;
 };
 
-const ShuffleButton: React.FC<Props> = ({ isShuffled, toggleShuffle }) => {
-  const icon = isShuffled ? "shuffle_on" : "shuffle";
+const ShuffleButton = (props: Props) => {
   return (
-    <IconButton icon={icon} onClick={toggleShuffle} className={styleIcon} />
+    <IconButton
+      icon={props.isShuffled ? "shuffle_on" : "shuffle"}
+      onClick={() => props.toggleShuffle()}
+      class={styleIcon}
+    />
   );
 };
 

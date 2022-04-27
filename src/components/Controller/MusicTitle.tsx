@@ -1,7 +1,5 @@
-import React from "react";
-
 import Marquee from "~/components/Marquee";
-import AudioInfo from "~/audio/AudioInfo";
+import type AudioInfo from "~/audio/AudioInfo";
 import { styleArtist, styleTitle, styleTitleView } from "./style.css";
 
 type Props = {
@@ -9,11 +7,11 @@ type Props = {
 };
 
 /** タイトルとアーティストをマーキーで表示 */
-const MusicTitle: React.FC<Props> = ({ info: { title, artist } }) => {
+const MusicTitle = (props: Props) => {
   return (
-    <span className={styleTitleView}>
-      <Marquee className={styleTitle}>{title}</Marquee>
-      <Marquee className={styleArtist}>{artist}</Marquee>
+    <span class={styleTitleView}>
+      <Marquee class={styleTitle}>{props.info.title}</Marquee>
+      <Marquee class={styleArtist}>{props.info.artist}</Marquee>
     </span>
   );
 };

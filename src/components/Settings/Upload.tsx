@@ -1,8 +1,8 @@
 import Icon from "~/components/GoogleIcon";
 import LabelIcon from "~/components/LabelIcon";
 import { uploadLibraryData, File } from "~/file";
-import React, { useState } from "react";
 import { styleUpload } from "./style.css";
+import { createSignal } from "solid-js";
 
 type Props = {
   accessToken: string;
@@ -12,23 +12,24 @@ type Props = {
 /**
  * now playing audio info view
  */
-const Upload: React.FC<Props> = ({ accessToken, files }) => {
-  const [status, setStatus] = useState("");
+const Upload = (props: Props) => {
+  const [status, setStatus] = createSignal("");
+  const upload = () => {
+    setStatus("pending_actions");
+    uploadLibraryData(props.accessToken, props.files).then(response =>
+      setStatus(response.status === 200 ? "done" : "error")
+    );
+  };
+
   return (
-    <div className={styleUpload}>
-      <button
-        onClick={() => {
-          setStatus("pending_actions");
-          uploadLibraryData(accessToken, files).then(response =>
-            setStatus(response.status === 200 ? "done" : "error")
-          );
-        }}>
+    <div class={styleUpload}>
+      <button onClick={upload}>
         <LabelIcon
           icon="file_upload"
           text="send library data to google drive"
         />
       </button>
-      <Icon icon={status} />
+      <Icon icon={status()} />
     </div>
   );
 };

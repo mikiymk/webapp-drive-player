@@ -1,24 +1,22 @@
-import React from "react";
+import type { JSX } from "solid-js";
 
 import Icon from "~/components/GoogleIcon";
 import { styleIcon } from "./style.css";
 
 type Props = {
   icon: string;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
-  className?: string;
+  onClick: JSX.EventHandler<HTMLButtonElement, MouseEvent>;
+  class?: string;
 };
 
 /** Google Material Icon ボタン */
-const IconButton: React.FC<Props> = ({ icon, onClick, className }) => {
-  let classes = `${styleIcon}`;
-  if (className !== undefined) {
-    classes = `${styleIcon} ${className}`;
-  }
+const IconButton = (props: Props) => {
+  const classes = () =>
+    props.class ? `${styleIcon} ${props.class}` : styleIcon;
 
   return (
-    <button onClick={onClick} className={classes}>
-      <Icon icon={icon} className={`${styleIcon}-icon`} />
+    <button onClick={event => props.onClick(event)} class={classes()}>
+      <Icon icon={props.icon} class={`${styleIcon}-icon`} />
     </button>
   );
 };

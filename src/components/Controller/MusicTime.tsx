@@ -1,5 +1,3 @@
-import React from "react";
-
 import { formatTime } from "~/format";
 import { styleTime } from "./style.css";
 
@@ -9,10 +7,10 @@ type Props = {
 };
 
 /** 時間をフォーマットして表示 */
-const MusicTitle: React.FC<Props> = ({ duration, currentTime }) => {
+const MusicTitle = (props: Props) => {
   return (
-    <span className={styleTime}>
-      {formatTime(currentTime)}/{formatTime(duration)}
+    <span class={styleTime}>
+      {formatTime(props.currentTime)}/{formatTime(props.duration)}
     </span>
   );
 };

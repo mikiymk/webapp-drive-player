@@ -30,7 +30,7 @@ export class TokenClient {
     this.isSetted = false;
   }
 
-  private onMessage(event: MessageEvent<any>) {
+  private onMessage(event: { data: string }) {
     try {
       if (event.data) {
         const params = JSON.parse(event.data).params;

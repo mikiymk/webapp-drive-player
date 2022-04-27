@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { createSignal } from "solid-js";
 
 import Icon from "~/components/GoogleIcon";
 import LabelIcon from "~/components/LabelIcon";
@@ -13,28 +13,29 @@ type Props = {
 /**
  * now playing audio info view
  */
-const Download: React.FC<Props> = ({ accessToken, addFiles }) => {
-  const [status, setStatus] = useState("");
+const Download = (props: Props) => {
+  const [status, setStatus] = createSignal("");
+  const download = () => {
+    setStatus("pending_actions");
+    downloadLibraryData(props.accessToken).then(files => {
+      if (files !== undefined) {
+        props.addFiles(files);
+        setStatus("done");
+      } else {
+        setStatus("error");
+      }
+    });
+  };
+
   return (
-    <div className={styleDownload}>
-      <button
-        onClick={() => {
-          setStatus("pending_actions");
-          downloadLibraryData(accessToken).then(files => {
-            if (files !== undefined) {
-              addFiles(files);
-              setStatus("done");
-            } else {
-              setStatus("error");
-            }
-          });
-        }}>
+    <div class={styleDownload}>
+      <button onClick={download}>
         <LabelIcon
           icon="file_download"
           text="get library data from google drive"
         />
       </button>
-      <Icon icon={status} />
+      <Icon icon={status()} />
     </div>
   );
 };

@@ -1,8 +1,8 @@
-import React from "react";
-import { File } from "~/file";
+import type { File } from "~/file";
 import Icon from "~/components/GoogleIcon";
 import useRightMenu from "~/hooks/useRightMenu";
 import { stylePlaylist } from "./style.css";
+import { For } from "solid-js";
 
 type Props = {
   files: Record<string, File>;
@@ -15,47 +15,39 @@ type Props = {
 };
 
 /** show on right click */
-const Playlist: React.FC<Props> = ({
-  files,
-  name,
-  audioIDs,
-  reset,
-  playsList,
-  remove,
-}) => {
-  const rightMenu = useRightMenu();
-  return (
-    <div className={stylePlaylist}>
-      <h3>{name}</h3>
-      <button onClick={reset}>back to list</button>
-      <button onClick={() => playsList(audioIDs, 0)}>play this playlist</button>
-      <ul>
-        {audioIDs
-          .map(id => ({
-            id,
-            name: files[id].info?.title ?? files[id].name,
-          }))
-          .map(({ id, name }, index) => (
-            <li key={id + index}>
-              {name}
-              <button
-                onClick={rightMenu([
-                  {
-                    type: "button",
-                    label: "play",
-                    onClick: () => playsList(audioIDs, index),
-                  },
+const Playlist = (props: Props) => {
+  const onClickIcon = (index: number) =>
+    useRightMenu()([
+      {
+        type: "button",
+        label: "play",
+        onClick: () => props.playsList(props.audioIDs, index),
+      },
+      {
+        type: "button",
+        label: "remove from playlist",
+        onClick: () => props.remove(index),
+      },
+    ]);
 
-                  {
-                    type: "button",
-                    label: "remove from playlist",
-                    onClick: () => remove(index),
-                  },
-                ])}>
+  return (
+    <div class={stylePlaylist}>
+      <h3>{props.name}</h3>
+      <button onClick={() => props.reset()}>back to list</button>
+      <button onClick={() => props.playsList(props.audioIDs, 0)}>
+        play this playlist
+      </button>
+      <ul>
+        <For each={props.audioIDs}>
+          {(id, index) => (
+            <li>
+              {props.files[id]?.info?.title ?? props.files[id]?.name ?? ""}
+              <button onClick={event => onClickIcon(index())(event)}>
                 <Icon icon="more_horiz" />
               </button>
             </li>
-          ))}
+          )}
+        </For>
       </ul>
     </div>
   );

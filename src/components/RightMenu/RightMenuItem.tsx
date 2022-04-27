@@ -1,6 +1,6 @@
-import React from "react";
+import { For, Match, Switch } from "solid-js";
 
-import Item from "./Item";
+import type Item from "./Item";
 import { styleHorizon, styleItem } from "./style.css";
 
 type Props = {
@@ -8,41 +8,36 @@ type Props = {
 };
 
 /** show on right click */
-const RightMenuItem: React.FC<Props> = ({ item }) => {
-  if (item.type === "hr") {
-    return <hr className={styleHorizon}></hr>;
-  } else if (item.type === "button") {
-    return (
-      <button className={styleItem} onClick={item.onClick}>
-        {item.label}
-      </button>
-    );
-  } else if (item.type === "anchor") {
-    return (
-      <a
-        className={styleItem}
-        href={item.href}
-        target="_blank"
-        rel="noreferrer">
-        {item.label}
-      </a>
-    );
-  } else if (item.type === "list") {
-    return (
-      <div className={styleItem}>
-        {item.label}
-        <div className="inner-list">
-          {item.list.map((item, index) => (
-            <RightMenuItem item={item} key={item.type + index} />
-          ))}
-        </div>
-      </div>
-    );
-  } else {
-    const neverItem: never = item;
-    console.log("never item", neverItem);
-    return null;
-  }
+const RightMenuItem = (props: Props) => {
+  return (
+    <Switch>
+      <Match when={props.item.type === "hr" && props.item}>
+        <hr class={styleHorizon}></hr>
+      </Match>
+      <Match when={props.item.type === "button" && props.item}>
+        {({ onClick, label }) => (
+          <button class={styleItem} onClick={onClick}>
+            {label}
+          </button>
+        )}
+      </Match>
+      <Match when={props.item.type === "anchor" && props.item}>
+        {({ href, label }) => (
+          <a class={styleItem} href={href} target="_blank" rel="noreferrer">
+            {label}
+          </a>
+        )}
+      </Match>
+      <Match when={props.item.type === "list" && props.item}>
+        {({ list, label }) => (
+          <div class={styleItem}>
+            {label}
+            <For each={list}>{item => <RightMenuItem item={item} />}</For>
+          </div>
+        )}
+      </Match>
+    </Switch>
+  );
 };
 
 export default RightMenuItem;

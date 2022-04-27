@@ -1,4 +1,4 @@
-import AudioPlayer from "./AudioPlayer";
+import type AudioPlayer from "./AudioPlayer";
 
 class AudioElementPlayer implements AudioPlayer {
   private audio = new Audio();

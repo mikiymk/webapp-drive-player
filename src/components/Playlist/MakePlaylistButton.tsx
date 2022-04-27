@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { createSignal } from "solid-js";
 import { styleMakePlaylist } from "./style.css";
 
 type Props = {
@@ -6,31 +6,31 @@ type Props = {
 };
 
 /** show on right click */
-const MakePlaylistButton: React.FC<Props> = ({ makePlaylist }) => {
-  const ref = useRef<HTMLInputElement>(null);
+const MakePlaylistButton = (props: Props) => {
+  const [value, setValue] = createSignal("");
 
   const addPlaylist = () => {
-    const name = ref.current?.value;
+    const name = value();
     if (name === undefined || name === null || name === "") {
       console.log("input playlist name");
       return;
     }
     try {
-      makePlaylist(name);
-      if (ref.current !== null) {
-        ref.current.value = "";
-      }
+      props.makePlaylist(name);
+      setValue("");
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <span className={styleMakePlaylist}>
+    <span class={styleMakePlaylist}>
       <button onClick={addPlaylist}>add playlist</button>
       <input
         type="text"
-        ref={ref}
+        onInput={event => {
+          setValue(event.currentTarget.value);
+        }}
         onKeyPress={event => {
           if (event.key === "Enter") addPlaylist();
         }}

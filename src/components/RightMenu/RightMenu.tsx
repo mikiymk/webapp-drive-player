@@ -1,7 +1,7 @@
 import IconButton from "~/components/IconButton";
-import React from "react";
+import { For } from "solid-js";
 
-import Item from "./Item";
+import type Item from "./Item";
 import useRightMenu from "~/hooks/useRightMenu";
 import RightMenuItem from "./RightMenuItem";
 import { styleRightMenu } from "./style.css";
@@ -13,20 +13,18 @@ type Props = {
 };
 
 /** show on right click */
-const RightMenu: React.FC<Props> = ({ items, top, left }) => {
+const RightMenu = (props: Props) => {
   return (
     <div
-      className={styleRightMenu}
+      class={styleRightMenu}
       style={{
-        visibility: items.length !== 0 ? "visible" : "hidden",
-        top: `${Math.trunc(top)}px`,
-        left: `${Math.trunc(left)}px`,
+        visibility: props.items.length !== 0 ? "visible" : "hidden",
+        top: Math.trunc(props.top) + "px",
+        left: Math.trunc(props.left) + "px",
       }}>
       <IconButton icon="close" onClick={useRightMenu()([])} />
       <hr></hr>
-      {items.map((item, index) => (
-        <RightMenuItem item={item} key={item.type + index} />
-      ))}
+      <For each={props.items}>{item => <RightMenuItem item={item} />}</For>
     </div>
   );
 };

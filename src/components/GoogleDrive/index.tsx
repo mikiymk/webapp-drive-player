@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Breadcrumbs } from "./Breadcrumbs";
 
 import { getAllMusics, getAllFolders, File } from "~/file";
@@ -7,6 +5,7 @@ import { styleDrive, styleItem, styleItemIcon } from "./style.css";
 
 import Icon from "~/components/GoogleIcon";
 import { useGDriveParents } from "./useGDriveParents";
+import { For } from "solid-js";
 
 type Props = {
   accessToken: string;
@@ -16,28 +15,28 @@ type Props = {
 /**
  * get files from google drive
  */
-const DriveFiles: React.FC<Props> = ({ accessToken, addFile }) => {
-  const parents = useGDriveParents(accessToken, getAllFolders, getAllMusics);
+const DriveFiles = (props: Props) => {
+  const parents = useGDriveParents(
+    () => props.accessToken,
+    getAllFolders,
+    getAllMusics
+  );
   const { addParents, move, folders, files } = parents;
 
   return (
-    <div className={styleDrive}>
-      <Breadcrumbs parents={parents.parents} move={move} />
-      <ul className="drive-list">
-        {folders.map(file => (
-          <ItemFolder
-            key={file.id}
-            name={file.name}
-            move={() => addParents(file)}
-          />
-        ))}
-        {files.map(file => (
-          <ItemFile
-            key={file.id}
-            name={file.name}
-            addFile={() => addFile(file)}
-          />
-        ))}
+    <div class={styleDrive}>
+      <Breadcrumbs parents={parents.parents()} move={move} />
+      <ul class="drive-list">
+        <For each={folders()}>
+          {folder => (
+            <ItemFolder name={folder.name} move={() => addParents(folder)} />
+          )}
+        </For>
+        <For each={files()}>
+          {file => (
+            <ItemFile name={file.name} addFile={() => props.addFile(file)} />
+          )}
+        </For>
       </ul>
     </div>
   );
@@ -48,11 +47,11 @@ type PropsItemFolder = {
   move: () => void;
 };
 
-const ItemFolder: React.FC<PropsItemFolder> = ({ name, move }) => {
+const ItemFolder = (props: PropsItemFolder) => {
   return (
-    <li className={styleItem} onClick={move}>
-      <Icon icon="folder" className={styleItemIcon} />
-      <span>{name}</span>
+    <li class={styleItem} onClick={() => props.move()}>
+      <Icon icon="folder" class={styleItemIcon} />
+      <span>{props.name}</span>
     </li>
   );
 };
@@ -62,11 +61,11 @@ type PropsItemFile = {
   addFile: () => void;
 };
 
-const ItemFile: React.FC<PropsItemFile> = ({ name, addFile }) => {
+const ItemFile = (props: PropsItemFile) => {
   return (
-    <li className={styleItem} onClick={addFile}>
-      <Icon icon="audio_file" className={styleItemIcon} />
-      <span>{name}</span>
+    <li class={styleItem} onClick={() => props.addFile()}>
+      <Icon icon="audio_file" class={styleItemIcon} />
+      <span>{props.name}</span>
     </li>
   );
 };

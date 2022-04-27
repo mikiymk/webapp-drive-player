@@ -1,4 +1,3 @@
-import React from "react";
 import { styleSeekBar } from "./style.css";
 import useSeekTime from "./useSeekTime";
 
@@ -9,19 +8,19 @@ type Props = {
 };
 
 /** 現在位置が左から右にいって時間を表す */
-const SeekBar: React.FC<Props> = ({ duration, time, seek }) => {
+const SeekBar = (props: Props) => {
   const { seekTime, onChange, onClickDown, onClickUp } = useSeekTime(
-    time,
-    seek
+    () => props.time,
+    time => props.seek(time)
   );
 
   return (
     <input
-      className={styleSeekBar}
+      class={styleSeekBar}
       type="range"
       min="0"
-      max={duration * 1000}
-      value={seekTime}
+      max={props.duration * 1000}
+      value={seekTime()}
       onChange={onChange}
       onInput={onChange}
       onMouseDown={onClickDown}

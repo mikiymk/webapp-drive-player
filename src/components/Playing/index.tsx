@@ -1,7 +1,7 @@
-import React from "react";
+import { For } from "solid-js";
 
-import AudioInfo from "~/audio/AudioInfo";
-import { Files } from "~/components/MusicPlayer";
+import type AudioInfo from "~/audio/AudioInfo";
+import type { Files } from "~/components/MusicPlayer";
 import useJacket from "~/hooks/useJacket";
 import { stylePlaying } from "./style.css";
 
@@ -14,17 +14,17 @@ type Props = {
 /**
  * now playing audio info view
  */
-const PlayingInfo: React.FC<Props> = ({ files, info, playingList }) => {
-  const jacket = useJacket(info.picture?.[0]);
+const PlayingInfo = (props: Props) => {
+  const jacket = useJacket(() => props.info.picture?.[0]);
 
   return (
-    <div className={stylePlaying}>
-      <span>{info.album}</span>
-      <img src={jacket} alt="album jacket" />
+    <div class={stylePlaying}>
+      <span>{props.info.album}</span>
+      <img src={jacket()} alt="album jacket" />
       <ol>
-        {Array.from(playingList).map((id, index) => (
-          <li key={index}>{files[id].name}</li>
-        ))}
+        <For each={Array.from(props.playingList)}>
+          {id => <li>{props.files[id]?.name ?? ""}</li>}
+        </For>
       </ol>
     </div>
   );

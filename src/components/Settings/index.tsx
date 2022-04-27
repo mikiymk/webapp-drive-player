@@ -1,5 +1,4 @@
-import { File } from "~/file";
-import React from "react";
+import type { File } from "~/file";
 import Download from "./Download";
 import { styleSettings } from "./style.css";
 import Upload from "./Upload";
@@ -13,11 +12,11 @@ type Props = {
 /**
  * now playing audio info view
  */
-const Settings: React.FC<Props> = ({ files, addFiles, accessToken }) => {
+const Settings = (props: Props) => {
   return (
-    <div className={styleSettings}>
-      <Upload files={files} accessToken={accessToken} />
-      <Download addFiles={addFiles} accessToken={accessToken} />
+    <div class={styleSettings}>
+      <Upload files={props.files} accessToken={props.accessToken} />
+      <Download addFiles={props.addFiles} accessToken={props.accessToken} />
     </div>
   );
 };

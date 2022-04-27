@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-
 import PlayingInfo from "../Playing/index";
 import MusicList from "../MusicLibrary/index";
 import DriveFiles from "../GoogleDrive/index";
 import Menu from "../Menu/index";
 import Controller from "../Controller/index";
 
-import { File } from "~/file";
+import type { File } from "~/file";
 import RightMenuContext from "~/components/RightMenu/Context";
 import useRightMenuContext from "~/hooks/useRightMenuContext";
 import Settings from "../Settings";
@@ -14,8 +12,8 @@ import Playlists from "../Playlist";
 import usePlaylist from "~/hooks/usePlaylist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
-import RouteMenu from "~/components/RouteMenu";
 import useSignIn from "~/hooks/useSignIn";
+import type { JSX } from "solid-js";
 
 export type Files = {
   [name: string]: File;
@@ -24,11 +22,10 @@ export type Files = {
 /**
  * react component root.
  */
-const MusicPlayer: React.FC = () => {
-  const auth = useSignIn();
-  const { files, addFile, addFiles, player, status } = useMusicPlayer(
-    auth.accessToken
-  );
+const MusicPlayer = () => {
+  const { accessToken, signIn, signOut } = useSignIn();
+  const { files, addFile, addFiles, player, status } =
+    useMusicPlayer(accessToken);
   const playlist = usePlaylist();
 
   const playWithIdList = (idList: string[], index: number) => {
@@ -43,8 +40,8 @@ const MusicPlayer: React.FC = () => {
       icon: "play_arrow",
       element: (
         <PlayingInfo
-          info={status.info}
-          files={files}
+          info={status.info()}
+          files={files()}
           playingList={player?.musicIds ?? []}
         />
       ),
@@ -54,9 +51,9 @@ const MusicPlayer: React.FC = () => {
       icon: "list",
       element: (
         <MusicList
-          files={files}
+          files={files()}
           play={playWithIdList}
-          playlist={playlist.playlists}
+          playlist={playlist.playlists()}
           addToPlaylist={playlist.addToPlaylist}
         />
       ),
@@ -66,8 +63,14 @@ const MusicPlayer: React.FC = () => {
       icon: "queue_music",
       element: (
         <Playlists
-          files={files}
-          playlist={playlist}
+          files={files()}
+          playlist={{
+            playlists: playlist.playlists(),
+            makePlaylist: playlist.makePlaylist,
+            deletePlaylist: playlist.deletePlaylist,
+            addToPlaylist: playlist.addToPlaylist,
+            removeFromPlaylist: playlist.removeFromPlaylist,
+          }}
           playsList={playWithIdList}
         />
       ),
@@ -75,7 +78,7 @@ const MusicPlayer: React.FC = () => {
     drive: {
       name: "Google Drive",
       icon: "cloud",
-      element: <DriveFiles addFile={addFile} accessToken={auth.accessToken} />,
+      element: <DriveFiles addFile={addFile} accessToken={accessToken()} />,
     },
     settings: {
       name: "Settings",
@@ -84,7 +87,7 @@ const MusicPlayer: React.FC = () => {
         <Settings
           files={Object.values(files)}
           addFiles={addFiles}
-          accessToken={auth.accessToken}
+          accessToken={accessToken()}
         />
       ),
     },
@@ -94,17 +97,19 @@ const MusicPlayer: React.FC = () => {
 
   return (
     <RightMenuContext.Provider value={value.setRightMenu}>
-      <div className={stylePlayer}>
-        {/* <Menu items={menuItems} signIn={signIn} setSignIn={setSignIn} /> */}
-        <RouteMenu items={menuItems} auth={auth} />
+      <div class={stylePlayer}>
+        <Menu
+          items={menuItems}
+          auth={{ accessToken: accessToken(), signIn, signOut }}
+        />
 
         <Controller
-          info={status.info}
-          duration={status.duration}
-          currentTime={status.currentTime}
-          paused={status.paused}
-          repeat={status.repeat}
-          shuffle={status.shuffle}
+          info={status.info()}
+          duration={status.duration()}
+          currentTime={status.currentTime()}
+          paused={status.paused()}
+          repeat={status.repeat()}
+          shuffle={status.shuffle()}
           seek={time => player?.seek(time)}
           play={() => player?.play()}
           pause={() => player?.pause()}

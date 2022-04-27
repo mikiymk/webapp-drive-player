@@ -1,8 +1,8 @@
-import React from "react";
 import MakePlaylistButton from "./MakePlaylistButton";
 import useRightMenu from "~/hooks/useRightMenu";
 import IconButton from "~/components/IconButton";
 import { stylePlaylists } from "./style.css";
+import { For } from "solid-js";
 
 type Props = {
   playlists: Record<string, string[]>;
@@ -13,45 +13,41 @@ type Props = {
 };
 
 /** show on right click */
-const PlaylistList: React.FC<Props> = ({
-  playlists,
-  makePlaylist,
-  deletePlaylist,
-
-  select,
-}) => {
+const PlaylistList = (props: Props) => {
   const rightMenu = useRightMenu();
+  const onClickIcon = (name: string) =>
+    rightMenu([
+      {
+        type: "button",
+        label: "open playlist",
+        onClick: event => {
+          props.select(name);
+          rightMenu([])(event);
+        },
+      },
+      {
+        type: "button",
+        label: "delete playlist",
+        onClick: event => {
+          props.deletePlaylist(name);
+          rightMenu([])(event);
+        },
+      },
+    ]);
 
   return (
-    <ul className={stylePlaylists}>
-      {Object.entries(playlists).map(([name]) => (
-        <li key={name}>
-          {name}
-          <IconButton
-            icon="more_horiz"
-            onClick={rightMenu([
-              {
-                type: "button",
-                label: "open playlist",
-                onClick: event => {
-                  select(name);
-                  rightMenu([])(event);
-                },
-              },
-              {
-                type: "button",
-                label: "delete playlist",
-                onClick: event => {
-                  deletePlaylist(name);
-                  rightMenu([])(event);
-                },
-              },
-            ])}
-          />
-        </li>
-      ))}
+    <ul class={stylePlaylists}>
+      <For each={Object.entries(props.playlists)}>
+        {([name]) => (
+          <li>
+            {name}
+            <IconButton icon="more_horiz" onClick={onClickIcon(name)} />
+          </li>
+        )}
+      </For>
+
       <li>
-        <MakePlaylistButton makePlaylist={makePlaylist} />
+        <MakePlaylistButton makePlaylist={props.makePlaylist} />
       </li>
     </ul>
   );

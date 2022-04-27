@@ -1,6 +1,4 @@
-import React from "react";
-
-import Repeat from "~/audio/Repeat";
+import type Repeat from "~/audio/Repeat";
 import IconButton from "~/components/IconButton";
 
 import { styleIcon } from "./style.css";
@@ -16,12 +14,12 @@ const iconName = {
   "repeat on": "repeat_on",
 } as const;
 
-const RepeatButton: React.FC<Props> = ({ repeat, toggleRepeat }) => {
+const RepeatButton = (props: Props) => {
   return (
     <IconButton
-      icon={iconName[repeat.value]}
-      onClick={toggleRepeat}
-      className={styleIcon}
+      icon={iconName[props.repeat.value]}
+      onClick={() => props.toggleRepeat()}
+      class={styleIcon}
     />
   );
 };

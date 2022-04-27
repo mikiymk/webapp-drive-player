@@ -1,6 +1,8 @@
-import { createContext, MouseEvent } from "react";
-import Item from "./Item";
+import { JSX, createContext } from "solid-js";
+import type Item from "./Item";
 
-const Context = createContext((item: Item[]) => (event: MouseEvent) => {});
+const Context = createContext<
+  (item: Item[]) => JSX.EventHandler<HTMLButtonElement, MouseEvent>
+>(() => () => {});
 
 export default Context;

@@ -1,4 +1,4 @@
-import React from "react";
+import { Show } from "solid-js";
 
 import IconButton from "~/components/IconButton";
 
@@ -10,11 +10,23 @@ type Props = {
   pause: () => void;
 };
 
-const PlayButton: React.FC<Props> = ({ isPlaying, play, pause }) => {
-  return isPlaying ? (
-    <IconButton icon={"pause"} onClick={pause} className={styleIcon} />
-  ) : (
-    <IconButton icon={"play_arrow"} onClick={play} className={styleIcon} />
+const PlayButton = (props: Props) => {
+  return (
+    <Show
+      when={props.isPlaying}
+      fallback={
+        <IconButton
+          icon={"play_arrow"}
+          onClick={props.play}
+          class={styleIcon}
+        />
+      }>
+      <IconButton
+        icon={"pause"}
+        onClick={() => props.pause()}
+        class={styleIcon}
+      />
+    </Show>
   );
 };
 

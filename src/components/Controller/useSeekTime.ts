@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
+import { Accessor, createEffect, createSignal, JSX } from "solid-js";
 
-const useSeekTime = (time: number, seek: (time: number) => void) => {
-  const [seekTime, setSeekTime] = useState(0);
-  const [click, setClick] = useState(false);
+const useSeekTime = (time: Accessor<number>, seek: (time: number) => void) => {
+  const [seekTime, setSeekTime] = createSignal(0);
+  const [click, setClick] = createSignal(false);
 
-  useEffect(() => {
-    if (!click) {
-      setSeekTime(Math.round(time * 1000));
+  createEffect(() => {
+    if (!click()) {
+      setSeekTime(Math.round(time() * 1000));
     }
-  }, [time]);
+  });
 
   const onClickDown = () => {
     setClick(true);
@@ -16,11 +16,11 @@ const useSeekTime = (time: number, seek: (time: number) => void) => {
 
   const onClickUp = () => {
     setClick(false);
-    seek(seekTime / 1000);
+    seek(seekTime() / 1000);
   };
 
-  const onChange: React.ChangeEventHandler<HTMLInputElement> = event => {
-    setSeekTime(parseInt(event.target.value, 10));
+  const onChange: JSX.EventHandler<HTMLInputElement, Event> = event => {
+    setSeekTime(parseInt(event.currentTarget.value, 10));
   };
 
   return {

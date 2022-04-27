@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { createSignal } from "solid-js";
 
 type Playlists = { [name: string]: string[] };
 
 const usePlaylist = () => {
-  const [playlists, setPlaylists] = useState<Playlists>({});
+  const [playlists, setPlaylists] = createSignal<Playlists>({});
 
   const makePlaylist = (playlist: string) => {
     if (playlist in playlists) {
@@ -30,7 +30,7 @@ const usePlaylist = () => {
 
     setPlaylists(playlists => ({
       ...playlists,
-      [playlist]: [...playlists[playlist], audioId],
+      [playlist]: playlists[playlist]?.concat(audioId) ?? [],
     }));
   };
 
@@ -41,10 +41,10 @@ const usePlaylist = () => {
 
     setPlaylists(playlists => ({
       ...playlists,
-      [playlist]: [
-        ...playlists[playlist].slice(0, index),
-        ...playlists[playlist].slice(index + 1),
-      ],
+      [playlist]:
+        playlists[playlist]
+          ?.slice(0, index)
+          .concat(playlists[playlist]?.slice(index + 1) ?? []) ?? [],
     }));
   };
 

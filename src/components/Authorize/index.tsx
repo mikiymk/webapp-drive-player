@@ -1,30 +1,29 @@
-import React from "react";
+import { Show } from "solid-js";
 
 import LabelIcon from "~/components/LabelIcon";
 
 type Props = {
   style: string;
   auth: {
-    isSignIn: boolean;
+    accessToken: string;
     signIn: () => void;
     signOut: () => void;
   };
 };
 
-const Authorize: React.FC<Props> = ({
-  style,
-  auth: { isSignIn, signIn, signOut },
-}) => {
-  const onClick = isSignIn ? signOut : signIn;
-
+const Authorize = (props: Props) => {
   return (
-    <li onClick={onClick} className={style}>
-      {isSignIn ? (
+    <Show
+      when={props.auth.accessToken !== ""}
+      fallback={
+        <li onClick={() => props.auth.signIn()} class={props.style}>
+          <LabelIcon icon="login" text="Sign In" />
+        </li>
+      }>
+      <li onClick={() => props.auth.signOut()} class={props.style}>
         <LabelIcon icon="logout" text="Sign Out" />
-      ) : (
-        <LabelIcon icon="login" text="Sign In" />
-      )}
-    </li>
+      </li>
+    </Show>
   );
 };
 

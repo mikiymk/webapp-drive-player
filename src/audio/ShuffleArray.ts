@@ -19,8 +19,8 @@ class ShuffleArray implements Iterable<string> {
     return this._array.length;
   }
 
-  get(index: number) {
-    return this._array[this._indexArray[index]];
+  get(index: number): string {
+    return this._array[this._indexArray[index] ?? 0] ?? "";
   }
 
   [Symbol.iterator](): ShuffleIterator {
@@ -63,14 +63,12 @@ const random = (limit: number): number => {
 };
 
 /** Fisher–Yates shuffle */
-const shuffle = <T>(array: T[]): T[] => {
+const shuffle = (array: number[]): number[] => {
   const len = array.length;
   for (let i = len - 1; i > 0; i--) {
     const j = random(i + 1);
 
-    const tmp = array[i];
-    array[i] = array[j];
-    array[j] = tmp;
+    [array[i], array[j]] = [array[j] ?? 0, array[i] ?? 0];
   }
 
   return array;
