@@ -36,7 +36,7 @@ const PlaylistList = (props: Props) => {
     ]);
 
   return (
-    <ul className={stylePlaylists}>
+    <ul class={stylePlaylists}>
       <For each={Object.entries(props.playlists)}>
         {([name]) => (
           <li>

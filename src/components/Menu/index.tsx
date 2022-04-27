@@ -30,8 +30,8 @@ const Menu = (props: Props) => {
   const [selected, setSelected] = createSignal("playing");
 
   return (
-    <div className={styleMenu}>
-      <ul className={styleNav}>
+    <div class={styleMenu}>
+      <ul class={styleNav}>
         <For each={Object.entries(props.items)}>
           {([id, item]) => (
             <li
@@ -46,7 +46,7 @@ const Menu = (props: Props) => {
         </For>
         <Authorize style={styleNavItem} auth={props.auth} />
       </ul>
-      <div className={styleContent}>{props.items[selected()]?.element}</div>
+      <div class={styleContent}>{props.items[selected()]?.element}</div>
     </div>
   );
 };

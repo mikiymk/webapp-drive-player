@@ -10,6 +10,7 @@
     "check": "run-s type lint format test",
     "format": "prettier -w index.html src",
     "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "type": "tsc --noEmit",
     "type:watch": "tsc --noEmit --watch",
     "watch": "run-p type:watch start"

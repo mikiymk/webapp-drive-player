@@ -18,7 +18,7 @@ const PlayingInfo = (props: Props) => {
   const jacket = useJacket(props.info.picture?.[0]);
 
   return (
-    <div className={stylePlaying}>
+    <div class={stylePlaying}>
       <span>{props.info.album}</span>
       <img src={jacket()} alt="album jacket" />
       <ol>

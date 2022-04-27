@@ -9,7 +9,7 @@ type Props = {
 /** 時間をフォーマットして表示 */
 const MusicTitle = (props: Props) => {
   return (
-    <span className={styleTime}>
+    <span class={styleTime}>
       {formatTime(props.currentTime)}/{formatTime(props.duration)}
     </span>
   );

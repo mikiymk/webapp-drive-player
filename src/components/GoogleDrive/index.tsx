@@ -24,9 +24,9 @@ const DriveFiles = (props: Props) => {
   const { addParents, move, folders, files } = parents;
 
   return (
-    <div className={styleDrive}>
+    <div class={styleDrive}>
       <Breadcrumbs parents={parents.parents()} move={move} />
-      <ul className="drive-list">
+      <ul class="drive-list">
         <For each={folders()}>
           {folder => (
             <ItemFolder name={folder.name} move={() => addParents(folder)} />
@@ -49,8 +49,8 @@ type PropsItemFolder = {
 
 const ItemFolder = (props: PropsItemFolder) => {
   return (
-    <li className={styleItem} onClick={props.move}>
-      <Icon icon="folder" className={styleItemIcon} />
+    <li class={styleItem} onClick={props.move}>
+      <Icon icon="folder" class={styleItemIcon} />
       <span>{props.name}</span>
     </li>
   );
@@ -63,8 +63,8 @@ type PropsItemFile = {
 
 const ItemFile = (props: PropsItemFile) => {
   return (
-    <li className={styleItem} onClick={props.addFile}>
-      <Icon icon="audio_file" className={styleItemIcon} />
+    <li class={styleItem} onClick={props.addFile}>
+      <Icon icon="audio_file" class={styleItemIcon} />
       <span>{props.name}</span>
     </li>
   );

@@ -22,7 +22,7 @@ const Upload = (props: Props) => {
   };
 
   return (
-    <div className={styleUpload}>
+    <div class={styleUpload}>
       <button onClick={upload}>
         <LabelIcon
           icon="file_upload"

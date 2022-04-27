@@ -97,7 +97,7 @@ const MusicPlayer = () => {
 
   return (
     <RightMenuContext.Provider value={value.setRightMenu}>
-      <div className={stylePlayer}>
+      <div class={stylePlayer}>
         <Menu
           items={menuItems}
           auth={{ accessToken: accessToken(), signIn, signOut }}

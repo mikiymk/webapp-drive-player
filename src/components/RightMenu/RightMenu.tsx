@@ -16,7 +16,7 @@ type Props = {
 const RightMenu = (props: Props) => {
   return (
     <div
-      className={styleRightMenu}
+      class={styleRightMenu}
       style={{
         visibility: props.items.length !== 0 ? "visible" : "hidden",
         top: Math.trunc(props.top) + "px",

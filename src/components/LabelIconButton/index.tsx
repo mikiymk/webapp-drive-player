@@ -16,7 +16,7 @@ const LabelIconButton = (props: Props) => {
     classes = `${styleButton} ${props.className}`;
   }
   return (
-    <button onClick={props.onClick} className={classes}>
+    <button onClick={props.onClick} class={classes}>
       <LabelIcon icon={props.icon} text={props.text} />
     </button>
   );

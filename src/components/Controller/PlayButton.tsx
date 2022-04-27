@@ -18,10 +18,10 @@ const PlayButton = (props: Props) => {
         <IconButton
           icon={"play_arrow"}
           onClick={props.play}
-          className={styleIcon}
+          class={styleIcon}
         />
       }>
-      <IconButton icon={"pause"} onClick={props.pause} className={styleIcon} />
+      <IconButton icon={"pause"} onClick={props.pause} class={styleIcon} />
     </Show>
   );
 };

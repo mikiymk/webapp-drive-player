@@ -3,19 +3,19 @@ import { JSX } from "solid-js";
 
 type Props = {
   children: JSX.Element;
-  className?: string;
+  class?: string;
 };
 
 /** CSSで横に動く */
 const Marquee = (props: Props) => {
   let classes = `${styleMarquee}`;
-  if (props.className !== undefined) {
-    classes = `${styleMarquee} ${props.className}`;
+  if (props.class !== undefined) {
+    classes = `${styleMarquee} ${props.class}`;
   }
 
   return (
-    <span className={classes}>
-      <span className={styleInner}>{props.children}</span>
+    <span class={classes}>
+      <span class={styleInner}>{props.children}</span>
     </span>
   );
 };

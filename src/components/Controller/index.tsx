@@ -41,7 +41,7 @@ const Controller = (props: Props) => {
         time={props.currentTime}
         seek={props.seek}
       />
-      <div className={styleController}>
+      <div class={styleController}>
         <PrevButton prev={props.playPrev} />
         <PlayButton
           isPlaying={!props.paused}

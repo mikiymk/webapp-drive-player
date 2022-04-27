@@ -7,9 +7,9 @@ type Props = AudioInfo;
 /** タイトルとアーティストをマーキーで表示 */
 const MusicTitle = (props: Props) => {
   return (
-    <span className={styleTitleView}>
-      <Marquee className={styleTitle}>{props.title}</Marquee>
-      <Marquee className={styleArtist}>{props.artist}</Marquee>
+    <span class={styleTitleView}>
+      <Marquee class={styleTitle}>{props.title}</Marquee>
+      <Marquee class={styleArtist}>{props.artist}</Marquee>
     </span>
   );
 };

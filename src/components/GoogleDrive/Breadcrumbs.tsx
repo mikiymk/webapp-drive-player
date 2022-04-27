@@ -10,7 +10,7 @@ type Props = {
 
 export const Breadcrumbs = (props: Props) => {
   return (
-    <ul className={styleBreadcrumbs}>
+    <ul class={styleBreadcrumbs}>
       <For each={props.parents}>
         {(parent, index) => (
           <>
@@ -30,7 +30,7 @@ type PropsBread = {
 
 const Bread = (props: PropsBread) => {
   return (
-    <li className={styleBread} onClick={props.move}>
+    <li class={styleBread} onClick={props.move}>
       {props.parent.name}
     </li>
   );

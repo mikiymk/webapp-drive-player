@@ -14,7 +14,7 @@ const ShuffleButton = (props: Props) => {
     <IconButton
       icon={icon}
       onClick={props.toggleShuffle}
-      className={styleIcon}
+      class={styleIcon}
     />
   );
 };

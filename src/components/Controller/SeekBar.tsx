@@ -16,7 +16,7 @@ const SeekBar = (props: Props) => {
 
   return (
     <input
-      className={styleSeekBar}
+      class={styleSeekBar}
       type="range"
       min="0"
       max={props.duration * 1000}

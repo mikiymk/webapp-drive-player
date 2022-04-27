@@ -31,7 +31,7 @@ const Playlist = (props: Props) => {
     ]);
 
   return (
-    <div className={stylePlaylist}>
+    <div class={stylePlaylist}>
       <h3>{props.name}</h3>
       <button onClick={props.reset}>back to list</button>
       <button onClick={() => props.playsList(props.audioIDs, 0)}>

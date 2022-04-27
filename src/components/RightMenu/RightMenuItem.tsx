@@ -12,25 +12,25 @@ const RightMenuItem = (props: Props) => {
   return (
     <Switch>
       <Match when={props.item.type === "hr" && props.item}>
-        <hr className={styleHorizon}></hr>
+        <hr class={styleHorizon}></hr>
       </Match>
       <Match when={props.item.type === "button" && props.item}>
         {({ onClick, label }) => (
-          <button className={styleItem} onClick={onClick}>
+          <button class={styleItem} onClick={onClick}>
             {label}
           </button>
         )}
       </Match>
       <Match when={props.item.type === "anchor" && props.item}>
         {({ href, label }) => (
-          <a className={styleItem} href={href} target="_blank" rel="noreferrer">
+          <a class={styleItem} href={href} target="_blank" rel="noreferrer">
             {label}
           </a>
         )}
       </Match>
       <Match when={props.item.type === "list" && props.item}>
         {({ list, label }) => (
-          <div className={styleItem}>
+          <div class={styleItem}>
             {label}
             <For each={list}>{item => <RightMenuItem item={item} />}</For>
           </div>

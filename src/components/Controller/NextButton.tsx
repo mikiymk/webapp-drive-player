@@ -8,7 +8,7 @@ type Props = {
 
 const NextButton = (props: Props) => {
   return (
-    <IconButton icon="skip_next" onClick={props.next} className={styleIcon} />
+    <IconButton icon="skip_next" onClick={props.next} class={styleIcon} />
   );
 };
 

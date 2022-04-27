@@ -28,7 +28,7 @@ const Download = (props: Props) => {
   };
 
   return (
-    <div className={styleDownload}>
+    <div class={styleDownload}>
       <button onClick={download}>
         <LabelIcon
           icon="file_download"

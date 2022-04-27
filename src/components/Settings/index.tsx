@@ -14,7 +14,7 @@ type Props = {
  */
 const Settings = (props: Props) => {
   return (
-    <div className={styleSettings}>
+    <div class={styleSettings}>
       <Upload files={props.files} accessToken={props.accessToken} />
       <Download addFiles={props.addFiles} accessToken={props.accessToken} />
     </div>

@@ -2,17 +2,17 @@ import { styleIcon } from "./style.css";
 
 type Props = {
   icon: string;
-  className?: string;
+  class?: string;
 };
 
 /** Google Material Icon */
 const Icon = (props: Props) => {
   let classes = `material-icons-sharp ${styleIcon}`;
-  if (props.className !== undefined) {
-    classes = `material-icons-sharp ${styleIcon} ${props.className}`;
+  if (props.class !== undefined) {
+    classes = `material-icons-sharp ${styleIcon} ${props.class}`;
   }
 
-  return <span className={classes}>{props.icon}</span>;
+  return <span class={classes}>{props.icon}</span>;
 };
 
 export default Icon;

@@ -17,7 +17,7 @@ type Props = {
  */
 const MusicList = (props: Props) => {
   return (
-    <ul className={styleLibrary}>
+    <ul class={styleLibrary}>
       <For each={Object.values(props.files)}>
         {(file, index) => (
           <Item

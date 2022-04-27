@@ -10,8 +10,8 @@ type Props = {
 const LabelIcon = (props: Props) => {
   return (
     <span>
-      <Icon icon={props.icon} className={styleIcon} />
-      <span className={`${styleIcon} ${styleLabel}`}>{props.text}</span>
+      <Icon icon={props.icon} class={styleIcon} />
+      <span class={`${styleIcon} ${styleLabel}`}>{props.text}</span>
     </span>
   );
 };
