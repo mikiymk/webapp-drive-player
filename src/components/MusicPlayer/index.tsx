@@ -23,10 +23,9 @@ export type Files = {
  * react component root.
  */
 const MusicPlayer = () => {
-  const auth = useSignIn();
-  const { files, addFile, addFiles, player, status } = useMusicPlayer(
-    auth.accessToken
-  );
+  const { accessToken, signIn, signOut } = useSignIn();
+  const { files, addFile, addFiles, player, status } =
+    useMusicPlayer(accessToken);
   const playlist = usePlaylist();
 
   const playWithIdList = (idList: string[], index: number) => {
@@ -79,7 +78,7 @@ const MusicPlayer = () => {
     drive: {
       name: "Google Drive",
       icon: "cloud",
-      element: <DriveFiles addFile={addFile} accessToken={auth.accessToken} />,
+      element: <DriveFiles addFile={addFile} accessToken={accessToken()} />,
     },
     settings: {
       name: "Settings",
@@ -88,7 +87,7 @@ const MusicPlayer = () => {
         <Settings
           files={Object.values(files)}
           addFiles={addFiles}
-          accessToken={auth.accessToken}
+          accessToken={accessToken()}
         />
       ),
     },
@@ -99,7 +98,10 @@ const MusicPlayer = () => {
   return (
     <RightMenuContext.Provider value={value.setRightMenu}>
       <div className={stylePlayer}>
-        <Menu items={menuItems} auth={auth} />
+        <Menu
+          items={menuItems}
+          auth={{ accessToken: accessToken(), signIn, signOut }}
+        />
 
         <Controller
           info={status.info()}

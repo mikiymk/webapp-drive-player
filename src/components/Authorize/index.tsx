@@ -6,23 +6,25 @@ import LabelIcon from "~/components/LabelIcon";
 type Props = {
   style: string;
   auth: {
-    isSignIn: boolean;
+    accessToken: string;
     signIn: () => void;
     signOut: () => void;
   };
 };
 
 const Authorize = (props: Props) => {
-  const onClick = props.auth.isSignIn ? props.auth.signOut : props.auth.signIn;
-
   return (
-    <li onClick={onClick} className={props.style}>
-      <Show
-        when={props.auth.isSignIn}
-        fallback={<LabelIcon icon="login" text="Sign In" />}>
+    <Show
+      when={props.auth.accessToken !== ""}
+      fallback={
+        <li onClick={props.auth.signIn} className={props.style}>
+          <LabelIcon icon="login" text="Sign In" />
+        </li>
+      }>
+      <li onClick={props.auth.signOut} className={props.style}>
         <LabelIcon icon="logout" text="Sign Out" />
-      </Show>
-    </li>
+      </li>
+    </Show>
   );
 };
 

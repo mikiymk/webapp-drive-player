@@ -4,9 +4,9 @@ import { File } from "~/file";
 import AudioInfo from "~/audio/AudioInfo";
 import { Files } from "~/components/MusicPlayer";
 import AudioElementPlayer from "~/audio/AudioElementPlayer";
-import { createEffect, createSignal, onMount } from "solid-js";
+import { Accessor, createEffect, createSignal, onMount } from "solid-js";
 
-const useMusicPlayer = (accessToken: string) => {
+const useMusicPlayer = (accessToken: Accessor<string>) => {
   const [files, setFiles] = createSignal<Files>({});
 
   const [paused, setPaused] = createSignal(true);
@@ -42,7 +42,7 @@ const useMusicPlayer = (accessToken: string) => {
   });
 
   createEffect(() => {
-    manager.setAccessToken(accessToken);
+    manager.setAccessToken(accessToken());
   });
 
   const addFiles = (newFiles: File[]) =>

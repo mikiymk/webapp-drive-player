@@ -13,8 +13,7 @@ const useSignIn = () => {
   });
 
   return {
-    accessToken: accessToken(),
-    isSignIn: accessToken().length !== 0,
+    accessToken,
     signIn: () =>
       client()
         ?.requestAccessToken()

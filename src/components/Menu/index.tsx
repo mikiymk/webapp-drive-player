@@ -19,7 +19,6 @@ type Props = {
 
   auth: {
     accessToken: string;
-    isSignIn: boolean;
     signIn: () => void;
     signOut: () => void;
   };
