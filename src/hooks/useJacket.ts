@@ -1,14 +1,15 @@
-import { createEffect, createSignal } from "solid-js";
+import { Accessor, createEffect, createSignal } from "solid-js";
 
-const useJacket = (picture?: ArrayBuffer) => {
+const useJacket = (picture: Accessor<ArrayBuffer | undefined>) => {
   const [jacket, setJacket] = createSignal("");
   const defaultBuffer = new ArrayBuffer(0);
-  const pictureBuffer = picture ?? defaultBuffer;
 
   createEffect(prev => {
+    const pictureBuffer = picture() ?? defaultBuffer;
     if (prev === pictureBuffer) {
       return prev;
     }
+
     if (jacket() !== "") {
       URL.revokeObjectURL(jacket());
       setJacket("");

@@ -37,8 +37,9 @@ const useMusicPlayer = (accessToken: Accessor<string>) => {
   });
 
   createEffect(() => {
+    const filesValue = files();
     manager.onChangeMusic = id =>
-      setInfo(files()[id].info ?? AudioInfo.getEmptyInfo());
+      setInfo(filesValue[id].info ?? AudioInfo.getEmptyInfo());
   });
 
   createEffect(() => {

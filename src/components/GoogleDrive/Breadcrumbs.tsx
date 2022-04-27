@@ -30,7 +30,7 @@ type PropsBread = {
 
 const Bread = (props: PropsBread) => {
   return (
-    <li class={styleBread} onClick={props.move}>
+    <li class={styleBread} onClick={() => props.move()}>
       {props.parent.name}
     </li>
   );

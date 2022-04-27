@@ -21,7 +21,11 @@ const PlayButton = (props: Props) => {
           class={styleIcon}
         />
       }>
-      <IconButton icon={"pause"} onClick={props.pause} class={styleIcon} />
+      <IconButton
+        icon={"pause"}
+        onClick={() => props.pause()}
+        class={styleIcon}
+      />
     </Show>
   );
 };

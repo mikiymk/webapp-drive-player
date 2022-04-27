@@ -8,12 +8,10 @@ type Props = {
 };
 
 const ShuffleButton = (props: Props) => {
-  const icon = props.isShuffled ? "shuffle_on" : "shuffle";
-
   return (
     <IconButton
-      icon={icon}
-      onClick={props.toggleShuffle}
+      icon={props.isShuffled ? "shuffle_on" : "shuffle"}
+      onClick={() => props.toggleShuffle()}
       class={styleIcon}
     />
   );

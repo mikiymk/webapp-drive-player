@@ -1,22 +1,15 @@
-import { createSignal, onMount } from "solid-js";
+import { createSignal } from "solid-js";
 import { initClient } from "~/google/init";
-import { TokenClient } from "~/google/TokenClient";
 
 const useSignIn = () => {
   const [accessToken, setAccessToken] = createSignal("");
-  const [client, setClient] = createSignal<TokenClient>();
-
-  onMount(() => {
-    const client = initClient();
-
-    setClient(client);
-  });
+  const client = initClient();
 
   return {
     accessToken,
     signIn: () =>
-      client()
-        ?.requestAccessToken()
+      client
+        .requestAccessToken()
         .then(response => setAccessToken(response.access_token)),
     signOut: () => setAccessToken(""),
   };

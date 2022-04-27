@@ -49,7 +49,7 @@ const Controller = (props: Props) => {
           pause={props.pause}
         />
         <NextButton next={props.playNext} />
-        <MusicTitle {...props.info} />
+        <MusicTitle info={props.info} />
         <RepeatButton repeat={props.repeat} toggleRepeat={toggleRepeat} />
         <ShuffleButton
           isShuffled={props.shuffle}

@@ -16,11 +16,11 @@ const Authorize = (props: Props) => {
     <Show
       when={props.auth.accessToken !== ""}
       fallback={
-        <li onClick={props.auth.signIn} class={props.style}>
+        <li onClick={() => props.auth.signIn()} class={props.style}>
           <LabelIcon icon="login" text="Sign In" />
         </li>
       }>
-      <li onClick={props.auth.signOut} class={props.style}>
+      <li onClick={() => props.auth.signOut()} class={props.style}>
         <LabelIcon icon="logout" text="Sign Out" />
       </li>
     </Show>

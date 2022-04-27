@@ -10,7 +10,7 @@ const PrevButton = (props: Props) => {
   return (
     <IconButton
       icon="skip_previous"
-      onClick={props.prev}
+      onClick={() => props.prev()}
       class={styleIcon}
     />
   );

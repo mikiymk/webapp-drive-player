@@ -10,8 +10,8 @@ type Props = {
 /** 現在位置が左から右にいって時間を表す */
 const SeekBar = (props: Props) => {
   const { seekTime, onChange, onClickDown, onClickUp } = useSeekTime(
-    props.time,
-    props.seek
+    () => props.time,
+    time => props.seek(time)
   );
 
   return (

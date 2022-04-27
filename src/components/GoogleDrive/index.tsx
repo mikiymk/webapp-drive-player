@@ -17,7 +17,7 @@ type Props = {
  */
 const DriveFiles = (props: Props) => {
   const parents = useGDriveParents(
-    props.accessToken,
+    () => props.accessToken,
     getAllFolders,
     getAllMusics
   );
@@ -49,7 +49,7 @@ type PropsItemFolder = {
 
 const ItemFolder = (props: PropsItemFolder) => {
   return (
-    <li class={styleItem} onClick={props.move}>
+    <li class={styleItem} onClick={() => props.move()}>
       <Icon icon="folder" class={styleItemIcon} />
       <span>{props.name}</span>
     </li>
@@ -63,7 +63,7 @@ type PropsItemFile = {
 
 const ItemFile = (props: PropsItemFile) => {
   return (
-    <li class={styleItem} onClick={props.addFile}>
+    <li class={styleItem} onClick={() => props.addFile()}>
       <Icon icon="audio_file" class={styleItemIcon} />
       <span>{props.name}</span>
     </li>

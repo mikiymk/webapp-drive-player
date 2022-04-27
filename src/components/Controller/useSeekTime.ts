@@ -1,12 +1,12 @@
-import { createEffect, createSignal, JSX } from "solid-js";
+import { Accessor, createEffect, createSignal, JSX } from "solid-js";
 
-const useSeekTime = (time: number, seek: (time: number) => void) => {
+const useSeekTime = (time: Accessor<number>, seek: (time: number) => void) => {
   const [seekTime, setSeekTime] = createSignal(0);
   const [click, setClick] = createSignal(false);
 
   createEffect(() => {
     if (!click()) {
-      setSeekTime(Math.round(time * 1000));
+      setSeekTime(Math.round(time() * 1000));
     }
   });
 

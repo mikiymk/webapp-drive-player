@@ -7,12 +7,12 @@ type Props = {
 
 /** Google Material Icon */
 const Icon = (props: Props) => {
-  let classes = `material-icons-sharp ${styleIcon}`;
-  if (props.class !== undefined) {
-    classes = `material-icons-sharp ${styleIcon} ${props.class}`;
-  }
+  const classes = () =>
+    props.class
+      ? `material-icons-sharp ${styleIcon} ${props.class}`
+      : `material-icons-sharp ${styleIcon}`;
 
-  return <span class={classes}>{props.icon}</span>;
+  return <span class={classes()}>{props.icon}</span>;
 };
 
 export default Icon;

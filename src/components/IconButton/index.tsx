@@ -5,19 +5,17 @@ import { styleIcon } from "./style.css";
 
 type Props = {
   icon: string;
-  onClick: JSX.EventHandlerUnion<HTMLButtonElement, MouseEvent>;
+  onClick: JSX.EventHandler<HTMLButtonElement, MouseEvent>;
   class?: string;
 };
 
 /** Google Material Icon ボタン */
 const IconButton = (props: Props) => {
-  let classes = `${styleIcon}`;
-  if (props.class !== undefined) {
-    classes = `${styleIcon} ${props.class}`;
-  }
+  const classes = () =>
+    props.class ? `${styleIcon} ${props.class}` : styleIcon;
 
   return (
-    <button onClick={props.onClick} class={classes}>
+    <button onClick={event => props.onClick(event)} class={classes()}>
       <Icon icon={props.icon} class={`${styleIcon}-icon`} />
     </button>
   );

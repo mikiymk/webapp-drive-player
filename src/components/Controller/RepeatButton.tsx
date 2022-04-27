@@ -18,7 +18,7 @@ const RepeatButton = (props: Props) => {
   return (
     <IconButton
       icon={iconName[props.repeat.value]}
-      onClick={props.toggleRepeat}
+      onClick={() => props.toggleRepeat()}
       class={styleIcon}
     />
   );

@@ -33,7 +33,7 @@ const Playlist = (props: Props) => {
   return (
     <div class={stylePlaylist}>
       <h3>{props.name}</h3>
-      <button onClick={props.reset}>back to list</button>
+      <button onClick={() => props.reset()}>back to list</button>
       <button onClick={() => props.playsList(props.audioIDs, 0)}>
         play this playlist
       </button>
@@ -42,7 +42,7 @@ const Playlist = (props: Props) => {
           {(id, index) => (
             <li>
               {props.files[id].info?.title ?? props.files[id].name}
-              <button onClick={onClickIcon(index())}>
+              <button onClick={event => onClickIcon(index())(event)}>
                 <Icon icon="more_horiz" />
               </button>
             </li>

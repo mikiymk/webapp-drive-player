@@ -8,13 +8,11 @@ type Props = {
 
 /** CSSで横に動く */
 const Marquee = (props: Props) => {
-  let classes = `${styleMarquee}`;
-  if (props.class !== undefined) {
-    classes = `${styleMarquee} ${props.class}`;
-  }
+  const classes = () =>
+    props.class ? `${styleMarquee} ${props.class}` : styleMarquee;
 
   return (
-    <span class={classes}>
+    <span class={classes()}>
       <span class={styleInner}>{props.children}</span>
     </span>
   );

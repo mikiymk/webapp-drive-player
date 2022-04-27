@@ -2,14 +2,16 @@ import Marquee from "~/components/Marquee";
 import AudioInfo from "~/audio/AudioInfo";
 import { styleArtist, styleTitle, styleTitleView } from "./style.css";
 
-type Props = AudioInfo;
+type Props = {
+  info: AudioInfo;
+};
 
 /** タイトルとアーティストをマーキーで表示 */
 const MusicTitle = (props: Props) => {
   return (
     <span class={styleTitleView}>
-      <Marquee class={styleTitle}>{props.title}</Marquee>
-      <Marquee class={styleArtist}>{props.artist}</Marquee>
+      <Marquee class={styleTitle}>{props.info.title}</Marquee>
+      <Marquee class={styleArtist}>{props.info.artist}</Marquee>
     </span>
   );
 };
