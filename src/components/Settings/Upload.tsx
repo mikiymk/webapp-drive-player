@@ -1,9 +1,8 @@
 import Icon from "~/components/GoogleIcon";
 import LabelIcon from "~/components/LabelIcon";
 import { uploadLibraryData, File } from "~/file";
-import React, { useState } from "react";
 import { styleUpload } from "./style.css";
-import { Component, createSignal } from "solid-js";
+import { createSignal } from "solid-js";
 
 type Props = {
   accessToken: string;

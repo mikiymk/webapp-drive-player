@@ -1,4 +1,3 @@
-import React from "react";
 import { File } from "~/file";
 import Icon from "~/components/GoogleIcon";
 import useRightMenu from "~/hooks/useRightMenu";

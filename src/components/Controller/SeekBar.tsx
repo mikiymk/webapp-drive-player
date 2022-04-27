@@ -1,4 +1,3 @@
-import React from "react";
 import { styleSeekBar } from "./style.css";
 import useSeekTime from "./useSeekTime";
 

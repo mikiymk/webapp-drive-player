@@ -1,5 +1,3 @@
-import React from "react";
-
 import Marquee from "~/components/Marquee";
 import AudioInfo from "~/audio/AudioInfo";
 import { styleArtist, styleTitle, styleTitleView } from "./style.css";

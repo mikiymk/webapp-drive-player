@@ -1,4 +1,3 @@
-import React from "react";
 import { For, Show } from "solid-js";
 
 import { File } from "~/file";

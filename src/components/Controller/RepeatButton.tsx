@@ -1,5 +1,3 @@
-import React from "react";
-
 import Repeat from "~/audio/Repeat";
 import IconButton from "~/components/IconButton";
 

@@ -1,9 +1,7 @@
 import { File } from "~/file";
-import React from "react";
 import Download from "./Download";
 import { styleSettings } from "./style.css";
 import Upload from "./Upload";
-import { Component } from "solid-js";
 
 type Props = {
   files: File[];

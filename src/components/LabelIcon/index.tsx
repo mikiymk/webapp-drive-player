@@ -1,6 +1,3 @@
-import React from "react";
-import { Component } from "solid-js";
-
 import Icon from "~/components/GoogleIcon";
 import { styleIcon, styleLabel } from "./style.css";
 

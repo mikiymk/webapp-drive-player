@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Component, createSignal } from "solid-js";
+import { createSignal } from "solid-js";
 
 import Icon from "~/components/GoogleIcon";
 import LabelIcon from "~/components/LabelIcon";

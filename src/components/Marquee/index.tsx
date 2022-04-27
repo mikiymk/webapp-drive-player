@@ -1,4 +1,3 @@
-import React from "react";
 import { styleMarquee, styleInner } from "./style.css";
 import { JSX } from "solid-js";
 

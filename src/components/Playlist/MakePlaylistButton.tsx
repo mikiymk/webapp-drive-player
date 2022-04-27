@@ -1,4 +1,3 @@
-import React, { useRef } from "react";
 import { styleMakePlaylist } from "./style.css";
 
 type Props = {

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Breadcrumbs } from "./Breadcrumbs";
 
 import { getAllMusics, getAllFolders, File } from "~/file";

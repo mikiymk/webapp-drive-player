@@ -1,4 +1,3 @@
-import React from "react";
 import { Show } from "solid-js";
 
 import LabelIcon from "~/components/LabelIcon";

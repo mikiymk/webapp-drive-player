@@ -1,5 +1,3 @@
-import React from "react";
-
 import LabelIcon from "~/components/LabelIcon";
 import { styleButton } from "./style.css";
 import { JSX } from "solid-js";

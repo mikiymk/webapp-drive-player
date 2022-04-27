@@ -1,4 +1,3 @@
-import React from "react";
 import { createSignal, For, JSX } from "solid-js";
 
 import LabelIcon from "~/components/LabelIcon";

@@ -1,4 +1,3 @@
-import React from "react";
 import { For } from "solid-js";
 
 import AudioInfo from "~/audio/AudioInfo";
