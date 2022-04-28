@@ -6,7 +6,6 @@
   "scripts": {
     "test": "jest",
     "build": "vite build",
-    "build:wasm": "wasm-pack build ./wasm-sql --target web",
     "start": "vite",
     "check": "run-s type lint format test",
     "format": "prettier -w index.html src",
@@ -14,8 +13,6 @@
     "lint:fix": "eslint src --fix",
     "type": "tsc --noEmit",
     "type:watch": "tsc --noEmit --watch",
-    "wasm": "wasm-pack build ./wasm-sql --target web",
-    "wasm:watch": "cargo watch -s 'wasm-pack build ./wasm-sql --target web' -w ./wasm-sql",
     "watch": "run-p type:watch start"
   },
   "repository": {

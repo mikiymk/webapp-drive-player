@@ -14,6 +14,7 @@ import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import useSignIn from "~/hooks/useSignIn";
 import type { JSX } from "solid-js";
+import createLibrary from "~/hooks/createLibrary";
 
 export type Files = {
   [name: string]: File;
@@ -24,6 +25,7 @@ export type Files = {
  */
 const MusicPlayer = () => {
   const { accessToken, signIn, signOut } = useSignIn();
+  createLibrary();
   const { files, addFile, addFiles, player, status } =
     useMusicPlayer(accessToken);
   const playlist = usePlaylist();
