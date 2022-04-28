@@ -13,6 +13,7 @@
     "lint:fix": "eslint src --fix",
     "type": "tsc --noEmit",
     "type:watch": "tsc --noEmit --watch",
+    "wasm": "wasm-pack build ./wasm-sql --target web",
     "watch": "run-p type:watch start"
   },
   "repository": {
