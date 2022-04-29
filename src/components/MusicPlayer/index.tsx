@@ -14,7 +14,8 @@ import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import useSignIn from "~/hooks/useSignIn";
 import type { JSX } from "solid-js";
-import createLibrary from "~/hooks/createLibrary";
+import createLibrary from "./createLibrary";
+import createFiles from "./createFiles";
 
 export type Files = {
   [name: string]: File;
@@ -25,10 +26,29 @@ export type Files = {
  */
 const MusicPlayer = () => {
   const { accessToken, signIn, signOut } = useSignIn();
-  createLibrary();
-  const { files, addFile, addFiles, player, status } =
-    useMusicPlayer(accessToken);
+  const { select, insert } = createLibrary();
+  const {
+    file: getFile,
+    files: getFiles,
+    addFiles: sqlAddFiles,
+  } = createFiles(select, insert);
+  const {
+    files: getFiles2,
+    addFile,
+    addFiles,
+    player,
+    status,
+  } = useMusicPlayer(accessToken);
   const playlist = usePlaylist();
+
+  let idNum = 4;
+
+  const files = () => {
+    if (idNum < 100) sqlAddFiles([{ id: "id-" + idNum++, name: "title" }]);
+
+    console.log(getFile("id-1"), getFiles());
+    return getFiles2();
+  };
 
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
@@ -87,7 +107,7 @@ const MusicPlayer = () => {
       icon: "settings",
       element: (
         <Settings
-          files={Object.values(files)}
+          files={Object.values(files())}
           addFiles={addFiles}
           accessToken={accessToken()}
         />
