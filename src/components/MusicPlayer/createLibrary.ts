@@ -1,5 +1,12 @@
 import { createEffect, createResource, createSignal } from "solid-js";
-import init, { BindParams, Database } from "sql.js";
+import init from "sql.js";
+import type { BindParams, Database, ParamsObject } from "sql.js";
+
+export type SelectDB = (
+  sql: string,
+  values?: BindParams | undefined
+) => ParamsObject[];
+export type UpdateDB = (sql: string, values?: BindParams[] | undefined) => void;
 
 const createLibrary = () => {
   const [database, setDatabase] = createSignal<Database | undefined>(
@@ -33,40 +40,10 @@ const createLibrary = () => {
 
     db.exec("CREATE TABLE `settings` (`setting` TEXT)");
 
-    db.create_function(
-      "js_updated",
-      () => (setDatabase(prev => (console.log("update database"), prev)), 1)
-    );
-
-    db.exec(
-      "INSERT INTO `audio` (`id`, `title`, `artists`, `album`, " +
-        "`album_artist`, `track`, `track_of`, `disk`, `disk_of`, " +
-        "`release_at`, `genre`, `picture`, `album_sort`, " +
-        "`title_sort`, `artist_sort`, `album_artist_sort`) VALUES ('id-1', " +
-        "'title', 'artists', 'album', 'album_artist', 1, 1, 1, 2, '1900-01-01', 'genre', " +
-        "'picture', 'album_sort', 'title_sort', 'artist_sort', 'album_artist_sort')"
-    );
-    db.exec(
-      "INSERT INTO `audio` (`id`, `title`, `artists`, `album`, " +
-        "`album_artist`, `track`, `track_of`, `disk`, `disk_of`, " +
-        "`release_at`, `genre`, `picture`, `album_sort`, " +
-        "`title_sort`, `artist_sort`, `album_artist_sort`) VALUES ('id-2', " +
-        "'title', 'artists', 'album', 'album_artist', 1, 1, 1, 2, '1900-01-01', 'genre', " +
-        "'picture', 'album_sort', 'title_sort', 'artist_sort', 'album_artist_sort')"
-    );
-    db.exec(
-      "INSERT INTO `audio` (`id`, `title`, `artists`, `album`, " +
-        "`album_artist`, `track`, `track_of`, `disk`, `disk_of`, " +
-        "`release_at`, `genre`, `picture`, `album_sort`, " +
-        "`title_sort`, `artist_sort`, `album_artist_sort`) VALUES ('id-3', " +
-        "'title', 'artists', 'album', 'album_artist', 1, 1, 1, 2, '1900-01-01', 'genre', " +
-        "'picture', 'album_sort', 'title_sort', 'artist_sort', 'album_artist_sort')"
-    );
-
     setDatabase(db);
   });
 
-  const select = (sql: string, values?: BindParams) => {
+  const select: SelectDB = (sql: string, values?: BindParams) => {
     const db = database();
     if (db === undefined) return [];
     const stmt = db.prepare(sql);
@@ -78,7 +55,7 @@ const createLibrary = () => {
     return result;
   };
 
-  const insert = (sql: string, values?: BindParams[]) => {
+  const update: UpdateDB = (sql: string, values?: BindParams[]) => {
     const db = database();
     if (db === undefined) return;
     if (values === undefined) return;
@@ -89,13 +66,15 @@ const createLibrary = () => {
     }
     stmt.free();
 
-    setDatabase(db => (console.log("update database", db), db));
+    console.log("update database", sql, values, db);
+
+    setDatabase(db => db);
   };
 
   return {
     database,
     select,
-    insert,
+    update,
   };
 };
 

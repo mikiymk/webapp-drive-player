@@ -15,7 +15,7 @@ type Props = {
  * now playing audio info view
  */
 const PlayingInfo = (props: Props) => {
-  const jacket = useJacket(() => props.info.picture?.[0]);
+  const jacket = useJacket(() => props.info.picture);
 
   return (
     <div class={stylePlaying}>

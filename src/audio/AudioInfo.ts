@@ -1,11 +1,14 @@
-type AudioInfoNumber = { of: number | null; no: number | null };
+import type { ParamsObject } from "sql.js";
+import { isArr, isBlob, isNum, isStr } from "~/hooks/isType";
+
+type Partial<T> = { [P in keyof T]?: T[P] | undefined };
+type AudioInfoNumber = { of: number | undefined; no: number | undefined };
 
 type AudioInfoSort = {
-  albumsort?: string | undefined;
-  titlesort?: string | undefined;
-  artistsort?: string | undefined;
-  albumartistsort?: string | undefined;
-  composersort?: string | undefined;
+  albumsort: string;
+  titlesort: string;
+  artistsort: string;
+  albumartistsort: string;
 };
 
 class AudioInfo {
@@ -32,7 +35,6 @@ class AudioInfo {
 
     const {
       title,
-      artist,
       artists,
       album,
       albumartist,
@@ -59,23 +61,41 @@ class AudioInfo {
 
     return new AudioInfo(
       title,
-      artist,
       artists,
       album,
       albumartist,
-      track,
-      disk,
+      { of: track.of ?? undefined, no: track.no ?? undefined },
+      { of: disk.of ?? undefined, no: disk.no ?? undefined },
       date,
       genre,
-      picture?.map(value => value.data.buffer),
+      picture?.[0]?.data.buffer,
       sort
+    );
+  }
+
+  static selectInfo(result: ParamsObject) {
+    return new AudioInfo(
+      isStr(result["title"]),
+      isArr(result["artists"]),
+      isStr(result["album"]),
+      isStr(result["album_artist"]),
+      { of: isNum(result["track_of"]), no: isNum(result["track"]) },
+      { of: isNum(result["disk_of"]), no: isNum(result["disk"]) },
+      isStr(result["release_at"]),
+      isArr(result["genre"]),
+      isBlob(result["picture"])?.buffer,
+      {
+        albumsort: isStr(result["album_sort"]),
+        titlesort: isStr(result["title_sort"]),
+        artistsort: isStr(result["artist_sort"]),
+        albumartistsort: isStr(result["album_artist_sort"]),
+      }
     );
   }
 
   static copyInfo(base: AudioInfo) {
     return new AudioInfo(
       base.title,
-      base.artist,
       base.artists,
       base.album,
       base.albumartist,
@@ -89,7 +109,6 @@ class AudioInfo {
   }
 
   readonly title: string;
-  readonly artist: string;
   readonly artists: string[];
   readonly album: string;
   readonly albumartist: string;
@@ -99,12 +118,11 @@ class AudioInfo {
   readonly date: string;
   readonly genre: string[];
 
-  readonly picture: ArrayBuffer[];
+  readonly picture: ArrayBuffer;
   readonly sort: AudioInfoSort;
 
   private constructor(
     title?: string,
-    artist?: string,
     artists?: string[],
     album?: string,
     albumartist?: string,
@@ -112,20 +130,24 @@ class AudioInfo {
     disk?: AudioInfoNumber,
     date?: string,
     genre?: string[],
-    picture?: ArrayBuffer[],
+    picture?: ArrayBuffer,
     sort?: Partial<AudioInfoSort>
   ) {
     this.title = title ?? "";
-    this.artist = artist ?? "";
     this.artists = artists ?? [""];
     this.album = album ?? "";
     this.albumartist = albumartist ?? "";
-    this.track = { no: track?.no ?? null, of: track?.of ?? null };
-    this.disk = { no: disk?.no ?? null, of: disk?.of ?? null };
+    this.track = { no: track?.no ?? undefined, of: track?.of ?? undefined };
+    this.disk = { no: disk?.no ?? undefined, of: disk?.of ?? undefined };
     this.date = date ?? "";
     this.genre = genre ?? [];
-    this.picture = picture ?? [];
-    this.sort = sort ?? {};
+    this.picture = picture ?? new ArrayBuffer(0);
+    this.sort = {
+      albumsort: sort?.albumsort ?? "",
+      titlesort: sort?.titlesort ?? "",
+      artistsort: sort?.artistsort ?? "",
+      albumartistsort: sort?.albumartistsort ?? "",
+    };
   }
 }
 

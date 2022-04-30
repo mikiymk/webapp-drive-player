@@ -9,7 +9,7 @@ import { For } from "solid-js";
 
 type Props = {
   accessToken: string;
-  addFile: (file: File) => void;
+  addFile: (file: File[]) => void;
 };
 
 /**
@@ -34,7 +34,7 @@ const DriveFiles = (props: Props) => {
         </For>
         <For each={files()}>
           {file => (
-            <ItemFile name={file.name} addFile={() => props.addFile(file)} />
+            <ItemFile name={file.name} addFile={() => props.addFile([file])} />
           )}
         </For>
       </ul>

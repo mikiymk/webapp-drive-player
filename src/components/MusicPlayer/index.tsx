@@ -26,29 +26,10 @@ export type Files = {
  */
 const MusicPlayer = () => {
   const { accessToken, signIn, signOut } = useSignIn();
-  const { select, insert } = createLibrary();
-  const {
-    file: getFile,
-    files: getFiles,
-    addFiles: sqlAddFiles,
-  } = createFiles(select, insert);
-  const {
-    files: getFiles2,
-    addFile,
-    addFiles,
-    player,
-    status,
-  } = useMusicPlayer(accessToken);
+  const { select, update } = createLibrary();
+  const { files, addFiles } = createFiles(select, update);
+  const { player, status } = useMusicPlayer(accessToken, select, update);
   const playlist = usePlaylist();
-
-  let idNum = 4;
-
-  const files = () => {
-    if (idNum < 100) sqlAddFiles([{ id: "id-" + idNum++, name: "title" }]);
-
-    console.log(getFile("id-1"), getFiles());
-    return getFiles2();
-  };
 
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
@@ -100,7 +81,7 @@ const MusicPlayer = () => {
     drive: {
       name: "Google Drive",
       icon: "cloud",
-      element: <DriveFiles addFile={addFile} accessToken={accessToken()} />,
+      element: <DriveFiles addFile={addFiles} accessToken={accessToken()} />,
     },
     settings: {
       name: "Settings",

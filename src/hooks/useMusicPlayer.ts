@@ -1,14 +1,15 @@
 import AudioManager from "~/audio/AudioManager";
 import Repeat from "~/audio/Repeat";
-import type { File } from "~/file";
 import AudioInfo from "~/audio/AudioInfo";
-import type { Files } from "~/components/MusicPlayer";
 import AudioElementPlayer from "~/audio/AudioElementPlayer";
 import { Accessor, createEffect, createSignal, onMount } from "solid-js";
+import type { BindParams, ParamsObject } from "sql.js";
 
-const useMusicPlayer = (accessToken: Accessor<string>) => {
-  const [files, setFiles] = createSignal<Files>({});
-
+const useMusicPlayer = (
+  accessToken: Accessor<string>,
+  select: (sql: string, values?: BindParams | undefined) => ParamsObject[],
+  update: (sql: string, values?: BindParams[] | undefined) => void
+) => {
   const [paused, setPaused] = createSignal(true);
   const [duration, setDuration] = createSignal(0);
   const [currentTime, setCurrentTime] = createSignal(0);
@@ -18,8 +19,49 @@ const useMusicPlayer = (accessToken: Accessor<string>) => {
   const [info, setInfo] = createSignal(AudioInfo.getEmptyInfo());
 
   const player = new AudioElementPlayer();
-
   const manager = new AudioManager(player);
+
+  const selectInfo = (id: string): AudioInfo | undefined => {
+    const result = select("SELECT * FROM `audio` WHERE `id` = :id;", {
+      ":id": id,
+    })[0];
+    if (result === undefined) return;
+
+    const info = AudioInfo.selectInfo(result);
+    return info;
+  };
+
+  const updateInfo = (id: string, info: AudioInfo): void => {
+    update(
+      "UPDATE `audio` SET `title` = :title, `artists` = :artists, " +
+        "`album` = :album, `album_artist` = :album_artist, `track` = :track, " +
+        "`track_of` = :track_of, `disk` = :disk, `disk_of` = :disk_of, " +
+        "`release_at` = :release_at, `genre` = :genre, `picture` = :picture, " +
+        "`album_sort` = :album_sort, `title_sort` = :title_sort, " +
+        "`artist_sort` = :artist_sort, `album_artist_sort` = :album_artist_sort " +
+        "WHERE `id` = :id;",
+      [
+        {
+          ":id": id,
+          ":title": info.title,
+          ":artists": JSON.stringify(info.artists),
+          ":album": info.album,
+          ":album_artist": info.albumartist,
+          ":track": info.track.no ?? null,
+          ":track_of": info.track.of ?? null,
+          ":disk": info.disk.no ?? null,
+          ":disk_of": info.disk.of ?? null,
+          ":release_at": info.date,
+          ":genre": JSON.stringify(info.genre),
+          ":picture": new Uint8Array(info.picture),
+          ":album_sort": info.sort.albumsort,
+          ":title_sort": info.sort.titlesort,
+          ":artist_sort": info.sort.artistsort,
+          ":album_artist_sort": info.sort.albumartistsort,
+        },
+      ]
+    );
+  };
 
   onMount(() => {
     manager.onSetDuration = duration => setDuration(duration);
@@ -28,37 +70,19 @@ const useMusicPlayer = (accessToken: Accessor<string>) => {
     manager.onSetRepeat = repeat => setRepeat(repeat);
     manager.onSetShuffle = shuffle => setShuffle(shuffle);
 
-    manager.onLoadInfo = (id: string, info: AudioInfo) =>
-      setFiles(files => {
-        const file = files[id];
-        if (file === undefined) return files;
-        return { ...files, [id]: { ...file, info } };
-      });
+    manager.onLoadInfo = updateInfo;
   });
 
   createEffect(() => {
-    const filesValue = files();
     manager.onChangeMusic = id =>
-      setInfo(filesValue[id]?.info ?? AudioInfo.getEmptyInfo());
+      setInfo(selectInfo(id) ?? AudioInfo.getEmptyInfo());
   });
 
   createEffect(() => {
     manager.setAccessToken(accessToken());
   });
 
-  const addFiles = (newFiles: File[]) =>
-    setFiles(files => ({
-      ...files,
-      ...Object.fromEntries(newFiles.map(newFile => [newFile.id, newFile])),
-    }));
-
-  const addFile = (newFiles: File) =>
-    setFiles(files => ({ ...files, [newFiles.id]: newFiles }));
-
   return {
-    files,
-    addFile,
-    addFiles,
     player: manager,
     status: {
       paused,
