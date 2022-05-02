@@ -1,10 +1,7 @@
-import type { BindParams, ParamsObject } from "sql.js";
 import { isStrStrict } from "~/hooks/isType";
+import type { SelectDB, UpdateDB } from "./createLibrary";
 
-const createFiles = (
-  select: (sql: string, values?: BindParams | undefined) => ParamsObject[],
-  insert: (sql: string, values?: BindParams[] | undefined) => void
-) => {
+const createFiles = (select: SelectDB, update: UpdateDB) => {
   const files = () => {
     const files = select("SELECT `id`, `title` FROM `audio`;")
       .map(param => ({
@@ -30,7 +27,7 @@ const createFiles = (
     const inserts = newFiles
       .filter(file => !(file.id in ids))
       .map(({ id, name }) => ({ ":id": id, ":title": name }));
-    insert(
+    update(
       "INSERT INTO `audio` (`id`, `title`) VALUES (:id, :title);",
       inserts
     );

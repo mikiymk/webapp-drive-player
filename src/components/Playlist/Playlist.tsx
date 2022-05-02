@@ -7,7 +7,7 @@ import { For } from "solid-js";
 type Props = {
   files: Record<string, File>;
   name: string;
-  audioIDs: string[];
+  audios: { id: string; title: string }[];
 
   reset: () => void;
   playsList: (list: string[], index: number) => void;
@@ -21,7 +21,11 @@ const Playlist = (props: Props) => {
       {
         type: "button",
         label: "play",
-        onClick: () => props.playsList(props.audioIDs, index),
+        onClick: () =>
+          props.playsList(
+            props.audios.map(({ id }) => id),
+            index
+          ),
       },
       {
         type: "button",
@@ -34,14 +38,20 @@ const Playlist = (props: Props) => {
     <div class={stylePlaylist}>
       <h3>{props.name}</h3>
       <button onClick={() => props.reset()}>back to list</button>
-      <button onClick={() => props.playsList(props.audioIDs, 0)}>
+      <button
+        onClick={() =>
+          props.playsList(
+            props.audios.map(({ id }) => id),
+            0
+          )
+        }>
         play this playlist
       </button>
       <ul>
-        <For each={props.audioIDs}>
-          {(id, index) => (
+        <For each={props.audios}>
+          {(audio, index) => (
             <li>
-              {props.files[id]?.info?.title ?? props.files[id]?.name ?? ""}
+              {audio.title}
               <button onClick={event => onClickIcon(index())(event)}>
                 <Icon icon="more_horiz" />
               </button>

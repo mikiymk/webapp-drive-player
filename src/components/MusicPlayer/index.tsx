@@ -9,7 +9,7 @@ import RightMenuContext from "~/components/RightMenu/Context";
 import useRightMenuContext from "~/hooks/useRightMenuContext";
 import Settings from "../Settings";
 import Playlists from "../Playlist";
-import usePlaylist from "~/hooks/usePlaylist";
+import usePlaylist from "./usePlaylist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import useSignIn from "~/hooks/useSignIn";
@@ -29,7 +29,7 @@ const MusicPlayer = () => {
   const { select, update } = createLibrary();
   const { files, addFiles } = createFiles(select, update);
   const { player, status } = useMusicPlayer(accessToken, select, update);
-  const playlist = usePlaylist();
+  const playlist = usePlaylist(select, update);
 
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
@@ -67,13 +67,12 @@ const MusicPlayer = () => {
       element: (
         <Playlists
           files={files()}
-          playlist={{
-            playlists: playlist.playlists(),
-            makePlaylist: playlist.makePlaylist,
-            deletePlaylist: playlist.deletePlaylist,
-            addToPlaylist: playlist.addToPlaylist,
-            removeFromPlaylist: playlist.removeFromPlaylist,
-          }}
+          playlist={(name: string) => playlist.playlist(name)}
+          playlists={playlist.playlists()}
+          makePlaylist={playlist.makePlaylist}
+          deletePlaylist={playlist.deletePlaylist}
+          addToPlaylist={playlist.addToPlaylist}
+          removeFromPlaylist={playlist.removeFromPlaylist}
           playsList={playWithIdList}
         />
       ),

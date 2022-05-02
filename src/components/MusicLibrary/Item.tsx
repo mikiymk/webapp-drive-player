@@ -7,7 +7,7 @@ type Props = {
   name: string;
   play: () => void;
 
-  playlist: Record<string, string[]>;
+  playlist: string[];
   addToPlaylist: (playlist: string, audioId: string) => void;
 };
 
@@ -22,7 +22,7 @@ export const Item = (props: Props) => {
       type: "list",
       label: "add to playlist",
       list: mapArray(
-        () => Object.keys(props.playlist),
+        () => props.playlist,
         name => ({
           type: "button" as const,
           label: name,

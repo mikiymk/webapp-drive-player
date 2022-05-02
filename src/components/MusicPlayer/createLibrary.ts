@@ -27,18 +27,40 @@ const createLibrary = () => {
     const db = new sql.Database();
 
     db.exec(
-      "CREATE TABLE `audio` (`id` TEXT PRIMARY KEY, `title` TEXT, `artists` TEXT, " +
-        "`album` TEXT, `album_artist` TEXT, `track` INTEGER, " +
-        "`track_of` INTEGER, `disk` INTEGER, `disk_of` INTEGER, " +
-        "`release_at` TEXT, `genre` TEXT, `picture` NONE, `album_sort` TEXT, " +
-        "`title_sort` TEXT, `artist_sort` TEXT, `album_artist_sort` TEXT)"
+      "CREATE TABLE `audio` (" +
+        "`id` TEXT PRIMARY KEY, " +
+        "`title` TEXT NOT NULL, " +
+        "`artists` TEXT, " +
+        "`album` TEXT, " +
+        "`album_artist` TEXT, " +
+        "`track` INTEGER, " +
+        "`track_of` INTEGER, " +
+        "`disk` INTEGER, " +
+        "`disk_of` INTEGER, " +
+        "`release_at` TEXT, " +
+        "`genre` TEXT, " +
+        "`picture` NONE, " +
+        "`album_sort` TEXT, " +
+        "`title_sort` TEXT, " +
+        "`artist_sort` TEXT, " +
+        "`album_artist_sort` TEXT);"
     );
 
     db.exec(
-      "CREATE TABLE `playlist` (`name` TEXT, `sort` INTEGER, `audio_id` TEXT)"
+      "CREATE TABLE `playlist` (" +
+        "`name` TEXT UNIQUE NOT NULL, " +
+        "`sort_key` INTEGER UNIQUE NOT NULL);"
+    );
+    db.exec(
+      "CREATE TABLE `playlist_audio` (" +
+        "`name` TEXT NOT NULL, " +
+        "`audio_id` TEXT NOT NULL, " +
+        "`sort_key` INTEGER UNIQUE NOT NULL, " +
+        "FOREIGN KEY (`name`) REFERENCES `playlist_audio` (`name`)" +
+        "FOREIGN KEY (`audio_id`) REFERENCES `audio` (`id`));"
     );
 
-    db.exec("CREATE TABLE `settings` (`setting` TEXT)");
+    db.exec("CREATE TABLE `settings` (`setting` TEXT);");
 
     setDatabase(db);
   });

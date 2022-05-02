@@ -13,7 +13,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "ignorePatterns": ["**/*$$$drive-player.vanilla.js"],
+  "ignorePatterns": ["**/*.vanilla.js"],
 
   "plugins": ["@typescript-eslint", "solid"],
 

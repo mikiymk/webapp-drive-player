@@ -5,7 +5,7 @@ import { stylePlaylists } from "./style.css";
 import { For } from "solid-js";
 
 type Props = {
-  playlists: Record<string, string[]>;
+  playlists: string[];
   makePlaylist: (playlist: string) => void;
   deletePlaylist: (playlist: string) => void;
 
@@ -37,8 +37,8 @@ const PlaylistList = (props: Props) => {
 
   return (
     <ul class={stylePlaylists}>
-      <For each={Object.entries(props.playlists)}>
-        {([name]) => (
+      <For each={props.playlists}>
+        {name => (
           <li>
             {name}
             <IconButton icon="more_horiz" onClick={onClickIcon(name)} />
