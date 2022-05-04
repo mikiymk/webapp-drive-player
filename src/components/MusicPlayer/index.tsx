@@ -5,8 +5,7 @@ import Menu from "../Menu/index";
 import Controller from "../Controller/index";
 
 import type { File } from "~/file";
-import RightMenuContext from "~/components/RightMenu/Context";
-import useRightMenuContext from "~/hooks/useRightMenuContext";
+import RightMenuProvider from "~/components/RightMenu/RightMenuProvider";
 import Settings from "../Settings";
 import Playlists from "../Playlist";
 import usePlaylist from "./usePlaylist";
@@ -95,10 +94,8 @@ const MusicPlayer = () => {
     },
   };
 
-  const { value, RightMenu } = useRightMenuContext();
-
   return (
-    <RightMenuContext.Provider value={value.setRightMenu}>
+    <RightMenuProvider>
       <div class={stylePlayer}>
         <Menu
           items={menuItems}
@@ -120,9 +117,8 @@ const MusicPlayer = () => {
           setRepeat={repeat => player?.setRepeat(repeat)}
           setShuffle={shuffle => player?.setShuffle(shuffle)}
         />
-        {RightMenu}
       </div>
-    </RightMenuContext.Provider>
+    </RightMenuProvider>
   );
 };
 

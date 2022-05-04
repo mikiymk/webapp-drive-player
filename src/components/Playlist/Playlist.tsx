@@ -1,8 +1,9 @@
 import type { File } from "~/file";
 import Icon from "~/components/GoogleIcon";
-import useRightMenu from "~/hooks/useRightMenu";
 import { stylePlaylist } from "./style.css";
-import { For } from "solid-js";
+import { For, useContext } from "solid-js";
+import { Context } from "../RightMenu";
+import type Item from "../RightMenu/Item";
 
 type Props = {
   files: Record<string, File>;
@@ -16,23 +17,22 @@ type Props = {
 
 /** show on right click */
 const Playlist = (props: Props) => {
-  const onClickIcon = (index: number) =>
-    useRightMenu()([
-      {
-        type: "button",
-        label: "play",
-        onClick: () =>
-          props.playsList(
-            props.audios.map(({ id }) => id),
-            index
-          ),
-      },
-      {
-        type: "button",
-        label: "remove from playlist",
-        onClick: () => props.remove(index),
-      },
-    ]);
+  const onClickIcon = (index: number): Item[] => [
+    {
+      type: "button",
+      label: "play",
+      onClick: () =>
+        props.playsList(
+          props.audios.map(({ id }) => id),
+          index
+        ),
+    },
+    {
+      type: "button",
+      label: "remove from playlist",
+      onClick: () => props.remove(index),
+    },
+  ];
 
   return (
     <div class={stylePlaylist}>
@@ -52,7 +52,10 @@ const Playlist = (props: Props) => {
           {(audio, index) => (
             <li>
               {audio.title}
-              <button onClick={event => onClickIcon(index())(event)}>
+              <button
+                onClick={event =>
+                  useContext(Context)(onClickIcon(index()), event)
+                }>
                 <Icon icon="more_horiz" />
               </button>
             </li>
