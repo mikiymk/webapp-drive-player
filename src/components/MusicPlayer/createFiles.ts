@@ -8,7 +8,17 @@ const createFiles = (select: SelectDB, update: UpdateDB) => {
         id: isStrStrict(param["id"]),
         name: isStrStrict(param["title"]),
       }))
-      .map(file => [file.id, file]);
+      .map(
+        (
+          file
+        ): [
+          string,
+          {
+            id: string;
+            name: string;
+          }
+        ] => [file.id, file]
+      );
     return Object.fromEntries(files);
   };
 

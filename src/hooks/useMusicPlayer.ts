@@ -3,12 +3,15 @@ import Repeat from "~/audio/Repeat";
 import AudioInfo from "~/audio/AudioInfo";
 import AudioElementPlayer from "~/audio/AudioElementPlayer";
 import { Accessor, createEffect, createSignal, onMount } from "solid-js";
-import type { BindParams, ParamsObject } from "sql.js";
+import type {
+  SelectDB,
+  UpdateDB,
+} from "~/components/MusicPlayer/createLibrary";
 
 const useMusicPlayer = (
   accessToken: Accessor<string>,
-  select: (sql: string, values?: BindParams | undefined) => ParamsObject[],
-  update: (sql: string, values?: BindParams[] | undefined) => void
+  select: SelectDB,
+  update: UpdateDB
 ) => {
   const [paused, setPaused] = createSignal(true);
   const [duration, setDuration] = createSignal(0);

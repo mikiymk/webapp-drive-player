@@ -5,7 +5,7 @@ import Menu from "../Menu/index";
 import Controller from "../Controller/index";
 
 import type { File } from "~/file";
-import RightMenuProvider from "~/components/RightMenu/RightMenuProvider";
+import RightMenuProvider from "~/components/RightMenu";
 import Settings from "../Settings";
 import Playlists from "../Playlist";
 import usePlaylist from "./usePlaylist";
@@ -26,6 +26,7 @@ export type Files = {
 const MusicPlayer = () => {
   const { accessToken, signIn, signOut } = useSignIn();
   const { select, update } = createLibrary();
+
   const { files, addFiles } = createFiles(select, update);
   const { player, status } = useMusicPlayer(accessToken, select, update);
   const playlist = usePlaylist(select, update);
@@ -65,7 +66,6 @@ const MusicPlayer = () => {
       icon: "queue_music",
       element: (
         <Playlists
-          files={files()}
           playlist={(name: string) => playlist.playlist(name)}
           playlists={playlist.playlists()}
           makePlaylist={playlist.makePlaylist}

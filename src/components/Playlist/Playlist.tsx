@@ -1,4 +1,3 @@
-import type { File } from "~/file";
 import Icon from "~/components/GoogleIcon";
 import { stylePlaylist } from "./style.css";
 import { For, useContext } from "solid-js";
@@ -6,7 +5,6 @@ import { Context } from "../RightMenu";
 import type Item from "../RightMenu/Item";
 
 type Props = {
-  files: Record<string, File>;
   name: string;
   audios: { id: string; title: string }[];
 
