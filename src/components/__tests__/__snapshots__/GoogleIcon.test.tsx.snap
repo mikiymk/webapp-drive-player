@@ -1,0 +1,3 @@
+// Vitest Snapshot v1
+
+exports[`<Icon /> > icon component test 1`] = `"<span class=\\"material-icons-sharp style__t4deip0\\">icon</span>"`;

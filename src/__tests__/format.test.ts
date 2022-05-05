@@ -1,3 +1,4 @@
+import { test, expect } from "vitest";
 import { formatTime } from "../format";
 
 test("1 second", () => {

@@ -1,3 +1,4 @@
+import { test, expect } from "vitest";
 import Repeat from "../Repeat";
 
 const list = [Repeat.DEFAULT, Repeat.OFF, Repeat.ON, Repeat.ONE];
