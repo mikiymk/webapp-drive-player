@@ -1,11 +1,11 @@
 import MakePlaylistButton from "./MakePlaylistButton";
-import useRightMenu from "~/hooks/useRightMenu";
 import IconButton from "~/components/IconButton";
 import { stylePlaylists } from "./style.css";
-import { For } from "solid-js";
+import { For, useContext } from "solid-js";
+import { ButtonClickEvent, Context } from "../RightMenu";
 
 type Props = {
-  playlists: Record<string, string[]>;
+  playlists: string[];
   makePlaylist: (playlist: string) => void;
   deletePlaylist: (playlist: string) => void;
 
@@ -14,34 +14,40 @@ type Props = {
 
 /** show on right click */
 const PlaylistList = (props: Props) => {
-  const rightMenu = useRightMenu();
-  const onClickIcon = (name: string) =>
-    rightMenu([
-      {
-        type: "button",
-        label: "open playlist",
-        onClick: event => {
-          props.select(name);
-          rightMenu([])(event);
+  const onClickIcon = (name: string, event: ButtonClickEvent) => {
+    console.log("onClickIcon");
+    const callRightMenu = useContext(Context);
+    console.log(callRightMenu);
+    return callRightMenu(
+      [
+        {
+          type: "button",
+          label: "open playlist",
+          onClick: event => {
+            props.select(name);
+            useContext(Context)([], event);
+          },
         },
-      },
-      {
-        type: "button",
-        label: "delete playlist",
-        onClick: event => {
-          props.deletePlaylist(name);
-          rightMenu([])(event);
+        {
+          type: "button",
+          label: "delete playlist",
+          onClick: event => {
+            props.deletePlaylist(name);
+            useContext(Context)([], event);
+          },
         },
-      },
-    ]);
+      ],
+      event
+    );
+  };
 
   return (
     <ul class={stylePlaylists}>
-      <For each={Object.entries(props.playlists)}>
-        {([name]) => (
+      <For each={props.playlists}>
+        {name => (
           <li>
             {name}
-            <IconButton icon="more_horiz" onClick={onClickIcon(name)} />
+            <IconButton icon="more_horiz" onClick={[onClickIcon, name]} />
           </li>
         )}
       </For>

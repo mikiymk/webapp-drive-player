@@ -11,7 +11,7 @@ const MusicTitle = (props: Props) => {
   return (
     <span class={styleTitleView}>
       <Marquee class={styleTitle}>{props.info.title}</Marquee>
-      <Marquee class={styleArtist}>{props.info.artist}</Marquee>
+      <Marquee class={styleArtist}>{props.info.artists.join()}</Marquee>
     </span>
   );
 };

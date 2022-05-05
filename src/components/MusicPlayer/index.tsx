@@ -5,15 +5,16 @@ import Menu from "../Menu/index";
 import Controller from "../Controller/index";
 
 import type { File } from "~/file";
-import RightMenuContext from "~/components/RightMenu/Context";
-import useRightMenuContext from "~/hooks/useRightMenuContext";
+import RightMenuProvider from "~/components/RightMenu";
 import Settings from "../Settings";
 import Playlists from "../Playlist";
-import usePlaylist from "~/hooks/usePlaylist";
+import usePlaylist from "./usePlaylist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import useSignIn from "~/hooks/useSignIn";
 import type { JSX } from "solid-js";
+import createLibrary from "./createLibrary";
+import createFiles from "./createFiles";
 
 export type Files = {
   [name: string]: File;
@@ -24,9 +25,11 @@ export type Files = {
  */
 const MusicPlayer = () => {
   const { accessToken, signIn, signOut } = useSignIn();
-  const { files, addFile, addFiles, player, status } =
-    useMusicPlayer(accessToken);
-  const playlist = usePlaylist();
+  const { select, update } = createLibrary();
+
+  const { files, addFiles } = createFiles(select, update);
+  const { player, status } = useMusicPlayer(accessToken, select, update);
+  const playlist = usePlaylist(select, update);
 
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
@@ -63,14 +66,12 @@ const MusicPlayer = () => {
       icon: "queue_music",
       element: (
         <Playlists
-          files={files()}
-          playlist={{
-            playlists: playlist.playlists(),
-            makePlaylist: playlist.makePlaylist,
-            deletePlaylist: playlist.deletePlaylist,
-            addToPlaylist: playlist.addToPlaylist,
-            removeFromPlaylist: playlist.removeFromPlaylist,
-          }}
+          playlist={(name: string) => playlist.playlist(name)}
+          playlists={playlist.playlists()}
+          makePlaylist={playlist.makePlaylist}
+          deletePlaylist={playlist.deletePlaylist}
+          addToPlaylist={playlist.addToPlaylist}
+          removeFromPlaylist={playlist.removeFromPlaylist}
           playsList={playWithIdList}
         />
       ),
@@ -78,14 +79,14 @@ const MusicPlayer = () => {
     drive: {
       name: "Google Drive",
       icon: "cloud",
-      element: <DriveFiles addFile={addFile} accessToken={accessToken()} />,
+      element: <DriveFiles addFile={addFiles} accessToken={accessToken()} />,
     },
     settings: {
       name: "Settings",
       icon: "settings",
       element: (
         <Settings
-          files={Object.values(files)}
+          files={Object.values(files())}
           addFiles={addFiles}
           accessToken={accessToken()}
         />
@@ -93,10 +94,8 @@ const MusicPlayer = () => {
     },
   };
 
-  const { value, RightMenu } = useRightMenuContext();
-
   return (
-    <RightMenuContext.Provider value={value.setRightMenu}>
+    <RightMenuProvider>
       <div class={stylePlayer}>
         <Menu
           items={menuItems}
@@ -118,9 +117,8 @@ const MusicPlayer = () => {
           setRepeat={repeat => player?.setRepeat(repeat)}
           setShuffle={shuffle => player?.setShuffle(shuffle)}
         />
-        {RightMenu}
       </div>
-    </RightMenuContext.Provider>
+    </RightMenuProvider>
   );
 };
 

@@ -1,13 +1,13 @@
-import { mapArray } from "solid-js";
+import { mapArray, useContext } from "solid-js";
 import Icon from "~/components/GoogleIcon";
-import useRightMenu from "~/hooks/useRightMenu";
+import { Context } from "../RightMenu";
 
 type Props = {
   id: string;
   name: string;
   play: () => void;
 
-  playlist: Record<string, string[]>;
+  playlist: string[];
   addToPlaylist: (playlist: string, audioId: string) => void;
 };
 
@@ -15,14 +15,14 @@ type Props = {
  * item of musics list
  */
 export const Item = (props: Props) => {
-  const onClick = useRightMenu()([
+  const onClick = () => [
     { type: "button", label: "play", onClick: () => props.play() },
     { type: "hr" },
     {
       type: "list",
       label: "add to playlist",
       list: mapArray(
-        () => Object.keys(props.playlist),
+        () => props.playlist,
         name => ({
           type: "button" as const,
           label: name,
@@ -30,12 +30,12 @@ export const Item = (props: Props) => {
         })
       )(),
     },
-  ]);
+  ];
 
   return (
     <li>
       {props.name} <button onClick={() => props.play()}>play</button>
-      <button onClick={onClick}>
+      <button onClick={[useContext(Context), onClick()]}>
         <Icon icon="more_horiz" />
       </button>
     </li>

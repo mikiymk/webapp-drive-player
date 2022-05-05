@@ -8,7 +8,7 @@ import { For } from "solid-js";
 type Props = {
   files: Files;
   play: (idList: string[], index: number) => void;
-  playlist: Record<string, string[]>;
+  playlist: string[];
   addToPlaylist: (playlist: string, audioId: string) => void;
 };
 

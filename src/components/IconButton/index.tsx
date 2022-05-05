@@ -5,7 +5,7 @@ import { styleIcon } from "./style.css";
 
 type Props = {
   icon: string;
-  onClick: JSX.EventHandler<HTMLButtonElement, MouseEvent>;
+  onClick: JSX.EventHandlerUnion<HTMLButtonElement, MouseEvent>;
   class?: string;
 };
 
@@ -15,7 +15,7 @@ const IconButton = (props: Props) => {
     props.class ? `${styleIcon} ${props.class}` : styleIcon;
 
   return (
-    <button onClick={event => props.onClick(event)} class={classes()}>
+    <button onClick={props.onClick} class={classes()}>
       <Icon icon={props.icon} class={`${styleIcon}-icon`} />
     </button>
   );
