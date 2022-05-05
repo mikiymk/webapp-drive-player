@@ -1,6 +1,6 @@
 {
   "name": "drive-player",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "music files in google drive play on browser",
   "main": "index.js",
   "scripts": {
@@ -30,8 +30,8 @@
     "@tsconfig/strictest": "^1.0.1",
     "@types/node": "^17.0.31",
     "@types/sql.js": "^1.4.3",
-    "@typescript-eslint/eslint-plugin": "^5.21.0",
-    "@typescript-eslint/parser": "^5.21.0",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
     "@vanilla-extract/vite-plugin": "^3.1.5",
     "eslint": "^8.14.0",
     "eslint-plugin-solid": "~0.4.7",
