@@ -1,11 +1,32 @@
+import { test, expect, describe } from "vitest";
 import Repeat from "../Repeat";
 
-const list = [Repeat.DEFAULT, Repeat.OFF, Repeat.ON, Repeat.ONE];
-
-for (const item of list) {
-  test("repeat", () => {
+describe("Repeat", () => {
+  let item = Repeat.ON;
+  test("repeat on", () => {
     expect(item.toggle()).not.toEqual(item);
     expect(item.toggle().toggle()).not.toEqual(item);
     expect(item.toggle().toggle().toggle()).toEqual(item);
   });
-}
+
+  item = Repeat.OFF;
+  test("repeat off", () => {
+    expect(item.toggle()).not.toEqual(item);
+    expect(item.toggle().toggle()).not.toEqual(item);
+    expect(item.toggle().toggle().toggle()).toEqual(item);
+  });
+
+  item = Repeat.ONE;
+  test("repeat one", () => {
+    expect(item.toggle()).not.toEqual(item);
+    expect(item.toggle().toggle()).not.toEqual(item);
+    expect(item.toggle().toggle().toggle()).toEqual(item);
+  });
+
+  item = Repeat.DEFAULT;
+  test("repeat default", () => {
+    expect(item.toggle()).not.toEqual(item);
+    expect(item.toggle().toggle()).not.toEqual(item);
+    expect(item.toggle().toggle().toggle()).toEqual(item);
+  });
+});

@@ -4,16 +4,17 @@
   "description": "music files in google drive play on browser",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "build": "vite build",
     "start": "vite",
     "check": "run-s type lint format test",
     "format": "prettier -w index.html src",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "type": "tsc --noEmit",
-    "type:watch": "tsc --noEmit --watch",
-    "watch": "run-p type:watch start"
+    "type": "tsc",
+    "type:watch": "tsc --watch",
+    "watch": "run-p type:watch test:watch start"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,6 @@
   "homepage": "https://github.com/mikiymk/drive-player#readme",
   "devDependencies": {
     "@tsconfig/strictest": "^1.0.1",
-    "@types/jest": "^27.4.1",
     "@types/node": "^17.0.31",
     "@types/sql.js": "^1.4.3",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
@@ -35,14 +35,13 @@
     "@vanilla-extract/vite-plugin": "^3.1.5",
     "eslint": "^8.14.0",
     "eslint-plugin-solid": "~0.4.7",
-    "jest": "^27.5.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.6.2",
-    "ts-jest": "^27.1.4",
     "typescript": "^4.6.4",
-    "vite": "^2.9.6",
+    "vite": "^2.9.8",
     "vite-plugin-eslint": "^1.6.0",
-    "vite-plugin-solid": "^2.2.6"
+    "vite-plugin-solid": "^2.2.6",
+    "vitest": "^0.10.2"
   },
   "dependencies": {
     "@vanilla-extract/css": "^1.7.0",
