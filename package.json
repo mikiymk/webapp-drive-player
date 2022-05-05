@@ -4,16 +4,17 @@
   "description": "music files in google drive play on browser",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "build": "vite build",
     "start": "vite",
     "check": "run-s type lint format test",
     "format": "prettier -w index.html src",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
-    "type": "tsc --noEmit",
-    "type:watch": "tsc --noEmit --watch",
-    "watch": "run-p type:watch start"
+    "type": "tsc",
+    "type:watch": "tsc --watch",
+    "watch": "run-p type:watch test:watch start"
   },
   "repository": {
     "type": "git",
