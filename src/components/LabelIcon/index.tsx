@@ -1,18 +1,18 @@
-import Icon from "~/components/GoogleIcon";
-import { styleIcon, styleLabel } from "./style.css";
+import type { JSXElement } from "solid-js";
+import { styleLabel } from "./style.css";
 
 type Props = {
-  icon: string;
-  text: string;
+  icon: JSXElement;
+  children: string;
 };
 
 /** Google Material Icon テキスト付き */
 const LabelIcon = (props: Props) => {
   return (
-    <span>
-      <Icon icon={props.icon} class={styleIcon} />
-      <span class={`${styleIcon} ${styleLabel}`}>{props.text}</span>
-    </span>
+    <>
+      {props.icon}
+      <span class={styleLabel}>{props.children}</span>
+    </>
   );
 };
 

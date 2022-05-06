@@ -1,6 +1,7 @@
 import { Show } from "solid-js";
 
 import LabelIcon from "~/components/LabelIcon";
+import { IconSignIn, IconSignOut } from "../Icon";
 
 type Props = {
   style: string;
@@ -17,11 +18,11 @@ const Authorize = (props: Props) => {
       when={props.auth.accessToken !== ""}
       fallback={
         <li onClick={() => props.auth.signIn()} class={props.style}>
-          <LabelIcon icon="login" text="Sign In" />
+          <LabelIcon icon={<IconSignIn />}>Sign In</LabelIcon>
         </li>
       }>
       <li onClick={() => props.auth.signOut()} class={props.style}>
-        <LabelIcon icon="logout" text="Sign Out" />
+        <LabelIcon icon={<IconSignOut />}>Sign Out</LabelIcon>
       </li>
     </Show>
   );

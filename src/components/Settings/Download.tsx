@@ -30,10 +30,9 @@ const Download = (props: Props) => {
   return (
     <div class={styleDownload}>
       <button onClick={download}>
-        <LabelIcon
-          icon="file_download"
-          text="get library data from google drive"
-        />
+        <LabelIcon icon="file_download">
+          get library data from google drive
+        </LabelIcon>
       </button>
       <Icon icon={status()} />
     </div>

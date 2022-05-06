@@ -24,10 +24,9 @@ const Upload = (props: Props) => {
   return (
     <div class={styleUpload}>
       <button onClick={upload}>
-        <LabelIcon
-          icon="file_upload"
-          text="send library data to google drive"
-        />
+        <LabelIcon icon="file_upload">
+          send library data to google drive
+        </LabelIcon>
       </button>
       <Icon icon={status()} />
     </div>

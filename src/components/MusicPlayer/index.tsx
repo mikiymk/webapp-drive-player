@@ -12,9 +12,16 @@ import usePlaylist from "./usePlaylist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import useSignIn from "~/hooks/useSignIn";
-import type { JSX } from "solid-js";
+import type { JSXElement } from "solid-js";
 import createLibrary from "./createLibrary";
 import createFiles from "./createFiles";
+import {
+  IconGoogleDrive,
+  IconLibrary,
+  IconPlay,
+  IconPlayList,
+  IconSettings,
+} from "../Icon";
 
 export type Files = {
   [name: string]: File;
@@ -36,11 +43,11 @@ const MusicPlayer = () => {
   };
 
   const menuItems: {
-    [name: string]: { name: string; icon: string; element: JSX.Element };
+    [name: string]: { name: string; icon: JSXElement; element: JSXElement };
   } = {
     playing: {
       name: "Now Playing",
-      icon: "play_arrow",
+      icon: <IconPlay />,
       element: (
         <PlayingInfo
           info={status.info()}
@@ -51,7 +58,7 @@ const MusicPlayer = () => {
     },
     library: {
       name: "Library",
-      icon: "list",
+      icon: <IconLibrary />,
       element: (
         <MusicList
           files={files()}
@@ -63,7 +70,7 @@ const MusicPlayer = () => {
     },
     playlist: {
       name: "Playlist",
-      icon: "queue_music",
+      icon: <IconPlayList />,
       element: (
         <Playlists
           playlist={(name: string) => playlist.playlist(name)}
@@ -78,12 +85,12 @@ const MusicPlayer = () => {
     },
     drive: {
       name: "Google Drive",
-      icon: "cloud",
+      icon: <IconGoogleDrive />,
       element: <DriveFiles addFile={addFiles} accessToken={accessToken()} />,
     },
     settings: {
       name: "Settings",
-      icon: "settings",
+      icon: <IconSettings />,
       element: (
         <Settings
           files={Object.values(files())}

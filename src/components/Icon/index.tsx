@@ -1,0 +1,64 @@
+import { styleIcon } from "./style.css";
+
+/* https://materialdesignicons.com/icon/play */
+export const IconPlay = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/format-list-bulleted */
+export const IconLibrary = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M7,5H21V7H7V5M7,13V11H21V13H7M4,4.5A1.5,1.5 0 0,1 5.5,6A1.5,1.5 0 0,1 4,7.5A1.5,1.5 0 0,1 2.5,6A1.5,1.5 0 0,1 4,4.5M4,10.5A1.5,1.5 0 0,1 5.5,12A1.5,1.5 0 0,1 4,13.5A1.5,1.5 0 0,1 2.5,12A1.5,1.5 0 0,1 4,10.5M7,19V17H21V19H7M4,16.5A1.5,1.5 0 0,1 5.5,18A1.5,1.5 0 0,1 4,19.5A1.5,1.5 0 0,1 2.5,18A1.5,1.5 0 0,1 4,16.5Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/playlist-music */
+export const IconPlayList = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M15,6H3V8H15V6M15,10H3V12H15V10M3,16H11V14H3V16M17,6V14.18C16.69,14.07 16.35,14 16,14A3,3 0 0,0 13,17A3,3 0 0,0 16,20A3,3 0 0,0 19,17V8H22V6H17Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/google-drive */
+export const IconGoogleDrive = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M7.71,3.5L1.15,15L4.58,21L11.13,9.5M9.73,15L6.3,21H19.42L22.85,15M22.28,14L15.42,2H8.58L8.57,2L15.43,14H22.28Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/google-drive */
+export const IconSettings = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/google-drive */
+export const IconSignIn = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M10,17V14H3V10H10V7L15,12L10,17M10,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H10A2,2 0 0,1 8,20V18H10V20H19V4H10V6H8V4A2,2 0 0,1 10,2Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/google-drive */
+export const IconSignOut = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />{" "}
+    </svg>
+  );
+};
