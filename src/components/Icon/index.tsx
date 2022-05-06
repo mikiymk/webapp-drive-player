@@ -45,7 +45,7 @@ export const IconSettings = () => {
   );
 };
 
-/* https://materialdesignicons.com/icon/google-drive */
+/* https://materialdesignicons.com/icon/log-in */
 export const IconSignIn = () => {
   return (
     <svg class={styleIcon} viewBox="0 0 24 24">
@@ -54,11 +54,56 @@ export const IconSignIn = () => {
   );
 };
 
-/* https://materialdesignicons.com/icon/google-drive */
+/* https://materialdesignicons.com/icon/log-out */
 export const IconSignOut = () => {
   return (
     <svg class={styleIcon} viewBox="0 0 24 24">
       <path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />{" "}
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/download */
+export const IconDownload = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/upload */
+export const IconUpload = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/dots-horizontal-circle-outline */
+export const IconLoading = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,10.5A1.5,1.5 0 0,1 13.5,12A1.5,1.5 0 0,1 12,13.5A1.5,1.5 0 0,1 10.5,12A1.5,1.5 0 0,1 12,10.5M7.5,10.5A1.5,1.5 0 0,1 9,12A1.5,1.5 0 0,1 7.5,13.5A1.5,1.5 0 0,1 6,12A1.5,1.5 0 0,1 7.5,10.5M16.5,10.5A1.5,1.5 0 0,1 18,12A1.5,1.5 0 0,1 16.5,13.5A1.5,1.5 0 0,1 15,12A1.5,1.5 0 0,1 16.5,10.5Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/check-circle-outline */
+export const IconDone = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M12 20C7.59 20 4 16.41 4 12S7.59 4 12 4 20 7.59 20 12 16.41 20 12 20M16.59 7.58L10 14.17L7.41 11.59L6 13L10 17L18 9L16.59 7.58Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/alert-circle-outline */
+export const IconError = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z" />
     </svg>
   );
 };

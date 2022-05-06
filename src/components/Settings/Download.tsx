@@ -1,8 +1,7 @@
-import { createSignal } from "solid-js";
+import { createSignal, Match, Switch } from "solid-js";
 
-import Icon from "~/components/GoogleIcon";
-import LabelIcon from "~/components/LabelIcon";
 import { downloadLibraryData, File } from "~/file";
+import { IconLoading, IconDone, IconError, IconDownload } from "../Icon";
 import { styleDownload } from "./style.css";
 
 type Props = {
@@ -16,7 +15,7 @@ type Props = {
 const Download = (props: Props) => {
   const [status, setStatus] = createSignal("");
   const download = () => {
-    setStatus("pending_actions");
+    setStatus("loading");
     downloadLibraryData(props.accessToken).then(files => {
       if (files !== undefined) {
         props.addFiles(files);
@@ -30,11 +29,20 @@ const Download = (props: Props) => {
   return (
     <div class={styleDownload}>
       <button onClick={download}>
-        <LabelIcon icon="file_download">
-          get library data from google drive
-        </LabelIcon>
+        <IconDownload />
+        get library data from google drive
       </button>
-      <Icon icon={status()} />
+      <Switch>
+        <Match when={status() === "loading"}>
+          <IconLoading />
+        </Match>{" "}
+        <Match when={status() === "done"}>
+          <IconDone />
+        </Match>{" "}
+        <Match when={status() === "error"}>
+          <IconError />
+        </Match>
+      </Switch>
     </div>
   );
 };
