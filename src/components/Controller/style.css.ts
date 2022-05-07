@@ -8,6 +8,12 @@ export const styleController = style({
   backgroundColor: "rgb(173,173,173)",
 });
 
+export const styleButton = style({
+  height: "3rem",
+  width: "3rem",
+  textAlign: "center",
+});
+
 export const styleIcon = style({
   height: "3rem",
   width: "3rem",

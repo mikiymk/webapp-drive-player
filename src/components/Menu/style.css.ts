@@ -33,3 +33,7 @@ export const styleContent = style({
   backgroundColor: "rgb(207, 207, 207)",
   overflowWrap: "anywhere",
 });
+
+export const styleLabel = style({
+  marginLeft: "0.5rem",
+});

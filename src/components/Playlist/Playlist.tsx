@@ -1,8 +1,8 @@
-import Icon from "~/components/GoogleIcon";
 import { stylePlaylist } from "./style.css";
 import { For, useContext } from "solid-js";
 import { Context } from "../RightMenu";
 import type Item from "../RightMenu/Item";
+import { IconDotInfo } from "../Icon";
 
 type Props = {
   name: string;
@@ -54,7 +54,7 @@ const Playlist = (props: Props) => {
                 onClick={event =>
                   useContext(Context)(onClickIcon(index()), event)
                 }>
-                <Icon icon="more_horiz" />
+                <IconDotInfo />
               </button>
             </li>
           )}

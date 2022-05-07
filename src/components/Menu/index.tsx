@@ -1,8 +1,7 @@
-import { createSignal, For, JSX } from "solid-js";
+import { createSignal, For, JSXElement } from "solid-js";
 
-import LabelIcon from "~/components/LabelIcon";
-
-import Authorize from "../Authorize";
+import Authorize from "./Authorize";
+import LabelIcon from "./LabelIcon";
 import {
   styleMenu,
   styleContent,
@@ -13,7 +12,7 @@ import {
 
 type Props = {
   items: {
-    [name: string]: { name: string; icon: string; element: JSX.Element };
+    [name: string]: { name: string; icon: JSXElement; element: JSXElement };
   };
 
   auth: {
@@ -38,13 +37,14 @@ const Menu = (props: Props) => {
               classList={{
                 [styleNavItem]: true,
                 [styleNavSelected]: id === selected(),
-              }}
-              onClick={() => setSelected(id)}>
-              <LabelIcon icon={item.icon} text={item.name} />
+              }}>
+              <button onClick={() => setSelected(id)}>
+                <LabelIcon icon={item.icon}>{item.name}</LabelIcon>
+              </button>
             </li>
           )}
         </For>
-        <Authorize style={styleNavItem} auth={props.auth} />
+        <Authorize auth={props.auth} />
       </ul>
       <div class={styleContent}>{props.items[selected()]?.element}</div>
     </div>

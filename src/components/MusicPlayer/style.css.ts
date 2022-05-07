@@ -1,4 +1,4 @@
-import { style } from "@vanilla-extract/css";
+import { globalStyle, style } from "@vanilla-extract/css";
 
 export const stylePlayer = style({
   display: "flex",
@@ -6,4 +6,9 @@ export const stylePlayer = style({
 
   width: "100%",
   height: "100%",
+});
+
+globalStyle(":root, body, #root", {
+  height: "100%",
+  width: "100%",
 });

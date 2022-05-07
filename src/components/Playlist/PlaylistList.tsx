@@ -1,8 +1,8 @@
 import MakePlaylistButton from "./MakePlaylistButton";
-import IconButton from "~/components/IconButton";
 import { stylePlaylists } from "./style.css";
 import { For, useContext } from "solid-js";
 import { ButtonClickEvent, Context } from "../RightMenu";
+import { IconDotInfo } from "../Icon";
 
 type Props = {
   playlists: string[];
@@ -47,7 +47,9 @@ const PlaylistList = (props: Props) => {
         {name => (
           <li>
             {name}
-            <IconButton icon="more_horiz" onClick={[onClickIcon, name]} />
+            <button onClick={[onClickIcon, name]}>
+              <IconDotInfo />
+            </button>
           </li>
         )}
       </For>

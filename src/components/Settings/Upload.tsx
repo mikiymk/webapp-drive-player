@@ -1,8 +1,7 @@
-import Icon from "~/components/GoogleIcon";
-import LabelIcon from "~/components/LabelIcon";
 import { uploadLibraryData, File } from "~/file";
 import { styleUpload } from "./style.css";
-import { createSignal } from "solid-js";
+import { createSignal, Match, Switch } from "solid-js";
+import { IconDone, IconError, IconLoading, IconUpload } from "../Icon";
 
 type Props = {
   accessToken: string;
@@ -15,7 +14,7 @@ type Props = {
 const Upload = (props: Props) => {
   const [status, setStatus] = createSignal("");
   const upload = () => {
-    setStatus("pending_actions");
+    setStatus("loading");
     uploadLibraryData(props.accessToken, props.files).then(response =>
       setStatus(response.status === 200 ? "done" : "error")
     );
@@ -24,12 +23,20 @@ const Upload = (props: Props) => {
   return (
     <div class={styleUpload}>
       <button onClick={upload}>
-        <LabelIcon
-          icon="file_upload"
-          text="send library data to google drive"
-        />
+        <IconUpload />
+        send library data to google drive
       </button>
-      <Icon icon={status()} />
+      <Switch>
+        <Match when={status() === "loading"}>
+          <IconLoading />
+        </Match>{" "}
+        <Match when={status() === "done"}>
+          <IconDone />
+        </Match>{" "}
+        <Match when={status() === "error"}>
+          <IconError />
+        </Match>
+      </Switch>
     </div>
   );
 };

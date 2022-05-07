@@ -1,10 +1,10 @@
-import IconButton from "~/components/IconButton";
 import { For, useContext } from "solid-js";
 
 import type Item from "./Item";
 import RightMenuItem from "./RightMenuItem";
 import { styleRightMenu } from "./style.css";
 import { Context } from ".";
+import { IconClose } from "../Icon";
 
 type Props = {
   items: Item[];
@@ -22,7 +22,9 @@ const RightMenu = (props: Props) => {
         top: Math.trunc(props.top) + "px",
         left: Math.trunc(props.left) + "px",
       }}>
-      <IconButton icon="close" onClick={[useContext(Context), []]} />
+      <button onclick={[useContext(Context), []]}>
+        <IconClose />
+      </button>
       <hr></hr>
       <For each={props.items}>{item => <RightMenuItem item={item} />}</For>
     </div>

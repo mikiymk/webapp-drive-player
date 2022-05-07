@@ -1,11 +1,11 @@
 import { Breadcrumbs } from "./Breadcrumbs";
 
 import { getAllMusics, getAllFolders, File } from "~/file";
-import { styleDrive, styleItem, styleItemIcon } from "./style.css";
+import { styleDrive, styleItem } from "./style.css";
 
-import Icon from "~/components/GoogleIcon";
 import { useGDriveParents } from "./useGDriveParents";
 import { For } from "solid-js";
+import { IconAudioFile, IconFolder } from "../Icon";
 
 type Props = {
   accessToken: string;
@@ -50,7 +50,7 @@ type PropsItemFolder = {
 const ItemFolder = (props: PropsItemFolder) => {
   return (
     <li class={styleItem} onClick={() => props.move()}>
-      <Icon icon="folder" class={styleItemIcon} />
+      <IconFolder />
       <span>{props.name}</span>
     </li>
   );
@@ -64,7 +64,7 @@ type PropsItemFile = {
 const ItemFile = (props: PropsItemFile) => {
   return (
     <li class={styleItem} onClick={() => props.addFile()}>
-      <Icon icon="audio_file" class={styleItemIcon} />
+      <IconAudioFile />
       <span>{props.name}</span>
     </li>
   );

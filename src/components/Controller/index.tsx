@@ -2,14 +2,21 @@ import MusicTitle from "./MusicTitle";
 import MusicTime from "./MusicTime";
 import SeekBar from "./SeekBar";
 
-import { styleController } from "./style.css";
-import PrevButton from "./PrevButton";
-import NextButton from "./NextButton";
-import PlayButton from "./PlayButton";
-import RepeatButton from "./RepeatButton";
-import ShuffleButton from "./ShuffleButton";
+import { styleButton, styleController } from "./style.css";
 import type Repeat from "~/audio/Repeat";
 import type AudioInfo from "~/audio/AudioInfo";
+import {
+  IconPause,
+  IconPlay,
+  IconRepeatOff,
+  IconRepeatOn,
+  IconRepeatOnce,
+  IconShuffleOff,
+  IconShuffleOn,
+  IconSkipNext,
+  IconSkipPrev,
+} from "../Icon";
+import { Match, Show, Switch } from "solid-js";
 
 type Props = {
   info: AudioInfo;
@@ -42,19 +49,40 @@ const Controller = (props: Props) => {
         seek={props.seek}
       />
       <div class={styleController}>
-        <PrevButton prev={props.playPrev} />
-        <PlayButton
-          isPlaying={!props.paused}
-          play={props.play}
-          pause={props.pause}
-        />
-        <NextButton next={props.playNext} />
+        <button class={styleButton} onClick={() => props.playPrev()}>
+          <IconSkipPrev />
+        </button>
+        <Show
+          when={props.paused}
+          fallback={
+            <button class={styleButton} onClick={() => props.pause()}>
+              <IconPause />
+            </button>
+          }>
+          <button class={styleButton} onClick={() => props.play()}>
+            <IconPlay />
+          </button>
+        </Show>
+        <button class={styleButton} onClick={() => props.playNext()}>
+          <IconSkipNext />
+        </button>
         <MusicTitle info={props.info} />
-        <RepeatButton repeat={props.repeat} toggleRepeat={toggleRepeat} />
-        <ShuffleButton
-          isShuffled={props.shuffle}
-          toggleShuffle={toggleShuffle}
-        />
+        <button class={styleButton} onClick={() => toggleRepeat()}>
+          <Switch fallback={<IconRepeatOff />}>
+            <Match when={props.repeat.value === "repeat on"}>
+              <IconRepeatOn />
+            </Match>
+            <Match when={props.repeat.value === "repeat one"}>
+              <IconRepeatOnce />
+            </Match>
+          </Switch>
+        </button>
+        <button class={styleButton} onClick={() => toggleShuffle()}>
+          <Show when={props.shuffle} fallback={<IconShuffleOff />}>
+            <IconShuffleOn />
+          </Show>
+        </button>
+
         <MusicTime duration={props.duration} currentTime={props.currentTime} />
       </div>
     </>
