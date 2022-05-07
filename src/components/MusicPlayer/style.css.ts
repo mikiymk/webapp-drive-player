@@ -8,7 +8,7 @@ export const stylePlayer = style({
   height: "100%",
 });
 
-globalStyle("html, body, #root", {
+globalStyle(":root, body, #root", {
   height: "100%",
   width: "100%",
 });
