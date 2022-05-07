@@ -1,7 +1,7 @@
 import { createSignal, For, JSXElement } from "solid-js";
 
-import Authorize from "../Authorize";
-import LabelIcon from "../LabelIcon";
+import Authorize from "./Authorize";
+import LabelIcon from "./LabelIcon";
 import {
   styleMenu,
   styleContent,
@@ -44,7 +44,7 @@ const Menu = (props: Props) => {
             </li>
           )}
         </For>
-        <Authorize style={styleNavItem} auth={props.auth} />
+        <Authorize auth={props.auth} />
       </ul>
       <div class={styleContent}>{props.items[selected()]?.element}</div>
     </div>

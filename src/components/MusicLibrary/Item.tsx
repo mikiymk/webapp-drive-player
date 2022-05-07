@@ -1,5 +1,5 @@
 import { mapArray, useContext } from "solid-js";
-import Icon from "~/components/GoogleIcon";
+import { IconDotInfo } from "../Icon";
 import { Context } from "../RightMenu";
 
 type Props = {
@@ -36,7 +36,7 @@ export const Item = (props: Props) => {
     <li>
       {props.name} <button onClick={() => props.play()}>play</button>
       <button onClick={[useContext(Context), onClick()]}>
-        <Icon icon="more_horiz" />
+        <IconDotInfo />
       </button>
     </li>
   );

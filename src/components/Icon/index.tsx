@@ -81,6 +81,15 @@ export const IconFolder = () => {
   );
 };
 
+/* https://materialdesignicons.com/icon/folder */
+export const IconDotInfo = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M16,12A2,2 0 0,1 18,10A2,2 0 0,1 20,12A2,2 0 0,1 18,14A2,2 0 0,1 16,12M10,12A2,2 0 0,1 12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12M4,12A2,2 0 0,1 6,10A2,2 0 0,1 8,12A2,2 0 0,1 6,14A2,2 0 0,1 4,12Z" />
+    </svg>
+  );
+};
+
 /* https://materialdesignicons.com/icon/download */
 export const IconDownload = () => {
   return (
@@ -122,6 +131,87 @@ export const IconError = () => {
   return (
     <svg class={styleIcon} viewBox="0 0 24 24">
       <path d="M11,15H13V17H11V15M11,7H13V13H11V7M12,2C6.47,2 2,6.5 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/skip-previous */
+export const IconSkipPrev = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M6,18V6H8V18H6M9.5,12L18,6V18L9.5,12Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/skip-next */
+export const IconSkipNext = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M16,18H18V6H16M6,18L14.5,12L6,6V18Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/pause */
+export const IconPause = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M14,19H18V5H14M6,19H10V5H6V19Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/repeat */
+export const IconRepeatOn = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M17,17H7V14L3,18L7,22V19H19V13H17M7,7H17V10L21,6L17,2V5H5V11H7V7Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/repeat-off */
+export const IconRepeatOff = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M2,5.27L3.28,4L20,20.72L18.73,22L15.73,19H7V22L3,18L7,14V17H13.73L7,10.27V11H5V8.27L2,5.27M17,13H19V17.18L17,15.18V13M17,5V2L21,6L17,10V7H8.82L6.82,5H17Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/repeat-once */
+export const IconRepeatOnce = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M13,15V9H12L10,10V11H11.5V15M17,17H7V14L3,18L7,22V19H19V13H17M7,7H17V10L21,6L17,2V5H5V11H7V7Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/shuffle */
+export const IconShuffleOn = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M14.83,13.41L13.42,14.82L16.55,17.95L14.5,20H20V14.5L17.96,16.54L14.83,13.41M14.5,4L16.54,6.04L4,18.59L5.41,20L17.96,7.46L20,9.5V4M10.59,9.17L5.41,4L4,5.41L9.17,10.58L10.59,9.17Z" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/shuffle-disabled */
+export const IconShuffleOff = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M16,4.5V7H5V9H16V11.5L19.5,8M16,12.5V15H5V17H16V19.5L19.5,16" />
+    </svg>
+  );
+};
+
+/* https://materialdesignicons.com/icon/close */
+export const IconClose = () => {
+  return (
+    <svg class={styleIcon} viewBox="0 0 24 24">
+      <path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z" />
     </svg>
   );
 };
