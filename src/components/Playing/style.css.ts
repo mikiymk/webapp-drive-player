@@ -10,3 +10,10 @@ export const styleImage = style({
   width: "100%",
   objectFit: "contain",
 });
+
+export const styleNoImage = style({
+  backgroundColor: "#888",
+  fill: "#333",
+  font: "bold 1px sans-serif",
+  textAnchor: "middle",
+});
