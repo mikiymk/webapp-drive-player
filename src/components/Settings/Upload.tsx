@@ -15,15 +15,10 @@ const Upload = (props: Props) => {
   const [status, setStatus] = createSignal("");
   const upload = () => {
     setStatus("loading");
-    const files = useAudios();
-    uploadLibraryData(
-      props.accessToken,
-      Object.entries(files.audios).map(([k, v]) => ({
-        id: k,
-        name: v.title,
-        info: v,
-      }))
-    ).then(response => setStatus(response.status === 200 ? "done" : "error"));
+    const audios = useAudios();
+    uploadLibraryData(props.accessToken, audios.audios).then(response =>
+      setStatus(response.status === 200 ? "done" : "error")
+    );
   };
 
   return (

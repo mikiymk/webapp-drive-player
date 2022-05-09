@@ -23,6 +23,12 @@ const DriveFiles = (props: Props) => {
     getAllMusics
   );
   const { addParents, move, folders, files } = parents;
+  const audios = useAudios();
+  const addAudioFile = (id: string, name: string) => {
+    audios.addAudios({
+      [id]: AudioInfo.getNamedInfo(name),
+    });
+  };
 
   return (
     <div class={styleDrive}>
@@ -37,11 +43,7 @@ const DriveFiles = (props: Props) => {
           {file => (
             <ItemFile
               name={file.name}
-              addFile={() =>
-                useAudios().addAudios({
-                  [file.id]: AudioInfo.getNamedInfo(file.name),
-                })
-              }
+              addFile={() => addAudioFile(file.id, file.name)}
             />
           )}
         </For>

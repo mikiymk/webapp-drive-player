@@ -1,10 +1,10 @@
 import { For, Show } from "solid-js";
 
-import type { File } from "~/file";
+import type { GoogleFile } from "~/file";
 import { styleBread, styleBreadcrumbs } from "./style.css";
 
 type Props = {
-  parents: File[];
+  parents: GoogleFile[];
   move: (index: number) => void;
 };
 
@@ -24,7 +24,7 @@ export const Breadcrumbs = (props: Props) => {
 };
 
 type PropsBread = {
-  parent: File;
+  parent: GoogleFile;
   move: () => void;
 };
 

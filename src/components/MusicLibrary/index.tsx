@@ -14,10 +14,8 @@ type Props = {
  * list of musics
  */
 const MusicList = (props: Props) => {
-  const files = createMemo(() => {
-    const files = useAudios();
-    return Object.entries(files.audios);
-  });
+  const audios = useAudios();
+  const files = createMemo(() => Object.entries(audios.audios));
 
   return (
     <ul class={styleLibrary}>

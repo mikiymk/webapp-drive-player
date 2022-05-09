@@ -7,18 +7,14 @@ import {
 } from "~/google/file";
 
 import AudioInfo from "~/audio/AudioInfo";
+import type { AudioRecord } from "./hooks/createFiles";
 
-export class File {
-  constructor(
-    public readonly id: string,
-    public readonly name: string,
-    public info?: AudioInfo
-  ) {
-    // EMPTY
-  }
-}
+export type GoogleFile = {
+  readonly id: string;
+  readonly name: string;
+};
 
-type Result = [File[], string | undefined];
+type Result = [GoogleFile[], string | undefined];
 
 /** ファイルリストの一部を入手 */
 const getPagedFiles = async (
@@ -30,7 +26,8 @@ const getPagedFiles = async (
 
   const rowFiles = result.files ?? [];
   const files = rowFiles.flatMap(({ id, name }) => {
-    if (id !== undefined && name !== undefined) return [new File(id, name)];
+    if (typeof id === "string" && typeof name === "string")
+      return [{ id, name }];
     else return [];
   });
   const nextToken = result.nextPageToken;
@@ -42,7 +39,7 @@ const getPagedFiles = async (
 const getAllFiles = async (accessToken: string, query: string) => {
   let token = undefined;
   let isFirst = true;
-  let allFiles: File[] = [];
+  let allFiles: GoogleFile[] = [];
 
   while (token || isFirst) {
     const [paged, next]: Result = await getPagedFiles(
@@ -89,58 +86,38 @@ const getLibraryID = async (accessToken: string): Promise<string | undefined> =>
     return result.files ? result.files[0]?.id : undefined;
   });
 
-export const uploadLibraryData = async (accessToken: string, files: File[]) => {
-  const filesData = files.map(file => ({
-    id: file.id,
-    name: file.name,
-    info: file.info,
-  }));
-
+export const uploadLibraryData = async (
+  accessToken: string,
+  files: AudioRecord
+) => {
   const id = await getLibraryID(accessToken);
 
   if (id !== undefined) {
-    return uploadAppDataJson(accessToken, id, filesData);
+    return uploadAppDataJson(accessToken, id, files);
   } else {
-    return createAppDataJson(accessToken, "library.json", filesData);
+    return createAppDataJson(accessToken, "library.json", files);
   }
 };
 
 export const downloadLibraryData = async (
   accessToken: string
-): Promise<File[] | undefined> => {
+): Promise<AudioRecord | undefined> => {
   const id = await getLibraryID(accessToken);
+  if (id === undefined) return;
 
-  if (id === undefined) {
-    return;
-  }
   const response = await downloadFile(accessToken, id);
-  if (response === null) {
-    return;
-  }
-  const json = await response.json();
+  if (response === null) return;
 
-  if (!Array.isArray(json)) {
-    return;
-  }
+  const json: unknown = await response.json();
+  if (typeof json !== "object") return;
+  if (json === null) return;
 
-  const files = json
-    .filter(
-      (
-        file: unknown
-      ): file is {
-        id: string;
-        name: string;
-        info: AudioInfo;
-      } => {
-        if (typeof file !== "object") {
-          return false;
-        } else if (file === null) {
-          return false;
-        }
-        return "id" in file && "name" in file && "info" in file;
-      }
-    )
-    .map(({ id, name, info }) => new File(id, name, AudioInfo.copyInfo(info)));
+  const files = Object.entries(json).map(
+    ([id, info]: [string, unknown]): [string, AudioInfo] => {
+      return ["" + id, AudioInfo.copyInfo(info as AudioInfo)];
+    }
+  );
+
   console.log(files);
-  return files;
+  return Object.fromEntries(files);
 };

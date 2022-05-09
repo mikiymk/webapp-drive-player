@@ -3,11 +3,11 @@ import create from "solid-zustand";
 import type AudioInfo from "~/audio/AudioInfo";
 
 export type AudioID = string;
-export type Audio = AudioInfo;
+export type AudioRecord = Record<AudioID, AudioInfo>;
 
-export type AudioStore = {
-  audios: Record<AudioID, Audio>;
-  addAudios: (audios: Record<AudioID, Audio>) => void;
+type AudioStore = {
+  audios: AudioRecord;
+  addAudios: (audios: AudioRecord) => void;
   setInfo: (id: AudioID, info: AudioInfo) => void;
 };
 

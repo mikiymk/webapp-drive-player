@@ -4,7 +4,7 @@ import DriveFiles from "../GoogleDrive/index";
 import Menu from "../Menu/index";
 import Controller from "../Controller/index";
 
-import type { File } from "~/file";
+import type { GoogleFile } from "~/file";
 import RightMenuProvider from "~/components/RightMenu";
 import Settings from "../Settings";
 import Playlists from "../Playlist";
@@ -23,7 +23,7 @@ import {
 } from "../Icon";
 
 export type Files = {
-  [name: string]: File;
+  [name: string]: GoogleFile;
 };
 
 /**

@@ -15,10 +15,9 @@ type Props = {
  */
 const PlayingInfo = (props: Props) => {
   const jacket = useJacket(() => props.info.picture);
-  const fileName = (id: string) => {
-    const files = useAudios();
-    const file = files.audios[id];
-    return file?.title ?? "";
+  const audios = useAudios();
+  const audioTitle = (id: string) => {
+    return audios.audios[id]?.title ?? "";
   };
 
   return (
@@ -27,7 +26,7 @@ const PlayingInfo = (props: Props) => {
       <img src={jacket()} alt="album jacket" />
       <ol>
         <For each={Array.from(props.playingList)}>
-          {id => <li>{fileName(id)}</li>}
+          {id => <li>{audioTitle(id)}</li>}
         </For>
       </ol>
     </div>

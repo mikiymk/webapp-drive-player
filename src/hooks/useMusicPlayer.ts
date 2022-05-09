@@ -18,7 +18,7 @@ const useMusicPlayer = (accessToken: Accessor<string>) => {
   const manager = new AudioManager(player);
 
   onMount(() => {
-    const files = useAudios();
+    const audios = useAudios();
 
     manager.onSetDuration = duration => setDuration(duration);
     manager.onSetPause = paused => setPaused(paused);
@@ -26,13 +26,13 @@ const useMusicPlayer = (accessToken: Accessor<string>) => {
     manager.onSetRepeat = repeat => setRepeat(repeat);
     manager.onSetShuffle = shuffle => setShuffle(shuffle);
 
-    manager.onLoadInfo = files.setInfo;
+    manager.onLoadInfo = audios.setInfo;
   });
 
   createEffect(() => {
-    const files = useAudios();
+    const audios = useAudios();
     manager.onChangeMusic = id => {
-      const info = files.audios[id];
+      const info = audios.audios[id];
       if (info instanceof AudioInfo) {
         setInfo(info);
       } else if (info !== undefined) {
