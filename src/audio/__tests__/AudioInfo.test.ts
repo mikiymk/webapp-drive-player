@@ -33,19 +33,3 @@ test("AudioInfo blob", async () => {
   expect(blobInfo).toHaveProperty("sort");
   expect(blobInfo).toEqual(AudioInfo.getEmptyInfo());
 });
-
-test("AudioInfo select", () => {
-  const selectInfo = AudioInfo.selectInfo({});
-
-  expect(selectInfo).toHaveProperty("title");
-  expect(selectInfo).toHaveProperty("artists");
-  expect(selectInfo).toHaveProperty("album");
-  expect(selectInfo).toHaveProperty("albumartist");
-  expect(selectInfo).toHaveProperty("track");
-  expect(selectInfo).toHaveProperty("disk");
-  expect(selectInfo).toHaveProperty("date");
-  expect(selectInfo).toHaveProperty("genre");
-  expect(selectInfo).toHaveProperty("picture");
-  expect(selectInfo).toHaveProperty("sort");
-  expect(selectInfo).toEqual(AudioInfo.getEmptyInfo());
-});

@@ -1,6 +1,3 @@
-import type { ParamsObject } from "sql.js";
-import { isArr, isBlob, isNum, isStr } from "~/hooks/isType";
-
 type Partial<T> = { [P in keyof T]?: T[P] | undefined };
 type AudioInfoNumber = { of: number | undefined; no: number | undefined };
 
@@ -74,26 +71,6 @@ class AudioInfo {
       genre,
       picture?.[0]?.data.buffer,
       sort
-    );
-  }
-
-  static selectInfo(result: ParamsObject) {
-    return new AudioInfo(
-      isStr(result["title"]),
-      isArr(result["artists"]),
-      isStr(result["album"]),
-      isStr(result["album_artist"]),
-      { of: isNum(result["track_of"]), no: isNum(result["track"]) },
-      { of: isNum(result["disk_of"]), no: isNum(result["disk"]) },
-      isStr(result["release_at"]),
-      isArr(result["genre"]),
-      isBlob(result["picture"])?.buffer,
-      {
-        albumsort: isStr(result["album_sort"]),
-        titlesort: isStr(result["title_sort"]),
-        artistsort: isStr(result["artist_sort"]),
-        albumartistsort: isStr(result["album_artist_sort"]),
-      }
     );
   }
 
