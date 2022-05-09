@@ -3,17 +3,15 @@ import { stylePlaylists } from "./style.css";
 import { For, useContext } from "solid-js";
 import { ButtonClickEvent, Context } from "../RightMenu";
 import { IconDotInfo } from "../Icon";
+import { usePlaylists } from "~/hooks/createPlaylists";
 
 type Props = {
-  playlists: string[];
-  makePlaylist: (playlist: string) => void;
-  deletePlaylist: (playlist: string) => void;
-
   select: (playlist: string) => void;
 };
 
 /** show on right click */
 const PlaylistList = (props: Props) => {
+  const playlists = usePlaylists();
   const onClickIcon = (name: string, event: ButtonClickEvent) => {
     console.log("onClickIcon");
     const callRightMenu = useContext(Context);
@@ -32,7 +30,7 @@ const PlaylistList = (props: Props) => {
           type: "button",
           label: "delete playlist",
           onClick: event => {
-            props.deletePlaylist(name);
+            playlists.deletePlaylist(name);
             useContext(Context)([], event);
           },
         },
@@ -43,7 +41,7 @@ const PlaylistList = (props: Props) => {
 
   return (
     <ul class={stylePlaylists}>
-      <For each={props.playlists}>
+      <For each={Object.keys(playlists.playlists)}>
         {name => (
           <li>
             {name}
@@ -55,7 +53,7 @@ const PlaylistList = (props: Props) => {
       </For>
 
       <li>
-        <MakePlaylistButton makePlaylist={props.makePlaylist} />
+        <MakePlaylistButton makePlaylist={playlists.makePlaylist} />
       </li>
     </ul>
   );

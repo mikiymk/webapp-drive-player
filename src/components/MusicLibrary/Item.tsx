@@ -1,4 +1,5 @@
 import { mapArray, useContext } from "solid-js";
+import { usePlaylists } from "~/hooks/createPlaylists";
 import { IconDotInfo } from "../Icon";
 import { Context } from "../RightMenu";
 
@@ -6,15 +7,13 @@ type Props = {
   id: string;
   name: string;
   play: () => void;
-
-  playlist: string[];
-  addToPlaylist: (playlist: string, audioId: string) => void;
 };
 
 /**
  * item of musics list
  */
 export const Item = (props: Props) => {
+  const playlists = usePlaylists();
   const onClick = () => [
     { type: "button", label: "play", onClick: () => props.play() },
     { type: "hr" },
@@ -22,11 +21,11 @@ export const Item = (props: Props) => {
       type: "list",
       label: "add to playlist",
       list: mapArray(
-        () => props.playlist,
+        () => Object.keys(playlists.playlists),
         name => ({
           type: "button" as const,
           label: name,
-          onClick: () => props.addToPlaylist(name, props.id),
+          onClick: () => playlists.addAudioToPlaylist(name, props.id),
         })
       )(),
     },

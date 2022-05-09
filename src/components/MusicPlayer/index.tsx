@@ -8,12 +8,10 @@ import type { GoogleFile } from "~/file";
 import RightMenuProvider from "~/components/RightMenu";
 import Settings from "../Settings";
 import Playlists from "../Playlist";
-import usePlaylist from "./usePlaylist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import useSignIn from "~/hooks/useSignIn";
 import type { JSXElement } from "solid-js";
-import createLibrary from "./createLibrary";
 import {
   IconGoogleDrive,
   IconLibrary,
@@ -31,10 +29,7 @@ export type Files = {
  */
 const MusicPlayer = () => {
   const { accessToken, signIn, signOut } = useSignIn();
-  const { select, update } = createLibrary();
-
   const { player, status } = useMusicPlayer(accessToken);
-  const playlist = usePlaylist(select, update);
 
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
@@ -56,28 +51,12 @@ const MusicPlayer = () => {
     library: {
       name: "Library",
       icon: <IconLibrary />,
-      element: (
-        <MusicList
-          play={playWithIdList}
-          playlist={playlist.playlists()}
-          addToPlaylist={playlist.addToPlaylist}
-        />
-      ),
+      element: <MusicList play={playWithIdList} />,
     },
     playlist: {
       name: "Playlist",
       icon: <IconPlayList />,
-      element: (
-        <Playlists
-          playlist={(name: string) => playlist.playlist(name)}
-          playlists={playlist.playlists()}
-          makePlaylist={playlist.makePlaylist}
-          deletePlaylist={playlist.deletePlaylist}
-          addToPlaylist={playlist.addToPlaylist}
-          removeFromPlaylist={playlist.removeFromPlaylist}
-          playsList={playWithIdList}
-        />
-      ),
+      element: <Playlists playsList={playWithIdList} />,
     },
     drive: {
       name: "Google Drive",
