@@ -4,17 +4,14 @@ import DriveFiles from "../GoogleDrive/index";
 import Menu from "../Menu/index";
 import Controller from "../Controller/index";
 
-import type { File } from "~/file";
+import type { GoogleFile } from "~/file";
 import RightMenuProvider from "~/components/RightMenu";
 import Settings from "../Settings";
 import Playlists from "../Playlist";
-import usePlaylist from "./usePlaylist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import useSignIn from "~/hooks/useSignIn";
 import type { JSXElement } from "solid-js";
-import createLibrary from "./createLibrary";
-import createFiles from "./createFiles";
 import {
   IconGoogleDrive,
   IconLibrary,
@@ -24,7 +21,7 @@ import {
 } from "../Icon";
 
 export type Files = {
-  [name: string]: File;
+  [name: string]: GoogleFile;
 };
 
 /**
@@ -32,11 +29,7 @@ export type Files = {
  */
 const MusicPlayer = () => {
   const { accessToken, signIn, signOut } = useSignIn();
-  const { select, update } = createLibrary();
-
-  const { files, addFiles } = createFiles(select, update);
-  const { player, status } = useMusicPlayer(accessToken, select, update);
-  const playlist = usePlaylist(select, update);
+  const { player, status } = useMusicPlayer(accessToken);
 
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
@@ -51,7 +44,6 @@ const MusicPlayer = () => {
       element: (
         <PlayingInfo
           info={status.info()}
-          files={files()}
           playingList={player?.musicIds ?? []}
         />
       ),
@@ -59,45 +51,22 @@ const MusicPlayer = () => {
     library: {
       name: "Library",
       icon: <IconLibrary />,
-      element: (
-        <MusicList
-          files={files()}
-          play={playWithIdList}
-          playlist={playlist.playlists()}
-          addToPlaylist={playlist.addToPlaylist}
-        />
-      ),
+      element: <MusicList play={playWithIdList} />,
     },
     playlist: {
       name: "Playlist",
       icon: <IconPlayList />,
-      element: (
-        <Playlists
-          playlist={(name: string) => playlist.playlist(name)}
-          playlists={playlist.playlists()}
-          makePlaylist={playlist.makePlaylist}
-          deletePlaylist={playlist.deletePlaylist}
-          addToPlaylist={playlist.addToPlaylist}
-          removeFromPlaylist={playlist.removeFromPlaylist}
-          playsList={playWithIdList}
-        />
-      ),
+      element: <Playlists playsList={playWithIdList} />,
     },
     drive: {
       name: "Google Drive",
       icon: <IconGoogleDrive />,
-      element: <DriveFiles addFile={addFiles} accessToken={accessToken()} />,
+      element: <DriveFiles accessToken={accessToken()} />,
     },
     settings: {
       name: "Settings",
       icon: <IconSettings />,
-      element: (
-        <Settings
-          files={Object.values(files())}
-          addFiles={addFiles}
-          accessToken={accessToken()}
-        />
-      ),
+      element: <Settings accessToken={accessToken()} />,
     },
   };
 

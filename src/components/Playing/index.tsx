@@ -1,13 +1,12 @@
-import { createMemo, For } from "solid-js";
+import { For } from "solid-js";
 
 import type AudioInfo from "~/audio/AudioInfo";
-import type { Files } from "~/components/MusicPlayer";
+import { useAudios } from "~/hooks/createFiles";
 import useJacket from "~/hooks/useJacket";
 import { stylePlaying } from "./style.css";
 
 type Props = {
   info: AudioInfo;
-  files: Files;
   playingList: Iterable<string>;
 };
 
@@ -16,7 +15,10 @@ type Props = {
  */
 const PlayingInfo = (props: Props) => {
   const jacket = useJacket(() => props.info.picture);
-  const files = createMemo(() => props.files);
+  const audios = useAudios();
+  const audioTitle = (id: string) => {
+    return audios.audios[id]?.title ?? "";
+  };
 
   return (
     <div class={stylePlaying}>
@@ -24,7 +26,7 @@ const PlayingInfo = (props: Props) => {
       <img src={jacket()} alt="album jacket" />
       <ol>
         <For each={Array.from(props.playingList)}>
-          {id => <li>{files()[id]?.name ?? ""}</li>}
+          {id => <li>{audioTitle(id)}</li>}
         </For>
       </ol>
     </div>

@@ -3,32 +3,31 @@ import { For, useContext } from "solid-js";
 import { Context } from "../RightMenu";
 import type Item from "../RightMenu/Item";
 import { IconDotInfo } from "../Icon";
+import { usePlaylists } from "~/hooks/createPlaylists";
+import { useAudios } from "~/hooks/createFiles";
 
 type Props = {
   name: string;
-  audios: { id: string; title: string }[];
 
   reset: () => void;
   playsList: (list: string[], index: number) => void;
-  remove: (index: number) => void;
 };
 
 /** show on right click */
 const Playlist = (props: Props) => {
+  const audios = useAudios();
+  const playlists = usePlaylists();
   const onClickIcon = (index: number): Item[] => [
     {
       type: "button",
       label: "play",
       onClick: () =>
-        props.playsList(
-          props.audios.map(({ id }) => id),
-          index
-        ),
+        props.playsList(playlists.playlists[props.name]?.audios ?? [], index),
     },
     {
       type: "button",
       label: "remove from playlist",
-      onClick: () => props.remove(index),
+      onClick: () => playlists.removeAudioFromPlaylist(props.name, index),
     },
   ];
 
@@ -38,18 +37,15 @@ const Playlist = (props: Props) => {
       <button onClick={() => props.reset()}>back to list</button>
       <button
         onClick={() =>
-          props.playsList(
-            props.audios.map(({ id }) => id),
-            0
-          )
+          props.playsList(playlists.playlists[props.name]?.audios ?? [], 0)
         }>
         play this playlist
       </button>
       <ul>
-        <For each={props.audios}>
+        <For each={playlists.playlists[props.name]?.audios ?? []}>
           {(audio, index) => (
             <li>
-              {audio.title}
+              {audios.audios[audio]?.title ?? ""}
               <button
                 onClick={event =>
                   useContext(Context)(onClickIcon(index()), event)

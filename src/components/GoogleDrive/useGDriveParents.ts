@@ -1,22 +1,22 @@
 import { Accessor, createEffect, createSignal } from "solid-js";
-import type { File } from "~/file";
+import type { GoogleFile } from "~/file";
 
 export const useGDriveParents = (
   accessToken: Accessor<string>,
   getAllFolders: (
     accessToken: string,
     parent?: string | undefined
-  ) => Promise<File[]>,
+  ) => Promise<GoogleFile[]>,
   getAllMusics: (
     accessToken: string,
     parent?: string | undefined
-  ) => Promise<File[]>
+  ) => Promise<GoogleFile[]>
 ) => {
-  const [parents, setParents] = createSignal<File[]>([
+  const [parents, setParents] = createSignal<GoogleFile[]>([
     { name: "root", id: "root" },
   ]);
-  const [files, setFiles] = createSignal<File[]>([]);
-  const [folders, setFolders] = createSignal<File[]>([]);
+  const [files, setFiles] = createSignal<GoogleFile[]>([]);
+  const [folders, setFolders] = createSignal<GoogleFile[]>([]);
 
   createEffect(() => {
     const parentId = parents().at(-1)?.id;
@@ -26,7 +26,7 @@ export const useGDriveParents = (
     getAllMusics(accessToken(), parentId).then(setFiles).catch(console.log);
   });
 
-  const addParents = (folder: File) =>
+  const addParents = (folder: GoogleFile) =>
     setParents(parents => parents.concat([folder]));
   const move = (index: number) =>
     setParents(parents => parents.slice(0, index + 1));

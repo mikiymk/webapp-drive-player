@@ -1,12 +1,12 @@
 import { createSignal, Match, Switch } from "solid-js";
 
-import { downloadLibraryData, File } from "~/file";
+import { downloadLibraryData } from "~/file";
+import { useAudios } from "~/hooks/createFiles";
 import { IconLoading, IconDone, IconError, IconDownload } from "../Icon";
 import { styleDownload } from "./style.css";
 
 type Props = {
   accessToken: string;
-  addFiles: (file: File[]) => void;
 };
 
 /**
@@ -14,11 +14,13 @@ type Props = {
  */
 const Download = (props: Props) => {
   const [status, setStatus] = createSignal("");
+  const audios = useAudios();
+
   const download = () => {
     setStatus("loading");
-    downloadLibraryData(props.accessToken).then(files => {
-      if (files !== undefined) {
-        props.addFiles(files);
+    downloadLibraryData(props.accessToken).then(data => {
+      if (data !== undefined) {
+        audios.addAudios(data);
         setStatus("done");
       } else {
         setStatus("error");

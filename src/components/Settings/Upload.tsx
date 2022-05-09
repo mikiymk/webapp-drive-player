@@ -1,11 +1,11 @@
-import { uploadLibraryData, File } from "~/file";
+import { uploadLibraryData } from "~/file";
 import { styleUpload } from "./style.css";
 import { createSignal, Match, Switch } from "solid-js";
 import { IconDone, IconError, IconLoading, IconUpload } from "../Icon";
+import { useAudios } from "~/hooks/createFiles";
 
 type Props = {
   accessToken: string;
-  files: File[];
 };
 
 /**
@@ -15,7 +15,8 @@ const Upload = (props: Props) => {
   const [status, setStatus] = createSignal("");
   const upload = () => {
     setStatus("loading");
-    uploadLibraryData(props.accessToken, props.files).then(response =>
+    const audios = useAudios();
+    uploadLibraryData(props.accessToken, audios.audios).then(response =>
       setStatus(response.status === 200 ? "done" : "error")
     );
   };

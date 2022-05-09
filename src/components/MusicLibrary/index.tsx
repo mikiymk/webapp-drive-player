@@ -1,31 +1,28 @@
 import { Item } from "./Item";
 
-import type { Files } from "~/components/MusicPlayer";
-
 import { styleLibrary } from "./style.css";
-import { For } from "solid-js";
+import { createMemo, For } from "solid-js";
+import { useAudios } from "~/hooks/createFiles";
 
 type Props = {
-  files: Files;
   play: (idList: string[], index: number) => void;
-  playlist: string[];
-  addToPlaylist: (playlist: string, audioId: string) => void;
 };
 
 /**
  * list of musics
  */
 const MusicList = (props: Props) => {
+  const audios = useAudios();
+  const AudioIDs = createMemo(() => Object.keys(audios.audios));
+
   return (
     <ul class={styleLibrary}>
-      <For each={Object.values(props.files)}>
-        {(file, index) => (
+      <For each={Object.entries(audios.audios)}>
+        {([id, file], index) => (
           <Item
-            id={file.id}
-            name={file.name}
-            play={() => props.play(Object.keys(props.files), index())}
-            playlist={props.playlist}
-            addToPlaylist={props.addToPlaylist}
+            id={id}
+            name={file.title}
+            play={() => props.play(AudioIDs(), index())}
           />
         )}
       </For>
