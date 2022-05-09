@@ -2,7 +2,7 @@ import create from "solid-zustand";
 import type AudioInfo from "~/audio/AudioInfo";
 
 export type FileID = string;
-export type File = { name: string } | AudioInfo;
+export type File = { title: string } | AudioInfo;
 
 export type Files = {
   files: Record<FileID, File>;

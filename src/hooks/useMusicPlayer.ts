@@ -3,16 +3,9 @@ import Repeat from "~/audio/Repeat";
 import AudioInfo from "~/audio/AudioInfo";
 import AudioElementPlayer from "~/audio/AudioElementPlayer";
 import { Accessor, createEffect, createSignal, onMount } from "solid-js";
-import type {
-  SelectDB,
-  UpdateDB,
-} from "~/components/MusicPlayer/createLibrary";
+import { useFiles } from "./createFiles";
 
-const useMusicPlayer = (
-  accessToken: Accessor<string>,
-  select: SelectDB,
-  update: UpdateDB
-) => {
+const useMusicPlayer = (accessToken: Accessor<string>) => {
   const [paused, setPaused] = createSignal(true);
   const [duration, setDuration] = createSignal(0);
   const [currentTime, setCurrentTime] = createSignal(0);
@@ -24,61 +17,30 @@ const useMusicPlayer = (
   const player = new AudioElementPlayer();
   const manager = new AudioManager(player);
 
-  const selectInfo = (id: string): AudioInfo | undefined => {
-    const result = select("SELECT * FROM `audio` WHERE `id` = :id;", {
-      ":id": id,
-    })[0];
-    if (result === undefined) return;
-
-    const info = AudioInfo.selectInfo(result);
-    return info;
-  };
-
-  const updateInfo = (id: string, info: AudioInfo): void => {
-    update(
-      "UPDATE `audio` SET `title` = :title, `artists` = :artists, " +
-        "`album` = :album, `album_artist` = :album_artist, `track` = :track, " +
-        "`track_of` = :track_of, `disk` = :disk, `disk_of` = :disk_of, " +
-        "`release_at` = :release_at, `genre` = :genre, `picture` = :picture, " +
-        "`album_sort` = :album_sort, `title_sort` = :title_sort, " +
-        "`artist_sort` = :artist_sort, `album_artist_sort` = :album_artist_sort " +
-        "WHERE `id` = :id;",
-      [
-        {
-          ":id": id,
-          ":title": info.title,
-          ":artists": JSON.stringify(info.artists),
-          ":album": info.album,
-          ":album_artist": info.albumartist,
-          ":track": info.track.no ?? null,
-          ":track_of": info.track.of ?? null,
-          ":disk": info.disk.no ?? null,
-          ":disk_of": info.disk.of ?? null,
-          ":release_at": info.date,
-          ":genre": JSON.stringify(info.genre),
-          ":picture": new Uint8Array(info.picture),
-          ":album_sort": info.sort.albumsort,
-          ":title_sort": info.sort.titlesort,
-          ":artist_sort": info.sort.artistsort,
-          ":album_artist_sort": info.sort.albumartistsort,
-        },
-      ]
-    );
-  };
-
   onMount(() => {
+    const files = useFiles();
+
     manager.onSetDuration = duration => setDuration(duration);
     manager.onSetPause = paused => setPaused(paused);
     manager.onSetCurrentTime = currentTime => setCurrentTime(currentTime);
     manager.onSetRepeat = repeat => setRepeat(repeat);
     manager.onSetShuffle = shuffle => setShuffle(shuffle);
 
-    manager.onLoadInfo = updateInfo;
+    manager.onLoadInfo = files.setInfo;
   });
 
   createEffect(() => {
-    manager.onChangeMusic = id =>
-      setInfo(selectInfo(id) ?? AudioInfo.getEmptyInfo());
+    const files = useFiles();
+    manager.onChangeMusic = id => {
+      const info = files.files[id];
+      if (info instanceof AudioInfo) {
+        setInfo(info);
+      } else if (info !== undefined) {
+        setInfo(AudioInfo.getEmptyInfo());
+      } else {
+        setInfo(AudioInfo.getEmptyInfo());
+      }
+    };
   });
 
   createEffect(() => {

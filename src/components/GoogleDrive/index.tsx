@@ -1,15 +1,15 @@
 import { Breadcrumbs } from "./Breadcrumbs";
 
-import { getAllMusics, getAllFolders, File } from "~/file";
+import { getAllMusics, getAllFolders } from "~/file";
 import { styleDrive, styleItem } from "./style.css";
 
 import { useGDriveParents } from "./useGDriveParents";
 import { For } from "solid-js";
 import { IconAudioFile, IconFolder } from "../Icon";
+import { useFiles } from "~/hooks/createFiles";
 
 type Props = {
   accessToken: string;
-  addFile: (file: File[]) => void;
 };
 
 /**
@@ -34,7 +34,12 @@ const DriveFiles = (props: Props) => {
         </For>
         <For each={files()}>
           {file => (
-            <ItemFile name={file.name} addFile={() => props.addFile([file])} />
+            <ItemFile
+              name={file.name}
+              addFile={() =>
+                useFiles().addFiles([[file.id, { title: file.name }]])
+              }
+            />
           )}
         </For>
       </ul>

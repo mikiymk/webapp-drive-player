@@ -12,9 +12,8 @@ import usePlaylist from "./usePlaylist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import useSignIn from "~/hooks/useSignIn";
-import type { JSXElement } from "solid-js";
+import { createEffect, JSXElement } from "solid-js";
 import createLibrary from "./createLibrary";
-import createFiles from "./createFiles";
 import {
   IconGoogleDrive,
   IconLibrary,
@@ -22,6 +21,7 @@ import {
   IconPlayList,
   IconSettings,
 } from "../Icon";
+import { useFiles } from "~/hooks/createFiles";
 
 export type Files = {
   [name: string]: File;
@@ -34,13 +34,21 @@ const MusicPlayer = () => {
   const { accessToken, signIn, signOut } = useSignIn();
   const { select, update } = createLibrary();
 
-  const { files, addFiles } = createFiles(select, update);
-  const { player, status } = useMusicPlayer(accessToken, select, update);
+  const { player, status } = useMusicPlayer(accessToken);
   const playlist = usePlaylist(select, update);
 
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
   };
+
+  createEffect(() => {
+    const files = useFiles();
+    console.log("useFiles()", files);
+    console.log("useFiles().files", files.files);
+    console.log("useFiles().files['']", files.files[""]);
+    console.log("useFiles().addFiles", files.addFiles);
+    console.log("useFiles().setInfo", files.setInfo);
+  });
 
   const menuItems: {
     [name: string]: { name: string; icon: JSXElement; element: JSXElement };
@@ -51,7 +59,6 @@ const MusicPlayer = () => {
       element: (
         <PlayingInfo
           info={status.info()}
-          files={files()}
           playingList={player?.musicIds ?? []}
         />
       ),
@@ -61,7 +68,6 @@ const MusicPlayer = () => {
       icon: <IconLibrary />,
       element: (
         <MusicList
-          files={files()}
           play={playWithIdList}
           playlist={playlist.playlists()}
           addToPlaylist={playlist.addToPlaylist}
@@ -86,18 +92,12 @@ const MusicPlayer = () => {
     drive: {
       name: "Google Drive",
       icon: <IconGoogleDrive />,
-      element: <DriveFiles addFile={addFiles} accessToken={accessToken()} />,
+      element: <DriveFiles accessToken={accessToken()} />,
     },
     settings: {
       name: "Settings",
       icon: <IconSettings />,
-      element: (
-        <Settings
-          files={Object.values(files())}
-          addFiles={addFiles}
-          accessToken={accessToken()}
-        />
-      ),
+      element: <Settings accessToken={accessToken()} />,
     },
   };
 

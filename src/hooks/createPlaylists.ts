@@ -13,7 +13,7 @@ export type Playlists = {
   removeAudioFromPlaylist: (name: PlaylistName, index: number) => void;
 };
 
-export const useFiles = create<Playlists>(set => ({
+export const usePlaylists = create<Playlists>(set => ({
   playlists: {},
   makePlaylist: name =>
     set(state => {

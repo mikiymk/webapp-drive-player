@@ -1,12 +1,12 @@
 import { createSignal, Match, Switch } from "solid-js";
 
-import { downloadLibraryData, File } from "~/file";
+import { downloadLibraryData } from "~/file";
+import { File, useFiles } from "~/hooks/createFiles";
 import { IconLoading, IconDone, IconError, IconDownload } from "../Icon";
 import { styleDownload } from "./style.css";
 
 type Props = {
   accessToken: string;
-  addFiles: (file: File[]) => void;
 };
 
 /**
@@ -14,11 +14,21 @@ type Props = {
  */
 const Download = (props: Props) => {
   const [status, setStatus] = createSignal("");
+  const files = useFiles();
+  const addFiles = (newFiles: [string, File][]) => {
+    files.addFiles(newFiles);
+  };
   const download = () => {
     setStatus("loading");
     downloadLibraryData(props.accessToken).then(files => {
       if (files !== undefined) {
-        props.addFiles(files);
+        addFiles(
+          files.map(file =>
+            file.info
+              ? [file.id, file.info]
+              : [file.id, { id: file.id, title: file.name }]
+          )
+        );
         setStatus("done");
       } else {
         setStatus("error");
