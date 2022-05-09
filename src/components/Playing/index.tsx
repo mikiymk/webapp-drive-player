@@ -1,7 +1,7 @@
 import { For } from "solid-js";
 
 import type AudioInfo from "~/audio/AudioInfo";
-import { useFiles } from "~/hooks/createFiles";
+import { useAudios } from "~/hooks/createFiles";
 import useJacket from "~/hooks/useJacket";
 import { stylePlaying } from "./style.css";
 
@@ -16,8 +16,8 @@ type Props = {
 const PlayingInfo = (props: Props) => {
   const jacket = useJacket(() => props.info.picture);
   const fileName = (id: string) => {
-    const files = useFiles();
-    const file = files.files[id];
+    const files = useAudios();
+    const file = files.audios[id];
     return file?.title ?? "";
   };
 

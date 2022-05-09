@@ -1,15 +1,15 @@
 import create from "solid-zustand";
-import type { FileID } from "./createFiles";
+import type { AudioID } from "./createFiles";
 
 export type PlaylistName = string;
-export type Playlist = { name: PlaylistName; audios: FileID[] };
+export type Playlist = { name: PlaylistName; audios: AudioID[] };
 
 export type Playlists = {
   playlists: Record<PlaylistName, Playlist>;
   makePlaylist: (name: PlaylistName) => void;
   deletePlaylist: (name: PlaylistName) => void;
 
-  addAudioToPlaylist: (name: PlaylistName, id: FileID) => void;
+  addAudioToPlaylist: (name: PlaylistName, id: AudioID) => void;
   removeAudioFromPlaylist: (name: PlaylistName, index: number) => void;
 };
 

@@ -1,19 +1,22 @@
 import create from "solid-zustand";
+
 import type AudioInfo from "~/audio/AudioInfo";
 
-export type FileID = string;
-export type File = { title: string } | AudioInfo;
+export type AudioID = string;
+export type Audio = AudioInfo;
 
-export type Files = {
-  files: Record<FileID, File>;
-  addFiles: (files: [FileID, File][]) => void;
-  setInfo: (id: FileID, info: AudioInfo) => void;
+export type AudioStore = {
+  audios: Record<AudioID, Audio>;
+  addAudios: (audios: Record<AudioID, Audio>) => void;
+  setInfo: (id: AudioID, info: AudioInfo) => void;
 };
 
-export const useFiles = create<Files>(set => ({
-  files: {},
-  addFiles: files =>
-    set(state => ({ files: { ...state.files, ...Object.fromEntries(files) } })),
+export const useAudios = create<AudioStore>(set => ({
+  audios: {},
+  addAudios: audios =>
+    set(state => ({
+      audios: { ...audios, ...state.audios },
+    })),
   setInfo: (id, info) =>
-    set(state => ({ files: { ...state.files, [id]: info } })),
+    set(state => ({ audios: { ...state.audios, [id]: info } })),
 }));

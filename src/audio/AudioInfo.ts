@@ -16,6 +16,10 @@ class AudioInfo {
     return new AudioInfo();
   }
 
+  static getNamedInfo(name: string) {
+    return new AudioInfo(name);
+  }
+
   /**
    * @param data オーディオファイルデータ
    * @returns データから読み取ったオーディオ情報

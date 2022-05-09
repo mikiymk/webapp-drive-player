@@ -3,7 +3,7 @@ import Repeat from "~/audio/Repeat";
 import AudioInfo from "~/audio/AudioInfo";
 import AudioElementPlayer from "~/audio/AudioElementPlayer";
 import { Accessor, createEffect, createSignal, onMount } from "solid-js";
-import { useFiles } from "./createFiles";
+import { useAudios } from "./createFiles";
 
 const useMusicPlayer = (accessToken: Accessor<string>) => {
   const [paused, setPaused] = createSignal(true);
@@ -18,7 +18,7 @@ const useMusicPlayer = (accessToken: Accessor<string>) => {
   const manager = new AudioManager(player);
 
   onMount(() => {
-    const files = useFiles();
+    const files = useAudios();
 
     manager.onSetDuration = duration => setDuration(duration);
     manager.onSetPause = paused => setPaused(paused);
@@ -30,9 +30,9 @@ const useMusicPlayer = (accessToken: Accessor<string>) => {
   });
 
   createEffect(() => {
-    const files = useFiles();
+    const files = useAudios();
     manager.onChangeMusic = id => {
-      const info = files.files[id];
+      const info = files.audios[id];
       if (info instanceof AudioInfo) {
         setInfo(info);
       } else if (info !== undefined) {

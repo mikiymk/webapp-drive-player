@@ -1,7 +1,8 @@
 import { createSignal, Match, Switch } from "solid-js";
+import AudioInfo from "~/audio/AudioInfo";
 
 import { downloadLibraryData } from "~/file";
-import { File, useFiles } from "~/hooks/createFiles";
+import { Audio, useAudios } from "~/hooks/createFiles";
 import { IconLoading, IconDone, IconError, IconDownload } from "../Icon";
 import { styleDownload } from "./style.css";
 
@@ -14,20 +15,19 @@ type Props = {
  */
 const Download = (props: Props) => {
   const [status, setStatus] = createSignal("");
-  const files = useFiles();
-  const addFiles = (newFiles: [string, File][]) => {
-    files.addFiles(newFiles);
+  const files = useAudios();
+  const addFiles = (newFiles: [string, Audio][]) => {
+    files.addAudios(Object.fromEntries(newFiles));
   };
   const download = () => {
     setStatus("loading");
     downloadLibraryData(props.accessToken).then(files => {
       if (files !== undefined) {
         addFiles(
-          files.map(file =>
-            file.info
-              ? [file.id, file.info]
-              : [file.id, { id: file.id, title: file.name }]
-          )
+          files.map(file => [
+            file.id,
+            file.info ? file.info : AudioInfo.getNamedInfo(file.name),
+          ])
         );
         setStatus("done");
       } else {

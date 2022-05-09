@@ -2,7 +2,7 @@ import { Item } from "./Item";
 
 import { styleLibrary } from "./style.css";
 import { createMemo, For } from "solid-js";
-import { useFiles } from "~/hooks/createFiles";
+import { useAudios } from "~/hooks/createFiles";
 
 type Props = {
   play: (idList: string[], index: number) => void;
@@ -15,8 +15,8 @@ type Props = {
  */
 const MusicList = (props: Props) => {
   const files = createMemo(() => {
-    const files = useFiles();
-    return Object.entries(files.files);
+    const files = useAudios();
+    return Object.entries(files.audios);
   });
 
   return (

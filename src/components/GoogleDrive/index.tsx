@@ -6,7 +6,8 @@ import { styleDrive, styleItem } from "./style.css";
 import { useGDriveParents } from "./useGDriveParents";
 import { For } from "solid-js";
 import { IconAudioFile, IconFolder } from "../Icon";
-import { useFiles } from "~/hooks/createFiles";
+import { useAudios } from "~/hooks/createFiles";
+import AudioInfo from "~/audio/AudioInfo";
 
 type Props = {
   accessToken: string;
@@ -37,7 +38,9 @@ const DriveFiles = (props: Props) => {
             <ItemFile
               name={file.name}
               addFile={() =>
-                useFiles().addFiles([[file.id, { title: file.name }]])
+                useAudios().addAudios({
+                  [file.id]: AudioInfo.getNamedInfo(file.name),
+                })
               }
             />
           )}

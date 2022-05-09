@@ -12,7 +12,7 @@ import usePlaylist from "./usePlaylist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import useSignIn from "~/hooks/useSignIn";
-import { createEffect, JSXElement } from "solid-js";
+import type { JSXElement } from "solid-js";
 import createLibrary from "./createLibrary";
 import {
   IconGoogleDrive,
@@ -21,7 +21,6 @@ import {
   IconPlayList,
   IconSettings,
 } from "../Icon";
-import { useFiles } from "~/hooks/createFiles";
 
 export type Files = {
   [name: string]: File;
@@ -40,15 +39,6 @@ const MusicPlayer = () => {
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
   };
-
-  createEffect(() => {
-    const files = useFiles();
-    console.log("useFiles()", files);
-    console.log("useFiles().files", files.files);
-    console.log("useFiles().files['']", files.files[""]);
-    console.log("useFiles().addFiles", files.addFiles);
-    console.log("useFiles().setInfo", files.setInfo);
-  });
 
   const menuItems: {
     [name: string]: { name: string; icon: JSXElement; element: JSXElement };
