@@ -1,7 +1,7 @@
-import { Accessor, createEffect, createSignal } from "solid-js";
+import { Accessor, batch, createEffect, createSignal } from "solid-js";
 
 const useJacket = (picture: Accessor<ArrayBuffer | undefined>) => {
-  const [jacket, setJacket] = createSignal("");
+  const [jacket, setJacket] = createSignal<string>();
   const defaultBuffer = new ArrayBuffer(0);
 
   createEffect(prev => {
@@ -10,14 +10,18 @@ const useJacket = (picture: Accessor<ArrayBuffer | undefined>) => {
       return prev;
     }
 
-    if (jacket() !== "") {
-      URL.revokeObjectURL(jacket());
-      setJacket("");
-    }
-    if (pictureBuffer !== defaultBuffer) {
-      const createdUrl = URL.createObjectURL(new Blob([pictureBuffer]));
-      setJacket(createdUrl);
-    }
+    batch(() => {
+      const jacketURL = jacket();
+      if (jacketURL !== undefined) {
+        URL.revokeObjectURL(jacketURL);
+        setJacket();
+      }
+
+      if (pictureBuffer.byteLength !== 0) {
+        const createdUrl = URL.createObjectURL(new Blob([pictureBuffer]));
+        setJacket(createdUrl);
+      }
+    });
 
     return pictureBuffer;
   });

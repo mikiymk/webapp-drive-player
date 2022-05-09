@@ -3,7 +3,8 @@ import { For } from "solid-js";
 import type AudioInfo from "~/audio/AudioInfo";
 import { useAudios } from "~/hooks/createFiles";
 import useJacket from "~/hooks/useJacket";
-import { stylePlaying } from "./style.css";
+import { styleImage, stylePlaying } from "./style.css";
+import noimage from "./noimage.svg";
 
 type Props = {
   info: AudioInfo;
@@ -23,7 +24,7 @@ const PlayingInfo = (props: Props) => {
   return (
     <div class={stylePlaying}>
       <span>{props.info.album}</span>
-      <img src={jacket()} alt="album jacket" />
+      <img src={jacket() ?? noimage} alt="album jacket" class={styleImage} />
       <ol>
         <For each={Array.from(props.playingList)}>
           {id => <li>{audioTitle(id)}</li>}
