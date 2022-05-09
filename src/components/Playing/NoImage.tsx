@@ -1,11 +1,11 @@
-import { styleNoImage } from "./style.css";
+import { styleImage, styleNoImage } from "./style.css";
 
 /**
  * no image available
  */
 const NoImage = () => {
   return (
-    <svg class={styleNoImage} viewBox="0 0 10 10">
+    <svg class={`${styleImage} ${styleNoImage}`} viewBox="0 0 10 10">
       <text x="50%" y="3">
         no image
       </text>
