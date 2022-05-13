@@ -32,16 +32,12 @@ const PlayingInfo = (props: Props) => {
         <dt>Disk</dt>
         <dd>
           {props.info.disk.no}
-          <Show when={props.info.disk.of}>
-            {of => <>/ {of}</>}
-          </Show>
+          <Show when={props.info.disk.of}>{of => <>/ {of}</>}</Show>
         </dd>
         <dt>Track</dt>
         <dd>
           {props.info.track.no}
-          <Show when={props.info.track.of}>
-            {of => <>/ {of}</>}
-          </Show>
+          <Show when={props.info.track.of}>{of => <>/ {of}</>}</Show>
         </dd>
       </dl>
     </div>
