@@ -10,14 +10,8 @@ import {
 } from "solid-js";
 
 import Authorize from "./Authorize";
-import LabelIcon from "./LabelIcon";
-import {
-  styleContent,
-  styleNav,
-  styleNavItem,
-  styleNavItemButton,
-  styleNavSelected,
-} from "./style.css";
+import NavItem from "./NavItem";
+import { styleContent, styleNav } from "./style.css";
 
 type MenuItem = {
   key: string;
@@ -65,17 +59,12 @@ export const Menu = (props: Props) => {
       <ul class={styleNav}>
         <For each={items()}>
           {item => (
-            <li
-              classList={{
-                [styleNavItem]: true,
-                [styleNavSelected]: item.key === selected(),
-              }}>
-              <button
-                class={styleNavItemButton}
-                onClick={() => setSelected(item.key)}>
-                <LabelIcon icon={item.icon}>{item.label}</LabelIcon>
-              </button>
-            </li>
+            <NavItem
+              icon={item.icon}
+              onClick={() => setSelected(item.key)}
+              selected={item.key === selected()}>
+              {item.label}
+            </NavItem>
           )}
         </For>
         <Authorize auth={props.auth} />

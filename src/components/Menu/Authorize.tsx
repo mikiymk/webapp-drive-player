@@ -1,8 +1,7 @@
 import { Show } from "solid-js";
 
-import LabelIcon from "./LabelIcon";
+import NavItem from "./NavItem";
 import { IconSignIn, IconSignOut } from "../Icon";
-import { styleNavItem, styleNavItemButton } from "./style.css";
 
 type Props = {
   auth: {
@@ -17,19 +16,13 @@ const Authorize = (props: Props) => {
     <Show
       when={props.auth.accessToken !== ""}
       fallback={
-        <li class={styleNavItem}>
-          <button
-            class={styleNavItemButton}
-            onClick={() => props.auth.signIn()}>
-            <LabelIcon icon={<IconSignIn />}>Sign In</LabelIcon>
-          </button>
-        </li>
+        <NavItem icon={<IconSignIn />} onClick={() => props.auth.signIn()}>
+          Sign In
+        </NavItem>
       }>
-      <li class={styleNavItem}>
-        <button class={styleNavItemButton} onClick={() => props.auth.signOut()}>
-          <LabelIcon icon={<IconSignOut />}>Sign Out</LabelIcon>
-        </button>
-      </li>
+      <NavItem icon={<IconSignOut />} onClick={() => props.auth.signOut()}>
+        Sign Out
+      </NavItem>
     </Show>
   );
 };
