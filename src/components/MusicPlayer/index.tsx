@@ -1,7 +1,6 @@
 import PlayingInfo from "../Playing/index";
 import MusicList from "../MusicLibrary/index";
 import DriveFiles from "../GoogleDrive/index";
-import Menu from "../Menu/index";
 import Controller from "../Controller/index";
 
 import type { GoogleFile } from "~/file";
@@ -11,14 +10,14 @@ import Playlists from "../Playlist";
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 import useSignIn from "~/hooks/useSignIn";
-import type { JSXElement } from "solid-js";
 import {
-  IconGoogleDrive,
+  IconDrive,
   IconLibrary,
   IconPlay,
   IconPlayList,
   IconSettings,
 } from "../Icon";
+import { Menu, MenuItem } from "../Menu";
 
 export type Files = {
   [name: string]: GoogleFile;
@@ -35,43 +34,31 @@ const MusicPlayer = () => {
     player?.playWithIdList(idList, index);
   };
 
-  const menuItems: {
-    [name: string]: { name: string; icon: JSXElement; element: JSXElement };
-  } = {
-    playing: {
-      name: "Now Playing",
-      icon: <IconPlay />,
-      element: <PlayingInfo info={status.info()} />,
-    },
-    library: {
-      name: "Library",
-      icon: <IconLibrary />,
-      element: <MusicList play={playWithIdList} />,
-    },
-    playlist: {
-      name: "Playlist",
-      icon: <IconPlayList />,
-      element: <Playlists playsList={playWithIdList} />,
-    },
-    drive: {
-      name: "Google Drive",
-      icon: <IconGoogleDrive />,
-      element: <DriveFiles accessToken={accessToken()} />,
-    },
-    settings: {
-      name: "Settings",
-      icon: <IconSettings />,
-      element: <Settings accessToken={accessToken()} />,
-    },
-  };
-
   return (
     <RightMenuProvider>
       <div class={stylePlayer}>
         <Menu
-          items={menuItems}
-          auth={{ accessToken: accessToken(), signIn, signOut }}
-        />
+          defaultKey="playing"
+          auth={{ accessToken: accessToken(), signIn, signOut }}>
+          <MenuItem key="playing" icon={<IconPlay />} label="Now Playing">
+            <PlayingInfo info={status.info()} />
+          </MenuItem>
+          <MenuItem key="library" icon={<IconLibrary />} label="Library">
+            <MusicList play={playWithIdList} />
+          </MenuItem>
+
+          <MenuItem key="playlist" icon={<IconPlayList />} label="Playlist">
+            <Playlists playsList={playWithIdList} />
+          </MenuItem>
+
+          <MenuItem key="drive" icon={<IconDrive />} label="Google Drive">
+            <DriveFiles accessToken={accessToken()} />
+          </MenuItem>
+
+          <MenuItem key="settings" icon={<IconSettings />} label="Settings">
+            <Settings accessToken={accessToken()} />
+          </MenuItem>
+        </Menu>
 
         <Controller
           info={status.info()}
