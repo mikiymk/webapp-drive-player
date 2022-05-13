@@ -41,12 +41,7 @@ const MusicPlayer = () => {
     playing: {
       name: "Now Playing",
       icon: <IconPlay />,
-      element: (
-        <PlayingInfo
-          info={status.info()}
-          playingList={player?.musicIds ?? []}
-        />
-      ),
+      element: <PlayingInfo info={status.info()} />,
     },
     library: {
       name: "Library",

@@ -1,13 +1,12 @@
-import { For } from "solid-js";
+import { Show } from "solid-js";
 
 import type AudioInfo from "~/audio/AudioInfo";
-import { useAudios } from "~/hooks/createFiles";
 import useJacket from "~/hooks/useJacket";
-import { stylePlaying } from "./style.css";
+import NoImage from "./NoImage";
+import { styleImage, styleInfo, stylePlaying } from "./style.css";
 
 type Props = {
   info: AudioInfo;
-  playingList: Iterable<string>;
 };
 
 /**
@@ -15,20 +14,32 @@ type Props = {
  */
 const PlayingInfo = (props: Props) => {
   const jacket = useJacket(() => props.info.picture);
-  const audios = useAudios();
-  const audioTitle = (id: string) => {
-    return audios.audios[id]?.title ?? "";
-  };
 
   return (
     <div class={stylePlaying}>
-      <span>{props.info.album}</span>
-      <img src={jacket()} alt="album jacket" />
-      <ol>
-        <For each={Array.from(props.playingList)}>
-          {id => <li>{audioTitle(id)}</li>}
-        </For>
-      </ol>
+      <Show when={jacket()} fallback={<NoImage />}>
+        {jacket => <img src={jacket} alt="album jacket" class={styleImage} />}
+      </Show>
+      <dl class={styleInfo}>
+        <dt>Album</dt>
+        <dd>{props.info.album}</dd>
+        <dt>Album Artist</dt>
+        <dd>{props.info.albumartist}</dd>
+        <dt>Title</dt>
+        <dd>{props.info.title}</dd>
+        <dt>Artist</dt>
+        <dd>{props.info.artists.join()}</dd>
+        <dt>Disk</dt>
+        <dd>
+          {props.info.disk.no}
+          <Show when={props.info.disk.of}>{of => <>/ {of}</>}</Show>
+        </dd>
+        <dt>Track</dt>
+        <dd>
+          {props.info.track.no}
+          <Show when={props.info.track.of}>{of => <>/ {of}</>}</Show>
+        </dd>
+      </dl>
     </div>
   );
 };
