@@ -3,7 +3,7 @@ import { Show } from "solid-js";
 import type AudioInfo from "~/audio/AudioInfo";
 import useJacket from "~/hooks/useJacket";
 import NoImage from "./NoImage";
-import { styleImage, stylePlaying } from "./style.css";
+import { styleImage, styleInfo, stylePlaying } from "./style.css";
 
 type Props = {
   info: AudioInfo;
@@ -20,7 +20,7 @@ const PlayingInfo = (props: Props) => {
       <Show when={jacket()} fallback={<NoImage />}>
         {jacket => <img src={jacket} alt="album jacket" class={styleImage} />}
       </Show>
-      <dl>
+      <dl class={styleInfo}>
         <dt>Album</dt>
         <dd>{props.info.album}</dd>
         <dt>Album Artist</dt>
