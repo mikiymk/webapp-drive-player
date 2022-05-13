@@ -8,7 +8,7 @@ export const stylePlaying = style({
 });
 
 export const styleImage = style({
-  flex: "0 0 min(90vh, 100%)",
+  flex: "0 0 min(calc(100vh - 4rem), 100%)",
   height: "min-content",
   maxHeight: "100%",
   width: "100%",

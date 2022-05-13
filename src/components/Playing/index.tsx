@@ -28,14 +28,20 @@ const PlayingInfo = (props: Props) => {
         <dt>Title</dt>
         <dd>{props.info.title}</dd>
         <dt>Artist</dt>
-        <dd>{props.info.artists}</dd>
+        <dd>{props.info.artists.join()}</dd>
         <dt>Disk</dt>
         <dd>
-          {props.info.disk.no}/{props.info.disk.of}
+          {props.info.disk.no}
+          <Show when={props.info.disk.of}>
+            {of => <>/ {of}</>}
+          </Show>
         </dd>
         <dt>Track</dt>
         <dd>
-          {props.info.track.no}/{props.info.track.of}
+          {props.info.track.no}
+          <Show when={props.info.track.of}>
+            {of => <>/ {of}</>}
+          </Show>
         </dd>
       </dl>
     </div>
