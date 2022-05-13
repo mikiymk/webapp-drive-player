@@ -17,7 +17,7 @@ import {
   IconPlayList,
   IconSettings,
 } from "../Icon";
-import { Menu as TabMenu, MenuItem } from "../TabMenu";
+import { Menu, MenuItem } from "../Menu";
 
 export type Files = {
   [name: string]: GoogleFile;
@@ -37,7 +37,7 @@ const MusicPlayer = () => {
   return (
     <RightMenuProvider>
       <div class={stylePlayer}>
-        <TabMenu
+        <Menu
           defaultKey="playing"
           auth={{ accessToken: accessToken(), signIn, signOut }}>
           <MenuItem key="playing" icon={<IconPlay />} label="Now Playing">
@@ -58,7 +58,7 @@ const MusicPlayer = () => {
           <MenuItem key="settings" icon={<IconSettings />} label="Settings">
             <Settings accessToken={accessToken()} />
           </MenuItem>
-        </TabMenu>
+        </Menu>
 
         <Controller
           info={status.info()}
