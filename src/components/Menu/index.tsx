@@ -12,10 +12,10 @@ import {
 import Authorize from "./Authorize";
 import LabelIcon from "./LabelIcon";
 import {
-  styleMenu,
   styleContent,
   styleNav,
   styleNavItem,
+  styleNavItemButton,
   styleNavSelected,
 } from "./style.css";
 
@@ -62,25 +62,25 @@ export const Menu = (props: Props) => {
 
   return (
     <MenuContext.Provider value={{ selected, addItem }}>
-      <div class={styleMenu}>
-        <ul class={styleNav}>
-          <For each={items()}>
-            {item => (
-              <li
-                classList={{
-                  [styleNavItem]: true,
-                  [styleNavSelected]: item.key === selected(),
-                }}>
-                <button onClick={() => setSelected(item.key)}>
-                  <LabelIcon icon={item.icon}>{item.label}</LabelIcon>
-                </button>
-              </li>
-            )}
-          </For>
-          <Authorize auth={props.auth} />
-        </ul>
-        <div class={styleContent}>{props.children}</div>
-      </div>
+      <ul class={styleNav}>
+        <For each={items()}>
+          {item => (
+            <li
+              classList={{
+                [styleNavItem]: true,
+                [styleNavSelected]: item.key === selected(),
+              }}>
+              <button
+                class={styleNavItemButton}
+                onClick={() => setSelected(item.key)}>
+                <LabelIcon icon={item.icon}>{item.label}</LabelIcon>
+              </button>
+            </li>
+          )}
+        </For>
+        <Authorize auth={props.auth} />
+      </ul>
+      <div class={styleContent}>{props.children}</div>
     </MenuContext.Provider>
   );
 };
