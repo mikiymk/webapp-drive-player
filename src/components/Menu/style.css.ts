@@ -33,4 +33,10 @@ export const styleContent = style({
 
 export const styleLabel = style({
   marginLeft: "0.5rem",
+
+  "@media": {
+    "(max-width: 700px)": {
+      display: "none",
+    },
+  },
 });

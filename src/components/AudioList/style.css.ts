@@ -7,8 +7,17 @@ export const sList = style({
 export const sHead = style({
   background: "#808080",
 });
+
 export const sItem = style({
   borderBottom: "solid 1px rgb(162, 162, 162)",
+});
+
+export const sItemArtist = style({
+  "@media": {
+    "(max-width: 700px)": {
+      display: "none",
+    },
+  },
 });
 
 export const sDot = style({

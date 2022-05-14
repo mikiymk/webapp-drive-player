@@ -4,7 +4,7 @@ import { usePlaylists } from "~/hooks/createPlaylists";
 import { IconDotInfo } from "../Icon";
 import { Context } from "../RightMenu";
 import type Item from "../RightMenu/Item";
-import { sList, sItem, sHead, sDot } from "./style.css";
+import { sList, sItem, sHead, sDot, sItemArtist } from "./style.css";
 
 type Props = {
   audios: string[];
@@ -41,7 +41,7 @@ const AudioList = (props: Props) => {
       <thead class={sHead}>
         <tr>
           <th>title</th>
-          <th>artists</th>
+          <th class={sItemArtist}>artists</th>
           <th></th>
         </tr>
       </thead>
@@ -59,6 +59,7 @@ const AudioList = (props: Props) => {
                 {audios.audios[item]?.title}
               </td>
               <td
+                class={sItemArtist}
                 onClick={() => setSelected([index()])}
                 onDblClick={() => props.play(props.audios, index())}>
                 {audios.audios[item]?.artists.join()}
