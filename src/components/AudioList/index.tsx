@@ -1,9 +1,10 @@
-import { Accessor, createMemo, createSignal, For, mapArray } from "solid-js";
+import { createMemo, createSignal, For, mapArray, useContext } from "solid-js";
 import { useAudios } from "~/hooks/createFiles";
 import { usePlaylists } from "~/hooks/createPlaylists";
 import { IconDotInfo } from "../Icon";
+import { Context } from "../RightMenu";
 import type Item from "../RightMenu/Item";
-import { styleList, styleListItem } from "./style.css";
+import { sList, sItem, sHead, sDot } from "./style.css";
 
 type Props = {
   audios: string[];
@@ -12,15 +13,16 @@ type Props = {
 
 const AudioList = (props: Props) => {
   const audios = useAudios();
-  const [selected, setSelected] = createSignal<number[]>([]);
   const playlists = usePlaylists();
+  const rightMenu = useContext(Context);
+  const [selected, setSelected] = createSignal<number[]>([]);
   const playlistNames = createMemo(() => Object.keys(playlists.playlists));
 
-  const onClick = (item: string, index: Accessor<number>): Item[] => [
+  const onClick = (item: string, index: number): Item[] => [
     {
       type: "button",
       label: "play",
-      onClick: () => props.play(props.audios, index()),
+      onClick: () => props.play(props.audios, index),
     },
     { type: "hr" },
     {
@@ -35,25 +37,42 @@ const AudioList = (props: Props) => {
   ];
 
   return (
-    <ul class={styleList}>
-      <For each={props.audios}>
-        {(item, index) => (
-          <li
-            classList={{
-              [styleListItem]: true,
-              selected: selected().includes(index()),
-            }}
-            onClick={() => setSelected([index()])}
-            onDblClick={() => props.play(props.audios, index())}>
-            <span>{audios.audios[item]?.title}</span>
-            <span>{audios.audios[item]?.artists.join()}</span>
-            <button onClick={() => onClick(item, index)}>
-              <IconDotInfo />
-            </button>
-          </li>
-        )}
-      </For>
-    </ul>
+    <table class={sList}>
+      <thead>
+        <tr class={sHead}>
+          <th>title</th>
+          <th>artists</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <For each={props.audios}>
+          {(item, index) => (
+            <tr
+              classList={{
+                [sItem]: true,
+                selected: selected().includes(index()),
+              }}>
+              <td
+                onClick={() => setSelected([index()])}
+                onDblClick={() => props.play(props.audios, index())}>
+                {audios.audios[item]?.title}
+              </td>
+              <td
+                onClick={() => setSelected([index()])}
+                onDblClick={() => props.play(props.audios, index())}>
+                {audios.audios[item]?.artists.join()}
+              </td>
+              <td class={sDot}>
+                <button onClick={[rightMenu, onClick(item, index())]}>
+                  <IconDotInfo />
+                </button>
+              </td>
+            </tr>
+          )}
+        </For>
+      </tbody>
+    </table>
   );
 };
 
