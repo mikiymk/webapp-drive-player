@@ -5,9 +5,11 @@ export const sList = style({
 });
 
 export const sHead = style({
-  display: "contents",
+  background: "#808080",
 });
-export const sItem = style({});
+export const sItem = style({
+  borderBottom: "solid 1px rgb(162, 162, 162)",
+});
 
 export const sDot = style({
   width: "1rem",

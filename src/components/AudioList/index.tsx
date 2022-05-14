@@ -38,8 +38,8 @@ const AudioList = (props: Props) => {
 
   return (
     <table class={sList}>
-      <thead>
-        <tr class={sHead}>
+      <thead class={sHead}>
+        <tr>
           <th>title</th>
           <th>artists</th>
           <th></th>

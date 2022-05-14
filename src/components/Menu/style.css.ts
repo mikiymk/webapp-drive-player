@@ -11,7 +11,7 @@ export const styleNavItem = style({
 });
 
 export const styleNavItemButton = style({
-  padding: "0.2rem 0.5rem",
+  padding: "0.5rem",
   whiteSpace: "nowrap",
 
   selectors: {

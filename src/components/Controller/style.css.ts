@@ -3,7 +3,7 @@ import { style } from "@vanilla-extract/css";
 export const styleController = style({
   display: "flex",
   justifyContent: "center",
-  flex: "0 0 1.5rem",
+  flex: "0 0 3rem",
   fontSize: "2rem",
   backgroundColor: "rgb(173,173,173)",
 });
