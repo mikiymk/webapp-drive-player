@@ -1,10 +1,6 @@
 import { stylePlaylist } from "./style.css";
-import { For, useContext } from "solid-js";
-import { Context } from "../RightMenu";
-import type Item from "../RightMenu/Item";
-import { IconDotInfo } from "../Icon";
 import { usePlaylists } from "~/hooks/createPlaylists";
-import { useAudios } from "~/hooks/createFiles";
+import AudioList from "../AudioList";
 
 type Props = {
   name: string;
@@ -15,21 +11,7 @@ type Props = {
 
 /** show on right click */
 const Playlist = (props: Props) => {
-  const audios = useAudios();
   const playlists = usePlaylists();
-  const onClickIcon = (index: number): Item[] => [
-    {
-      type: "button",
-      label: "play",
-      onClick: () =>
-        props.playsList(playlists.playlists[props.name]?.audios ?? [], index),
-    },
-    {
-      type: "button",
-      label: "remove from playlist",
-      onClick: () => playlists.removeAudioFromPlaylist(props.name, index),
-    },
-  ];
 
   return (
     <div class={stylePlaylist}>
@@ -41,21 +23,17 @@ const Playlist = (props: Props) => {
         }>
         play this playlist
       </button>
-      <ul>
-        <For each={playlists.playlists[props.name]?.audios ?? []}>
-          {(audio, index) => (
-            <li>
-              {audios.audios[audio]?.title ?? ""}
-              <button
-                onClick={event =>
-                  useContext(Context)(onClickIcon(index()), event)
-                }>
-                <IconDotInfo />
-              </button>
-            </li>
-          )}
-        </For>
-      </ul>
+      <AudioList
+        audios={playlists.playlists[props.name]?.audios ?? []}
+        play={props.playsList}
+        extendMenu={(_, index) => [
+          {
+            type: "button",
+            label: "remove from playlist",
+            onClick: () => playlists.removeAudioFromPlaylist(props.name, index),
+          },
+        ]}
+      />
     </div>
   );
 };

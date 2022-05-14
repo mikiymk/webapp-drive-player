@@ -11,7 +11,7 @@ export const styleNavItem = style({
 });
 
 export const styleNavItemButton = style({
-  padding: "0.2rem 0.5rem",
+  padding: "0.5rem",
   whiteSpace: "nowrap",
 
   selectors: {
@@ -26,11 +26,17 @@ export const styleNavSelected = style({
 });
 
 export const styleContent = style({
-  flex: "0 1 100vh",
+  flex: "1 0 0",
   backgroundColor: "rgb(207, 207, 207)",
   overflow: "hidden",
 });
 
 export const styleLabel = style({
   marginLeft: "0.5rem",
+
+  "@media": {
+    "(max-width: 700px)": {
+      display: "none",
+    },
+  },
 });
