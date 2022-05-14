@@ -18,6 +18,7 @@ import {
   IconSettings,
 } from "../Icon";
 import { Menu, MenuItem } from "../Menu";
+import { onMount } from "solid-js";
 
 export type Files = {
   [name: string]: GoogleFile;
@@ -33,6 +34,13 @@ const MusicPlayer = () => {
   const playWithIdList = (idList: string[], index: number) => {
     player?.playWithIdList(idList, index);
   };
+
+  onMount(() => {
+    const element = document.getElementById("beforeload");
+    if (element) {
+      document.body.removeChild(element);
+    }
+  });
 
   return (
     <RightMenuProvider>
