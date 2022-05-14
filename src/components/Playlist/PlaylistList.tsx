@@ -13,9 +13,9 @@ type Props = {
 const PlaylistList = (props: Props) => {
   const playlists = usePlaylists();
   const playlistNames = createMemo(() => Object.keys(playlists.playlists));
+  const callRightMenu = useContext(Context);
   const onClickIcon = (name: string, event: ButtonClickEvent) => {
     console.log("onClickIcon");
-    const callRightMenu = useContext(Context);
     console.log(callRightMenu);
     return callRightMenu(
       [

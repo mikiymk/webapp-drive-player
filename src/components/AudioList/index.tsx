@@ -4,11 +4,12 @@ import { usePlaylists } from "~/hooks/createPlaylists";
 import { IconDotInfo } from "../Icon";
 import { Context } from "../RightMenu";
 import type Item from "../RightMenu/Item";
-import { sList, sItem, sHead, sDot, sItemArtist } from "./style.css";
+import { sList, sItem, sHead, sDot, sItemArtist, sBody } from "./style.css";
 
 type Props = {
   audios: string[];
   play: (idList: string[], index: number) => void;
+  extendMenu?: (item: string, index: number) => Item[];
 };
 
 const AudioList = (props: Props) => {
@@ -34,6 +35,7 @@ const AudioList = (props: Props) => {
         onClick: () => playlists.addAudioToPlaylist(name, item),
       }))(),
     },
+    ...(props.extendMenu?.(item, index) ?? []),
   ];
 
   return (
@@ -45,7 +47,7 @@ const AudioList = (props: Props) => {
           <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody class={sBody}>
         <For each={props.audios}>
           {(item, index) => (
             <tr

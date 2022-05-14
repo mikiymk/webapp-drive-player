@@ -8,6 +8,11 @@ export const sHead = style({
   background: "#808080",
 });
 
+export const sBody = style({
+  height: "100%",
+  overflowY: "scroll",
+});
+
 export const sItem = style({
   borderBottom: "solid 1px rgb(162, 162, 162)",
 });

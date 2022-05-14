@@ -26,7 +26,7 @@ export const styleNavSelected = style({
 });
 
 export const styleContent = style({
-  flex: "0 1 100vh",
+  flex: "1 0 0",
   backgroundColor: "rgb(207, 207, 207)",
   overflow: "hidden",
 });
