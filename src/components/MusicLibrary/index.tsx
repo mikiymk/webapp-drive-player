@@ -1,6 +1,6 @@
 import { createMemo } from "solid-js";
 import { useAudios } from "~/hooks/createFiles";
-import AudioList from "../AudioList";
+import { AudioList } from "../AudioList";
 
 type Props = {
   play: (idList: string[], index: number) => void;

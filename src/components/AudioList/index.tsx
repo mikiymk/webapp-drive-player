@@ -6,13 +6,13 @@ import { Context } from "../RightMenu";
 import type Item from "../RightMenu/Item";
 import { sList, sItem, sHead, sDot, sItemArtist, sBody } from "./style.css";
 
-type Props = {
+export type AudioListProps = {
   audios: string[];
   play: (idList: string[], index: number) => void;
   extendMenu?: (item: string, index: number) => Item[];
 };
 
-const AudioList = (props: Props) => {
+export const AudioList = (props: AudioListProps) => {
   const audios = useAudios();
   const playlists = usePlaylists();
   const rightMenu = useContext(Context);
@@ -78,5 +78,3 @@ const AudioList = (props: Props) => {
     </table>
   );
 };
-
-export default AudioList;

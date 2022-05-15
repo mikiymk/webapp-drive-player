@@ -1,6 +1,6 @@
-import MusicTitle from "./MusicTitle";
-import MusicTime from "./MusicTime";
-import SeekBar from "./SeekBar";
+import { MusicTitle } from "./MusicTitle";
+import { MusicTime } from "./MusicTime";
+import { SeekBar } from "./SeekBar";
 
 import { styleButton, styleController } from "./style.css";
 import type { Repeat } from "~/audio/Repeat";
@@ -18,7 +18,7 @@ import {
 } from "../Icon";
 import { Match, Show, Switch } from "solid-js";
 
-type Props = {
+export type ControllerProps = {
   info: AudioInfo;
   duration: number;
   currentTime: number;
@@ -37,7 +37,7 @@ type Props = {
 /**
  * 曲の再生・停止などのコントロールする
  */
-const Controller = (props: Props) => {
+export const Controller = (props: ControllerProps) => {
   const toggleRepeat = () => props.setRepeat(props.repeat.toggle());
   const toggleShuffle = () => props.setShuffle(!props.shuffle);
 
@@ -88,5 +88,3 @@ const Controller = (props: Props) => {
     </>
   );
 };
-
-export default Controller;

@@ -1,14 +1,14 @@
 import { styleSeekBar } from "./style.css";
-import useSeekTime from "./useSeekTime";
+import { useSeekTime } from "./useSeekTime";
 
-type Props = {
+export type SeekBarProps = {
   duration: number;
   time: number;
   seek: (time: number) => void;
 };
 
 /** 現在位置が左から右にいって時間を表す */
-const SeekBar = (props: Props) => {
+export const SeekBar = (props: SeekBarProps) => {
   const { seekTime, onChange, onClickDown, onClickUp } = useSeekTime(
     () => props.time,
     time => props.seek(time)
@@ -30,5 +30,3 @@ const SeekBar = (props: Props) => {
     />
   );
 };
-
-export default SeekBar;

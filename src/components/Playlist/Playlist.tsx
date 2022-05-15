@@ -1,6 +1,6 @@
 import { stylePlaylist } from "./style.css";
 import { usePlaylists } from "~/hooks/createPlaylists";
-import AudioList from "../AudioList";
+import { AudioList } from "../AudioList";
 
 type Props = {
   name: string;

@@ -1,7 +1,7 @@
 import PlayingInfo from "../Playing/index";
 import MusicList from "../MusicLibrary/index";
 import DriveFiles from "../GoogleDrive/index";
-import Controller from "../Controller/index";
+import { Controller } from "../Controller/index";
 
 import type { GoogleFile } from "~/file";
 import RightMenuProvider from "~/components/RightMenu";
