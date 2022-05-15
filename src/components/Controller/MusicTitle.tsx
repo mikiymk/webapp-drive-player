@@ -1,5 +1,5 @@
 import Marquee from "~/components/Marquee";
-import type AudioInfo from "~/audio/AudioInfo";
+import type { AudioInfo } from "~/audio/AudioInfo";
 import { styleArtist, styleTitle, styleTitleView } from "./style.css";
 
 type Props = {

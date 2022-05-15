@@ -3,8 +3,8 @@ import MusicTime from "./MusicTime";
 import SeekBar from "./SeekBar";
 
 import { styleButton, styleController } from "./style.css";
-import type Repeat from "~/audio/Repeat";
-import type AudioInfo from "~/audio/AudioInfo";
+import type { Repeat } from "~/audio/Repeat";
+import type { AudioInfo } from "~/audio/AudioInfo";
 import {
   IconPause,
   IconPlay,

@@ -1,10 +1,10 @@
 import { downloadFile } from "~/google/file";
-import AudioInfo from "./AudioInfo";
+import { AudioInfo } from "./AudioInfo";
 
 /**
  * 非同期なダウンロードを管理する
  */
-class BufferLoader {
+export class BufferLoader {
   /** 保持しているファイルのBLOB URL */
   public loaded: Blob | null = null;
 
@@ -86,5 +86,3 @@ class BufferLoader {
     this.accessToken = accessToken;
   }
 }
-
-export default BufferLoader;

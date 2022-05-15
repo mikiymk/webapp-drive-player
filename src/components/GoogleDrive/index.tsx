@@ -7,7 +7,7 @@ import { useGDriveParents } from "./useGDriveParents";
 import { For } from "solid-js";
 import { IconAudioFile, IconFolder } from "../Icon";
 import { useAudios } from "~/hooks/createFiles";
-import AudioInfo from "~/audio/AudioInfo";
+import { AudioInfo } from "~/audio/AudioInfo";
 
 type Props = {
   accessToken: string;

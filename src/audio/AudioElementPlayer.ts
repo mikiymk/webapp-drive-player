@@ -1,6 +1,6 @@
-import type AudioPlayer from "./AudioPlayer";
+import type { AudioPlayer } from "./AudioPlayer";
 
-class AudioElementPlayer implements AudioPlayer {
+export class AudioElementPlayer implements AudioPlayer {
   private audio = new Audio();
 
   private blob = new Blob();
@@ -70,5 +70,3 @@ class AudioElementPlayer implements AudioPlayer {
     this.audio.currentTime = time;
   }
 }
-
-export default AudioElementPlayer;

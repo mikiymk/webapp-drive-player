@@ -8,7 +8,7 @@ type AudioInfoSort = {
   albumartistsort: string;
 };
 
-class AudioInfo {
+export class AudioInfo {
   static getEmptyInfo() {
     return new AudioInfo();
   }
@@ -131,5 +131,3 @@ class AudioInfo {
     };
   }
 }
-
-export default AudioInfo;

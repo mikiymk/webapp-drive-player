@@ -1,13 +1,13 @@
-import Repeat from "./Repeat";
-import ShuffleArray from "./ShuffleArray";
-import BufferLoader from "./BufferLoader";
-import type AudioInfo from "./AudioInfo";
-import type AudioPlayer from "./AudioPlayer";
+import { Repeat } from "./Repeat";
+import { ShuffleArray } from "./ShuffleArray";
+import { BufferLoader } from "./BufferLoader";
+import type { AudioInfo } from "./AudioInfo";
+import type { AudioPlayer } from "./AudioPlayer";
 
 /**
  * 音楽再生の管理
  */
-class AudioManager {
+export class AudioManager {
   private player: AudioPlayer;
 
   private readonly buffer = new BufferLoader((id, info) =>
@@ -185,5 +185,3 @@ class AudioManager {
     this.player.seek(time);
   }
 }
-
-export default AudioManager;
