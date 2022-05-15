@@ -1,13 +1,13 @@
-import PlaylistList from "./PlaylistList";
-import Playlist from "./Playlist";
+import { PlaylistList } from "./PlaylistList";
+import { Playlist } from "./Playlist";
 import { createSignal, Show } from "solid-js";
 
-type Props = {
+export type PlaylistsProps = {
   playsList: (list: string[], index: number) => void;
 };
 
 /** show on right click */
-const Playlists = (props: Props) => {
+export const Playlists = (props: PlaylistsProps) => {
   const [selectedPlaylist, setSelectedPlaylist] = createSignal("");
 
   return (
@@ -24,5 +24,3 @@ const Playlists = (props: Props) => {
     </Show>
   );
 };
-
-export default Playlists;

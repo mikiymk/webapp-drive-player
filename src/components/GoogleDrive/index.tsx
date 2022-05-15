@@ -9,14 +9,14 @@ import { IconAudioFile, IconFolder } from "../Icon";
 import { useAudios } from "~/hooks/createFiles";
 import { AudioInfo } from "~/audio/AudioInfo";
 
-type Props = {
+export type DriveFilesProps = {
   accessToken: string;
 };
 
 /**
  * get files from google drive
  */
-const DriveFiles = (props: Props) => {
+export const DriveFiles = (props: DriveFilesProps) => {
   const parents = useGDriveParents(
     () => props.accessToken,
     getAllFolders,
@@ -52,12 +52,12 @@ const DriveFiles = (props: Props) => {
   );
 };
 
-type PropsItemFolder = {
+type ItemFolderProps = {
   name: string;
   move: () => void;
 };
 
-const ItemFolder = (props: PropsItemFolder) => {
+const ItemFolder = (props: ItemFolderProps) => {
   return (
     <li class={styleItem} onClick={() => props.move()}>
       <IconFolder />
@@ -66,12 +66,12 @@ const ItemFolder = (props: PropsItemFolder) => {
   );
 };
 
-type PropsItemFile = {
+type ItemFileProps = {
   name: string;
   addFile: () => void;
 };
 
-const ItemFile = (props: PropsItemFile) => {
+const ItemFile = (props: ItemFileProps) => {
   return (
     <li class={styleItem} onClick={() => props.addFile()}>
       <IconAudioFile />
@@ -79,5 +79,3 @@ const ItemFile = (props: PropsItemFile) => {
     </li>
   );
 };
-
-export default DriveFiles;

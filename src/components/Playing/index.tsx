@@ -2,17 +2,17 @@ import { Show } from "solid-js";
 
 import type { AudioInfo } from "~/audio/AudioInfo";
 import useJacket from "~/hooks/useJacket";
-import NoImage from "./NoImage";
+import { NoImage } from "./NoImage";
 import { styleImage, styleInfo, stylePlaying } from "./style.css";
 
-type Props = {
+export type PlayingProps = {
   info: AudioInfo;
 };
 
 /**
  * now playing audio info view
  */
-const PlayingInfo = (props: Props) => {
+export const Playing = (props: PlayingProps) => {
   const jacket = useJacket(() => props.info.picture);
 
   return (
@@ -43,5 +43,3 @@ const PlayingInfo = (props: Props) => {
     </div>
   );
 };
-
-export default PlayingInfo;

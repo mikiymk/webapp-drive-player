@@ -1,9 +1,9 @@
 import { Show } from "solid-js";
 
-import NavItem from "./NavItem";
+import { NavItem } from "./NavItem";
 import { IconSignIn, IconSignOut } from "../Icon";
 
-type Props = {
+export type AuthorizeProps = {
   auth: {
     accessToken: string;
     signIn: () => void;
@@ -11,7 +11,7 @@ type Props = {
   };
 };
 
-const Authorize = (props: Props) => {
+export const Authorize = (props: AuthorizeProps) => {
   return (
     <Show
       when={props.auth.accessToken !== ""}
@@ -26,5 +26,3 @@ const Authorize = (props: Props) => {
     </Show>
   );
 };
-
-export default Authorize;

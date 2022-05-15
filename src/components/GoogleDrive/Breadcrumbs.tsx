@@ -3,12 +3,12 @@ import { For, Show } from "solid-js";
 import type { GoogleFile } from "~/file";
 import { styleBread, styleBreadcrumbs } from "./style.css";
 
-type Props = {
+export type BreadcrumbsProps = {
   parents: GoogleFile[];
   move: (index: number) => void;
 };
 
-export const Breadcrumbs = (props: Props) => {
+export const Breadcrumbs = (props: BreadcrumbsProps) => {
   return (
     <ul class={styleBreadcrumbs}>
       <For each={props.parents}>
@@ -23,12 +23,12 @@ export const Breadcrumbs = (props: Props) => {
   );
 };
 
-type PropsBread = {
+type BreadProps = {
   parent: GoogleFile;
   move: () => void;
 };
 
-const Bread = (props: PropsBread) => {
+const Bread = (props: BreadProps) => {
   return (
     <li class={styleBread} onClick={() => props.move()}>
       {props.parent.name}

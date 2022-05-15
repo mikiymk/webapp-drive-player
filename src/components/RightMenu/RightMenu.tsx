@@ -1,19 +1,19 @@
 import { For, useContext } from "solid-js";
 
 import type Item from "./Item";
-import RightMenuItem from "./RightMenuItem";
+import { RightMenuItem } from "./RightMenuItem";
 import { styleRightMenu } from "./style.css";
 import { Context } from ".";
 import { IconClose } from "../Icon";
 
-type Props = {
+export type RightMenuProps = {
   items: Item[];
   top: number;
   left: number;
 };
 
 /** show on right click */
-const RightMenu = (props: Props) => {
+export const RightMenu = (props: RightMenuProps) => {
   return (
     <div
       class={styleRightMenu}
@@ -30,5 +30,3 @@ const RightMenu = (props: Props) => {
     </div>
   );
 };
-
-export default RightMenu;

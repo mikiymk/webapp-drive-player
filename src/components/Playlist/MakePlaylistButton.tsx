@@ -1,12 +1,12 @@
 import { createSignal } from "solid-js";
 import { styleMakePlaylist } from "./style.css";
 
-type Props = {
+export type MakePlaylistButtonProps = {
   makePlaylist: (playlist: string) => void;
 };
 
 /** show on right click */
-const MakePlaylistButton = (props: Props) => {
+export const MakePlaylistButton = (props: MakePlaylistButtonProps) => {
   const [value, setValue] = createSignal("");
 
   const addPlaylist = () => {
@@ -38,5 +38,3 @@ const MakePlaylistButton = (props: Props) => {
     </span>
   );
 };
-
-export default MakePlaylistButton;
