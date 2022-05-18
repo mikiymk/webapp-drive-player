@@ -27,3 +27,7 @@ export const styleBread = style({
     "&:hover": { cursor: "pointer" },
   },
 });
+
+export const styleLoading = style({
+  display: "inline",
+});
