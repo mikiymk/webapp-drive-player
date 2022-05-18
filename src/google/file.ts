@@ -1,11 +1,21 @@
+import { generateUrl } from "./generateUrl";
+
 const GET_PAGE_SIZE = 100;
+
+const fetchGet = (url: string, accessToken: string) => {
+  return fetch(url, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
 
 /**
  * Google Drive からファイルリストを入手
  * @param query 検索クエリ文字列 https://developers.google.com/drive/api/v3/ref-search-terms
  * @param token ページトークン
  */
-export const getList = async (
+export const getList = (
   accessToken: string,
   query: string,
   token?: string
@@ -13,54 +23,32 @@ export const getList = async (
   files: { id: string; name: string }[];
   nextPageToken?: string;
 }> => {
-  const url =
-    "https://www.googleapis.com/drive/v3/files?" +
-    Object.entries({
-      fields: "nextPageToken, files(id, name)",
-      pageSize: GET_PAGE_SIZE,
-      pageToken: token,
-      orderBy: "name",
-      q: query,
-    })
-      .map(([key, value]) => `${key}=${encodeURIComponent(value ?? "")}`)
-      .join("&");
+  const url = generateUrl("https://www.googleapis.com/drive/v3/files", [
+    ["fields", "nextPageToken, files(id, name)"],
+    ["pageSize", GET_PAGE_SIZE],
+    ["pageToken", token],
+    ["orderBy", "name"],
+    ["q", query],
+  ]);
 
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-  const json = await response.json();
-  console.log(json);
-
-  return json;
+  return fetchGet(url, accessToken).then(response => response.json());
 };
 
-export const getAppDataList = async (
+export const getAppDataList = (
   accessToken: string,
   query: string,
   token?: string
 ) => {
-  const url =
-    "https://www.googleapis.com/drive/v3/files?" +
-    Object.entries({
-      spaces: "appDataFolder",
-      fields: "nextPageToken, files(id, name)",
-      pageSize: GET_PAGE_SIZE,
-      pageToken: token,
-      orderBy: "name",
-      q: query,
-    })
-      .map(([key, value]) => `${key}=${encodeURIComponent(value ?? "")}`)
-      .join("&");
+  const url = generateUrl("https://www.googleapis.com/drive/v3/files", [
+    ["spaces", "appDataFolder"],
+    ["fields", "nextPageToken, files(id, name)"],
+    ["pageSize", GET_PAGE_SIZE],
+    ["pageToken", token],
+    ["orderBy", "name"],
+    ["q", query],
+  ]);
 
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  });
-
-  return response.json();
+  return fetchGet(url, accessToken).then(response => response.json());
 };
 
 /**
@@ -68,56 +56,33 @@ export const getAppDataList = async (
  * @returns エラーなら `null`
  */
 export const downloadFile = async (accessToken: string, fileId: string) => {
-  console.log(`download file ID ${fileId}`);
   try {
     const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const response = await fetchGet(url, accessToken);
 
     if (!response.ok) {
+      const responseData = JSON.stringify(await response.json(), null, 2);
       throw new Error(
-        response.status +
-          " " +
-          response.statusText +
-          " " +
-          JSON.stringify(await response.json(), null, 2)
+        `${response.status} ${response.statusText} ${responseData}`
       );
     }
 
-    console.log(`downloaded ${fileId}`);
     return response;
   } catch (error) {
-    console.error(`download error ${fileId}`, error);
     return null;
   }
 };
 
-const getMultipartBody = (data: object, metadata: object) => {
-  const ln = "\r\n";
-  const boundary = "--_boundary";
+const getMultipartBody = (data: object, metadata: object, boundary: string) => {
+  return `--${boundary}
+Content-Type: application/json; charset=UTF-8
 
-  const multipartBody =
-    boundary +
-    ln +
-    "Content-Type: application/json; charset=UTF-8" +
-    ln +
-    ln +
-    JSON.stringify(metadata) +
-    ln +
-    boundary +
-    ln +
-    "Content-Type: application/json; charset=UTF-8" +
-    ln +
-    ln +
-    JSON.stringify(data) +
-    ln +
-    boundary +
-    "--";
+${JSON.stringify(metadata)}
+--${boundary}
+Content-Type: application/json; charset=UTF-8
 
-  return multipartBody;
+${JSON.stringify(data)}
+--${boundary}--`;
 };
 
 export const uploadAppDataJson = async (
@@ -127,13 +92,14 @@ export const uploadAppDataJson = async (
 ) => {
   const url = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`;
 
-  const multipartBody = getMultipartBody(data, {});
+  const boundary = "_boundary" + Math.random().toString(16).substring(2);
+  const multipartBody = getMultipartBody(data, {}, boundary);
 
   const response = await fetch(url, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "multipart/related; boundary=_boundary",
+      "Content-Type": "multipart/related; boundary=" + boundary,
       "Content-Length": multipartBody.length.toString(),
     },
     body: multipartBody,
@@ -151,16 +117,18 @@ export const createAppDataJson = async (
   const url =
     "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
 
-  const multipartBody = getMultipartBody(data, {
-    name: fileName,
-    parents: ["appDataFolder"],
-  });
+  const boundary = "_boundary" + Math.random().toString(16).substring(2);
+  const multipartBody = getMultipartBody(
+    data,
+    { name: fileName, parents: ["appDataFolder"] },
+    boundary
+  );
 
   const response = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${accessToken}`,
-      "Content-Type": "multipart/related; boundary=_boundary",
+      "Content-Type": "multipart/related; boundary=" + boundary,
       "Content-Length": multipartBody.length.toString(),
     },
     body: multipartBody,

@@ -1,3 +1,5 @@
+import { generateUrl } from "./generateUrl";
+
 type TokenClientOption = {
   clientId: string;
   scope: string;
@@ -72,7 +74,7 @@ export class TokenClient {
 
     this.authID = createAuthID();
     this.option.redirectUri = generateRedirectUri(this.authID);
-    const url = generateUrl(this.authUrl, this.option);
+    const url = generateUrl(this.authUrl, generateQuery(this.option));
 
     openWindow(url);
     return promise;
@@ -88,23 +90,19 @@ const generateRedirectUri = (authID: string) => {
   return `storagerelay://${protocol}/${location.host}?id=${authID}`;
 };
 
-const param = (key: string, value?: string) => {
-  return value && key + "=" + encodeURIComponent(value.trim());
-};
-
-const generateUrl = function (url: string, option: TokenClientOption) {
-  const querys = [
-    param("gsiwebsdk", "3"),
-    param("client_id", option.clientId),
-    param("scope", option.scope),
-    param("redirect_uri", option.redirectUri),
-    param("prompt", ""),
-    param("response_type", "token"),
-    param("include_granted_scopes", "true"),
-    param("enable_serial_consent", "true"),
+const generateQuery = (
+  option: TokenClientOption
+): [string, string | undefined][] => {
+  return [
+    ["gsiwebsdk", "3"],
+    ["client_id", option.clientId],
+    ["scope", option.scope],
+    ["redirect_uri", option.redirectUri],
+    ["prompt", ""],
+    ["response_type", "token"],
+    ["include_granted_scopes", "true"],
+    ["enable_serial_consent", "true"],
   ];
-
-  return url + "?" + querys.filter(v => v).join("&");
 };
 
 const openWindow = function (authUrl: string) {
