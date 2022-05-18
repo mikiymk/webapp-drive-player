@@ -1,8 +1,5 @@
-import { MusicTitle } from "./MusicTitle";
-import { MusicTime } from "./MusicTime";
-import { SeekBar } from "./SeekBar";
+import { Match, Show, Switch } from "solid-js";
 
-import { styleButton, styleController } from "./style.css";
 import type { Repeat } from "~/audio/Repeat";
 import type { AudioInfo } from "~/audio/AudioInfo";
 import {
@@ -15,8 +12,12 @@ import {
   IconShuffleOn,
   IconSkipNext,
   IconSkipPrev,
-} from "../Icon";
-import { Match, Show, Switch } from "solid-js";
+} from "~/components/Icon";
+
+import { MusicTitle } from "./MusicTitle";
+import { MusicTime } from "./MusicTime";
+import { SeekBar } from "./SeekBar";
+import { styleButton, styleController } from "./style.css";
 
 export type ControllerProps = {
   info: AudioInfo;

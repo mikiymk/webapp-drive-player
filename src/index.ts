@@ -1,7 +1,7 @@
 import { render } from "solid-js/web";
-
-import "./polyfills";
 import "destyle.css";
+
+import "~/polyfills";
 import { MusicPlayer } from "~/components/MusicPlayer";
 
 const root = document.getElementById("root");

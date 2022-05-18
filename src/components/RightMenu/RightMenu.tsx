@@ -1,10 +1,11 @@
 import { For, useContext } from "solid-js";
 
+import { IconClose } from "~/components/Icon";
+
 import type Item from "./Item";
 import { RightMenuItem } from "./RightMenuItem";
 import { styleRightMenu } from "./style.css";
 import { Context } from ".";
-import { IconClose } from "../Icon";
 
 export type RightMenuProps = {
   items: Item[];

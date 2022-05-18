@@ -1,6 +1,6 @@
 import { Download } from "./Download";
-import { styleSettings } from "./style.css";
 import { Upload } from "./Upload";
+import { styleSettings } from "./style.css";
 
 export type SettingsProps = {
   accessToken: string;

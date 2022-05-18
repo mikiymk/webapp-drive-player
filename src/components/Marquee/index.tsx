@@ -1,5 +1,6 @@
-import { styleMarquee, styleInner } from "./style.css";
 import type { JSX } from "solid-js";
+
+import { styleMarquee, styleInner } from "./style.css";
 
 export type MarqueeProps = {
   children: JSX.Element;

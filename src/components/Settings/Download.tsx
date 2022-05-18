@@ -2,7 +2,13 @@ import { createSignal, Match, Switch } from "solid-js";
 
 import { downloadLibraryData } from "~/file";
 import { useAudios } from "~/hooks/createFiles";
-import { IconLoading, IconDone, IconError, IconDownload } from "../Icon";
+import {
+  IconLoading,
+  IconDone,
+  IconError,
+  IconDownload,
+} from "~/components/Icon";
+
 import { styleDownload } from "./style.css";
 
 export type DownloadProps = {

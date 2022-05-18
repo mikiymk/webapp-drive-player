@@ -1,4 +1,5 @@
 import { formatTime } from "~/format";
+
 import { styleTime } from "./style.css";
 
 export type MusicTitleProps = {

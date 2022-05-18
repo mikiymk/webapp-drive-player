@@ -1,13 +1,13 @@
-import { Breadcrumbs } from "./Breadcrumbs";
-
-import { getAllMusics, getAllFolders } from "~/file";
-import { styleDrive, styleItem } from "./style.css";
-
-import { useGDriveParents } from "./useGDriveParents";
 import { For } from "solid-js";
-import { IconAudioFile, IconFolder } from "../Icon";
-import { useAudios } from "~/hooks/createFiles";
+
 import { AudioInfo } from "~/audio/AudioInfo";
+import { IconAudioFile, IconFolder } from "~/components/Icon";
+import { getAllMusics, getAllFolders } from "~/file";
+import { useAudios } from "~/hooks/createFiles";
+
+import { Breadcrumbs } from "./Breadcrumbs";
+import { useGDriveParents } from "./useGDriveParents";
+import { styleDrive, styleItem } from "./style.css";
 
 export type DriveFilesProps = {
   accessToken: string;

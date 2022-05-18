@@ -1,25 +1,25 @@
-import { Playing } from "../Playing/index";
+import { onMount } from "solid-js";
 
-import { Library } from "../MusicLibrary/index";
-import { DriveFiles } from "../GoogleDrive/index";
-import { Controller } from "../Controller/index";
-
-import type { GoogleFile } from "~/file";
-import { RightMenuProvider } from "~/components/RightMenu";
-import { Settings } from "../Settings";
-import { Playlists } from "../Playlist";
-import { stylePlayer } from "./style.css";
-import useMusicPlayer from "~/hooks/useMusicPlayer";
-import useSignIn from "~/hooks/useSignIn";
+import { Controller } from "~/components/Controller";
+import { DriveFiles } from "~/components/GoogleDrive";
 import {
   IconDrive,
   IconLibrary,
   IconPlay,
   IconPlayList,
   IconSettings,
-} from "../Icon";
-import { Menu, MenuItem } from "../Menu";
-import { onMount } from "solid-js";
+} from "~/components/Icon";
+import { Library } from "~/components/MusicLibrary";
+import { Menu, MenuItem } from "~/components/Menu";
+import { Playing } from "~/components/Playing";
+import { Playlists } from "~/components/Playlist";
+import { RightMenuProvider } from "~/components/RightMenu";
+import { Settings } from "~/components/Settings";
+import type { GoogleFile } from "~/file";
+import useMusicPlayer from "~/hooks/useMusicPlayer";
+import useSignIn from "~/hooks/useSignIn";
+
+import { stylePlayer } from "./style.css";
 
 export type Files = {
   [name: string]: GoogleFile;

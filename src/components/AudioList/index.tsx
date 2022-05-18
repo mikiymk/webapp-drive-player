@@ -1,9 +1,11 @@
 import { createMemo, createSignal, For, mapArray, useContext } from "solid-js";
+
+import { IconDotInfo } from "~/components/Icon";
+import { Context } from "~/components/RightMenu";
+import type Item from "~/components/RightMenu/Item";
 import { useAudios } from "~/hooks/createFiles";
 import { usePlaylists } from "~/hooks/createPlaylists";
-import { IconDotInfo } from "../Icon";
-import { Context } from "../RightMenu";
-import type Item from "../RightMenu/Item";
+
 import { sList, sItem, sHead, sDot, sItemArtist, sBody } from "./style.css";
 
 export type AudioListProps = {

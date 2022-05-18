@@ -1,9 +1,11 @@
+import { createMemo, For, useContext } from "solid-js";
+
+import { ButtonClickEvent, Context } from "~/components/RightMenu";
+import { IconDotInfo } from "~/components/Icon";
+import { usePlaylists } from "~/hooks/createPlaylists";
+
 import { MakePlaylistButton } from "./MakePlaylistButton";
 import { stylePlaylists } from "./style.css";
-import { createMemo, For, useContext } from "solid-js";
-import { ButtonClickEvent, Context } from "../RightMenu";
-import { IconDotInfo } from "../Icon";
-import { usePlaylists } from "~/hooks/createPlaylists";
 
 export type PlaylistListProps = {
   select: (playlist: string) => void;

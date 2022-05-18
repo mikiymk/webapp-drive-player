@@ -1,6 +1,7 @@
+import { createSignal, Show } from "solid-js";
+
 import { PlaylistList } from "./PlaylistList";
 import { Playlist } from "./Playlist";
-import { createSignal, Show } from "solid-js";
 
 export type PlaylistsProps = {
   playsList: (list: string[], index: number) => void;

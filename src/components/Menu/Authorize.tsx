@@ -1,7 +1,8 @@
 import { Show } from "solid-js";
 
+import { IconSignIn, IconSignOut } from "~/components/Icon";
+
 import { NavItem } from "./NavItem";
-import { IconSignIn, IconSignOut } from "../Icon";
 
 export type AuthorizeProps = {
   auth: {

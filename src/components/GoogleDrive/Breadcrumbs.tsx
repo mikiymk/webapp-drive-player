@@ -1,6 +1,7 @@
 import { For, Show } from "solid-js";
 
 import type { GoogleFile } from "~/file";
+
 import { styleBread, styleBreadcrumbs } from "./style.css";
 
 export type BreadcrumbsProps = {
