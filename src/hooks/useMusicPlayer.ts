@@ -7,7 +7,7 @@ import { AudioElementPlayer } from "~/audio/AudioElementPlayer";
 
 import { useAudios } from "./createFiles";
 
-const useMusicPlayer = (accessToken: Accessor<string>) => {
+const useMusicPlayer = (accessToken: Accessor<string | undefined>) => {
   const [paused, setPaused] = createSignal(true);
   const [duration, setDuration] = createSignal(0);
   const [currentTime, setCurrentTime] = createSignal(0);

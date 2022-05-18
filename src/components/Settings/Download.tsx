@@ -12,7 +12,7 @@ import {
 import { styleDownload } from "./style.css";
 
 export type DownloadProps = {
-  accessToken: string;
+  accessToken: string | undefined;
 };
 
 /**
@@ -22,16 +22,17 @@ export const Download = (props: DownloadProps) => {
   const [status, setStatus] = createSignal("");
   const audios = useAudios();
 
-  const download = () => {
+  const download = async () => {
     setStatus("loading");
-    downloadLibraryData(props.accessToken).then(data => {
-      if (data !== undefined) {
-        audios.addAudios(data);
-        setStatus("done");
-      } else {
-        setStatus("error");
-      }
-    });
+    if (props.accessToken === undefined) return;
+
+    const data = await downloadLibraryData(props.accessToken);
+    if (data !== undefined) {
+      audios.addAudios(data);
+      setStatus("done");
+    } else {
+      setStatus("error");
+    }
   };
 
   return (

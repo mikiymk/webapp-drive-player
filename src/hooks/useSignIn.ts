@@ -3,7 +3,7 @@ import { createSignal } from "solid-js";
 import { initClient } from "~/google/init";
 
 const useSignIn = () => {
-  const [accessToken, setAccessToken] = createSignal("");
+  const [accessToken, setAccessToken] = createSignal<string>();
   const client = initClient();
 
   return {
@@ -12,7 +12,7 @@ const useSignIn = () => {
       client
         .requestAccessToken()
         .then(response => setAccessToken(response.access_token)),
-    signOut: () => setAccessToken(""),
+    signOut: () => setAccessToken(),
   };
 };
 
