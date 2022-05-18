@@ -3,12 +3,12 @@ import { For, Match, Switch } from "solid-js";
 import type Item from "./Item";
 import { styleHorizon, styleItem } from "./style.css";
 
-type Props = {
+export type RightMenuItemProps = {
   item: Item;
 };
 
 /** show on right click */
-const RightMenuItem = (props: Props) => {
+export const RightMenuItem = (props: RightMenuItemProps) => {
   return (
     <Switch>
       <Match when={props.item.type === "hr" && props.item}>
@@ -39,5 +39,3 @@ const RightMenuItem = (props: Props) => {
     </Switch>
   );
 };
-
-export default RightMenuItem;

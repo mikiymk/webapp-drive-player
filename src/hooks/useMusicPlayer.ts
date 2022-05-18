@@ -1,8 +1,10 @@
-import AudioManager from "~/audio/AudioManager";
-import Repeat from "~/audio/Repeat";
-import AudioInfo from "~/audio/AudioInfo";
-import AudioElementPlayer from "~/audio/AudioElementPlayer";
 import { Accessor, createEffect, createSignal, onMount } from "solid-js";
+
+import { AudioManager } from "~/audio/AudioManager";
+import { Repeat } from "~/audio/Repeat";
+import { AudioInfo } from "~/audio/AudioInfo";
+import { AudioElementPlayer } from "~/audio/AudioElementPlayer";
+
 import { useAudios } from "./createFiles";
 
 const useMusicPlayer = (accessToken: Accessor<string>) => {

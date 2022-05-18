@@ -1,8 +1,9 @@
-import { stylePlaylist } from "./style.css";
 import { usePlaylists } from "~/hooks/createPlaylists";
-import AudioList from "../AudioList";
+import { AudioList } from "~/components/AudioList";
 
-type Props = {
+import { stylePlaylist } from "./style.css";
+
+export type PlaylistProps = {
   name: string;
 
   reset: () => void;
@@ -10,7 +11,7 @@ type Props = {
 };
 
 /** show on right click */
-const Playlist = (props: Props) => {
+export const Playlist = (props: PlaylistProps) => {
   const playlists = usePlaylists();
 
   return (
@@ -37,5 +38,3 @@ const Playlist = (props: Props) => {
     </div>
   );
 };
-
-export default Playlist;

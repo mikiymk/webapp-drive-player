@@ -5,9 +5,8 @@ import {
   getList,
   uploadAppDataJson,
 } from "~/google/file";
-
-import AudioInfo from "~/audio/AudioInfo";
-import type { AudioRecord } from "./hooks/createFiles";
+import { AudioInfo } from "~/audio/AudioInfo";
+import type { AudioRecord } from "~/hooks/createFiles";
 
 export type GoogleFile = {
   readonly id: string;

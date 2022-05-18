@@ -9,8 +9,8 @@ import {
   useContext,
 } from "solid-js";
 
-import Authorize from "./Authorize";
-import NavItem from "./NavItem";
+import { Authorize } from "./Authorize";
+import { NavItem } from "./NavItem";
 import { styleContent, styleNav } from "./style.css";
 
 type MenuItem = {
@@ -27,7 +27,7 @@ const MenuContext = createContext<{
   addItem: () => {},
 });
 
-type Props = {
+export type MenuProps = {
   defaultKey: string;
   auth: {
     accessToken: string;
@@ -40,7 +40,7 @@ type Props = {
 /**
  * menu list click menu and change view
  */
-export const Menu = (props: Props) => {
+export const Menu = (props: MenuProps) => {
   const [selected, setSelected] = createSignal(props.defaultKey);
   const [items, setItems] = createSignal<MenuItem[]>([]);
 
@@ -74,14 +74,14 @@ export const Menu = (props: Props) => {
   );
 };
 
-type PropsItem = {
+export type MenuItemProps = {
   key: string;
   icon: JSXElement;
   label: string;
   children: JSXElement;
 };
 
-export const MenuItem = (props: PropsItem) => {
+export const MenuItem = (props: MenuItemProps) => {
   const menu = useContext(MenuContext);
 
   createRenderEffect(() => {

@@ -2,17 +2,23 @@ import { createSignal, Match, Switch } from "solid-js";
 
 import { downloadLibraryData } from "~/file";
 import { useAudios } from "~/hooks/createFiles";
-import { IconLoading, IconDone, IconError, IconDownload } from "../Icon";
+import {
+  IconLoading,
+  IconDone,
+  IconError,
+  IconDownload,
+} from "~/components/Icon";
+
 import { styleDownload } from "./style.css";
 
-type Props = {
+export type DownloadProps = {
   accessToken: string;
 };
 
 /**
  * now playing audio info view
  */
-const Download = (props: Props) => {
+export const Download = (props: DownloadProps) => {
   const [status, setStatus] = createSignal("");
   const audios = useAudios();
 
@@ -48,5 +54,3 @@ const Download = (props: Props) => {
     </div>
   );
 };
-
-export default Download;

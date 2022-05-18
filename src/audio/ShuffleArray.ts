@@ -1,7 +1,7 @@
 /**
  * 元の並びを維持したままランダム並び替えをする配列
  */
-class ShuffleArray implements Iterable<string> {
+export class ShuffleArray implements Iterable<string> {
   private readonly _array: string[];
   private _indexArray: number[];
 
@@ -81,5 +81,3 @@ const makeShuffledArray = (length: number, shuffled: boolean) => {
     return makeArray(length);
   }
 };
-
-export default ShuffleArray;

@@ -1,16 +1,18 @@
-import MakePlaylistButton from "./MakePlaylistButton";
-import { stylePlaylists } from "./style.css";
 import { createMemo, For, useContext } from "solid-js";
-import { ButtonClickEvent, Context } from "../RightMenu";
-import { IconDotInfo } from "../Icon";
+
+import { ButtonClickEvent, Context } from "~/components/RightMenu";
+import { IconDotInfo } from "~/components/Icon";
 import { usePlaylists } from "~/hooks/createPlaylists";
 
-type Props = {
+import { MakePlaylistButton } from "./MakePlaylistButton";
+import { stylePlaylists } from "./style.css";
+
+export type PlaylistListProps = {
   select: (playlist: string) => void;
 };
 
 /** show on right click */
-const PlaylistList = (props: Props) => {
+export const PlaylistList = (props: PlaylistListProps) => {
   const playlists = usePlaylists();
   const playlistNames = createMemo(() => Object.keys(playlists.playlists));
   const callRightMenu = useContext(Context);
@@ -59,5 +61,3 @@ const PlaylistList = (props: Props) => {
     </ul>
   );
 };
-
-export default PlaylistList;

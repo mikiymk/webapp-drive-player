@@ -1,5 +1,6 @@
 import { test, expect, vi } from "vitest";
-import AudioInfo from "../AudioInfo";
+
+import { AudioInfo } from "../AudioInfo";
 
 test("AudioInfo empty", () => {
   const emptyInfo = AudioInfo.getEmptyInfo();

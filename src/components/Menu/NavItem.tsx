@@ -1,4 +1,5 @@
 import type { JSXElement } from "solid-js";
+
 import {
   styleLabel,
   styleNavItem,
@@ -6,7 +7,7 @@ import {
   styleNavSelected,
 } from "./style.css";
 
-type Props = {
+export type Props = {
   icon: JSXElement;
   selected?: boolean;
   onClick: () => void;
@@ -14,7 +15,7 @@ type Props = {
 };
 
 /** Google Material Icon テキスト付き */
-const NavItem = (props: Props) => {
+export const NavItem = (props: Props) => {
   return (
     <li
       classList={{
@@ -28,5 +29,3 @@ const NavItem = (props: Props) => {
     </li>
   );
 };
-
-export default NavItem;

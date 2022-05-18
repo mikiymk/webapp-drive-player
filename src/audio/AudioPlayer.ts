@@ -1,4 +1,4 @@
-interface AudioPlayer {
+export interface AudioPlayer {
   onEnd: (() => void) | undefined;
   changePause: ((pause: boolean) => void) | undefined;
   updateTime: ((time: number) => void) | undefined;
@@ -23,5 +23,3 @@ interface AudioPlayer {
   /** 再生位置を指定のものに変更 */
   seek(time: number): void;
 }
-
-export default AudioPlayer;

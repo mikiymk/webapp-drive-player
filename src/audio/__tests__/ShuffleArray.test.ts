@@ -1,5 +1,6 @@
 import { test, expect } from "vitest";
-import ShuffleArray from "../ShuffleArray";
+
+import { ShuffleArray } from "../ShuffleArray";
 
 test("ShuffleArray", () => {
   const base = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];

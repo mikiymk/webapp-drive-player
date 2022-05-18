@@ -3,7 +3,7 @@ type RepeatType = "repeat off" | "repeat one" | "repeat on";
 /**
  * 「なし→全部→１つ→なし」の切り替えをする
  */
-class Repeat {
+export class Repeat {
   static readonly ON = new Repeat("repeat on");
   static readonly OFF = new Repeat("repeat off");
   static readonly ONE = new Repeat("repeat one");
@@ -34,5 +34,3 @@ class Repeat {
     }
   }
 }
-
-export default Repeat;

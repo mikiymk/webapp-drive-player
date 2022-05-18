@@ -1,24 +1,25 @@
-import PlayingInfo from "../Playing/index";
-import MusicList from "../MusicLibrary/index";
-import DriveFiles from "../GoogleDrive/index";
-import Controller from "../Controller/index";
+import { onMount } from "solid-js";
 
-import type { GoogleFile } from "~/file";
-import RightMenuProvider from "~/components/RightMenu";
-import Settings from "../Settings";
-import Playlists from "../Playlist";
-import { stylePlayer } from "./style.css";
-import useMusicPlayer from "~/hooks/useMusicPlayer";
-import useSignIn from "~/hooks/useSignIn";
+import { Controller } from "~/components/Controller";
+import { DriveFiles } from "~/components/GoogleDrive";
 import {
   IconDrive,
   IconLibrary,
   IconPlay,
   IconPlayList,
   IconSettings,
-} from "../Icon";
-import { Menu, MenuItem } from "../Menu";
-import { onMount } from "solid-js";
+} from "~/components/Icon";
+import { Library } from "~/components/MusicLibrary";
+import { Menu, MenuItem } from "~/components/Menu";
+import { Playing } from "~/components/Playing";
+import { Playlists } from "~/components/Playlist";
+import { RightMenuProvider } from "~/components/RightMenu";
+import { Settings } from "~/components/Settings";
+import type { GoogleFile } from "~/file";
+import useMusicPlayer from "~/hooks/useMusicPlayer";
+import useSignIn from "~/hooks/useSignIn";
+
+import { stylePlayer } from "./style.css";
 
 export type Files = {
   [name: string]: GoogleFile;
@@ -27,7 +28,7 @@ export type Files = {
 /**
  * react component root.
  */
-const MusicPlayer = () => {
+export const MusicPlayer = () => {
   const { accessToken, signIn, signOut } = useSignIn();
   const { player, status } = useMusicPlayer(accessToken);
 
@@ -49,10 +50,10 @@ const MusicPlayer = () => {
           defaultKey="playing"
           auth={{ accessToken: accessToken(), signIn, signOut }}>
           <MenuItem key="playing" icon={<IconPlay />} label="Now Playing">
-            <PlayingInfo info={status.info()} />
+            <Playing info={status.info()} />
           </MenuItem>
           <MenuItem key="library" icon={<IconLibrary />} label="Library">
-            <MusicList play={playWithIdList} />
+            <Library play={playWithIdList} />
           </MenuItem>
 
           <MenuItem key="playlist" icon={<IconPlayList />} label="Playlist">
@@ -87,5 +88,3 @@ const MusicPlayer = () => {
     </RightMenuProvider>
   );
 };
-
-export default MusicPlayer;

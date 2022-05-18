@@ -1,13 +1,14 @@
-import Marquee from "~/components/Marquee";
-import type AudioInfo from "~/audio/AudioInfo";
+import type { AudioInfo } from "~/audio/AudioInfo";
+import { Marquee } from "~/components/Marquee";
+
 import { styleArtist, styleTitle, styleTitleView } from "./style.css";
 
-type Props = {
+export type MusicTitleProps = {
   info: AudioInfo;
 };
 
 /** タイトルとアーティストをマーキーで表示 */
-const MusicTitle = (props: Props) => {
+export const MusicTitle = (props: MusicTitleProps) => {
   return (
     <span class={styleTitleView}>
       <Marquee class={styleTitle}>{props.info.title}</Marquee>
@@ -15,5 +16,3 @@ const MusicTitle = (props: Props) => {
     </span>
   );
 };
-
-export default MusicTitle;

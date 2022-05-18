@@ -1,18 +1,20 @@
 import { createMemo, createSignal, For, mapArray, useContext } from "solid-js";
+
+import { IconDotInfo } from "~/components/Icon";
+import { Context } from "~/components/RightMenu";
+import type Item from "~/components/RightMenu/Item";
 import { useAudios } from "~/hooks/createFiles";
 import { usePlaylists } from "~/hooks/createPlaylists";
-import { IconDotInfo } from "../Icon";
-import { Context } from "../RightMenu";
-import type Item from "../RightMenu/Item";
+
 import { sList, sItem, sHead, sDot, sItemArtist, sBody } from "./style.css";
 
-type Props = {
+export type AudioListProps = {
   audios: string[];
   play: (idList: string[], index: number) => void;
   extendMenu?: (item: string, index: number) => Item[];
 };
 
-const AudioList = (props: Props) => {
+export const AudioList = (props: AudioListProps) => {
   const audios = useAudios();
   const playlists = usePlaylists();
   const rightMenu = useContext(Context);
@@ -78,5 +80,3 @@ const AudioList = (props: Props) => {
     </table>
   );
 };
-
-export default AudioList;

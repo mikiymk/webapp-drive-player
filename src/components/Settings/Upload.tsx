@@ -1,17 +1,23 @@
-import { uploadLibraryData } from "~/file";
-import { styleUpload } from "./style.css";
 import { createSignal, Match, Switch } from "solid-js";
-import { IconDone, IconError, IconLoading, IconUpload } from "../Icon";
+import {
+  IconDone,
+  IconError,
+  IconLoading,
+  IconUpload,
+} from "~/components/Icon";
+import { uploadLibraryData } from "~/file";
 import { useAudios } from "~/hooks/createFiles";
 
-type Props = {
+import { styleUpload } from "./style.css";
+
+export type UploadProps = {
   accessToken: string;
 };
 
 /**
  * now playing audio info view
  */
-const Upload = (props: Props) => {
+export const Upload = (props: UploadProps) => {
   const [status, setStatus] = createSignal("");
   const upload = () => {
     setStatus("loading");
@@ -41,5 +47,3 @@ const Upload = (props: Props) => {
     </div>
   );
 };
-
-export default Upload;

@@ -1,5 +1,6 @@
-import { createSignal, createContext, JSX } from "solid-js";
-import RightMenu from "./RightMenu";
+import { createSignal, createContext, JSXElement } from "solid-js";
+
+import { RightMenu } from "./RightMenu";
 import type Item from "./Item";
 
 export type ButtonClickEvent = MouseEvent & {
@@ -16,7 +17,11 @@ export type PopMenu = (
 
 export const Context = createContext<PopMenu>(() => () => {});
 
-const RightMenuProvider = (props: { children: JSX.Element }) => {
+export type RightMenuProviderProps = {
+  children: JSXElement;
+};
+
+export const RightMenuProvider = (props: RightMenuProviderProps) => {
   const [items, setItems] = createSignal<Item[]>([]);
   const [top, setTop] = createSignal(0);
   const [left, setLeft] = createSignal(0);
@@ -35,5 +40,3 @@ const RightMenuProvider = (props: { children: JSX.Element }) => {
     </Context.Provider>
   );
 };
-
-export default RightMenuProvider;

@@ -1,6 +1,9 @@
 import { Accessor, createEffect, createSignal, JSX } from "solid-js";
 
-const useSeekTime = (time: Accessor<number>, seek: (time: number) => void) => {
+export const useSeekTime = (
+  time: Accessor<number>,
+  seek: (time: number) => void
+) => {
   const [seekTime, setSeekTime] = createSignal(0);
   const [click, setClick] = createSignal(false);
 
@@ -30,5 +33,3 @@ const useSeekTime = (time: Accessor<number>, seek: (time: number) => void) => {
     onClickUp,
   };
 };
-
-export default useSeekTime;

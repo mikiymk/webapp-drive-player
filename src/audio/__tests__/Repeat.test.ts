@@ -1,5 +1,6 @@
 import { test, expect, describe } from "vitest";
-import Repeat from "../Repeat";
+
+import { Repeat } from "../Repeat";
 
 describe("Repeat", () => {
   let item = Repeat.ON;

@@ -1,15 +1,15 @@
-import Download from "./Download";
+import { Download } from "./Download";
+import { Upload } from "./Upload";
 import { styleSettings } from "./style.css";
-import Upload from "./Upload";
 
-type Props = {
+export type SettingsProps = {
   accessToken: string;
 };
 
 /**
  * now playing audio info view
  */
-const Settings = (props: Props) => {
+export const Settings = (props: SettingsProps) => {
   return (
     <div class={styleSettings}>
       <Upload accessToken={props.accessToken} />
@@ -17,5 +17,3 @@ const Settings = (props: Props) => {
     </div>
   );
 };
-
-export default Settings;
