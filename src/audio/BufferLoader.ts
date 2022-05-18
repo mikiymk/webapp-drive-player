@@ -1,4 +1,4 @@
-import { downloadFile } from "~/google/file";
+import { downloadFile } from "~/google/downloadFile";
 import { AudioInfo } from "./AudioInfo";
 
 /**
