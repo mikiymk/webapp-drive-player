@@ -2,7 +2,6 @@ import { For } from "solid-js";
 
 import { AudioInfo } from "~/audio/AudioInfo";
 import { IconAudioFile, IconFolder } from "~/components/Icon";
-import { getAllMusics, getAllFolders } from "~/file";
 import { useAudios } from "~/hooks/createFiles";
 
 import { Breadcrumbs } from "./Breadcrumbs";
@@ -17,12 +16,7 @@ export type DriveFilesProps = {
  * get files from google drive
  */
 export const DriveFiles = (props: DriveFilesProps) => {
-  const parents = useGDriveParents(
-    () => props.accessToken,
-    getAllFolders,
-    getAllMusics
-  );
-  const { addParents, move, folders, files } = parents;
+  const parents = useGDriveParents(() => props.accessToken);
   const audios = useAudios();
   const addAudioFile = (id: string, name: string) => {
     audios.addAudios({
@@ -32,14 +26,17 @@ export const DriveFiles = (props: DriveFilesProps) => {
 
   return (
     <div class={styleDrive}>
-      <Breadcrumbs parents={parents.parents()} move={move} />
+      <Breadcrumbs parents={parents.parents()} move={parents.move} />
       <ul class="drive-list">
-        <For each={folders()}>
+        <For each={parents.folders()}>
           {folder => (
-            <ItemFolder name={folder.name} move={() => addParents(folder)} />
+            <ItemFolder
+              name={folder.name}
+              move={() => parents.addParents(folder)}
+            />
           )}
         </For>
-        <For each={files()}>
+        <For each={parents.files()}>
           {file => (
             <ItemFile
               name={file.name}

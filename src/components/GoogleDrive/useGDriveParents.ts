@@ -1,36 +1,35 @@
-import { Accessor, createEffect, createSignal } from "solid-js";
+import { Accessor, createResource, createSignal } from "solid-js";
 
+import { getAllMusics, getAllFolders } from "~/file";
 import type { GoogleFile } from "~/file";
 
-export const useGDriveParents = (
-  accessToken: Accessor<string>,
-  getAllFolders: (
-    accessToken: string,
-    parent?: string | undefined
-  ) => Promise<GoogleFile[]>,
-  getAllMusics: (
-    accessToken: string,
-    parent?: string | undefined
-  ) => Promise<GoogleFile[]>
-) => {
+export const useGDriveParents = (accessToken: Accessor<string>) => {
   const [parents, setParents] = createSignal<GoogleFile[]>([
     { name: "root", id: "root" },
   ]);
-  const [files, setFiles] = createSignal<GoogleFile[]>([]);
-  const [folders, setFolders] = createSignal<GoogleFile[]>([]);
 
-  createEffect(() => {
-    const parentId = parents().at(-1)?.id;
-    setFolders([]);
-    setFiles([]);
-    getAllFolders(accessToken(), parentId).then(setFolders).catch(console.log);
-    getAllMusics(accessToken(), parentId).then(setFiles).catch(console.log);
-  });
+  const [files, { refetch: refetchFiles }] = createResource(
+    accessToken,
+    (key, { refetching: r }) => getAllMusics(key, r as string)
+  );
+  const [folders, { refetch: refetchFolders }] = createResource(
+    accessToken,
+    (key, { refetching: r }) => getAllFolders(key, r as string)
+  );
 
-  const addParents = (folder: GoogleFile) =>
+  const refetch = (info: string | undefined) => {
+    refetchFiles(info);
+    refetchFolders(info);
+  };
+
+  const addParents = (folder: GoogleFile) => {
     setParents(parents => parents.concat([folder]));
-  const move = (index: number) =>
+    refetch(parents().at(-1)?.id);
+  };
+  const move = (index: number) => {
     setParents(parents => parents.slice(0, index + 1));
+    refetch(parents().at(-1)?.id);
+  };
 
   return { parents, folders, files, addParents, move };
 };
