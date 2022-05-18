@@ -24,8 +24,9 @@ export class AudioInfo {
   static async getInfo(data: Blob) {
     let metadata;
     try {
-      const { parseBlob } = await import("music-metadata-browser");
-      metadata = await parseBlob(data);
+      const { parseBuffer } = await import("./music-metadata");
+      const buffer = await data.arrayBuffer();
+      metadata = await parseBuffer(new Uint8Array(buffer));
       console.log(metadata);
     } catch (error) {
       console.log("error");
