@@ -3,7 +3,7 @@ import { Upload } from "./Upload";
 import { styleSettings } from "./style.css";
 
 export type SettingsProps = {
-  accessToken: string;
+  accessToken: string | undefined;
 };
 
 /**

@@ -29,11 +29,11 @@ const MenuContext = createContext<{
 
 export type MenuProps = {
   defaultKey: string;
-  auth: {
-    accessToken: string;
-    signIn: () => void;
-    signOut: () => void;
-  };
+
+  isSignIn: boolean;
+  signIn: () => void;
+  signOut: () => void;
+
   children: JSXElement;
 };
 
@@ -67,7 +67,7 @@ export const Menu = (props: MenuProps) => {
             </NavItem>
           )}
         </For>
-        <Authorize auth={props.auth} />
+        <Authorize {...props} />
       </ul>
       <div class={styleContent}>{props.children}</div>
     </MenuContext.Provider>

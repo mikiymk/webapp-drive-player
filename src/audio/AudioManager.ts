@@ -142,7 +142,7 @@ export class AudioManager {
     this.loadNextBuffer();
   }
 
-  setAccessToken(accessToken: string) {
+  setAccessToken(accessToken: string | undefined) {
     this.buffer.setAccessToken(accessToken);
     this.nextBuffer.setAccessToken(accessToken);
   }

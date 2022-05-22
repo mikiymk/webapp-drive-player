@@ -48,7 +48,9 @@ export const MusicPlayer = () => {
       <div class={stylePlayer}>
         <Menu
           defaultKey="playing"
-          auth={{ accessToken: accessToken(), signIn, signOut }}>
+          isSignIn={accessToken() !== undefined}
+          signIn={signIn}
+          signOut={signOut}>
           <MenuItem key="playing" icon={<IconPlay />} label="Now Playing">
             <Playing info={status.info()} />
           </MenuItem>

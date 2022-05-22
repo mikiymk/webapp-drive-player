@@ -1,4 +1,4 @@
-import { downloadFile } from "~/google/file";
+import { downloadFile } from "~/google/downloadFile";
 import { AudioInfo } from "./AudioInfo";
 
 /**
@@ -16,7 +16,7 @@ export class BufferLoader {
 
   private setInfo: (id: string, info: AudioInfo) => void;
 
-  private accessToken = "";
+  private accessToken: string | undefined;
 
   constructor(setInfo: (id: string, info: AudioInfo) => void) {
     this.setInfo = setInfo;
@@ -82,7 +82,7 @@ export class BufferLoader {
     return this.loadedID === this.willLoadID;
   }
 
-  setAccessToken(accessToken: string) {
+  setAccessToken(accessToken: string | undefined) {
     this.accessToken = accessToken;
   }
 }

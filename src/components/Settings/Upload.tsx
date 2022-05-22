@@ -11,7 +11,7 @@ import { useAudios } from "~/hooks/createFiles";
 import { styleUpload } from "./style.css";
 
 export type UploadProps = {
-  accessToken: string;
+  accessToken: string | undefined;
 };
 
 /**
@@ -19,12 +19,12 @@ export type UploadProps = {
  */
 export const Upload = (props: UploadProps) => {
   const [status, setStatus] = createSignal("");
-  const upload = () => {
+  const upload = async () => {
     setStatus("loading");
     const audios = useAudios();
-    uploadLibraryData(props.accessToken, audios.audios).then(response =>
-      setStatus(response.status === 200 ? "done" : "error")
-    );
+    if (props.accessToken === undefined) return;
+    const response = await uploadLibraryData(props.accessToken, audios.audios);
+    setStatus(response.status === 200 ? "done" : "error");
   };
 
   return (
