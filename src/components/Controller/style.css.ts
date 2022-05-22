@@ -14,9 +14,16 @@ export const styleButton = style({
   textAlign: "center",
 });
 
-export const styleIcon = style({
+export const styleExtensionButton = style({
   height: "3rem",
   width: "3rem",
+  textAlign: "center",
+
+  "@media": {
+    "(max-width: 30rem)": {
+      display: "none",
+    },
+  },
 });
 
 export const styleSeekBar = style({
@@ -49,7 +56,13 @@ export const styleArtist = style({
 
 export const styleTime = style({
   margin: "0.9rem 0",
-  width: "18ch",
+  minWidth: "12ch",
   fontSize: "1rem",
   textAlign: "center",
+
+  "@media": {
+    "(max-width: 30rem)": {
+      display: "none",
+    },
+  },
 });
