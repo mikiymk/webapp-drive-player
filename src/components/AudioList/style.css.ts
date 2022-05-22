@@ -18,9 +18,11 @@ export const sItem = style({
 });
 
 export const sItemArtist = style({
+  display: "none",
+
   "@media": {
-    "(max-width: 700px)": {
-      display: "none",
+    "(min-width: 30rem)": {
+      display: "unset",
     },
   },
 });

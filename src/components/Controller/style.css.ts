@@ -1,22 +1,25 @@
 import { style } from "@vanilla-extract/css";
 
 export const styleController = style({
-  display: "flex",
+  display: "grid",
   justifyContent: "center",
   flex: "0 0 3rem",
   fontSize: "2rem",
   backgroundColor: "rgb(173,173,173)",
+  grid: "3rem / repeat(5, 1fr)",
+
+  "@media": {
+    "(min-width: 30rem)": {
+      display: "flex",
+    },
+  },
 });
 
 export const styleButton = style({
   height: "3rem",
   width: "3rem",
   textAlign: "center",
-});
-
-export const styleIcon = style({
-  height: "3rem",
-  width: "3rem",
+  justifySelf: "center",
 });
 
 export const styleSeekBar = style({
@@ -32,6 +35,8 @@ export const styleSeekBar = style({
 
 export const styleTitleView = style({
   flex: "1 0 calc(100vw - 30rem)",
+  gridColumn: "1 / -1",
+  gridRow: "1",
 
   display: "flex",
   flexDirection: "column",
@@ -48,8 +53,15 @@ export const styleArtist = style({
 });
 
 export const styleTime = style({
+  display: "none",
   margin: "0.9rem 0",
-  width: "18ch",
+  minWidth: "12ch",
   fontSize: "1rem",
   textAlign: "center",
+
+  "@media": {
+    "(min-width: 30rem)": {
+      display: "unset",
+    },
+  },
 });
