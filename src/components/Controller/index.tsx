@@ -17,11 +17,7 @@ import {
 import { MusicTitle } from "./MusicTitle";
 import { MusicTime } from "./MusicTime";
 import { SeekBar } from "./SeekBar";
-import {
-  styleButton,
-  styleController,
-  styleExtensionButton,
-} from "./style.css";
+import { styleButton, styleController } from "./style.css";
 
 export type ControllerProps = {
   info: AudioInfo;
@@ -72,7 +68,7 @@ export const Controller = (props: ControllerProps) => {
           <IconSkipNext />
         </button>
         <MusicTitle info={props.info} />
-        <button class={styleExtensionButton} onClick={() => toggleRepeat()}>
+        <button class={styleButton} onClick={() => toggleRepeat()}>
           <Switch fallback={<IconRepeatOff />}>
             <Match when={props.repeat.value === "repeat on"}>
               <IconRepeatOn />
@@ -82,7 +78,7 @@ export const Controller = (props: ControllerProps) => {
             </Match>
           </Switch>
         </button>
-        <button class={styleExtensionButton} onClick={() => toggleShuffle()}>
+        <button class={styleButton} onClick={() => toggleShuffle()}>
           <Show when={props.shuffle} fallback={<IconShuffleOff />}>
             <IconShuffleOn />
           </Show>

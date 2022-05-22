@@ -6,24 +6,20 @@ export const styleController = style({
   flex: "0 0 3rem",
   fontSize: "2rem",
   backgroundColor: "rgb(173,173,173)",
+
+  "@media": {
+    "(max-width: 30rem)": {
+      display: "grid",
+      grid: "3rem / repeat(5, 1fr)",
+    },
+  },
 });
 
 export const styleButton = style({
   height: "3rem",
   width: "3rem",
   textAlign: "center",
-});
-
-export const styleExtensionButton = style({
-  height: "3rem",
-  width: "3rem",
-  textAlign: "center",
-
-  "@media": {
-    "(max-width: 30rem)": {
-      display: "none",
-    },
-  },
+  justifySelf: "center",
 });
 
 export const styleSeekBar = style({
@@ -39,6 +35,8 @@ export const styleSeekBar = style({
 
 export const styleTitleView = style({
   flex: "1 0 calc(100vw - 30rem)",
+  gridColumn: "1 / -1",
+  gridRow: "1",
 
   display: "flex",
   flexDirection: "column",
