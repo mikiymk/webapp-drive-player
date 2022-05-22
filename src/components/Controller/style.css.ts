@@ -1,16 +1,16 @@
 import { style } from "@vanilla-extract/css";
 
 export const styleController = style({
-  display: "flex",
+  display: "grid",
   justifyContent: "center",
   flex: "0 0 3rem",
   fontSize: "2rem",
   backgroundColor: "rgb(173,173,173)",
+  grid: "3rem / repeat(5, 1fr)",
 
   "@media": {
-    "(max-width: 30rem)": {
-      display: "grid",
-      grid: "3rem / repeat(5, 1fr)",
+    "(min-width: 30rem)": {
+      display: "flex",
     },
   },
 });
@@ -53,14 +53,15 @@ export const styleArtist = style({
 });
 
 export const styleTime = style({
+  display: "none",
   margin: "0.9rem 0",
   minWidth: "12ch",
   fontSize: "1rem",
   textAlign: "center",
 
   "@media": {
-    "(max-width: 30rem)": {
-      display: "none",
+    "(min-width: 30rem)": {
+      display: "unset",
     },
   },
 });

@@ -32,11 +32,12 @@ export const styleContent = style({
 });
 
 export const styleLabel = style({
+  display: "none",
   marginLeft: "0.5rem",
 
   "@media": {
-    "(max-width: 700px)": {
-      display: "none",
+    "(min-width: 30rem)": {
+      display: "unset",
     },
   },
 });
