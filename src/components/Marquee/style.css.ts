@@ -5,7 +5,6 @@ import { keyframes, style } from "@vanilla-extract/css";
 /** マーキーアニメーション */
 const marquee = keyframes({
   "0%": { transform: "translate(0)" },
-  "10%": { transform: "translate(0)" },
   "100%": { transform: "translate(-100%)" },
 });
 
@@ -30,14 +29,16 @@ export const styleInner = style({
   top: 0,
   left: 0,
   whiteSpace: "nowrap",
-  animationName: "none",
+  animation: "none linear infinite 20s 2s",
 
   selectors: {
     [`${styleMarquee}:hover > &`]: {
       animationName: marquee,
-      animationTimingFunction: "linear",
-      animationDuration: "20s",
-      animationIterationCount: "infinite",
+    },
+  },
+  "@media": {
+    "(hover: none)": {
+      animationName: marquee,
     },
   },
 });
