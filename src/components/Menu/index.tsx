@@ -24,7 +24,7 @@ const MenuContext = createContext<{
   addItem: (key: string, icon: JSXElement, label: string) => void;
 }>({
   selected: () => "",
-  addItem: () => {},
+  addItem: () => 0,
 });
 
 export type MenuProps = {

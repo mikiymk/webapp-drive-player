@@ -1,6 +1,6 @@
 {
   "name": "drive-player",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "music files in google drive play on browser",
   "main": "index.js",
   "scripts": {

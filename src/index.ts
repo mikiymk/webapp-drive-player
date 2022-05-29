@@ -5,10 +5,7 @@ import { MusicPlayer } from "~/components/MusicPlayer";
 
 import "destyle.css";
 
-registerSW({
-  onNeedRefresh() {},
-  onOfflineReady() {},
-});
+registerSW({});
 
 const root = document.getElementById("root");
 

@@ -69,7 +69,8 @@ export const AudioList = (props: AudioListProps) => {
                 {audios.audios[item]?.artists.join()}
               </td>
               <td class={sDot}>
-                <button onClick={[rightMenu, onClick(item, index())]}>
+                <button
+                  onClick={event => rightMenu(onClick(item, index()), event)}>
                   <IconDotInfo />
                 </button>
               </td>
