@@ -5,7 +5,7 @@ import { MusicPlayer } from "~/components/MusicPlayer";
 
 import "destyle.css";
 
-const updateSW = registerSW({
+registerSW({
   onNeedRefresh() {},
   onOfflineReady() {},
 });
