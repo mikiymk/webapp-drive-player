@@ -1,9 +1,9 @@
 import { render } from "solid-js/web";
-import "destyle.css";
+import { registerSW } from "virtual:pwa-register";
 
 import { MusicPlayer } from "~/components/MusicPlayer";
 
-import { registerSW } from "virtual:pwa-register";
+import "destyle.css";
 
 const updateSW = registerSW({
   onNeedRefresh() {},
