@@ -1,7 +1,14 @@
 import { render } from "solid-js/web";
-import "destyle.css";
+import { registerSW } from "virtual:pwa-register";
 
 import { MusicPlayer } from "~/components/MusicPlayer";
+
+import "destyle.css";
+
+const updateSW = registerSW({
+  onNeedRefresh() {},
+  onOfflineReady() {},
+});
 
 const root = document.getElementById("root");
 
