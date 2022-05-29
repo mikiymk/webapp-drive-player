@@ -28,9 +28,7 @@ export const DriveFiles = (props: DriveFilesProps) => {
   return (
     <div class={styleDrive}>
       <Breadcrumbs parents={parents.parents()} move={parents.move} />
-      <Show
-        when={!parents.folders.loading && !parents.files.loading}
-        fallback={<Loading />}>
+      <Show when={!parents.loading()} fallback={<Loading />}>
         <ul class="drive-list">
           <For each={parents.folders()}>
             {folder => (

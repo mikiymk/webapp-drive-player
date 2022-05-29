@@ -8,6 +8,7 @@ export const useGDriveParents = (accessToken: Accessor<string | undefined>) => {
     { name: "root", id: "root" },
   ]);
 
+  const [loading, setLoading] = createSignal(false);
   const [files, setFiles] = createSignal<GoogleFile[]>([]);
   const [folders, setFolders] = createSignal<GoogleFile[]>([]);
   createEffect(() => {
@@ -15,12 +16,14 @@ export const useGDriveParents = (accessToken: Accessor<string | undefined>) => {
     const token = accessToken();
     if (!token) return;
 
+    setLoading(true);
     const newFiles = getAllMusics(token, parent);
     const newFolders = getAllFolders(token, parent);
 
     Promise.all([newFiles, newFolders]).then(([newFiles, newFolders]) => {
       setFiles(newFiles);
       setFolders(newFolders);
+      setLoading(false);
     });
   });
 
@@ -30,5 +33,5 @@ export const useGDriveParents = (accessToken: Accessor<string | undefined>) => {
   const move = (index: number) =>
     setParents(parents => parents.slice(0, index + 1));
 
-  return { parents, folders, files, addParents, move };
+  return { parents, loading, folders, files, addParents, move };
 };
