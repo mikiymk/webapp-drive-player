@@ -1,52 +1,60 @@
-import { createSignal } from "solid-js";
+import { createStore } from "solid-js/store";
 
 import type { AudioID } from "./createAudios";
 
 export type PlaylistName = string;
-export type Playlist = { name: PlaylistName; audios: AudioID[] };
-export type PlaylistRecord = Record<PlaylistName, Playlist>;
+export type Playlist = [PlaylistName, AudioID[]];
+export type PlaylistList = ([PlaylistName, AudioID[]] | null)[];
+export type PlaylistIndex = Record<PlaylistName, number | null>;
 
-const [playlists, setPlaylists] = createSignal<PlaylistRecord>({});
+const [playlists, setPlaylists] = createStore<PlaylistList>([]);
+const playlistIndex: PlaylistIndex = {};
 export { playlists };
 
+export const getPlaylist = (name: PlaylistName) => {
+  const index = playlistIndex[name];
+  if (index === undefined || index === null) return undefined;
+
+  const playlist = playlists[index];
+  if (playlist === undefined || playlist === null) return undefined;
+
+  return playlist[1];
+};
+
 export const makePlaylist = (name: PlaylistName) => {
-  return setPlaylists(state => {
-    const playlists = { ...state };
-    playlists[name] = { name, audios: [] };
-    return playlists;
+  if (typeof playlistIndex[name] === "number") return;
+
+  setPlaylists(value => {
+    playlistIndex[name] = value.length;
+    return [...value, [name, []]];
   });
 };
 
 export const deletePlaylist = (name: PlaylistName) => {
-  return setPlaylists(state => {
-    const playlists = Object.entries(state);
+  const index = playlistIndex[name];
+  if (index === undefined || index === null) return;
 
-    const index = playlists.findIndex(([n]) => n === name);
-    if (index === -1) return state;
+  setPlaylists(value => {
+    const playlists = [...value];
+    playlists[index] = null;
+    playlistIndex[name] = null;
 
-    const deletedPlaylists = playlists
-      .slice(0, index)
-      .concat(playlists.slice(index + 1));
-    return Object.fromEntries(deletedPlaylists);
+    return playlists;
   });
 };
 
 export const addAudio = (name: PlaylistName, id: AudioID) => {
-  return setPlaylists(state => {
-    const playlists = { ...state };
-    const audios = playlists[name]?.audios ?? [];
-    audios.push(id);
-    playlists[name] = { name, audios: audios };
-    return playlists;
-  });
+  const index = playlistIndex[name];
+  if (index === undefined || index === null) return;
+
+  setPlaylists(index, 1, value => [...value, id]);
 };
 
 export const removeAudio = (name: PlaylistName, index: number) => {
-  return setPlaylists(state => {
-    const playlists = { ...state };
-    const audios = playlists[name]?.audios ?? [];
-    const deleted = audios.slice(0, index).concat(audios.slice(index + 1));
-    playlists[name] = { name, audios: deleted };
-    return playlists;
-  });
+  const pindex = playlistIndex[name];
+  if (pindex === undefined || pindex === null) return;
+
+  setPlaylists(pindex, 1, value =>
+    value.slice(0, index).concat(value.slice(index + 1))
+  );
 };

@@ -5,7 +5,7 @@ import { audios } from "~/hooks/createAudios";
 import { AudioList } from "../AudioList";
 
 export type LibraryProps = {
-  play: (idList: string[], index: number) => void;
+  play: (idList: readonly string[], index: number) => void;
 };
 
 /**

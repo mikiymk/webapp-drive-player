@@ -32,7 +32,7 @@ export const MusicPlayer = () => {
   const { accessToken, signIn, signOut } = useSignIn();
   const { player, status } = useMusicPlayer(accessToken);
 
-  const playWithIdList = (idList: string[], index: number) => {
+  const playWithIdList = (idList: readonly string[], index: number) => {
     player?.playWithIdList(idList, index);
   };
 

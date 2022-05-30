@@ -4,7 +4,7 @@ import { PlaylistList } from "./PlaylistList";
 import { Playlist } from "./Playlist";
 
 export type PlaylistsProps = {
-  playsList: (list: string[], index: number) => void;
+  playsList: (list: readonly string[], index: number) => void;
 };
 
 /** show on right click */

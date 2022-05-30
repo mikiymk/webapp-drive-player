@@ -1,4 +1,4 @@
-import { createMemo, For, useContext } from "solid-js";
+import { For, useContext } from "solid-js";
 
 import { ButtonClickEvent, Context } from "~/components/RightMenu";
 import { IconDotInfo } from "~/components/Icon";
@@ -17,7 +17,6 @@ export type PlaylistListProps = {
 
 /** show on right click */
 export const PlaylistList = (props: PlaylistListProps) => {
-  const playlistNames = createMemo(() => Object.keys(playlists()));
   const callRightMenu = useContext(Context);
   const onClickIcon = (name: string, event: ButtonClickEvent) => {
     console.log("onClickIcon");
@@ -47,15 +46,17 @@ export const PlaylistList = (props: PlaylistListProps) => {
 
   return (
     <ul class={stylePlaylists}>
-      <For each={playlistNames()}>
-        {name => (
-          <li>
-            {name}
-            <button onClick={[onClickIcon, name]}>
-              <IconDotInfo />
-            </button>
-          </li>
-        )}
+      <For each={playlists}>
+        {playlist =>
+          playlist !== null && (
+            <li>
+              {playlist[0]}
+              <button onClick={[onClickIcon, playlist[0]]}>
+                <IconDotInfo />
+              </button>
+            </li>
+          )
+        }
       </For>
 
       <li>

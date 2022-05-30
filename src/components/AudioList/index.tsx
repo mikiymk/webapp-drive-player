@@ -1,4 +1,4 @@
-import { createMemo, createSignal, For, mapArray, useContext } from "solid-js";
+import { createSignal, For, mapArray, useContext } from "solid-js";
 
 import { IconDotInfo } from "~/components/Icon";
 import { Context } from "~/components/RightMenu";
@@ -9,15 +9,14 @@ import { playlists, addAudio } from "~/hooks/createPlaylists";
 import { sList, sItem, sHead, sDot, sItemArtist, sBody } from "./style.css";
 
 export type AudioListProps = {
-  audios: string[];
-  play: (idList: string[], index: number) => void;
+  audios: readonly string[];
+  play: (idList: readonly string[], index: number) => void;
   extendMenu?: (item: string, index: number) => Item[];
 };
 
 export const AudioList = (props: AudioListProps) => {
   const rightMenu = useContext(Context);
   const [selected, setSelected] = createSignal<number[]>([]);
-  const playlistNames = createMemo(() => Object.keys(playlists()));
 
   const onClick = (item: string, index: number): Item[] => [
     {
@@ -29,11 +28,18 @@ export const AudioList = (props: AudioListProps) => {
     {
       type: "list",
       label: "add to playlist",
-      list: mapArray(playlistNames, name => ({
-        type: "button" as const,
-        label: name,
-        onClick: () => addAudio(name, item),
-      }))(),
+      list: mapArray(
+        () => playlists,
+        playlist =>
+          playlist !== null && {
+            type: "button" as const,
+            label: playlist[0],
+            onClick: () => addAudio(playlist[0], item),
+          }
+      )().filter(
+        (v): v is { type: "button"; label: string; onClick: () => void } =>
+          v !== false
+      ),
     },
     ...(props.extendMenu?.(item, index) ?? []),
   ];
