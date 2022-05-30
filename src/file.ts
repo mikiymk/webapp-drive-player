@@ -1,8 +1,10 @@
+import type { DeepReadonly } from "solid-js/store";
+
 import { createAppDataJson, uploadAppDataJson } from "~/google/uploadFile";
+import { downloadFile } from "~/google/downloadFile";
 import { getAppDataList, getList } from "~/google/getFileList";
 import { AudioInfo } from "~/audio/AudioInfo";
-import type { AudioRecord } from "~/hooks/createAudios";
-import { downloadFile } from "./google/downloadFile";
+import type { AudioList } from "~/hooks/createAudios";
 
 export type GoogleFile = {
   readonly id: string;
@@ -83,7 +85,7 @@ const getLibraryID = async (accessToken: string): Promise<string | undefined> =>
 
 export const uploadLibraryData = async (
   accessToken: string,
-  files: AudioRecord
+  files: DeepReadonly<AudioList>
 ) => {
   const id = await getLibraryID(accessToken);
 
@@ -96,7 +98,7 @@ export const uploadLibraryData = async (
 
 export const downloadLibraryData = async (
   accessToken: string
-): Promise<AudioRecord | undefined> => {
+): Promise<AudioList | undefined> => {
   const id = await getLibraryID(accessToken);
   if (id === undefined) return;
 
@@ -114,5 +116,5 @@ export const downloadLibraryData = async (
   );
 
   console.log(files);
-  return Object.fromEntries(files);
+  return files;
 };

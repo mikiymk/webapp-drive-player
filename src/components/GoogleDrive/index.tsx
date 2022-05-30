@@ -19,9 +19,7 @@ export type DriveFilesProps = {
 export const DriveFiles = (props: DriveFilesProps) => {
   const parents = useGDriveParents(() => props.accessToken);
   const addAudioFile = (id: string, name: string) => {
-    addAudios({
-      [id]: AudioInfo.getNamedInfo(name),
-    });
+    addAudios([[id, AudioInfo.getNamedInfo(name)]]);
   };
 
   return (

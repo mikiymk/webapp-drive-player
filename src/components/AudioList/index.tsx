@@ -3,7 +3,7 @@ import { createSignal, For, mapArray, useContext } from "solid-js";
 import { IconDotInfo } from "~/components/Icon";
 import { Context } from "~/components/RightMenu";
 import type Item from "~/components/RightMenu/Item";
-import { audios } from "~/hooks/createAudios";
+import { getAudio } from "~/hooks/createAudios";
 import { playlists, addAudio } from "~/hooks/createPlaylists";
 
 import { sList, sItem, sHead, sDot, sItemArtist, sBody } from "./style.css";
@@ -64,13 +64,13 @@ export const AudioList = (props: AudioListProps) => {
               <td
                 onClick={() => setSelected([index()])}
                 onDblClick={() => props.play(props.audios, index())}>
-                {audios()[item]?.title}
+                {getAudio(item)?.[1]?.title}
               </td>
               <td
                 class={sItemArtist}
                 onClick={() => setSelected([index()])}
                 onDblClick={() => props.play(props.audios, index())}>
-                {audios()[item]?.artists.join()}
+                {getAudio(item)?.[1]?.artists.join()}
               </td>
               <td class={sDot}>
                 <button

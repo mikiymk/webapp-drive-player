@@ -5,7 +5,7 @@ import { Repeat } from "~/audio/Repeat";
 import { AudioInfo } from "~/audio/AudioInfo";
 import { AudioElementPlayer } from "~/audio/AudioElementPlayer";
 
-import { audios, setAudioInfo } from "./createAudios";
+import { getAudio, setAudioInfo } from "./createAudios";
 
 const useMusicPlayer = (accessToken: Accessor<string | undefined>) => {
   const [paused, setPaused] = createSignal(true);
@@ -31,13 +31,11 @@ const useMusicPlayer = (accessToken: Accessor<string | undefined>) => {
 
   createEffect(() => {
     manager.onChangeMusic = id => {
-      const info = audios()[id];
-      if (info instanceof AudioInfo) {
-        setInfo(info);
-      } else if (info !== undefined) {
+      const info = getAudio(id);
+      if (info === undefined) {
         setInfo(AudioInfo.getEmptyInfo());
       } else {
-        setInfo(AudioInfo.getEmptyInfo());
+        setInfo(AudioInfo.copyInfo(info[1] as AudioInfo));
       }
     };
   });

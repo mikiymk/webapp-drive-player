@@ -1,5 +1,4 @@
-import { createMemo } from "solid-js";
-
+import { mapArray } from "solid-js";
 import { audios } from "~/hooks/createAudios";
 
 import { AudioList } from "../AudioList";
@@ -12,7 +11,13 @@ export type LibraryProps = {
  * list of musics
  */
 export const Library = (props: LibraryProps) => {
-  const AudioIDs = createMemo(() => Object.keys(audios()));
-
-  return <AudioList audios={AudioIDs()} play={props.play} />;
+  return (
+    <AudioList
+      audios={mapArray(
+        () => audios,
+        audio => audio[0]
+      )()}
+      play={props.play}
+    />
+  );
 };

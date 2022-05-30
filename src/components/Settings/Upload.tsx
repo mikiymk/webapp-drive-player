@@ -22,7 +22,7 @@ export const Upload = (props: UploadProps) => {
   const upload = async () => {
     setStatus("loading");
     if (props.accessToken === undefined) return;
-    const response = await uploadLibraryData(props.accessToken, audios());
+    const response = await uploadLibraryData(props.accessToken, audios);
     setStatus(response.status === 200 ? "done" : "error");
   };
 

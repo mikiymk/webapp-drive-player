@@ -32,7 +32,7 @@ export const makePlaylist = (name: PlaylistName) => {
 
 export const deletePlaylist = (name: PlaylistName) => {
   const index = playlistIndex[name];
-  if (index === undefined || index === null) return;
+  if (typeof index !== "number") return;
 
   setPlaylists(value => {
     const playlists = [...value];
@@ -45,14 +45,14 @@ export const deletePlaylist = (name: PlaylistName) => {
 
 export const addAudio = (name: PlaylistName, id: AudioID) => {
   const index = playlistIndex[name];
-  if (index === undefined || index === null) return;
+  if (typeof index !== "number") return;
 
   setPlaylists(index, 1, value => [...value, id]);
 };
 
 export const removeAudio = (name: PlaylistName, index: number) => {
   const pindex = playlistIndex[name];
-  if (pindex === undefined || pindex === null) return;
+  if (typeof pindex !== "number") return;
 
   setPlaylists(pindex, 1, value =>
     value.slice(0, index).concat(value.slice(index + 1))
