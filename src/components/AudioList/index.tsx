@@ -4,7 +4,7 @@ import { IconDotInfo } from "~/components/Icon";
 import { Context } from "~/components/RightMenu";
 import type Item from "~/components/RightMenu/Item";
 import { audios } from "~/hooks/createAudios";
-import { usePlaylists } from "~/hooks/createPlaylists";
+import { playlists, addAudio } from "~/hooks/createPlaylists";
 
 import { sList, sItem, sHead, sDot, sItemArtist, sBody } from "./style.css";
 
@@ -15,10 +15,9 @@ export type AudioListProps = {
 };
 
 export const AudioList = (props: AudioListProps) => {
-  const playlists = usePlaylists();
   const rightMenu = useContext(Context);
   const [selected, setSelected] = createSignal<number[]>([]);
-  const playlistNames = createMemo(() => Object.keys(playlists.playlists));
+  const playlistNames = createMemo(() => Object.keys(playlists()));
 
   const onClick = (item: string, index: number): Item[] => [
     {
@@ -33,7 +32,7 @@ export const AudioList = (props: AudioListProps) => {
       list: mapArray(playlistNames, name => ({
         type: "button" as const,
         label: name,
-        onClick: () => playlists.addAudioToPlaylist(name, item),
+        onClick: () => addAudio(name, item),
       }))(),
     },
     ...(props.extendMenu?.(item, index) ?? []),
