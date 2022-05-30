@@ -1,7 +1,7 @@
 import { createRoot } from "solid-js";
 import create from "solid-zustand";
 
-import type { AudioID } from "./createFiles";
+import type { AudioID } from "./createAudios";
 
 export type PlaylistName = string;
 export type Playlist = { name: PlaylistName; audios: AudioID[] };

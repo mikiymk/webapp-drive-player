@@ -1,7 +1,7 @@
 import { createAppDataJson, uploadAppDataJson } from "~/google/uploadFile";
 import { getAppDataList, getList } from "~/google/getFileList";
 import { AudioInfo } from "~/audio/AudioInfo";
-import type { AudioRecord } from "~/hooks/createFiles";
+import type { AudioRecord } from "~/hooks/createAudios";
 import { downloadFile } from "./google/downloadFile";
 
 export type GoogleFile = {

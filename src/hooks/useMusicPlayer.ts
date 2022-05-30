@@ -5,7 +5,7 @@ import { Repeat } from "~/audio/Repeat";
 import { AudioInfo } from "~/audio/AudioInfo";
 import { AudioElementPlayer } from "~/audio/AudioElementPlayer";
 
-import { useAudios } from "./createFiles";
+import { audios, setAudioInfo } from "./createAudios";
 
 const useMusicPlayer = (accessToken: Accessor<string | undefined>) => {
   const [paused, setPaused] = createSignal(true);
@@ -20,21 +20,18 @@ const useMusicPlayer = (accessToken: Accessor<string | undefined>) => {
   const manager = new AudioManager(player);
 
   onMount(() => {
-    const audios = useAudios();
-
     manager.onSetDuration = duration => setDuration(duration);
     manager.onSetPause = paused => setPaused(paused);
     manager.onSetCurrentTime = currentTime => setCurrentTime(currentTime);
     manager.onSetRepeat = repeat => setRepeat(repeat);
     manager.onSetShuffle = shuffle => setShuffle(shuffle);
 
-    manager.onLoadInfo = audios.setInfo;
+    manager.onLoadInfo = setAudioInfo;
   });
 
   createEffect(() => {
-    const audios = useAudios();
     manager.onChangeMusic = id => {
-      const info = audios.audios[id];
+      const info = audios()[id];
       if (info instanceof AudioInfo) {
         setInfo(info);
       } else if (info !== undefined) {

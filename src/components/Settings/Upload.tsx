@@ -6,7 +6,7 @@ import {
   IconUpload,
 } from "~/components/Icon";
 import { uploadLibraryData } from "~/file";
-import { useAudios } from "~/hooks/createFiles";
+import { audios } from "~/hooks/createAudios";
 
 import { styleUpload } from "./style.css";
 
@@ -21,9 +21,8 @@ export const Upload = (props: UploadProps) => {
   const [status, setStatus] = createSignal("");
   const upload = async () => {
     setStatus("loading");
-    const audios = useAudios();
     if (props.accessToken === undefined) return;
-    const response = await uploadLibraryData(props.accessToken, audios.audios);
+    const response = await uploadLibraryData(props.accessToken, audios());
     setStatus(response.status === 200 ? "done" : "error");
   };
 
@@ -36,10 +35,10 @@ export const Upload = (props: UploadProps) => {
       <Switch>
         <Match when={status() === "loading"}>
           <IconLoading />
-        </Match>{" "}
+        </Match>
         <Match when={status() === "done"}>
           <IconDone />
-        </Match>{" "}
+        </Match>
         <Match when={status() === "error"}>
           <IconError />
         </Match>

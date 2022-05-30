@@ -2,7 +2,7 @@ import { For, Show } from "solid-js";
 
 import { AudioInfo } from "~/audio/AudioInfo";
 import { IconAudioFile, IconFolder } from "~/components/Icon";
-import { useAudios } from "~/hooks/createFiles";
+import { addAudios } from "~/hooks/createAudios";
 
 import { Breadcrumbs } from "./Breadcrumbs";
 import { Loading } from "./Loading";
@@ -18,9 +18,8 @@ export type DriveFilesProps = {
  */
 export const DriveFiles = (props: DriveFilesProps) => {
   const parents = useGDriveParents(() => props.accessToken);
-  const audios = useAudios();
   const addAudioFile = (id: string, name: string) => {
-    audios.addAudios({
+    addAudios({
       [id]: AudioInfo.getNamedInfo(name),
     });
   };
