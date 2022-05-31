@@ -2,7 +2,6 @@ import { style } from "@vanilla-extract/css";
 
 export const styleRightMenu = style({
   position: "fixed",
-  visibility: "hidden",
 
   top: 0,
   left: 0,
@@ -17,7 +16,6 @@ export const styleRightMenu = style({
 
 export const styleSubMenu = style({
   position: "absolute",
-  visibility: "hidden",
 
   left: "100%",
 

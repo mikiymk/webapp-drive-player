@@ -13,6 +13,7 @@ export const MenuProvider = (props: MenuProviderProps) => {
   const [left, setLeft] = createSignal(0);
 
   const popMenu = (event: MouseEvent) => {
+    console.log("pop");
     setVisible(true);
     setTop(event.clientY);
     setLeft(event.clientX);

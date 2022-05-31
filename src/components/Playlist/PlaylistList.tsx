@@ -1,6 +1,5 @@
-import { For, useContext } from "solid-js";
+import { For } from "solid-js";
 
-import { ButtonClickEvent, Context } from "~/components/RightMenu";
 import { IconDotInfo } from "~/components/Icon";
 import {
   playlists,
@@ -10,6 +9,7 @@ import {
 
 import { MakePlaylistButton } from "./MakePlaylistButton";
 import { stylePlaylists } from "./style.css";
+import { Menu, MenuItem, MenuProvider, usePopMenu } from "../PopUpMenu";
 
 export type PlaylistListProps = {
   select: (playlist: string) => void;
@@ -17,43 +17,19 @@ export type PlaylistListProps = {
 
 /** show on right click */
 export const PlaylistList = (props: PlaylistListProps) => {
-  const callRightMenu = useContext(Context);
-  const onClickIcon = (name: string, event: ButtonClickEvent) => {
-    console.log("onClickIcon");
-    console.log(callRightMenu);
-    return callRightMenu(
-      [
-        {
-          type: "button",
-          label: "open playlist",
-          onClick: event => {
-            props.select(name);
-            useContext(Context)([], event);
-          },
-        },
-        {
-          type: "button",
-          label: "delete playlist",
-          onClick: event => {
-            deletePlaylist(name);
-            useContext(Context)([], event);
-          },
-        },
-      ],
-      event
-    );
-  };
-
   return (
     <ul class={stylePlaylists}>
       <For each={Array.from(playlists())}>
         {playlist => (
-          <li>
-            {playlist[0]}
-            <button onClick={[onClickIcon, playlist[0]]}>
-              <IconDotInfo />
-            </button>
-          </li>
+          <MenuProvider
+            menu={
+              <PlaylistListMenu
+                name={playlist[0]}
+                select={name => props.select(name)}
+              />
+            }>
+            <PlaylistListItem name={playlist[0]} />
+          </MenuProvider>
         )}
       </For>
 
@@ -61,5 +37,39 @@ export const PlaylistList = (props: PlaylistListProps) => {
         <MakePlaylistButton makePlaylist={makePlaylist} />
       </li>
     </ul>
+  );
+};
+
+type PlaylistListItemProps = {
+  name: string;
+};
+
+const PlaylistListItem = (props: PlaylistListItemProps) => {
+  const popMenu = usePopMenu();
+  return (
+    <li>
+      {props.name}
+      <button onClick={event => popMenu(event)}>
+        <IconDotInfo />
+      </button>
+    </li>
+  );
+};
+
+type PlaylistListMenuProps = {
+  name: string;
+  select: (name: string) => void;
+};
+
+const PlaylistListMenu = (props: PlaylistListMenuProps) => {
+  return (
+    <Menu>
+      <MenuItem onClick={() => props.select(props.name)}>
+        open playlist
+      </MenuItem>
+      <MenuItem onClick={() => deletePlaylist(props.name)}>
+        delete playlist
+      </MenuItem>
+    </Menu>
   );
 };

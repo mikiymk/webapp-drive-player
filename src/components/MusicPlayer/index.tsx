@@ -13,7 +13,6 @@ import { Library } from "~/components/MusicLibrary";
 import { Menu, MenuItem } from "~/components/Menu";
 import { Playing } from "~/components/Playing";
 import { Playlists } from "~/components/Playlist";
-import { RightMenuProvider } from "~/components/RightMenu";
 import { Settings } from "~/components/Settings";
 import type { GoogleFile } from "~/file";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
@@ -42,45 +41,43 @@ export const MusicPlayer = () => {
   });
 
   return (
-    <RightMenuProvider>
-      <div class={stylePlayer}>
-        <Menu defaultKey="playing">
-          <MenuItem key="playing" icon={<IconPlay />} label="Now Playing">
-            <Playing info={status.info()} />
-          </MenuItem>
-          <MenuItem key="library" icon={<IconLibrary />} label="Library">
-            <Library play={playWithIdList} />
-          </MenuItem>
+    <div class={stylePlayer}>
+      <Menu defaultKey="playing">
+        <MenuItem key="playing" icon={<IconPlay />} label="Now Playing">
+          <Playing info={status.info()} />
+        </MenuItem>
+        <MenuItem key="library" icon={<IconLibrary />} label="Library">
+          <Library play={playWithIdList} />
+        </MenuItem>
 
-          <MenuItem key="playlist" icon={<IconPlayList />} label="Playlist">
-            <Playlists playsList={playWithIdList} />
-          </MenuItem>
+        <MenuItem key="playlist" icon={<IconPlayList />} label="Playlist">
+          <Playlists playsList={playWithIdList} />
+        </MenuItem>
 
-          <MenuItem key="drive" icon={<IconDrive />} label="Google Drive">
-            <DriveFiles />
-          </MenuItem>
+        <MenuItem key="drive" icon={<IconDrive />} label="Google Drive">
+          <DriveFiles />
+        </MenuItem>
 
-          <MenuItem key="settings" icon={<IconSettings />} label="Settings">
-            <Settings />
-          </MenuItem>
-        </Menu>
+        <MenuItem key="settings" icon={<IconSettings />} label="Settings">
+          <Settings />
+        </MenuItem>
+      </Menu>
 
-        <Controller
-          info={status.info()}
-          duration={status.duration()}
-          currentTime={status.currentTime()}
-          paused={status.paused()}
-          repeat={status.repeat()}
-          shuffle={status.shuffle()}
-          seek={time => player?.seek(time)}
-          play={() => player?.play()}
-          pause={() => player?.pause()}
-          playNext={() => player?.playToNext()}
-          playPrev={() => player?.playToPrev()}
-          setRepeat={repeat => player?.setRepeat(repeat)}
-          setShuffle={shuffle => player?.setShuffle(shuffle)}
-        />
-      </div>
-    </RightMenuProvider>
+      <Controller
+        info={status.info()}
+        duration={status.duration()}
+        currentTime={status.currentTime()}
+        paused={status.paused()}
+        repeat={status.repeat()}
+        shuffle={status.shuffle()}
+        seek={time => player?.seek(time)}
+        play={() => player?.play()}
+        pause={() => player?.pause()}
+        playNext={() => player?.playToNext()}
+        playPrev={() => player?.playToPrev()}
+        setRepeat={repeat => player?.setRepeat(repeat)}
+        setShuffle={shuffle => player?.setShuffle(shuffle)}
+      />
+    </div>
   );
 };
