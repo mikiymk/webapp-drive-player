@@ -29,17 +29,13 @@ export const AudioList = (props: AudioListProps) => {
       type: "list",
       label: "add to playlist",
       list: mapArray(
-        () => playlists,
-        playlist =>
-          playlist !== null && {
-            type: "button" as const,
-            label: playlist[0],
-            onClick: () => addAudio(playlist[0], item),
-          }
-      )().filter(
-        (v): v is { type: "button"; label: string; onClick: () => void } =>
-          v !== false
-      ),
+        () => Array.from(playlists()),
+        playlist => ({
+          type: "button" as const,
+          label: playlist[0],
+          onClick: () => addAudio(playlist[0], item),
+        })
+      )(),
     },
     ...(props.extendMenu?.(item, index) ?? []),
   ];

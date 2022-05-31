@@ -1,60 +1,62 @@
-import { createStore } from "solid-js/store";
+import { createSignal } from "solid-js";
 
 import type { AudioID } from "./createAudios";
 
 export type PlaylistName = string;
-export type Playlist = [PlaylistName, AudioID[]];
-export type PlaylistList = ([PlaylistName, AudioID[]] | null)[];
-export type PlaylistIndex = Record<PlaylistName, number | null>;
+export type PlaylistMap = Map<PlaylistName, AudioID[]>;
+export type PlaylistEntries = [PlaylistName, AudioID[]][];
 
-const [playlists, setPlaylists] = createStore<PlaylistList>([]);
-const playlistIndex: PlaylistIndex = {};
+const [playlists, setPlaylists] = createSignal<PlaylistMap>(new Map());
 export { playlists };
 
-export const getPlaylist = (name: PlaylistName) => {
-  const index = playlistIndex[name];
-  if (index === undefined || index === null) return undefined;
-
-  const playlist = playlists[index];
-  if (playlist === undefined || playlist === null) return undefined;
-
-  return playlist[1];
-};
-
 export const makePlaylist = (name: PlaylistName) => {
-  if (typeof playlistIndex[name] === "number") return;
-
   setPlaylists(value => {
-    playlistIndex[name] = value.length;
-    return [...value, [name, []]];
+    if (value.has(name)) return value;
+
+    const map = new Map(value);
+    map.set(name, []);
+
+    return map;
   });
 };
 
 export const deletePlaylist = (name: PlaylistName) => {
-  const index = playlistIndex[name];
-  if (typeof index !== "number") return;
-
   setPlaylists(value => {
-    const playlists = [...value];
-    playlists[index] = null;
-    playlistIndex[name] = null;
+    if (!value.has(name)) return value;
 
-    return playlists;
+    const map = new Map(value);
+    map.delete(name);
+
+    return map;
   });
 };
 
 export const addAudio = (name: PlaylistName, id: AudioID) => {
-  const index = playlistIndex[name];
-  if (typeof index !== "number") return;
+  setPlaylists(value => {
+    const map = new Map(value);
 
-  setPlaylists(index, 1, value => [...value, id]);
+    const audios = map.get(name);
+    if (audios !== undefined) {
+      map.set(name, [...audios, id]);
+    } else {
+      map.set(name, [id]);
+    }
+
+    return map;
+  });
 };
 
 export const removeAudio = (name: PlaylistName, index: number) => {
-  const pindex = playlistIndex[name];
-  if (typeof pindex !== "number") return;
+  setPlaylists(value => {
+    const map = new Map(value);
 
-  setPlaylists(pindex, 1, value =>
-    value.slice(0, index).concat(value.slice(index + 1))
-  );
+    const audios = map.get(name);
+    if (audios === undefined) {
+      return value;
+    }
+
+    map.set(name, audios.slice(0, index).concat(audios.slice(index + 1)));
+
+    return map;
+  });
 };

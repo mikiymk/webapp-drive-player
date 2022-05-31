@@ -46,17 +46,15 @@ export const PlaylistList = (props: PlaylistListProps) => {
 
   return (
     <ul class={stylePlaylists}>
-      <For each={playlists}>
-        {playlist =>
-          playlist !== null && (
-            <li>
-              {playlist[0]}
-              <button onClick={[onClickIcon, playlist[0]]}>
-                <IconDotInfo />
-              </button>
-            </li>
-          )
-        }
+      <For each={Array.from(playlists())}>
+        {playlist => (
+          <li>
+            {playlist[0]}
+            <button onClick={[onClickIcon, playlist[0]]}>
+              <IconDotInfo />
+            </button>
+          </li>
+        )}
       </For>
 
       <li>

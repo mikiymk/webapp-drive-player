@@ -1,4 +1,4 @@
-import { getPlaylist, removeAudio } from "~/hooks/createPlaylists";
+import { playlists, removeAudio } from "~/hooks/createPlaylists";
 import { AudioList } from "~/components/AudioList";
 
 import { stylePlaylist } from "./style.css";
@@ -16,11 +16,12 @@ export const Playlist = (props: PlaylistProps) => {
     <div class={stylePlaylist}>
       <h3>{props.name}</h3>
       <button onClick={() => props.reset()}>back to list</button>
-      <button onClick={() => props.playsList(getPlaylist(props.name) ?? [], 0)}>
+      <button
+        onClick={() => props.playsList(playlists().get(props.name) ?? [], 0)}>
         play this playlist
       </button>
       <AudioList
-        audios={getPlaylist(props.name) ?? []}
+        audios={playlists().get(props.name) ?? []}
         play={props.playsList}
         extendMenu={(_, index) => [
           {
