@@ -1,13 +1,14 @@
-import { Accessor, createEffect, createSignal, onMount } from "solid-js";
+import { createEffect, createSignal, onMount } from "solid-js";
 
 import { AudioManager } from "~/audio/AudioManager";
 import { Repeat } from "~/audio/Repeat";
 import { AudioInfo } from "~/audio/AudioInfo";
 import { AudioElementPlayer } from "~/audio/AudioElementPlayer";
 
-import { useAudios } from "./createFiles";
+import { getAudio, setAudioInfo } from "./createAudios";
+import { accessToken } from "./useSignIn";
 
-const useMusicPlayer = (accessToken: Accessor<string | undefined>) => {
+const useMusicPlayer = () => {
   const [paused, setPaused] = createSignal(true);
   const [duration, setDuration] = createSignal(0);
   const [currentTime, setCurrentTime] = createSignal(0);
@@ -20,27 +21,22 @@ const useMusicPlayer = (accessToken: Accessor<string | undefined>) => {
   const manager = new AudioManager(player);
 
   onMount(() => {
-    const audios = useAudios();
-
     manager.onSetDuration = duration => setDuration(duration);
     manager.onSetPause = paused => setPaused(paused);
     manager.onSetCurrentTime = currentTime => setCurrentTime(currentTime);
     manager.onSetRepeat = repeat => setRepeat(repeat);
     manager.onSetShuffle = shuffle => setShuffle(shuffle);
 
-    manager.onLoadInfo = audios.setInfo;
+    manager.onLoadInfo = setAudioInfo;
   });
 
   createEffect(() => {
-    const audios = useAudios();
     manager.onChangeMusic = id => {
-      const info = audios.audios[id];
-      if (info instanceof AudioInfo) {
-        setInfo(info);
-      } else if (info !== undefined) {
+      const info = getAudio(id);
+      if (info === undefined) {
         setInfo(AudioInfo.getEmptyInfo());
       } else {
-        setInfo(AudioInfo.getEmptyInfo());
+        setInfo(AudioInfo.copyInfo(info as AudioInfo));
       }
     };
   });

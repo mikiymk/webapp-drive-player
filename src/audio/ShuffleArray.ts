@@ -5,7 +5,7 @@ export class ShuffleArray implements Iterable<string> {
   private readonly _array: string[];
   private _indexArray: number[];
 
-  constructor(array: string[], shuffled: boolean) {
+  constructor(array: readonly string[], shuffled: boolean) {
     this._array = Array.from(array);
     this._indexArray = makeShuffledArray(this._array.length, shuffled);
   }

@@ -1,55 +1,62 @@
-import { createRoot } from "solid-js";
-import create from "solid-zustand";
+import { createSignal } from "solid-js";
 
-import type { AudioID } from "./createFiles";
+import type { AudioID } from "./createAudios";
 
 export type PlaylistName = string;
-export type Playlist = { name: PlaylistName; audios: AudioID[] };
+export type PlaylistMap = Map<PlaylistName, AudioID[]>;
+export type PlaylistEntries = [PlaylistName, AudioID[]][];
 
-export type Playlists = {
-  playlists: Record<PlaylistName, Playlist>;
-  makePlaylist: (name: PlaylistName) => void;
-  deletePlaylist: (name: PlaylistName) => void;
+const [playlists, setPlaylists] = createSignal<PlaylistMap>(new Map());
+export { playlists };
 
-  addAudioToPlaylist: (name: PlaylistName, id: AudioID) => void;
-  removeAudioFromPlaylist: (name: PlaylistName, index: number) => void;
+export const makePlaylist = (name: PlaylistName) => {
+  setPlaylists(value => {
+    if (value.has(name)) return value;
+
+    const map = new Map(value);
+    map.set(name, []);
+
+    return map;
+  });
 };
 
-export const usePlaylists = createRoot(() => {
-  return create<Playlists>(set => ({
-    playlists: {},
-    makePlaylist: name =>
-      set(state => {
-        const playlists = { ...state.playlists };
-        playlists[name] = { name, audios: [] };
-        return { playlists };
-      }),
-    deletePlaylist: name =>
-      set(state => {
-        const playlists = Object.entries(state.playlists);
-        const index = playlists.findIndex(([n]) => n === name);
-        if (index === -1) return { playlists: state.playlists };
-        const deletedPlaylists = playlists
-          .slice(0, index)
-          .concat(playlists.slice(index + 1));
-        return { playlists: Object.fromEntries(deletedPlaylists) };
-      }),
+export const deletePlaylist = (name: PlaylistName) => {
+  setPlaylists(value => {
+    if (!value.has(name)) return value;
 
-    addAudioToPlaylist: (name, id) =>
-      set(state => {
-        const playlists = { ...state.playlists };
-        const audios = playlists[name]?.audios ?? [];
-        audios.push(id);
-        playlists[name] = { name, audios: audios };
-        return { playlists };
-      }),
-    removeAudioFromPlaylist: (name, index) =>
-      set(state => {
-        const playlists = { ...state.playlists };
-        const audios = playlists[name]?.audios ?? [];
-        const deleted = audios.slice(0, index).concat(audios.slice(index + 1));
-        playlists[name] = { name, audios: deleted };
-        return { playlists };
-      }),
-  }));
-});
+    const map = new Map(value);
+    map.delete(name);
+
+    return map;
+  });
+};
+
+export const addAudio = (name: PlaylistName, id: AudioID) => {
+  setPlaylists(value => {
+    const map = new Map(value);
+
+    const audios = map.get(name);
+    if (audios !== undefined) {
+      map.set(name, [...audios, id]);
+    } else {
+      map.set(name, [id]);
+    }
+
+    return map;
+  });
+};
+
+export const removeAudio = (name: PlaylistName, index: number) => {
+  setPlaylists(value => {
+    const map = new Map(value);
+
+    const audios = map.get(name);
+    if (audios === undefined) {
+      return value;
+    }
+
+    map.set(name, audios.slice(0, index).concat(audios.slice(index + 1)));
+
+    return map;
+  });
+};

@@ -1,7 +1,7 @@
 import { createSignal, Match, Switch } from "solid-js";
 
 import { downloadLibraryData } from "~/file";
-import { useAudios } from "~/hooks/createFiles";
+import { addAudios } from "~/hooks/createAudios";
 import {
   IconLoading,
   IconDone,
@@ -10,25 +10,22 @@ import {
 } from "~/components/Icon";
 
 import { styleDownload } from "./style.css";
-
-export type DownloadProps = {
-  accessToken: string | undefined;
-};
+import { accessToken } from "~/hooks/useSignIn";
 
 /**
  * now playing audio info view
  */
-export const Download = (props: DownloadProps) => {
+export const Download = () => {
   const [status, setStatus] = createSignal("");
-  const audios = useAudios();
 
   const download = async () => {
     setStatus("loading");
-    if (props.accessToken === undefined) return;
+    const token = accessToken();
+    if (token === undefined) return;
 
-    const data = await downloadLibraryData(props.accessToken);
+    const data = await downloadLibraryData(token);
     if (data !== undefined) {
-      audios.addAudios(data);
+      addAudios(data);
       setStatus("done");
     } else {
       setStatus("error");
@@ -44,10 +41,10 @@ export const Download = (props: DownloadProps) => {
       <Switch>
         <Match when={status() === "loading"}>
           <IconLoading />
-        </Match>{" "}
+        </Match>
         <Match when={status() === "done"}>
           <IconDone />
-        </Match>{" "}
+        </Match>
         <Match when={status() === "error"}>
           <IconError />
         </Match>

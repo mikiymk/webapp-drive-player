@@ -1,25 +1,22 @@
 import { Show } from "solid-js";
 
 import { IconSignIn, IconSignOut } from "~/components/Icon";
+import { accessToken, useSignIn } from "~/hooks/useSignIn";
 
 import { NavItem } from "./NavItem";
 
-export type AuthorizeProps = {
-  isSignIn: boolean;
-  signIn: () => void;
-  signOut: () => void;
-};
+export const Authorize = () => {
+  const { signIn, signOut } = useSignIn();
 
-export const Authorize = (props: AuthorizeProps) => {
   return (
     <Show
-      when={props.isSignIn}
+      when={accessToken() !== undefined}
       fallback={
-        <NavItem icon={<IconSignIn />} onClick={() => props.signIn()}>
+        <NavItem icon={<IconSignIn />} onClick={() => signIn()}>
           Sign In
         </NavItem>
       }>
-      <NavItem icon={<IconSignOut />} onClick={() => props.signOut()}>
+      <NavItem icon={<IconSignOut />} onClick={() => signOut()}>
         Sign Out
       </NavItem>
     </Show>

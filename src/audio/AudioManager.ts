@@ -99,7 +99,7 @@ export class AudioManager {
   /**
    * リストと最初のインデックスを渡して再生を始める
    */
-  playWithIdList(ids: string[], index: number) {
+  playWithIdList(ids: readonly string[], index: number) {
     this.musicIds = new ShuffleArray(ids, false);
     this.index = index;
 

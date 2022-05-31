@@ -2,27 +2,20 @@ import { For, Show } from "solid-js";
 
 import { AudioInfo } from "~/audio/AudioInfo";
 import { IconAudioFile, IconFolder } from "~/components/Icon";
-import { useAudios } from "~/hooks/createFiles";
+import { addAudios } from "~/hooks/createAudios";
 
 import { Breadcrumbs } from "./Breadcrumbs";
 import { Loading } from "./Loading";
 import { useGDriveParents } from "./useGDriveParents";
 import { styleDrive, styleItem } from "./style.css";
 
-export type DriveFilesProps = {
-  accessToken: string | undefined;
-};
-
 /**
  * get files from google drive
  */
-export const DriveFiles = (props: DriveFilesProps) => {
-  const parents = useGDriveParents(() => props.accessToken);
-  const audios = useAudios();
+export const DriveFiles = () => {
+  const parents = useGDriveParents();
   const addAudioFile = (id: string, name: string) => {
-    audios.addAudios({
-      [id]: AudioInfo.getNamedInfo(name),
-    });
+    addAudios([[id, AudioInfo.getNamedInfo(name)]]);
   };
 
   return (

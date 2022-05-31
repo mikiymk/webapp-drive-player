@@ -1,25 +1,22 @@
-import { createMemo, createSignal, For, mapArray, useContext } from "solid-js";
+import { createSignal, For, mapArray, useContext } from "solid-js";
 
 import { IconDotInfo } from "~/components/Icon";
 import { Context } from "~/components/RightMenu";
 import type Item from "~/components/RightMenu/Item";
-import { useAudios } from "~/hooks/createFiles";
-import { usePlaylists } from "~/hooks/createPlaylists";
+import { getAudio } from "~/hooks/createAudios";
+import { playlists, addAudio } from "~/hooks/createPlaylists";
 
 import { sList, sItem, sHead, sDot, sItemArtist, sBody } from "./style.css";
 
 export type AudioListProps = {
-  audios: string[];
-  play: (idList: string[], index: number) => void;
+  audios: readonly string[];
+  play: (idList: readonly string[], index: number) => void;
   extendMenu?: (item: string, index: number) => Item[];
 };
 
 export const AudioList = (props: AudioListProps) => {
-  const audios = useAudios();
-  const playlists = usePlaylists();
   const rightMenu = useContext(Context);
   const [selected, setSelected] = createSignal<number[]>([]);
-  const playlistNames = createMemo(() => Object.keys(playlists.playlists));
 
   const onClick = (item: string, index: number): Item[] => [
     {
@@ -31,11 +28,14 @@ export const AudioList = (props: AudioListProps) => {
     {
       type: "list",
       label: "add to playlist",
-      list: mapArray(playlistNames, name => ({
-        type: "button" as const,
-        label: name,
-        onClick: () => playlists.addAudioToPlaylist(name, item),
-      }))(),
+      list: mapArray(
+        () => Array.from(playlists()),
+        playlist => ({
+          type: "button" as const,
+          label: playlist[0],
+          onClick: () => addAudio(playlist[0], item),
+        })
+      )(),
     },
     ...(props.extendMenu?.(item, index) ?? []),
   ];
@@ -60,13 +60,13 @@ export const AudioList = (props: AudioListProps) => {
               <td
                 onClick={() => setSelected([index()])}
                 onDblClick={() => props.play(props.audios, index())}>
-                {audios.audios[item]?.title}
+                {getAudio(item)?.title}
               </td>
               <td
                 class={sItemArtist}
                 onClick={() => setSelected([index()])}
                 onDblClick={() => props.play(props.audios, index())}>
-                {audios.audios[item]?.artists.join()}
+                {getAudio(item)?.artists.join()}
               </td>
               <td class={sDot}>
                 <button

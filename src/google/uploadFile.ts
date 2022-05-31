@@ -1,4 +1,8 @@
-const getMultipartBody = (data: object, metadata: object, boundary: string) => {
+const getMultipartBody = (
+  jsonData: string,
+  metadata: object,
+  boundary: string
+) => {
   return `--${boundary}
 Content-Type: application/json; charset=UTF-8
 
@@ -6,19 +10,19 @@ ${JSON.stringify(metadata)}
 --${boundary}
 Content-Type: application/json; charset=UTF-8
 
-${JSON.stringify(data)}
+${jsonData}
 --${boundary}--`;
 };
 
 export const uploadAppDataJson = async (
   accessToken: string,
   fileId: string,
-  data: object
+  jsonData: string
 ) => {
   const url = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`;
 
   const boundary = "_boundary" + Math.random().toString(16).substring(2);
-  const multipartBody = getMultipartBody(data, {}, boundary);
+  const multipartBody = getMultipartBody(jsonData, {}, boundary);
 
   const response = await fetch(url, {
     method: "PATCH",
@@ -37,14 +41,14 @@ export const uploadAppDataJson = async (
 export const createAppDataJson = async (
   accessToken: string,
   fileName: string,
-  data: object
+  jsonData: string
 ) => {
   const url =
     "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
 
   const boundary = "_boundary" + Math.random().toString(16).substring(2);
   const multipartBody = getMultipartBody(
-    data,
+    jsonData,
     { name: fileName, parents: ["appDataFolder"] },
     boundary
   );

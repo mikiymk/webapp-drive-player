@@ -16,10 +16,14 @@ const config = defineConfig(({ mode, command }) => {
         includeAssets: [],
         manifest: {
           name: "Iron Ragdoll",
+          // eslint-disable-next-line camelcase
           short_name: "IronRagdoll",
+          // eslint-disable-next-line camelcase
           start_url: "/",
           display: "standalone",
+          // eslint-disable-next-line camelcase
           theme_color: "#888",
+          // eslint-disable-next-line camelcase
           background_color: "#888",
           description: "Web App Audio Player with Google Drive",
           categories: ["music"],
