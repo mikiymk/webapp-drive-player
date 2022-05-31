@@ -2,18 +2,17 @@ import { createSignal } from "solid-js";
 
 import { initClient } from "~/google/init";
 
-const useSignIn = () => {
-  const [accessToken, setAccessToken] = createSignal<string>();
+const [accessToken, setAccessToken] = createSignal<string>();
+export { accessToken };
+
+export const useSignIn = () => {
   const client = initClient();
 
   return {
-    accessToken,
-    signIn: () =>
-      client
-        .requestAccessToken()
-        .then(response => setAccessToken(response.access_token)),
+    signIn: async () => {
+      const response = await client.requestAccessToken();
+      setAccessToken(response.access_token);
+    },
     signOut: () => setAccessToken(),
   };
 };
-
-export default useSignIn;

@@ -9,15 +9,11 @@ import { Loading } from "./Loading";
 import { useGDriveParents } from "./useGDriveParents";
 import { styleDrive, styleItem } from "./style.css";
 
-export type DriveFilesProps = {
-  accessToken: string | undefined;
-};
-
 /**
  * get files from google drive
  */
-export const DriveFiles = (props: DriveFilesProps) => {
-  const parents = useGDriveParents(() => props.accessToken);
+export const DriveFiles = () => {
+  const parents = useGDriveParents();
   const addAudioFile = (id: string, name: string) => {
     addAudios([[id, AudioInfo.getNamedInfo(name)]]);
   };

@@ -7,22 +7,20 @@ import {
 } from "~/components/Icon";
 import { uploadLibraryData } from "~/file";
 import { audios } from "~/hooks/createAudios";
+import { accessToken } from "~/hooks/useSignIn";
 
 import { styleUpload } from "./style.css";
-
-export type UploadProps = {
-  accessToken: string | undefined;
-};
 
 /**
  * now playing audio info view
  */
-export const Upload = (props: UploadProps) => {
+export const Upload = () => {
   const [status, setStatus] = createSignal("");
   const upload = async () => {
     setStatus("loading");
-    if (props.accessToken === undefined) return;
-    const response = await uploadLibraryData(props.accessToken, audios);
+    const token = accessToken();
+    if (token === undefined) return;
+    const response = await uploadLibraryData(token, audios);
     setStatus(response.status === 200 ? "done" : "error");
   };
 

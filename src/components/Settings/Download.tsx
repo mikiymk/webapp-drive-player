@@ -10,22 +10,20 @@ import {
 } from "~/components/Icon";
 
 import { styleDownload } from "./style.css";
-
-export type DownloadProps = {
-  accessToken: string | undefined;
-};
+import { accessToken } from "~/hooks/useSignIn";
 
 /**
  * now playing audio info view
  */
-export const Download = (props: DownloadProps) => {
+export const Download = () => {
   const [status, setStatus] = createSignal("");
 
   const download = async () => {
     setStatus("loading");
-    if (props.accessToken === undefined) return;
+    const token = accessToken();
+    if (token === undefined) return;
 
-    const data = await downloadLibraryData(props.accessToken);
+    const data = await downloadLibraryData(token);
     if (data !== undefined) {
       addAudios(data);
       setStatus("done");

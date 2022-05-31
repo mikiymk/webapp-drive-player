@@ -17,7 +17,6 @@ import { RightMenuProvider } from "~/components/RightMenu";
 import { Settings } from "~/components/Settings";
 import type { GoogleFile } from "~/file";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
-import useSignIn from "~/hooks/useSignIn";
 
 import { stylePlayer } from "./style.css";
 
@@ -29,8 +28,7 @@ export type Files = {
  * react component root.
  */
 export const MusicPlayer = () => {
-  const { accessToken, signIn, signOut } = useSignIn();
-  const { player, status } = useMusicPlayer(accessToken);
+  const { player, status } = useMusicPlayer();
 
   const playWithIdList = (idList: readonly string[], index: number) => {
     player?.playWithIdList(idList, index);
@@ -46,11 +44,7 @@ export const MusicPlayer = () => {
   return (
     <RightMenuProvider>
       <div class={stylePlayer}>
-        <Menu
-          defaultKey="playing"
-          isSignIn={accessToken() !== undefined}
-          signIn={signIn}
-          signOut={signOut}>
+        <Menu defaultKey="playing">
           <MenuItem key="playing" icon={<IconPlay />} label="Now Playing">
             <Playing info={status.info()} />
           </MenuItem>
@@ -63,11 +57,11 @@ export const MusicPlayer = () => {
           </MenuItem>
 
           <MenuItem key="drive" icon={<IconDrive />} label="Google Drive">
-            <DriveFiles accessToken={accessToken()} />
+            <DriveFiles />
           </MenuItem>
 
           <MenuItem key="settings" icon={<IconSettings />} label="Settings">
-            <Settings accessToken={accessToken()} />
+            <Settings />
           </MenuItem>
         </Menu>
 

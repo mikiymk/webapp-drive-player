@@ -1,4 +1,4 @@
-import { Accessor, createEffect, createSignal, onMount } from "solid-js";
+import { createEffect, createSignal, onMount } from "solid-js";
 
 import { AudioManager } from "~/audio/AudioManager";
 import { Repeat } from "~/audio/Repeat";
@@ -6,8 +6,9 @@ import { AudioInfo } from "~/audio/AudioInfo";
 import { AudioElementPlayer } from "~/audio/AudioElementPlayer";
 
 import { getAudio, setAudioInfo } from "./createAudios";
+import { accessToken } from "./useSignIn";
 
-const useMusicPlayer = (accessToken: Accessor<string | undefined>) => {
+const useMusicPlayer = () => {
   const [paused, setPaused] = createSignal(true);
   const [duration, setDuration] = createSignal(0);
   const [currentTime, setCurrentTime] = createSignal(0);
