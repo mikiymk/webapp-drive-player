@@ -53,8 +53,6 @@
     "events": "^3.3.0",
     "music-metadata": "^7.12.3",
     "process": "^0.11.10",
-    "solid-js": "^1.4.1",
-    "solid-zustand": "^1.4.0",
-    "zustand": "^4.0.0-rc.1"
+    "solid-js": "^1.4.1"
   }
 }
