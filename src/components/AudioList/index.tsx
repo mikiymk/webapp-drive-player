@@ -64,13 +64,13 @@ export const AudioList = (props: AudioListProps) => {
               <td
                 onClick={() => setSelected([index()])}
                 onDblClick={() => props.play(props.audios, index())}>
-                {getAudio(item)?.[1]?.title}
+                {getAudio(item)?.title}
               </td>
               <td
                 class={sItemArtist}
                 onClick={() => setSelected([index()])}
                 onDblClick={() => props.play(props.audios, index())}>
-                {getAudio(item)?.[1]?.artists.join()}
+                {getAudio(item)?.artists.join()}
               </td>
               <td class={sDot}>
                 <button

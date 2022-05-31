@@ -1,10 +1,8 @@
-import type { DeepReadonly } from "solid-js/store";
-
 import { createAppDataJson, uploadAppDataJson } from "~/google/uploadFile";
 import { downloadFile } from "~/google/downloadFile";
 import { getAppDataList, getList } from "~/google/getFileList";
 import { AudioInfo } from "~/audio/AudioInfo";
-import type { AudioList } from "~/hooks/createAudios";
+import type { AudioEntries, AudioMap } from "~/hooks/createAudios";
 
 export type GoogleFile = {
   readonly id: string;
@@ -77,7 +75,7 @@ export const getAllMusics = async (accessToken: string, parent?: string) =>
     `mimeType contains 'audio/' and parents in '${parent ?? "root"}'`
   );
 
-const getLibraryID = async (accessToken: string): Promise<string | undefined> =>
+const getLibraryID = (accessToken: string): Promise<string | undefined> =>
   getAppDataList(accessToken, "name = 'library.json'").then(result => {
     console.log(result);
     return result.files ? result.files[0]?.id : undefined;
@@ -85,32 +83,32 @@ const getLibraryID = async (accessToken: string): Promise<string | undefined> =>
 
 export const uploadLibraryData = async (
   accessToken: string,
-  files: DeepReadonly<AudioList>
+  data: AudioMap
 ) => {
   const id = await getLibraryID(accessToken);
+  const jsonData = JSON.stringify(Array.from(data));
 
   if (id !== undefined) {
-    return uploadAppDataJson(accessToken, id, files);
+    return uploadAppDataJson(accessToken, id, jsonData);
   } else {
-    return createAppDataJson(accessToken, "library.json", files);
+    return createAppDataJson(accessToken, "library.json", jsonData);
   }
 };
 
 export const downloadLibraryData = async (
   accessToken: string
-): Promise<AudioList | undefined> => {
+): Promise<AudioEntries | undefined> => {
   const id = await getLibraryID(accessToken);
-  if (id === undefined) return;
+  if (id === undefined) return undefined;
 
   const response = await downloadFile(accessToken, id);
-  if (response === null) return;
+  if (response === null) return undefined;
 
   const json: unknown = await response.json();
-  if (typeof json !== "object") return;
-  if (json === null) return;
+  if (!Array.isArray(json)) return undefined;
 
-  const files = Object.entries(json).map(
-    ([id, info]: [string, unknown]): [string, AudioInfo] => {
+  const files = json.map(
+    ([id, info]: [unknown, unknown]): [string, AudioInfo] => {
       return ["" + id, AudioInfo.copyInfo(info as AudioInfo)];
     }
   );

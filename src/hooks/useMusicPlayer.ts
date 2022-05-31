@@ -36,7 +36,7 @@ const useMusicPlayer = () => {
       if (info === undefined) {
         setInfo(AudioInfo.getEmptyInfo());
       } else {
-        setInfo(AudioInfo.copyInfo(info[1] as AudioInfo));
+        setInfo(AudioInfo.copyInfo(info as AudioInfo));
       }
     };
   });

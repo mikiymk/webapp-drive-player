@@ -20,7 +20,7 @@ export const Upload = () => {
     setStatus("loading");
     const token = accessToken();
     if (token === undefined) return;
-    const response = await uploadLibraryData(token, audios);
+    const response = await uploadLibraryData(token, audios());
     setStatus(response.status === 200 ? "done" : "error");
   };
 

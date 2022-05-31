@@ -1,4 +1,3 @@
-import { mapArray } from "solid-js";
 import { audios } from "~/hooks/createAudios";
 
 import { AudioList } from "../AudioList";
@@ -11,13 +10,5 @@ export type LibraryProps = {
  * list of musics
  */
 export const Library = (props: LibraryProps) => {
-  return (
-    <AudioList
-      audios={mapArray(
-        () => audios,
-        audio => audio[0]
-      )()}
-      play={props.play}
-    />
-  );
+  return <AudioList audios={Array.from(audios().keys())} play={props.play} />;
 };
