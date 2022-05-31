@@ -15,6 +15,20 @@ export const styleRightMenu = style({
   minWidth: "10rem",
 });
 
+export const styleSubMenu = style({
+  position: "absolute",
+  visibility: "hidden",
+
+  left: "100%",
+
+  backgroundColor: "white",
+  borderColor: "gray",
+  borderStyle: "solid",
+  borderWidth: "0.1rem",
+
+  minWidth: "10rem",
+});
+
 export const styleItem = style({
   margin: "0.5rem",
 });
