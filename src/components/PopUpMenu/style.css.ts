@@ -17,8 +17,6 @@ export const styleRightMenu = style({
 export const styleSubMenu = style({
   position: "absolute",
 
-  left: "100%",
-
   backgroundColor: "white",
   borderColor: "gray",
   borderStyle: "solid",

@@ -1,19 +1,11 @@
-import { createSignal, For, JSXElement, Show } from "solid-js";
-import type { AudioInfo } from "~/audio/AudioInfo";
+import { For, JSXElement, Show } from "solid-js";
 
-import { IconDotInfo } from "~/components/Icon";
-import { AudioID, getAudio } from "~/hooks/createAudios";
-import { playlists, addAudio } from "~/hooks/createPlaylists";
-import {
-  Menu,
-  MenuItem,
-  MenuProvider,
-  MenuSeparator,
-  usePopMenu,
-  SubMenu,
-} from "../PopUpMenu";
+import { getAudio } from "~/hooks/createAudios";
+import { MenuProvider } from "~/components/PopUpMenu";
 
-import { sList, sItem, sHead, sDot, sItemArtist, sBody } from "./style.css";
+import { AudioListItem } from "./AudioListItem";
+import { AudioListMenu } from "./AudioListMenu";
+import { sList, sHead, sItemArtist, sBody } from "./style.css";
 
 export type AudioListProps = {
   audios: readonly string[];
@@ -55,63 +47,5 @@ export const AudioList = (props: AudioListProps) => {
         </For>
       </tbody>
     </table>
-  );
-};
-
-type AudioListItemProps = {
-  audio: AudioInfo | undefined;
-  play: () => void;
-};
-
-const AudioListItem = (props: AudioListItemProps) => {
-  const [selected, setSelected] = createSignal(false);
-  const popMenu = usePopMenu();
-
-  return (
-    <tr
-      classList={{
-        [sItem]: true,
-        selected: selected(),
-      }}>
-      <td onClick={() => setSelected(true)} onDblClick={() => props.play()}>
-        {props.audio?.title}
-      </td>
-      <td
-        class={sItemArtist}
-        onClick={() => setSelected(true)}
-        onDblClick={() => props.play()}>
-        {props.audio?.artists.join()}
-      </td>
-      <td class={sDot}>
-        <button onClick={popMenu}>
-          <IconDotInfo />
-        </button>
-      </td>
-    </tr>
-  );
-};
-
-type AudioListMenuProps = {
-  item: AudioID;
-  play: () => void;
-  extendMenu: JSXElement;
-};
-
-const AudioListMenu = (props: AudioListMenuProps) => {
-  return (
-    <Menu>
-      <MenuItem onClick={() => props.play()}>play</MenuItem>
-      <MenuSeparator />
-      <SubMenu label="add to playlist">
-        <For each={Array.from(playlists())}>
-          {playlist => (
-            <MenuItem onClick={() => addAudio(playlist[0], props.item)}>
-              {playlist[0]}
-            </MenuItem>
-          )}
-        </For>
-      </SubMenu>
-      {props.extendMenu}
-    </Menu>
   );
 };

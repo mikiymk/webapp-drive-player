@@ -1,28 +1,22 @@
-import { createSignal, JSXElement, useContext } from "solid-js";
+import { createSignal, JSXElement, Show } from "solid-js";
 
-import { MenuContext } from "./MenuContext";
-import { styleSubMenu } from "./style.css";
+import { styleItem, styleSubMenu } from "./style.css";
 
-export type MenuProps = {
+export type SubMenuProps = {
   label: string;
   children: JSXElement;
 };
 
 /** show on right click */
-export const SubMenu = (props: MenuProps) => {
+export const SubMenu = (props: SubMenuProps) => {
   const [visible, setVisible] = createSignal(false);
-  const { visible: pvisible } = useContext(MenuContext);
 
   return (
-    <div>
-      <div onClick={() => setVisible(v => !v)}>{props.label}</div>
-      <div
-        class={styleSubMenu}
-        style={{
-          visibility: pvisible() && visible() ? "visible" : "hidden",
-        }}>
-        {props.children}
-      </div>
+    <div class={styleItem}>
+      <button onClick={() => setVisible(v => !v)}>{props.label}</button>
+      <Show when={visible()}>
+        <div class={styleSubMenu}>{props.children}</div>
+      </Show>
     </div>
   );
 };

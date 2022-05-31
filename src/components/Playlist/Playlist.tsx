@@ -1,8 +1,8 @@
 import { playlists, removeAudio } from "~/hooks/createPlaylists";
 import { AudioList } from "~/components/AudioList";
+import { MenuItem } from "~/components/PopUpMenu";
 
 import { stylePlaylist } from "./style.css";
-import { MenuItem } from "../PopUpMenu";
 
 export type PlaylistProps = {
   name: string;
