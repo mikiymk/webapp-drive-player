@@ -30,5 +30,8 @@ export const styleItem = style({
 });
 
 export const styleHorizon = style({
+  height: 0,
+  width: "100%",
+  borderBottom: "solid black 1px",
   margin: "0.2rem",
 });

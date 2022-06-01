@@ -4,8 +4,9 @@ import { IconClose } from "~/components/Icon";
 import { createRef } from "~/hooks/createRef";
 
 import { MenuContext } from "./MenuContext";
-import { styleRightMenu } from "./style.css";
 import { getMenuSize } from "./getMenuSize";
+import { styleRightMenu } from "./style.css";
+import { MenuSeparator } from "./MenuSeparator";
 
 export type MenuProps = {
   children: JSXElement;
@@ -36,7 +37,7 @@ export const Menu = (props: MenuProps) => {
         <button onclick={() => closeMenu()}>
           <IconClose />
         </button>
-        <hr></hr>
+        <MenuSeparator />
         {props.children}
       </div>
     </Show>
