@@ -1,45 +1,19 @@
-import { createSignal, For, mapArray, useContext } from "solid-js";
+import { For, JSXElement, Show } from "solid-js";
 
-import { IconDotInfo } from "~/components/Icon";
-import { Context } from "~/components/RightMenu";
-import type Item from "~/components/RightMenu/Item";
 import { getAudio } from "~/hooks/createAudios";
-import { playlists, addAudio } from "~/hooks/createPlaylists";
+import { MenuProvider } from "~/components/PopUpMenu";
 
-import { sList, sItem, sHead, sDot, sItemArtist, sBody } from "./style.css";
+import { AudioListItem } from "./AudioListItem";
+import { AudioListMenu } from "./AudioListMenu";
+import { sList, sHead, sItemArtist, sBody } from "./style.css";
 
 export type AudioListProps = {
   audios: readonly string[];
   play: (idList: readonly string[], index: number) => void;
-  extendMenu?: (item: string, index: number) => Item[];
+  extendMenu?: (props: { item: string; index: number }) => JSXElement;
 };
 
 export const AudioList = (props: AudioListProps) => {
-  const rightMenu = useContext(Context);
-  const [selected, setSelected] = createSignal<number[]>([]);
-
-  const onClick = (item: string, index: number): Item[] => [
-    {
-      type: "button",
-      label: "play",
-      onClick: () => props.play(props.audios, index),
-    },
-    { type: "hr" },
-    {
-      type: "list",
-      label: "add to playlist",
-      list: mapArray(
-        () => Array.from(playlists()),
-        playlist => ({
-          type: "button" as const,
-          label: playlist[0],
-          onClick: () => addAudio(playlist[0], item),
-        })
-      )(),
-    },
-    ...(props.extendMenu?.(item, index) ?? []),
-  ];
-
   return (
     <table class={sList}>
       <thead class={sHead}>
@@ -52,29 +26,23 @@ export const AudioList = (props: AudioListProps) => {
       <tbody class={sBody}>
         <For each={props.audios}>
           {(item, index) => (
-            <tr
-              classList={{
-                [sItem]: true,
-                selected: selected().includes(index()),
-              }}>
-              <td
-                onClick={() => setSelected([index()])}
-                onDblClick={() => props.play(props.audios, index())}>
-                {getAudio(item)?.title}
-              </td>
-              <td
-                class={sItemArtist}
-                onClick={() => setSelected([index()])}
-                onDblClick={() => props.play(props.audios, index())}>
-                {getAudio(item)?.artists.join()}
-              </td>
-              <td class={sDot}>
-                <button
-                  onClick={event => rightMenu(onClick(item, index()), event)}>
-                  <IconDotInfo />
-                </button>
-              </td>
-            </tr>
+            <MenuProvider
+              menu={
+                <AudioListMenu
+                  item={item}
+                  play={() => props.play(props.audios, index())}
+                  extendMenu={
+                    <Show when={props.extendMenu}>
+                      {ExtendMenu => <ExtendMenu item={item} index={index()} />}
+                    </Show>
+                  }
+                />
+              }>
+              <AudioListItem
+                audio={getAudio(item)}
+                play={() => props.play(props.audios, index())}
+              />
+            </MenuProvider>
           )}
         </For>
       </tbody>

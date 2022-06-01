@@ -1,5 +1,6 @@
 import { playlists, removeAudio } from "~/hooks/createPlaylists";
 import { AudioList } from "~/components/AudioList";
+import { MenuItem } from "~/components/PopUpMenu";
 
 import { stylePlaylist } from "./style.css";
 
@@ -23,13 +24,11 @@ export const Playlist = (props: PlaylistProps) => {
       <AudioList
         audios={playlists().get(props.name) ?? []}
         play={props.playsList}
-        extendMenu={(_, index) => [
-          {
-            type: "button",
-            label: "remove from playlist",
-            onClick: () => removeAudio(props.name, index),
-          },
-        ]}
+        extendMenu={innerProps => (
+          <MenuItem onClick={() => removeAudio(props.name, innerProps.index)}>
+            remove from playlist
+          </MenuItem>
+        )}
       />
     </div>
   );

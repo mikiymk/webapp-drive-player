@@ -13,7 +13,7 @@ import { Library } from "~/components/MusicLibrary";
 import { Menu, MenuItem } from "~/components/Menu";
 import { Playing } from "~/components/Playing";
 import { Playlists } from "~/components/Playlist";
-import { RightMenuProvider } from "~/components/RightMenu";
+import { ExclusiveMenuRoot } from "~/components/PopUpMenu";
 import { Settings } from "~/components/Settings";
 import type { GoogleFile } from "~/file";
 import useMusicPlayer from "~/hooks/useMusicPlayer";
@@ -42,7 +42,7 @@ export const MusicPlayer = () => {
   });
 
   return (
-    <RightMenuProvider>
+    <ExclusiveMenuRoot>
       <div class={stylePlayer}>
         <Menu defaultKey="playing">
           <MenuItem key="playing" icon={<IconPlay />} label="Now Playing">
@@ -81,6 +81,6 @@ export const MusicPlayer = () => {
           setShuffle={shuffle => player?.setShuffle(shuffle)}
         />
       </div>
-    </RightMenuProvider>
+    </ExclusiveMenuRoot>
   );
 };
