@@ -20,7 +20,8 @@ export const AudioListItem = (props: AudioListItemProps) => {
       classList={{
         [sItem]: true,
         selected: selected(),
-      }}>
+      }}
+      oncontextmenu={popMenu}>
       <td onClick={() => setSelected(true)} onDblClick={() => props.play()}>
         {props.audio?.title}
       </td>

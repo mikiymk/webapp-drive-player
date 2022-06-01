@@ -34,6 +34,7 @@ export const MenuProvider = (props: MenuProviderProps) => {
   });
 
   const popMenu = (event: MouseEvent) => {
+    event.preventDefault();
     close();
     setVisible(true);
     setTop(event.clientY);

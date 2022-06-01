@@ -8,9 +8,9 @@ export type PlaylistListItemProps = {
 export const PlaylistListItem = (props: PlaylistListItemProps) => {
   const popMenu = usePopMenu();
   return (
-    <li>
+    <li oncontextmenu={popMenu}>
       {props.name}
-      <button onClick={event => popMenu(event)}>
+      <button onClick={popMenu}>
         <IconDotInfo />
       </button>
     </li>
