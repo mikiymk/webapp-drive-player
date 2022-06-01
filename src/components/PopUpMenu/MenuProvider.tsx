@@ -1,5 +1,12 @@
-import { createSignal, JSXElement } from "solid-js";
+import {
+  createSignal,
+  JSXElement,
+  onCleanup,
+  onMount,
+  useContext,
+} from "solid-js";
 
+import { ExclusiveContext } from "./ExclusiveContext";
 import { MenuContext } from "./MenuContext";
 
 export type MenuProviderProps = {
@@ -12,15 +19,25 @@ export const MenuProvider = (props: MenuProviderProps) => {
   const [top, setTop] = createSignal(0);
   const [left, setLeft] = createSignal(0);
 
-  const popMenu = (event: MouseEvent) => {
-    console.log("pop");
-    setVisible(true);
-    setTop(event.clientY);
-    setLeft(event.clientX);
-  };
+  const { apply, remove, close } = useContext(ExclusiveContext);
 
   const closeMenu = () => {
     setVisible(false);
+  };
+
+  onMount(() => {
+    apply(closeMenu);
+  });
+
+  onCleanup(() => {
+    remove(closeMenu);
+  });
+
+  const popMenu = (event: MouseEvent) => {
+    close();
+    setVisible(true);
+    setTop(event.clientY);
+    setLeft(event.clientX);
   };
 
   return (
