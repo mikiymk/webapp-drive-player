@@ -7,21 +7,19 @@ export const styleRightMenu = style({
   left: 0,
 
   backgroundColor: "white",
-  borderColor: "gray",
-  borderStyle: "solid",
-  borderWidth: "0.1rem",
 
   minWidth: "10rem",
 });
 
 export const styleSubMenu = style({
   position: "absolute",
+  left: "0",
 
   backgroundColor: "white",
-  borderColor: "gray",
-  borderStyle: "solid",
-  borderWidth: "0.1rem",
+  border: "solid black 1px",
 
+  overflow: "hidden scroll",
+  textOverflow: "ellipsis",
   minWidth: "10rem",
 });
 
