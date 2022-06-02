@@ -1,11 +1,12 @@
 import { createSignal, Match, Switch } from "solid-js";
+
 import {
   IconDone,
   IconError,
   IconLoading,
   IconUpload,
 } from "~/components/Icon";
-import { uploadLibraryData } from "~/file";
+import { sendLibrary } from "~/google/fetchLibrary";
 import { audios } from "~/hooks/createAudios";
 import { accessToken } from "~/hooks/useSignIn";
 
@@ -20,7 +21,7 @@ export const Upload = () => {
     setStatus("loading");
     const token = accessToken();
     if (token === undefined) return;
-    const response = await uploadLibraryData(token, audios());
+    const response = await sendLibrary(token, Array.from(audios().entries()));
     setStatus(response.status === 200 ? "done" : "error");
   };
 

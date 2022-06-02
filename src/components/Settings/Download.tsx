@@ -1,6 +1,5 @@
 import { createSignal, Match, Switch } from "solid-js";
 
-import { downloadLibraryData } from "~/file";
 import { addAudios } from "~/hooks/createAudios";
 import {
   IconLoading,
@@ -11,6 +10,7 @@ import {
 
 import { styleDownload } from "./style.css";
 import { accessToken } from "~/hooks/useSignIn";
+import { getLibrary } from "~/google/fetchLibrary";
 
 /**
  * now playing audio info view
@@ -23,8 +23,8 @@ export const Download = () => {
     const token = accessToken();
     if (token === undefined) return;
 
-    const data = await downloadLibraryData(token);
-    if (data !== undefined) {
+    const data = await getLibrary(token);
+    if (data !== null) {
       addAudios(data);
       setStatus("done");
     } else {
