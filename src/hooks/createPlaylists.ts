@@ -9,6 +9,10 @@ export type PlaylistEntries = readonly [PlaylistName, readonly AudioID[]][];
 const [playlists, setPlaylists] = createSignal<PlaylistMap>(new Map());
 export { playlists };
 
+export const addPlaylists = (playlists: PlaylistEntries) => {
+  setPlaylists(value => new Map([...value, ...playlists]));
+};
+
 export const makePlaylist = (name: PlaylistName) => {
   setPlaylists(value => {
     if (value.has(name)) return value;
