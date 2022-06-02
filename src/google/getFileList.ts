@@ -1,24 +1,22 @@
 import { fetchGet } from "./fetchGet";
 import { generateUrl } from "./generateUrl";
+import type { GoogleFile, GoogleFileList } from "./type";
 
 const GET_PAGE_SIZE = 100;
-
-type GoogleFileList = {
-  files: { id: string; name: string }[];
-  nextPageToken?: string;
-};
 
 /**
  * Google Drive からファイルリストを入手
  * @param query 検索クエリ文字列 https://developers.google.com/drive/api/v3/ref-search-terms
  * @param token ページトークン
  */
-export const getList = async (
+const getFileListPart = async (
   accessToken: string,
   query: string,
-  token?: string
+  appData: boolean,
+  token?: string | undefined
 ): Promise<GoogleFileList> => {
-  const url = generateUrl("https://www.googleapis.com/drive/v3/files", [
+  const url: string = generateUrl("https://www.googleapis.com/drive/v3/files", [
+    ["spaces", appData && "appDataFolder"],
     ["fields", "nextPageToken, files(id, name)"],
     ["pageSize", GET_PAGE_SIZE],
     ["pageToken", token],
@@ -26,24 +24,35 @@ export const getList = async (
     ["q", query],
   ]);
 
-  const response = await fetchGet(url, accessToken);
+  const response: Response = await fetchGet(url, accessToken);
   return await response.json();
 };
 
-export const getAppDataList = async (
+/** ファイルリストをまとめて全ファイルリストを入手 */
+export const getFileList = async (
   accessToken: string,
   query: string,
-  token?: string
-): Promise<GoogleFileList> => {
-  const url = generateUrl("https://www.googleapis.com/drive/v3/files", [
-    ["spaces", "appDataFolder"],
-    ["fields", "nextPageToken, files(id, name)"],
-    ["pageSize", GET_PAGE_SIZE],
-    ["pageToken", token],
-    ["orderBy", "name"],
-    ["q", query],
-  ]);
+  appData: boolean
+) => {
+  let nextPageToken: string | undefined = undefined;
+  let allFiles: GoogleFile[] = [];
 
-  const response = await fetchGet(url, accessToken);
-  return await response.json();
+  do {
+    const files: GoogleFileList = await getFileListPart(
+      accessToken,
+      query,
+      appData,
+      nextPageToken
+    );
+
+    allFiles = allFiles.concat(files.files);
+    nextPageToken = files.nextPageToken;
+  } while (nextPageToken);
+
+  return allFiles;
+};
+
+export const getFileID = async (token: string, name: string, app: boolean) => {
+  const files = await getFileListPart(token, `name = '${name}'`, app);
+  return files?.files[0]?.id;
 };

@@ -14,31 +14,33 @@ ${jsonData}
 --${boundary}--`;
 };
 
-export const uploadAppDataJson = async (
+const ramdomString = () => Math.random().toString(16).substring(2);
+
+export const uploadAppData = async (
   accessToken: string,
   fileId: string,
   jsonData: string
 ) => {
   const url = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`;
 
-  const boundary = "_boundary" + Math.random().toString(16).substring(2);
-  const multipartBody = getMultipartBody(jsonData, {}, boundary);
+  const boundary = "_boundary" + ramdomString();
+  const body = getMultipartBody(jsonData, {}, boundary);
 
   const response = await fetch(url, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "multipart/related; boundary=" + boundary,
-      "Content-Length": multipartBody.length.toString(),
+      "Content-Length": body.length.toString(),
     },
-    body: multipartBody,
+    body,
   });
 
-  console.log("upload", multipartBody, response);
+  console.log("upload", body, response);
   return response;
 };
 
-export const createAppDataJson = async (
+export const createAppData = async (
   accessToken: string,
   fileName: string,
   jsonData: string
@@ -46,8 +48,8 @@ export const createAppDataJson = async (
   const url =
     "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
 
-  const boundary = "_boundary" + Math.random().toString(16).substring(2);
-  const multipartBody = getMultipartBody(
+  const boundary = "_boundary" + ramdomString();
+  const body = getMultipartBody(
     jsonData,
     { name: fileName, parents: ["appDataFolder"] },
     boundary
@@ -58,11 +60,11 @@ export const createAppDataJson = async (
     headers: {
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "multipart/related; boundary=" + boundary,
-      "Content-Length": multipartBody.length.toString(),
+      "Content-Length": body.length.toString(),
     },
-    body: multipartBody,
+    body,
   });
 
-  console.log("create", multipartBody, response);
+  console.log("create", body, response);
   return response;
 };

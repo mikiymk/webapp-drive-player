@@ -3,8 +3,8 @@ import { createSignal } from "solid-js";
 import type { AudioID } from "./createAudios";
 
 export type PlaylistName = string;
-export type PlaylistMap = Map<PlaylistName, AudioID[]>;
-export type PlaylistEntries = [PlaylistName, AudioID[]][];
+export type PlaylistMap = Map<PlaylistName, readonly AudioID[]>;
+export type PlaylistEntries = readonly [PlaylistName, readonly AudioID[]][];
 
 const [playlists, setPlaylists] = createSignal<PlaylistMap>(new Map());
 export { playlists };

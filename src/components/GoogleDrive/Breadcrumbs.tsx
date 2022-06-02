@@ -1,6 +1,6 @@
 import { For, Show } from "solid-js";
 
-import type { GoogleFile } from "~/file";
+import type { GoogleFile } from "~/google/type";
 
 import { styleBread, styleBreadcrumbs } from "./style.css";
 
