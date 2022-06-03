@@ -32,11 +32,11 @@ const useMusicPlayer = () => {
 
   createEffect(() => {
     manager.onChangeMusic = id => {
-      const info = getAudio(id);
-      if (info === undefined) {
-        setInfo(AudioInfo.getEmptyInfo());
+      let info;
+      if (id !== undefined && (info = getAudio(id)) !== undefined) {
+        setInfo(AudioInfo.copyInfo(info));
       } else {
-        setInfo(AudioInfo.copyInfo(info as AudioInfo));
+        setInfo(AudioInfo.getEmptyInfo());
       }
     };
   });

@@ -2,7 +2,8 @@ import { downloadFile } from "~/google/downloadFile";
 
 import { AudioInfo } from "./AudioInfo";
 
-const downloadeds: {
+const CACHE_LENGTH = 5;
+const caches: {
   id: string;
   token: string;
   data: Promise<Blob | null>;
@@ -16,15 +17,16 @@ const downloadeds: {
  * @returns
  */
 export const downloadAudio = (
-  id: string,
-  token: string
-): { data: Promise<Blob | null>; info: Promise<AudioInfo> } => {
-  const cached = downloadeds.find(
-    cached => id === cached.id && token === cached.token
-  );
+  id: string | undefined,
+  token: string | undefined
+): [Promise<Blob | null>, Promise<AudioInfo>] => {
+  const cached = caches.find(cache => id === cache.id && token === cache.token);
   if (cached) {
     const { data, info } = cached;
-    return { data, info };
+    return [data, info];
+  }
+  if (id === undefined || token === undefined) {
+    return [Promise.resolve(null), Promise.resolve(AudioInfo.getEmptyInfo())];
   }
 
   const data = downloadAudioPromise(id, token);
@@ -35,10 +37,12 @@ export const downloadAudio = (
     return AudioInfo.getInfo(data.slice());
   });
 
-  downloadeds.shift();
-  downloadeds.push({ id, token, data, info });
+  caches.push({ id, token, data, info });
+  if (caches.length > CACHE_LENGTH) {
+    caches.shift();
+  }
 
-  return { data, info };
+  return [data, info];
 };
 
 const downloadAudioPromise = async (
