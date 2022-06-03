@@ -1,9 +1,9 @@
 import { createEffect, createSignal, onMount } from "solid-js";
 
+import { AudioElementPlayer } from "~/audio/AudioElementPlayer";
+import { AudioInfo } from "~/audio/AudioInfo";
 import { AudioManager } from "~/audio/AudioManager";
 import { Repeat } from "~/audio/Repeat";
-import { AudioInfo } from "~/audio/AudioInfo";
-import { AudioElementPlayer } from "~/audio/AudioElementPlayer";
 
 import { getAudio, setAudioInfo } from "./createAudios";
 import { accessToken } from "./useSignIn";

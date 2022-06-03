@@ -1,5 +1,5 @@
-import { CLIENT_ID, SCOPES } from "./key";
 import { TokenClient } from "./TokenClient";
+import { CLIENT_ID, SCOPES } from "./key";
 
 export const initClient = () => {
   return new TokenClient({

@@ -1,10 +1,12 @@
 import { createSignal } from "solid-js";
 
-import type { AudioInfo } from "~/audio/AudioInfo";
 import { IconDotInfo } from "~/components/Icon";
+
 import { usePopMenu } from "~/components/PopUpMenu";
 
-import { sItem, sDot, sItemArtist } from "./style.css";
+import { sDot, sItem, sItemArtist } from "./style.css";
+
+import type { AudioInfo } from "~/audio/AudioInfo";
 
 export type AudioListItemProps = {
   audio: AudioInfo | undefined;

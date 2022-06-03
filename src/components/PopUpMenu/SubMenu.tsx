@@ -1,7 +1,10 @@
-import { createEffect, createSignal, JSXElement, Show } from "solid-js";
+import { Show, createEffect, createSignal } from "solid-js";
+
 import { createRef } from "~/hooks/createRef";
 
 import { styleItem, styleSubMenu } from "./style.css";
+
+import type { JSXElement } from "solid-js";
 
 export type SubMenuProps = {
   label: string;

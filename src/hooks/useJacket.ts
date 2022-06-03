@@ -1,4 +1,6 @@
-import { Accessor, batch, createEffect, createSignal } from "solid-js";
+import { batch, createEffect, createSignal } from "solid-js";
+
+import type { Accessor } from "solid-js";
 
 const useJacket = (picture: Accessor<ArrayBuffer | undefined>) => {
   const [jacket, setJacket] = createSignal<string>();

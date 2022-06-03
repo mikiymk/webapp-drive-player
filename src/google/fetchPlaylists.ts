@@ -1,8 +1,8 @@
-import type { PlaylistEntries } from "~/hooks/createPlaylists";
-
 import { downloadFile } from "./downloadFile";
 import { getFileID } from "./getFileList";
-import { uploadAppData, createAppData } from "./uploadFile";
+import { createAppData, uploadAppData } from "./uploadFile";
+
+import type { PlaylistEntries } from "~/hooks/createPlaylists";
 
 const FILE_NAME = "playlists.json";
 

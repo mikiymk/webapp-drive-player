@@ -1,4 +1,6 @@
-import { createContext, Accessor } from "solid-js";
+import { createContext } from "solid-js";
+
+import type { Accessor } from "solid-js";
 
 export type MenuContext = {
   top: Accessor<number>;

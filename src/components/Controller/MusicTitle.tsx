@@ -1,7 +1,8 @@
-import type { AudioInfo } from "~/audio/AudioInfo";
 import { Marquee } from "~/components/Marquee";
 
 import { styleArtist, styleTitle, styleTitleView } from "./style.css";
+
+import type { AudioInfo } from "~/audio/AudioInfo";
 
 export type MusicTitleProps = {
   info: AudioInfo;

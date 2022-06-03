@@ -1,8 +1,10 @@
-import { createSignal, JSXElement, Match, Switch } from "solid-js";
+import { Match, Switch, createSignal } from "solid-js";
 
-import { IconLoading, IconDone, IconError } from "~/components/Icon";
+import { IconDone, IconError, IconLoading } from "~/components/Icon";
 
 import { styleDownload } from "./style.css";
+
+import type { JSXElement } from "solid-js";
 
 type Status = "loading" | "done" | "error";
 

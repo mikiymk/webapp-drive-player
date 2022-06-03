@@ -1,4 +1,6 @@
-import { Accessor, createEffect, createSignal, JSX } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
+
+import type { Accessor, JSX } from "solid-js";
 
 export const useSeekTime = (
   time: Accessor<number>,

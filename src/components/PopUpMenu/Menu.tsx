@@ -1,12 +1,14 @@
-import { JSXElement, Show, useContext } from "solid-js";
+import { Show, useContext } from "solid-js";
 
 import { IconClose } from "~/components/Icon";
 import { createRef } from "~/hooks/createRef";
 
 import { MenuContext } from "./MenuContext";
+import { MenuSeparator } from "./MenuSeparator";
 import { getMenuSize } from "./getMenuSize";
 import { styleRightMenu } from "./style.css";
-import { MenuSeparator } from "./MenuSeparator";
+
+import type { JSXElement } from "solid-js";
 
 export type MenuProps = {
   children: JSXElement;

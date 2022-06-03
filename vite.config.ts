@@ -1,11 +1,13 @@
-import { defineConfig } from "vite";
-import { UserConfig } from "vitest/config";
 import path from "path";
+
 import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
-import solidPlugin from "vite-plugin-solid";
-import eslintPlugin from "vite-plugin-eslint";
 import { visualizer } from "rollup-plugin-visualizer";
+import { defineConfig } from "vite";
+import eslintPlugin from "vite-plugin-eslint";
 import { VitePWA } from "vite-plugin-pwa";
+import solidPlugin from "vite-plugin-solid";
+
+import type { UserConfig } from "vitest/config";
 
 const config = defineConfig(({ mode, command }) => {
   const config: UserConfig = {
@@ -15,15 +17,12 @@ const config = defineConfig(({ mode, command }) => {
       VitePWA({
         includeAssets: [],
         manifest: {
+          /* eslint-disable camelcase */
           name: "Iron Ragdoll",
-          // eslint-disable-next-line camelcase
           short_name: "IronRagdoll",
-          // eslint-disable-next-line camelcase
           start_url: "/",
           display: "standalone",
-          // eslint-disable-next-line camelcase
           theme_color: "#888",
-          // eslint-disable-next-line camelcase
           background_color: "#888",
           description: "Web App Audio Player with Google Drive",
           categories: ["music"],
@@ -37,6 +36,7 @@ const config = defineConfig(({ mode, command }) => {
             },
             { src: "/icon.png", type: "image/png", sizes: "144x144" },
           ],
+          /* eslint-enable camelcase */
         },
         workbox: {},
       }),

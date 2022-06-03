@@ -1,13 +1,9 @@
-import {
-  createSignal,
-  JSXElement,
-  onCleanup,
-  onMount,
-  useContext,
-} from "solid-js";
+import { createSignal, onCleanup, onMount, useContext } from "solid-js";
 
 import { ExclusiveContext } from "./ExclusiveContext";
 import { MenuContext } from "./MenuContext";
+
+import type { JSXElement } from "solid-js";
 
 export type MenuProviderProps = {
   menu: JSXElement;

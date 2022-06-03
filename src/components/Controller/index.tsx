@@ -1,7 +1,5 @@
 import { Match, Show, Switch } from "solid-js";
 
-import type { Repeat } from "~/audio/Repeat";
-import type { AudioInfo } from "~/audio/AudioInfo";
 import {
   IconPause,
   IconPlay,
@@ -14,10 +12,13 @@ import {
   IconSkipPrev,
 } from "~/components/Icon";
 
-import { MusicTitle } from "./MusicTitle";
 import { MusicTime } from "./MusicTime";
+import { MusicTitle } from "./MusicTitle";
 import { SeekBar } from "./SeekBar";
 import { styleButton, styleController } from "./style.css";
+
+import type { AudioInfo } from "~/audio/AudioInfo";
+import type { Repeat } from "~/audio/Repeat";
 
 export type ControllerProps = {
   info: AudioInfo;

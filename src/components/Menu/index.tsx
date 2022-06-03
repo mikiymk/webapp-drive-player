@@ -1,17 +1,17 @@
 import {
-  Accessor,
+  For,
+  Show,
   createContext,
   createRenderEffect,
   createSignal,
-  For,
-  JSXElement,
-  Show,
   useContext,
 } from "solid-js";
 
 import { Authorize } from "./Authorize";
 import { NavItem } from "./NavItem";
 import { styleContent, styleNav } from "./style.css";
+
+import type { Accessor, JSXElement } from "solid-js";
 
 type MenuItem = {
   key: string;

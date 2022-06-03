@@ -1,8 +1,10 @@
-import { For, JSXElement } from "solid-js";
+import { For } from "solid-js";
 
-import type { AudioID } from "~/hooks/createAudios";
-import { playlists, addAudio } from "~/hooks/createPlaylists";
 import { Menu, MenuItem, MenuSeparator, SubMenu } from "~/components/PopUpMenu";
+import { addAudio, playlists } from "~/hooks/createPlaylists";
+
+import type { JSXElement } from "solid-js";
+import type { AudioID } from "~/hooks/createAudios";
 
 export type AudioListMenuProps = {
   item: AudioID;
