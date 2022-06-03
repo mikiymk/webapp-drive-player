@@ -19,8 +19,10 @@ export class ShuffleArray implements Iterable<string> {
     return this._array.length;
   }
 
-  get(index: number): string {
-    return this._array[this._indexArray[index] ?? 0] ?? "";
+  get(index: number): string | undefined {
+    const arrayIndex = this._indexArray[index];
+    if (arrayIndex === undefined) return undefined;
+    return this._array[arrayIndex];
   }
 
   [Symbol.iterator](): ShuffleIterator {
@@ -38,15 +40,17 @@ class ShuffleIterator implements Iterator<string, undefined> {
   }
 
   next(): IteratorResult<string, undefined> {
-    if (this._index < this._array.length) {
+    const value = this._array.get(this._index++);
+
+    if (value !== undefined) {
       return {
         done: false,
-        value: this._array.get(this._index++),
+        value,
       };
     } else {
       return {
         done: true,
-        value: undefined,
+        value,
       };
     }
   }
@@ -54,7 +58,7 @@ class ShuffleIterator implements Iterator<string, undefined> {
 
 /** 0 <= n < length の配列を作る */
 const makeArray = (length: number): number[] => {
-  return Array.from({ length }).map((_, i) => i);
+  return Array.from({ length }, (_, i) => i);
 };
 
 /** 0 <= n < limit の整数乱数 */
