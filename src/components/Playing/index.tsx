@@ -1,10 +1,11 @@
 import { Show } from "solid-js";
 
-import type { AudioInfo } from "~/audio/AudioInfo";
 import useJacket from "~/hooks/useJacket";
 
 import { NoImage } from "./NoImage";
 import { styleImage, styleInfo, stylePlaying } from "./style.css";
+
+import type { AudioInfo } from "~/audio/AudioInfo";
 
 export type PlayingProps = {
   info: AudioInfo;

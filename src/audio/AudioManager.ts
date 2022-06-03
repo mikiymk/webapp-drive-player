@@ -1,6 +1,7 @@
+import { BufferLoader } from "./BufferLoader";
 import { Repeat } from "./Repeat";
 import { ShuffleArray } from "./ShuffleArray";
-import { BufferLoader } from "./BufferLoader";
+
 import type { AudioInfo } from "./AudioInfo";
 import type { AudioPlayer } from "./AudioPlayer";
 

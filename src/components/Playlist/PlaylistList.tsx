@@ -1,7 +1,7 @@
 import { For } from "solid-js";
 
 import { MenuProvider } from "~/components/PopUpMenu";
-import { playlists, makePlaylist } from "~/hooks/createPlaylists";
+import { makePlaylist, playlists } from "~/hooks/createPlaylists";
 
 import { MakePlaylistButton } from "./MakePlaylistButton";
 import { PlaylistListItem } from "./PlaylistListItem";

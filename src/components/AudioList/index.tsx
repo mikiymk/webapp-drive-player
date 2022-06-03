@@ -1,11 +1,14 @@
-import { For, JSXElement, Show } from "solid-js";
+import { For, Show } from "solid-js";
+
+import { MenuProvider } from "~/components/PopUpMenu";
 
 import { getAudio } from "~/hooks/createAudios";
-import { MenuProvider } from "~/components/PopUpMenu";
 
 import { AudioListItem } from "./AudioListItem";
 import { AudioListMenu } from "./AudioListMenu";
-import { sList, sHead, sItemArtist, sBody } from "./style.css";
+import { sBody, sHead, sItemArtist, sList } from "./style.css";
+
+import type { JSXElement } from "solid-js";
 
 export type AudioListProps = {
   audios: readonly string[];

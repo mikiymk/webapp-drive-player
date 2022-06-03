@@ -1,7 +1,9 @@
-import { JSX, useContext } from "solid-js";
+import { useContext } from "solid-js";
 
 import { MenuContext } from "./MenuContext";
 import { styleItem } from "./style.css";
+
+import type { JSX } from "solid-js";
 
 export type MenuItemProps = {
   onClick: JSX.EventHandler<HTMLButtonElement, MouseEvent>;

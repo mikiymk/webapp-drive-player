@@ -1,8 +1,4 @@
-const getMultipartBody = (
-  jsonData: string,
-  metadata: object,
-  boundary: string
-) => {
+const getMultipartBody = (data: string, metadata: object, boundary: string) => {
   return `--${boundary}
 Content-Type: application/json; charset=UTF-8
 
@@ -10,45 +6,47 @@ ${JSON.stringify(metadata)}
 --${boundary}
 Content-Type: application/json; charset=UTF-8
 
-${jsonData}
+${data}
 --${boundary}--`;
 };
 
-export const uploadAppDataJson = async (
-  accessToken: string,
+const ramdomString = () => Math.random().toString(16).substring(2);
+
+export const uploadAppData = async (
+  token: string,
   fileId: string,
-  jsonData: string
+  data: string
 ) => {
   const url = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`;
 
-  const boundary = "_boundary" + Math.random().toString(16).substring(2);
-  const multipartBody = getMultipartBody(jsonData, {}, boundary);
+  const boundary = "_boundary" + ramdomString();
+  const body = getMultipartBody(data, {}, boundary);
 
   const response = await fetch(url, {
     method: "PATCH",
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${token}`,
       "Content-Type": "multipart/related; boundary=" + boundary,
-      "Content-Length": multipartBody.length.toString(),
+      "Content-Length": body.length.toString(),
     },
-    body: multipartBody,
+    body,
   });
 
-  console.log("upload", multipartBody, response);
+  console.log("upload", body, response);
   return response;
 };
 
-export const createAppDataJson = async (
-  accessToken: string,
+export const createAppData = async (
+  token: string,
   fileName: string,
-  jsonData: string
+  data: string
 ) => {
   const url =
     "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
 
-  const boundary = "_boundary" + Math.random().toString(16).substring(2);
-  const multipartBody = getMultipartBody(
-    jsonData,
+  const boundary = "_boundary" + ramdomString();
+  const body = getMultipartBody(
+    data,
     { name: fileName, parents: ["appDataFolder"] },
     boundary
   );
@@ -56,13 +54,13 @@ export const createAppDataJson = async (
   const response = await fetch(url, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${token}`,
       "Content-Type": "multipart/related; boundary=" + boundary,
-      "Content-Length": multipartBody.length.toString(),
+      "Content-Length": body.length.toString(),
     },
-    body: multipartBody,
+    body,
   });
 
-  console.log("create", multipartBody, response);
+  console.log("create", body, response);
   return response;
 };

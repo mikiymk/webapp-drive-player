@@ -1,11 +1,11 @@
-import type { JSXElement } from "solid-js";
-
 import {
   styleLabel,
   styleNavItem,
   styleNavItemButton,
   styleNavSelected,
 } from "./style.css";
+
+import type { JSXElement } from "solid-js";
 
 export type Props = {
   icon: JSXElement;

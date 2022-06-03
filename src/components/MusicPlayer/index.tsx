@@ -9,16 +9,18 @@ import {
   IconPlayList,
   IconSettings,
 } from "~/components/Icon";
-import { Library } from "~/components/MusicLibrary";
 import { Menu, MenuItem } from "~/components/Menu";
+import { Library } from "~/components/MusicLibrary";
 import { Playing } from "~/components/Playing";
 import { Playlists } from "~/components/Playlist";
 import { ExclusiveMenuRoot } from "~/components/PopUpMenu";
 import { Settings } from "~/components/Settings";
-import type { GoogleFile } from "~/file";
+
 import useMusicPlayer from "~/hooks/useMusicPlayer";
 
 import { stylePlayer } from "./style.css";
+
+import type { GoogleFile } from "~/google/type";
 
 export type Files = {
   [name: string]: GoogleFile;

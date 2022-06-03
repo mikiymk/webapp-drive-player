@@ -1,8 +1,10 @@
 import { createEffect, createSignal } from "solid-js";
 
-import { getAllMusics, getAllFolders } from "~/file";
-import type { GoogleFile } from "~/file";
+import { getAllFolders, getAllMusics } from "~/file";
+
 import { accessToken } from "~/hooks/useSignIn";
+
+import type { GoogleFile } from "~/google/type";
 
 export const useGDriveParents = () => {
   const [parents, setParents] = createSignal<GoogleFile[]>([

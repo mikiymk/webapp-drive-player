@@ -1,6 +1,7 @@
-import type { JSXElement } from "solid-js";
 import { render as solidRender } from "solid-js/web";
 import { vi } from "vitest";
+
+import type { JSXElement } from "solid-js";
 
 export const render = (component: () => JSXElement) => {
   const container = document.body.appendChild(document.createElement("div"));
