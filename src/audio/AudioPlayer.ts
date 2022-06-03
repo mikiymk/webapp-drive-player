@@ -4,7 +4,11 @@ export interface AudioPlayer {
   updateTime: ((time: number) => void) | undefined;
   updateDuration: ((duration: number) => void) | undefined;
 
-  setBuffer: (blob: Blob) => void;
+  /**
+   * オーディオデータを設定する。
+   * nullなら設定をとる。
+   */
+  setBuffer: (data: Blob | null) => void;
 
   setLoop(loop: boolean): void;
 

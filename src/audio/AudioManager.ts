@@ -1,4 +1,4 @@
-import { BufferLoader } from "./BufferLoader";
+import { downloadAudio } from "./AudioDownloader";
 import { Repeat } from "./Repeat";
 import { ShuffleArray } from "./ShuffleArray";
 
@@ -11,13 +11,7 @@ import type { AudioPlayer } from "./AudioPlayer";
 export class AudioManager {
   private player: AudioPlayer;
 
-  private readonly buffer = new BufferLoader((id, info) =>
-    this.loadInfo(id, info)
-  );
-  private readonly nextBuffer = new BufferLoader((id, info) =>
-    this.loadInfo(id, info)
-  );
-
+  private accessToken: string | undefined;
   /** play music file list */
   musicIds = new ShuffleArray([], false);
 
@@ -27,34 +21,40 @@ export class AudioManager {
   repeat: Repeat = Repeat.DEFAULT;
   isPaused = true;
 
-  onSetDuration: (duration: number) => void = () => {};
-  onSetCurrentTime: (currentTime: number) => void = () => {};
-  onSetPause: (isPaused: boolean) => void = () => {};
-  onSetRepeat: (repeat: Repeat) => void = () => {};
-  onSetShuffle: (shuffle: boolean) => void = () => {};
-  onLoadInfo: (id: string, info: AudioInfo) => void = () => {};
-  onChangeMusic: (id: string) => void = () => {};
+  onSetDuration?: (duration: number) => void;
+  onSetCurrentTime?: (currentTime: number) => void;
+  onSetPause?: (isPaused: boolean) => void;
+  onSetRepeat?: (repeat: Repeat) => void;
+  onSetShuffle?: (shuffle: boolean) => void;
+  onLoadInfo?: (id: string, info: AudioInfo) => void;
+  onChangeMusic?: (id: string | undefined) => void;
 
   constructor(player: AudioPlayer) {
     this.player = player;
     player.onEnd = () => this.onEnd();
-    player.changePause = pause => this.onSetPause(pause);
-    player.updateTime = time => this.onSetCurrentTime(time);
-    player.updateDuration = duration => this.onSetDuration(duration);
+    player.changePause = pause => this.onSetPause?.(pause);
+    player.updateTime = time => this.onSetCurrentTime?.(time);
+    player.updateDuration = duration => this.onSetDuration?.(duration);
   }
 
   /**
    * 今の曲の再生バッファをロード
    */
-  private async loadBuffer() {
-    return await this.buffer.load(this.musicIds.get(this.index));
+  private loadBuffer() {
+    const id = this.musicIds.get(this.index);
+    const [data, info] = downloadAudio(id, this.accessToken);
+    info.then(info => id && this.loadInfo(id, info));
+    return data;
   }
 
   /**
    * 次の曲の再生バッファをロード
    */
-  private async loadNextBuffer() {
-    return await this.nextBuffer.load(this.musicIds.get(this.nextIndex));
+  private loadNextBuffer() {
+    const id = this.musicIds.get(this.nextIndex);
+    const [data, info] = downloadAudio(id, this.accessToken);
+    info.then(info => id && this.loadInfo(id, info));
+    return data;
   }
 
   /**
@@ -63,15 +63,10 @@ export class AudioManager {
    */
   playToNext() {
     this.stop();
+
     this.index = this.nextIndex;
-    if (this.nextBuffer.isLoaded) {
-      this.buffer.copyFrom(this.nextBuffer);
-      this.setBuffer();
-      this.loadNextBuffer();
-      this.start();
-    } else {
-      this.playAndLoad();
-    }
+
+    this.playAndLoad();
   }
 
   /**
@@ -80,10 +75,12 @@ export class AudioManager {
    */
   playToPrev() {
     this.stop();
+
     this.index = this.index - 1;
     if (this.index === -1) {
       this.index = this.musicIds.length - 1;
     }
+
     this.playAndLoad();
   }
 
@@ -92,8 +89,10 @@ export class AudioManager {
    */
   async playAndLoad() {
     this.stop();
-    await this.loadBuffer();
+
+    this.loadBuffer();
     this.loadNextBuffer();
+
     this.start();
   }
 
@@ -121,35 +120,33 @@ export class AudioManager {
    * 必要がなければ何もしない
    * オーディオ情報も一緒に設定
    */
-  private setBuffer() {
-    if (this.buffer.loaded === null) {
-      return;
-    }
+  private async setBuffer() {
+    const id = this.musicIds.get(this.index);
+    const data = this.loadBuffer();
 
-    this.player.setBuffer(this.buffer.loaded);
-    this.onChangeMusic(this.buffer.loadedID);
+    this.player.setBuffer(await data);
+    this.onChangeMusic?.(id);
   }
 
   setRepeat(repeat: Repeat) {
     this.repeat = repeat;
     this.player.setLoop(repeat.value === "repeat one");
-    this.onSetRepeat(repeat);
+    this.onSetRepeat?.(repeat);
     this.loadNextBuffer();
   }
 
   setShuffle(shuffle: boolean) {
     this.musicIds.shuffle = shuffle;
-    this.onSetShuffle(shuffle);
+    this.onSetShuffle?.(shuffle);
     this.loadNextBuffer();
   }
 
   setAccessToken(accessToken: string | undefined) {
-    this.buffer.setAccessToken(accessToken);
-    this.nextBuffer.setAccessToken(accessToken);
+    this.accessToken = accessToken;
   }
 
   private loadInfo(id: string, info: AudioInfo) {
-    this.onLoadInfo(id, info);
+    this.onLoadInfo?.(id, info);
   }
 
   /** コールバック用 曲が終わった時 */
@@ -165,8 +162,7 @@ export class AudioManager {
   }
 
   start() {
-    this.setBuffer();
-    this.player.start();
+    this.setBuffer().then(() => this.player.start());
   }
 
   stop() {
@@ -174,8 +170,7 @@ export class AudioManager {
   }
 
   play() {
-    this.setBuffer();
-    this.player.play();
+    this.setBuffer().then(() => this.player.play());
   }
 
   pause() {

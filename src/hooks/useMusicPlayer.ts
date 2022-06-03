@@ -27,16 +27,21 @@ const useMusicPlayer = () => {
     manager.onSetRepeat = repeat => setRepeat(repeat);
     manager.onSetShuffle = shuffle => setShuffle(shuffle);
 
-    manager.onLoadInfo = setAudioInfo;
-  });
+    let currentID: string | undefined;
+    manager.onLoadInfo = (id, info) => {
+      setAudioInfo(id, info);
+      if (id === currentID) {
+        setInfo(AudioInfo.copyInfo(info));
+      }
+    };
 
-  createEffect(() => {
     manager.onChangeMusic = id => {
-      const info = getAudio(id);
-      if (info === undefined) {
-        setInfo(AudioInfo.getEmptyInfo());
+      let info;
+      currentID = id;
+      if (id !== undefined && (info = getAudio(id)) !== undefined) {
+        setInfo(AudioInfo.copyInfo(info));
       } else {
-        setInfo(AudioInfo.copyInfo(info as AudioInfo));
+        setInfo(AudioInfo.getEmptyInfo());
       }
     };
   });
