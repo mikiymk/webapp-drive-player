@@ -3,7 +3,7 @@ import type { AudioPlayer } from "./AudioPlayer";
 export class AudioElementPlayer implements AudioPlayer {
   private audio = new Audio();
 
-  private blob = new Blob();
+  private blob: Blob | null = new Blob();
   private blobURL = "";
 
   onEnd: (() => void) | undefined;
@@ -13,6 +13,7 @@ export class AudioElementPlayer implements AudioPlayer {
 
   constructor() {
     this.audio.addEventListener("ended", () => this.onEnd?.());
+
     this.audio.addEventListener("timeupdate", () =>
       this.updateTime?.(this.audio.currentTime)
     );
@@ -21,14 +22,18 @@ export class AudioElementPlayer implements AudioPlayer {
     );
   }
 
-  setBuffer(blob: Blob): void {
+  setBuffer(blob: Blob | null): void {
     if (blob === this.blob) {
       return;
     }
 
     URL.revokeObjectURL(this.blobURL);
     this.blob = blob;
-    this.blobURL = URL.createObjectURL(blob);
+    if (blob !== null) {
+      this.blobURL = URL.createObjectURL(blob);
+    } else {
+      this.blobURL = "";
+    }
 
     this.audio.src = this.blobURL;
     this.audio.load();
@@ -53,6 +58,7 @@ export class AudioElementPlayer implements AudioPlayer {
     if (this.audio.src === "" || !this.audio.paused) {
       return;
     }
+
     this.audio
       .play()
       .then(() => this.changePause?.(false))
