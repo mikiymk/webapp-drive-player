@@ -1,6 +1,8 @@
-import { createSignal, onMount } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 
 import { playlists } from "~/hooks/createPlaylists";
+
+import { styleDialog, styleDialogButton, styleDialogInput } from "./style.css";
 
 export type RenameDialogProps = {
   name: string | undefined;
@@ -11,24 +13,51 @@ export type RenameDialogProps = {
 export const RenameDialog = (props: RenameDialogProps) => {
   const [newName, setNewName] = createSignal("");
   const [error, setError] = createSignal("");
-  onMount(() => {
+  createEffect(() => {
     if (props.name) setNewName(props.name);
+    else setNewName("");
   });
 
   const handleChange = (event: { currentTarget: HTMLInputElement }) => {
     const newName = event.currentTarget.value;
     if (playlists().has(newName)) setError("duplicate name");
+    else if (newName === "") setError("empty name");
     else setError("");
     setNewName(newName);
   };
 
+  const handleKey = (
+    event: KeyboardEvent & { currentTarget: HTMLInputElement }
+  ) => {
+    if (event.key === "Enter") {
+      handleChange(event);
+      if (!error()) {
+        props.close(newName());
+      }
+    }
+  };
+
   return (
-    <dialog open>
-      <p>rename playlist</p>
-      <input value={newName()} onchange={handleChange} />
+    <dialog class={styleDialog} open>
+      <label>
+        playlist name
+        <input
+          class={styleDialogInput}
+          value={newName()}
+          onchange={handleChange}
+          onkeypress={handleKey}
+        />
+      </label>
       <p>{error()}</p>
-      <button onclick={() => props.close()}>Cancel</button>
-      <button onclick={() => props.close(newName())}>Confirm</button>
+      <button class={styleDialogButton} onclick={() => props.close()}>
+        Cancel
+      </button>
+      <button
+        class={styleDialogButton}
+        onclick={() => props.close(newName())}
+        disabled={Boolean(error())}>
+        Rename
+      </button>
     </dialog>
   );
 };

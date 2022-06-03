@@ -1,4 +1,4 @@
-import { createSignal, For, Show } from "solid-js";
+import { batch, createSignal, For, Show } from "solid-js";
 
 import { MenuProvider } from "~/components/PopUpMenu";
 import { makePlaylist, playlists } from "~/hooks/createPlaylists";
@@ -19,9 +19,11 @@ export const PlaylistList = (props: PlaylistListProps) => {
   const [name, setName] = createSignal<string>();
   const [onClose, setOnClose] = createSignal<(name?: string) => void>(() => 0);
   const openDialog = (name: string, onClose: (name?: string) => void) => {
-    setOpen(true);
-    setName(name);
-    setOnClose(() => onClose);
+    batch(() => {
+      setName(name);
+      setOpen(true);
+      setOnClose(() => onClose);
+    });
   };
   const closeDialog = (name?: string) => {
     setOpen(false);
