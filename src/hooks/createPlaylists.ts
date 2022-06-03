@@ -35,6 +35,19 @@ export const deletePlaylist = (name: PlaylistName) => {
   });
 };
 
+export const renamePlaylist = (name: PlaylistName, newName: PlaylistName) => {
+  setPlaylists(value => {
+    const audios = value.get(name);
+    if (audios === undefined) return value;
+
+    const map = new Map(value);
+    map.delete(name);
+    map.set(newName, audios);
+
+    return map;
+  });
+};
+
 export const addAudio = (name: PlaylistName, id: AudioID) => {
   setPlaylists(value => {
     const map = new Map(value);

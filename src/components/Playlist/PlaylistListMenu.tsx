@@ -1,9 +1,10 @@
-import { Menu, MenuItem } from "~/components/PopUpMenu";
-import { deletePlaylist } from "~/hooks/createPlaylists";
+import { Menu, MenuItem, MenuSeparator } from "~/components/PopUpMenu";
+import { deletePlaylist, renamePlaylist } from "~/hooks/createPlaylists";
 
 export type PlaylistListMenuProps = {
   name: string;
   select: (name: string) => void;
+  openDialog: (name: string, onClose: (name?: string) => void) => void;
 };
 
 export const PlaylistListMenu = (props: PlaylistListMenuProps) => {
@@ -12,6 +13,16 @@ export const PlaylistListMenu = (props: PlaylistListMenuProps) => {
       <MenuItem onClick={() => props.select(props.name)}>
         open playlist
       </MenuItem>
+      <MenuItem
+        onClick={() =>
+          props.openDialog(
+            props.name,
+            name => name && renamePlaylist(props.name, name)
+          )
+        }>
+        rename playlist
+      </MenuItem>
+      <MenuSeparator />
       <MenuItem onClick={() => deletePlaylist(props.name)}>
         delete playlist
       </MenuItem>
