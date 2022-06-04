@@ -1,7 +1,8 @@
 import type { AudioPlayer } from "./AudioPlayer";
 
-export class AudioElementPlayer implements AudioPlayer {
+export class AudioElementSourcePlayer implements AudioPlayer {
   private context: AudioContext;
+  private node: MediaElementAudioSourceNode | null;
 
   onEnd: (() => void) | undefined;
   onChangePause: ((pause: boolean) => void) | undefined;
@@ -10,27 +11,74 @@ export class AudioElementPlayer implements AudioPlayer {
 
   constructor(context?: AudioContext) {
     this.context = context ?? new AudioContext();
+    this.node = null;
   }
 
   setBuffer(data: Blob | null): void {
-    throw new Error("Method not implemented.");
+    this.node?.disconnect();
+    if (data === null) {
+      URL.revokeObjectURL(this.node?.mediaElement.src ?? "");
+      this.node = null;
+      return;
+    }
+
+    const elem = new Audio();
+    elem.src = URL.createObjectURL(data);
+    elem.addEventListener("ended", () => this.onEnd?.());
+
+    elem.addEventListener("timeupdate", () =>
+      this.onUpdateTime?.(elem.currentTime)
+    );
+    elem.addEventListener("durationchange", () =>
+      this.onUpdateDuration?.(elem.duration)
+    );
+    elem.load();
+    this.node = this.context.createMediaElementSource(elem);
+    this.node.connect(this.context.destination);
   }
+
   setLoop(loop: boolean): void {
-    throw new Error("Method not implemented.");
+    if (this.node) this.node.mediaElement.loop = loop;
   }
-  start(): void {
-    throw new Error("Method not implemented.");
+
+  start() {
+    if (this.node) {
+      this.node.mediaElement.currentTime = 0;
+      this.play();
+    }
   }
-  stop(): void {
-    throw new Error("Method not implemented.");
+
+  stop() {
+    if (this.node) {
+      this.pause();
+      this.node.mediaElement.currentTime = 0;
+    }
   }
-  play(): void {
-    throw new Error("Method not implemented.");
+
+  /** 記録された停止位置から再生 */
+  play() {
+    if (this.node) {
+      if (this.node.mediaElement.src === "" || !this.node.mediaElement.paused) {
+        return;
+      }
+
+      this.node.mediaElement
+        .play()
+        .then(() => this.onChangePause?.(false))
+        .catch(() => this.onChangePause?.(true));
+    }
   }
-  pause(): void {
-    throw new Error("Method not implemented.");
+
+  /** 停止して現在の位置を停止位置として記録 */
+  pause() {
+    if (this.node) {
+      this.node.mediaElement.pause();
+      this.onChangePause?.(true);
+    }
   }
-  seek(time: number): void {
-    throw new Error("Method not implemented.");
+
+  /** 再生位置を指定のものに変更 */
+  seek(time: number) {
+    if (this.node) this.node.mediaElement.currentTime = time;
   }
 }
