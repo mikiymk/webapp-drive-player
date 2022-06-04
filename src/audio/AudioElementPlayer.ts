@@ -22,15 +22,16 @@ export class AudioElementPlayer implements AudioPlayer {
     );
   }
 
-  setBuffer(blob: Blob | null): void {
-    if (blob === this.blob) {
+  async setBuffer(blob: Promise<Blob | null>): Promise<void> {
+    const awaited = await blob;
+    if (awaited === this.blob) {
       return;
     }
+    this.blob = awaited;
 
     URL.revokeObjectURL(this.blobURL);
-    this.blob = blob;
-    if (blob !== null) {
-      this.blobURL = URL.createObjectURL(blob);
+    if (this.blob !== null) {
+      this.blobURL = URL.createObjectURL(this.blob);
     } else {
       this.blobURL = "";
     }

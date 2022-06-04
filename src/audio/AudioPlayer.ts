@@ -8,7 +8,7 @@ export interface AudioPlayer {
    * オーディオデータを設定する。
    * nullなら設定をとる。
    */
-  setBuffer(data: Blob | null): void;
+  setBuffer(data: Promise<Blob | null>): Promise<void>;
 
   setLoop(loop: boolean): void;
 

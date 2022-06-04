@@ -124,8 +124,8 @@ export class AudioManager {
     const id = this.musicIds.get(this.index);
     const data = this.loadBuffer();
 
-    this.player.setBuffer(await data);
     this.onChangeMusic?.(id);
+    await this.player.setBuffer(data);
   }
 
   setRepeat(repeat: Repeat) {

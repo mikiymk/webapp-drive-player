@@ -3,6 +3,7 @@ import type { AudioPlayer } from "./AudioPlayer";
 export class AudioElementSourcePlayer implements AudioPlayer {
   private context: AudioContext;
   private node: MediaElementAudioSourceNode | null;
+  private blob: Blob | null = null;
 
   onEnd: (() => void) | undefined;
   onChangePause: ((pause: boolean) => void) | undefined;
@@ -14,16 +15,22 @@ export class AudioElementSourcePlayer implements AudioPlayer {
     this.node = null;
   }
 
-  setBuffer(data: Blob | null): void {
+  async setBuffer(blob: Promise<Blob | null>): Promise<void> {
+    const awaited = await blob;
+    if (awaited === this.blob) {
+      return;
+    }
+    this.blob = awaited;
+
     this.node?.disconnect();
-    if (data === null) {
+    if (null === awaited) {
       URL.revokeObjectURL(this.node?.mediaElement.src ?? "");
       this.node = null;
       return;
     }
 
     const elem = new Audio();
-    elem.src = URL.createObjectURL(data);
+    elem.src = URL.createObjectURL(awaited);
     elem.addEventListener("ended", () => this.onEnd?.());
 
     elem.addEventListener("timeupdate", () =>
