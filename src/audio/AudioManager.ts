@@ -32,9 +32,9 @@ export class AudioManager {
   constructor(player: AudioPlayer) {
     this.player = player;
     player.onEnd = () => this.onEnd();
-    player.changePause = pause => this.onSetPause?.(pause);
-    player.updateTime = time => this.onSetCurrentTime?.(time);
-    player.updateDuration = duration => this.onSetDuration?.(duration);
+    player.onChangePause = pause => this.onSetPause?.(pause);
+    player.onUpdateTime = time => this.onSetCurrentTime?.(time);
+    player.onUpdateDuration = duration => this.onSetDuration?.(duration);
   }
 
   /**

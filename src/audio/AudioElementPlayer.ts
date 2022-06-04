@@ -7,18 +7,18 @@ export class AudioElementPlayer implements AudioPlayer {
   private blobURL = "";
 
   onEnd: (() => void) | undefined;
-  changePause: ((pause: boolean) => void) | undefined;
-  updateTime: ((time: number) => void) | undefined;
-  updateDuration: ((duration: number) => void) | undefined;
+  onChangePause: ((pause: boolean) => void) | undefined;
+  onUpdateTime: ((time: number) => void) | undefined;
+  onUpdateDuration: ((duration: number) => void) | undefined;
 
   constructor() {
     this.audio.addEventListener("ended", () => this.onEnd?.());
 
     this.audio.addEventListener("timeupdate", () =>
-      this.updateTime?.(this.audio.currentTime)
+      this.onUpdateTime?.(this.audio.currentTime)
     );
     this.audio.addEventListener("durationchange", () =>
-      this.updateDuration?.(this.audio.duration)
+      this.onUpdateDuration?.(this.audio.duration)
     );
   }
 
@@ -61,14 +61,14 @@ export class AudioElementPlayer implements AudioPlayer {
 
     this.audio
       .play()
-      .then(() => this.changePause?.(false))
-      .catch(() => this.changePause?.(true));
+      .then(() => this.onChangePause?.(false))
+      .catch(() => this.onChangePause?.(true));
   }
 
   /** 停止して現在の位置を停止位置として記録 */
   pause() {
     this.audio.pause();
-    this.changePause?.(true);
+    this.onChangePause?.(true);
   }
 
   /** 再生位置を指定のものに変更 */
