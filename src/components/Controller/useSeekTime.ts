@@ -20,8 +20,8 @@ export const useSeekTime = (
   };
 
   const onClickUp = () => {
-    setClick(false);
     seek(seekTime() / 1000);
+    setClick(false);
   };
 
   const onChange: JSX.EventHandler<HTMLInputElement, Event> = event => {

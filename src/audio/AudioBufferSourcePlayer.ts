@@ -72,16 +72,24 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
   play(): void {
     if (this.buffer) {
       this.startTime = this.context.currentTime - this.currentTime;
-      this.node = getBufferSourceNode(
-        this.context,
-        this.buffer,
-        this.startTime,
-        this.onEnd
-      );
+      this.node = this.context.createBufferSource();
+      this.node.buffer = this.buffer;
+
+      this.node.addEventListener("ended", () => {
+        if (
+          Math.abs(
+            this.startTime +
+              (this.buffer?.duration ?? 0) -
+              this.context.currentTime
+          ) < 1
+        )
+          this.onEnd?.();
+      });
+
       this.node.connect(this.context.destination);
 
       try {
-        this.node.start(0, this.startTime);
+        this.node.start(0, this.currentTime);
         this.onChangePause?.(false);
       } catch (e) {
         this.onChangePause?.(true);
@@ -100,23 +108,12 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
   }
 
   seek(time: number): void {
-    this.currentTime = time;
+    if (this.startTime) {
+      this.pause();
+      this.currentTime = time;
+      this.play();
+    } else {
+      this.currentTime = time;
+    }
   }
 }
-
-const getBufferSourceNode = (
-  context: AudioContext,
-  buffer: AudioBuffer,
-  startTime: number,
-  onEnd?: () => void
-) => {
-  const node = context.createBufferSource();
-  node.buffer = buffer;
-
-  node.addEventListener("ended", () => {
-    if (Math.abs(startTime + (buffer?.duration ?? 0) - context.currentTime) < 1)
-      onEnd?.();
-  });
-
-  return node;
-};
