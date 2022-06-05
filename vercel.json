@@ -1,0 +1,17 @@
+{
+  "headers": [
+    {
+      "source": "/(index.html)?",
+      "headers": [
+        {
+          "key": "Feature-Policy",
+          "value": "autoplay 'self' https://www.googleapis.com"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "autoplay 'self' https://www.googleapis.com"
+        }
+      ]
+    }
+  ]
+}

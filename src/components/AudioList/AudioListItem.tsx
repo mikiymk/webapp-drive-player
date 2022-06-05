@@ -9,7 +9,7 @@ import { sDot, sItem, sItemArtist } from "./style.css";
 import type { AudioInfo } from "~/audio/AudioInfo";
 
 export type AudioListItemProps = {
-  audio: AudioInfo | undefined;
+  audio: AudioInfo;
   play: () => void;
 };
 
@@ -23,16 +23,11 @@ export const AudioListItem = (props: AudioListItemProps) => {
         [sItem]: true,
         selected: selected(),
       }}
+      onClick={() => setSelected(true)}
+      onDblClick={() => props.play()}
       oncontextmenu={popMenu}>
-      <td onClick={() => setSelected(true)} onDblClick={() => props.play()}>
-        {props.audio?.title}
-      </td>
-      <td
-        class={sItemArtist}
-        onClick={() => setSelected(true)}
-        onDblClick={() => props.play()}>
-        {props.audio?.artists.join()}
-      </td>
+      <td>{props.audio?.title}</td>
+      <td class={sItemArtist}>{props.audio?.artists.join()}</td>
       <td class={sDot}>
         <button onClick={popMenu}>
           <IconDotInfo />
