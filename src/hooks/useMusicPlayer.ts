@@ -17,26 +17,8 @@ const useMusicPlayer = () => {
 
   const [info, setInfo] = createSignal(AudioInfo.getEmptyInfo());
 
-  const [player, setPlayer] = createSignal<"bufsrc" | "elemsrc" | "elem">(
-    "bufsrc"
-  );
-  const bufferSourcePlayer = new AudioBufferSourcePlayer();
-  const elementSourcePlayer = new AudioBufferSourcePlayer();
-  const elementPlayer = new AudioBufferSourcePlayer();
-  const manager = new AudioManager(bufferSourcePlayer);
-  createEffect(() => {
-    const selectedPlayer = player();
-    if (selectedPlayer === "bufsrc") {
-      manager.player = bufferSourcePlayer;
-      console.log("change to bufferSourcePlayer");
-    } else if (selectedPlayer === "elemsrc") {
-      manager.player = elementSourcePlayer;
-      console.log("change to elementSourcePlayer");
-    } else if (selectedPlayer === "elem") {
-      manager.player = elementPlayer;
-      console.log("change to elementPlayer");
-    }
-  });
+  const player = new AudioBufferSourcePlayer();
+  const manager = new AudioManager(player);
 
   onMount(() => {
     manager.onSetDuration = duration => setDuration(duration);
@@ -78,7 +60,6 @@ const useMusicPlayer = () => {
       shuffle,
       info,
     },
-    setPlayer,
   };
 };
 

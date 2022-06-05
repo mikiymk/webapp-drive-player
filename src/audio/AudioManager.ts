@@ -9,7 +9,7 @@ import type { AudioPlayer } from "./AudioPlayer";
  * 音楽再生の管理
  */
 export class AudioManager {
-  player: AudioPlayer;
+  private player: AudioPlayer;
 
   private accessToken: string | undefined;
   /** play music file list */
