@@ -18,7 +18,7 @@ const useMusicPlayer = () => {
   const [info, setInfo] = createSignal(AudioInfo.getEmptyInfo());
 
   const [player, setPlayer] = createSignal<"bufsrc" | "elemsrc" | "elem">(
-    "bufsrc"
+    "elemsrc"
   );
   const bufferSourcePlayer = new AudioBufferSourcePlayer();
   const elementSourcePlayer = new AudioBufferSourcePlayer();

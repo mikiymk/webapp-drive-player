@@ -17,7 +17,7 @@ type SettingsProps = {
 };
 
 const [player, setPlayer] = createSignal<"bufsrc" | "elemsrc" | "elem">(
-  "bufsrc"
+  "elemsrc"
 );
 
 /**

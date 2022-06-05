@@ -60,6 +60,7 @@ export class AudioElementPlayer implements AudioPlayer {
       return;
     }
 
+    console.log("element play");
     this.audio
       .play()
       .then(() => this.onChangePause?.(false))

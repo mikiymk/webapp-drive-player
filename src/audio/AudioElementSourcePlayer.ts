@@ -69,6 +69,7 @@ export class AudioElementSourcePlayer implements AudioPlayer {
         return;
       }
 
+      console.log("element source play");
       this.node.mediaElement
         .play()
         .then(() => this.onChangePause?.(false))

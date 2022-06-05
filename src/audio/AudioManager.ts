@@ -162,6 +162,8 @@ export class AudioManager {
   }
 
   start() {
+    console.log("start with", this.player);
+
     this.setBuffer().then(() => this.player.start());
   }
 
@@ -170,6 +172,8 @@ export class AudioManager {
   }
 
   play() {
+    console.log("play with", this.player);
+
     this.setBuffer().then(() => this.player.play());
   }
 
