@@ -1,8 +1,8 @@
 import { createEffect, createSignal, onMount } from "solid-js";
 
+import { AudioBufferSourcePlayer } from "~/audio/AudioBufferSourcePlayer";
 import { AudioInfo } from "~/audio/AudioInfo";
 import { AudioManager } from "~/audio/AudioManager";
-import { AudioMediaStreamPlayer } from "~/audio/AudioMediaStreamPlayer";
 import { Repeat } from "~/audio/Repeat";
 
 import { getAudio, setAudioInfo } from "./createAudios";
@@ -17,7 +17,7 @@ const useMusicPlayer = () => {
 
   const [info, setInfo] = createSignal(AudioInfo.getEmptyInfo());
 
-  const player = new AudioMediaStreamPlayer();
+  const player = new AudioBufferSourcePlayer();
   const manager = new AudioManager(player);
 
   onMount(() => {

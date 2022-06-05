@@ -89,7 +89,6 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
       this.node.connect(this.context.destination);
 
       try {
-        console.log("buffer source play");
         this.node.start(0, this.currentTime);
         this.onChangePause?.(false);
       } catch (e) {

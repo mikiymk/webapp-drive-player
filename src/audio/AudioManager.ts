@@ -9,7 +9,7 @@ import type { AudioPlayer } from "./AudioPlayer";
  * 音楽再生の管理
  */
 export class AudioManager {
-  player: AudioPlayer;
+  private player: AudioPlayer;
 
   private accessToken: string | undefined;
   /** play music file list */
@@ -162,8 +162,6 @@ export class AudioManager {
   }
 
   start() {
-    console.log("start with", this.player);
-
     this.setBuffer().then(() => this.player.start());
   }
 
@@ -172,8 +170,6 @@ export class AudioManager {
   }
 
   play() {
-    console.log("play with", this.player);
-
     this.setBuffer().then(() => this.player.play());
   }
 
