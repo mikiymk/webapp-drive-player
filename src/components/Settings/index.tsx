@@ -1,5 +1,3 @@
-import { createSignal } from "solid-js";
-
 import { IconDownload, IconUpload } from "~/components/Icon";
 import { getLibrary, sendLibrary } from "~/google/fetchLibrary";
 import { getPlaylists, sendPlaylists } from "~/google/fetchPlaylists";
@@ -10,25 +8,10 @@ import { accessToken } from "~/hooks/useSignIn";
 import { Load } from "./Load";
 import { styleSettings } from "./style.css";
 
-import type { Setter } from "solid-js";
-
-type SettingsProps = {
-  setPlayer: Setter<"bufsrc" | "elemsrc" | "elem">;
-};
-
-const [player, setPlayer] = createSignal<"bufsrc" | "elemsrc" | "elem">(
-  "elemsrc"
-);
-
 /**
  * now playing audio info view
  */
-export const Settings = (props: SettingsProps) => {
-  const handleClick = (value: "bufsrc" | "elemsrc" | "elem") => {
-    setPlayer(value);
-    props.setPlayer(value);
-  };
-
+export const Settings = () => {
   return (
     <div class={styleSettings}>
       <Load load={uploadLibrary}>
@@ -47,36 +30,6 @@ export const Settings = (props: SettingsProps) => {
         <IconDownload />
         get playlist data from google drive
       </Load>
-      <fieldset>
-        <p>select player</p>
-        <label>
-          BufferSource{" "}
-          <input
-            type="radio"
-            name="player"
-            onclick={[handleClick, "bufsrc"]}
-            checked={player() === "bufsrc"}
-          />
-        </label>
-        <label>
-          ElementSource
-          <input
-            type="radio"
-            name="player"
-            onclick={[handleClick, "elemsrc"]}
-            checked={player() === "elemsrc"}
-          />
-        </label>
-        <label>
-          Element
-          <input
-            type="radio"
-            name="player"
-            onclick={[handleClick, "elem"]}
-            checked={player() === "elem"}
-          />
-        </label>
-      </fieldset>
     </div>
   );
 };
