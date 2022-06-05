@@ -1,5 +1,8 @@
 import { createSignal, Match, Switch } from "solid-js";
 
+import { Albums } from "./Albums";
+import { Artists } from "./Artists";
+
 import { TopMenu } from "./Menu";
 import { Songs } from "./Songs";
 
@@ -19,6 +22,14 @@ export const Library = (props: LibraryProps) => {
     <Switch fallback={<TopMenu select={setSelectTab} />}>
       <Match when={selectTab() === "songs"}>
         <Songs reset={resetTab} play={props.play} />
+      </Match>
+
+      <Match when={selectTab() === "albums"}>
+        <Albums reset={resetTab} play={props.play} />
+      </Match>
+
+      <Match when={selectTab() === "artists"}>
+        <Artists reset={resetTab} play={props.play} />
       </Match>
     </Switch>
   );
