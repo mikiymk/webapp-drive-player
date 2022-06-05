@@ -1,6 +1,7 @@
-import { audios } from "~/hooks/createAudios";
+import { createSignal, Match, Switch } from "solid-js";
 
-import { AudioList } from "../AudioList";
+import { TopMenu } from "./Menu";
+import { Songs } from "./Songs";
 
 export type LibraryProps = {
   play: (idList: readonly string[], index: number) => void;
@@ -10,5 +11,15 @@ export type LibraryProps = {
  * list of musics
  */
 export const Library = (props: LibraryProps) => {
-  return <AudioList audios={Array.from(audios().keys())} play={props.play} />;
+  const [selectTab, setSelectTab] = createSignal<string>();
+  const resetTab = () => {
+    setSelectTab();
+  };
+  return (
+    <Switch fallback={<TopMenu select={setSelectTab} />}>
+      <Match when={selectTab() === "songs"}>
+        <Songs reset={resetTab} play={props.play} />
+      </Match>
+    </Switch>
+  );
 };
