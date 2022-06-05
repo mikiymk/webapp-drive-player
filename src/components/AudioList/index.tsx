@@ -23,29 +23,36 @@ export const AudioList = (props: AudioListProps) => {
         <tr>
           <th>title</th>
           <th class={sItemArtist}>artists</th>
+
           <th></th>
         </tr>
       </thead>
       <tbody class={sBody}>
         <For each={props.audios}>
           {(item, index) => (
-            <MenuProvider
-              menu={
-                <AudioListMenu
-                  item={item}
-                  play={() => props.play(props.audios, index())}
-                  extendMenu={
-                    <Show when={props.extendMenu}>
-                      {ExtendMenu => <ExtendMenu item={item} index={index()} />}
-                    </Show>
-                  }
-                />
-              }>
-              <AudioListItem
-                audio={getAudio(item)}
-                play={() => props.play(props.audios, index())}
-              />
-            </MenuProvider>
+            <Show when={getAudio(item)}>
+              {audio => (
+                <MenuProvider
+                  menu={
+                    <AudioListMenu
+                      item={item}
+                      play={() => props.play(props.audios, index())}
+                      extendMenu={
+                        <Show when={props.extendMenu}>
+                          {ExtendMenu => (
+                            <ExtendMenu item={item} index={index()} />
+                          )}
+                        </Show>
+                      }
+                    />
+                  }>
+                  <AudioListItem
+                    audio={audio}
+                    play={() => props.play(props.audios, index())}
+                  />
+                </MenuProvider>
+              )}
+            </Show>
           )}
         </For>
       </tbody>
