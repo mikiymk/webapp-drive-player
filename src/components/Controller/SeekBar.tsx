@@ -21,7 +21,6 @@ export const SeekBar = (props: SeekBarProps) => {
       min="0"
       max={props.duration * 1000}
       value={seekTime()}
-      onChange={onChange}
       onInput={onChange}
       onMouseDown={onClickDown}
       onMouseUp={onClickUp}

@@ -1,14 +1,14 @@
 export interface AudioPlayer {
   onEnd: (() => void) | undefined;
-  changePause: ((pause: boolean) => void) | undefined;
-  updateTime: ((time: number) => void) | undefined;
-  updateDuration: ((duration: number) => void) | undefined;
+  onChangePause: ((pause: boolean) => void) | undefined;
+  onUpdateTime: ((time: number) => void) | undefined;
+  onUpdateDuration: ((duration: number) => void) | undefined;
 
   /**
    * オーディオデータを設定する。
    * nullなら設定をとる。
    */
-  setBuffer: (data: Blob | null) => void;
+  setBuffer(data: Promise<Blob | null>): Promise<void>;
 
   setLoop(loop: boolean): void;
 

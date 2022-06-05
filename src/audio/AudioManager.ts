@@ -9,7 +9,7 @@ import type { AudioPlayer } from "./AudioPlayer";
  * 音楽再生の管理
  */
 export class AudioManager {
-  private player: AudioPlayer;
+  player: AudioPlayer;
 
   private accessToken: string | undefined;
   /** play music file list */
@@ -32,9 +32,9 @@ export class AudioManager {
   constructor(player: AudioPlayer) {
     this.player = player;
     player.onEnd = () => this.onEnd();
-    player.changePause = pause => this.onSetPause?.(pause);
-    player.updateTime = time => this.onSetCurrentTime?.(time);
-    player.updateDuration = duration => this.onSetDuration?.(duration);
+    player.onChangePause = pause => this.onSetPause?.(pause);
+    player.onUpdateTime = time => this.onSetCurrentTime?.(time);
+    player.onUpdateDuration = duration => this.onSetDuration?.(duration);
   }
 
   /**
@@ -124,8 +124,8 @@ export class AudioManager {
     const id = this.musicIds.get(this.index);
     const data = this.loadBuffer();
 
-    this.player.setBuffer(await data);
     this.onChangeMusic?.(id);
+    await this.player.setBuffer(data);
   }
 
   setRepeat(repeat: Repeat) {

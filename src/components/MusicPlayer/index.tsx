@@ -30,7 +30,7 @@ export type Files = {
  * react component root.
  */
 export const MusicPlayer = () => {
-  const { player, status } = useMusicPlayer();
+  const { player, status, setPlayer } = useMusicPlayer();
 
   const playWithIdList = (idList: readonly string[], index: number) => {
     player?.playWithIdList(idList, index);
@@ -63,7 +63,7 @@ export const MusicPlayer = () => {
           </MenuItem>
 
           <MenuItem key="settings" icon={<IconSettings />} label="Settings">
-            <Settings />
+            <Settings setPlayer={setPlayer} />
           </MenuItem>
         </Menu>
 
