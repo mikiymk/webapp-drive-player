@@ -1,11 +1,12 @@
-import { parse as ContentType_parse } from "content-type";
-import { fromBuffer } from "file-type/core";
-import { parse as MimeType_parse } from "media-typer";
+import { parse as ContentTypeParse } from "content-type";
+import { fileTypeFromBuffer } from "file-type";
+import { parse as MimeTypeParse } from "media-typer";
 
 import { AIFFParser } from "./aiff/AiffParser";
 import { APEv2Parser } from "./apev2/APEv2Parser";
 import { AsfParser } from "./asf/AsfParser";
 import { MetadataCollector } from "./common/MetadataCollector";
+import { uint8array } from "./common/Util";
 import { DsdiffParser } from "./dsdiff/DsdiffParser";
 import { DsfParser } from "./dsf/DsfParser";
 import { FlacParser } from "./flac/FlacParser";
@@ -19,8 +20,8 @@ import { WavPackParser } from "./wavpack/WavPackParser";
 
 import type { INativeMetadataCollector } from "./common/MetadataCollector";
 
+import type { ITokenizer } from "./strtok3";
 import type { IOptions, IAudioMetadata, ParserType } from "./type";
-import type { ITokenizer } from "strtok3/lib/core";
 
 export interface ITokenParser {
   /**
@@ -43,14 +44,44 @@ export interface ITokenParser {
   parse(): Promise<void>;
 }
 
+/**
+ * Parse metadata from tokenizer
+ * @param tokenizer - Tokenizer
+ * @param opts - Options
+ * @returns Native metadata
+ */
+export const parseOnContentType = async (
+  tokenizer: ITokenizer,
+  opts: IOptions | undefined
+): Promise<IAudioMetadata> => {
+  // Resolve parser based on MIME-type or file extension
+
+  // Parser could not be determined on MIME-type or extension
+  const buf = uint8array(4100);
+  await tokenizer.peekBuffer(buf, { mayBeLess: true });
+
+  const guessedType = await fileTypeFromBuffer(buf);
+  if (!guessedType) {
+    throw new Error("Failed to determine audio format");
+  }
+
+  const parserId = getParserIdForMimeType(guessedType.mime);
+  if (!parserId) {
+    throw new Error("Guessed MIME-type not supported: " + guessedType.mime);
+  }
+
+  return parse(tokenizer, parserId, opts);
+};
+
 export function parseHttpContentType(contentType: string | undefined): {
   type: string;
   subtype: string;
-  suffix?: string;
+  suffix: string | undefined;
   parameters: { [id: string]: string };
 } {
-  const type = ContentType_parse(contentType);
-  const mime = MimeType_parse(type.type);
+  if (!contentType) throw new Error("content type required");
+  const type = ContentTypeParse(contentType);
+  const mime = MimeTypeParse(type.type);
   return {
     type: mime.type,
     subtype: mime.subtype,
@@ -65,189 +96,44 @@ async function parse(
   opts: IOptions = {}
 ): Promise<IAudioMetadata> {
   // Parser found, execute parser
-  const parser = await ParserFactory.loadParser(parserId);
+  const parser = await loadParser(parserId);
   const metadata = new MetadataCollector(opts);
   await parser.init(metadata, tokenizer, opts).parse();
   return metadata.toCommonMetadata();
 }
 
-export class ParserFactory {
-  public static async parse(
-    tokenizer: ITokenizer,
-    parserId: ParserType,
-    opts: IOptions
-  ): Promise<IAudioMetadata> {
-    if (!parserId) {
-      // Parser could not be determined on MIME-type or extension
-      debug("Guess parser on content...");
-
-      const buf = Buffer.alloc(4100);
-      await tokenizer.peekBuffer(buf, { mayBeLess: true });
-      if (tokenizer.fileInfo.path) {
-        parserId = this.getParserIdForExtension(tokenizer.fileInfo.path);
-      }
-      if (!parserId) {
-        const guessedType = await fromBuffer(buf);
-        if (!guessedType) {
-          throw new Error("Failed to determine audio format");
-        }
-        debug(
-          `Guessed file type is mime=${guessedType.mime}, extension=${guessedType.ext}`
-        );
-        parserId = ParserFactory.getParserIdForMimeType(guessedType.mime);
-        if (!parserId) {
-          throw new Error(
-            "Guessed MIME-type not supported: " + guessedType.mime
-          );
-        }
-      }
-    }
-    // Parser found, execute parser
-    return parse(tokenizer, parserId, opts);
+const loadParser = async (moduleName: ParserType): Promise<ITokenParser> => {
+  switch (moduleName) {
+    case "aiff":
+      return new AIFFParser();
+    case "adts":
+    case "mpeg":
+      return new MpegParser();
+    case "apev2":
+      return new APEv2Parser();
+    case "asf":
+      return new AsfParser();
+    case "dsf":
+      return new DsfParser();
+    case "dsdiff":
+      return new DsdiffParser();
+    case "flac":
+      return new FlacParser();
+    case "mp4":
+      return new MP4Parser();
+    case "musepack":
+      return new MusepackParser();
+    case "ogg":
+      return new OggParser();
+    case "riff":
+      return new WaveParser();
+    case "wavpack":
+      return new WavPackParser();
+    case "matroska":
+      return new MatroskaParser();
+    default:
+      throw new Error(`Unknown parser type: ${moduleName}`);
   }
-
-  /**
-   * @param filePath - Path, filename or extension to audio file
-   * @return Parser sub-module name
-   */
-  public static getParserIdForExtension(filePath: string): ParserType {
-    if (!filePath) return;
-
-    const extension =
-      this.getExtension(filePath).toLocaleLowerCase() || filePath;
-
-    switch (extension) {
-      case ".mp2":
-      case ".mp3":
-      case ".m2a":
-      case ".aac": // Assume it is ADTS-container
-        return "mpeg";
-
-      case ".ape":
-        return "apev2";
-
-      case ".mp4":
-      case ".m4a":
-      case ".m4b":
-      case ".m4pa":
-      case ".m4v":
-      case ".m4r":
-      case ".3gp":
-        return "mp4";
-
-      case ".wma":
-      case ".wmv":
-      case ".asf":
-        return "asf";
-
-      case ".flac":
-        return "flac";
-
-      case ".ogg":
-      case ".ogv":
-      case ".oga":
-      case ".ogm":
-      case ".ogx":
-      case ".opus": // recommended filename extension for Ogg Opus
-      case ".spx": // recommended filename extension for Ogg Speex
-        return "ogg";
-
-      case ".aif":
-      case ".aiff":
-      case ".aifc":
-        return "aiff";
-
-      case ".wav":
-      case ".bwf": // Broadcast Wave Format
-        return "riff";
-
-      case ".wv":
-      case ".wvp":
-        return "wavpack";
-
-      case ".mpc":
-        return "musepack";
-
-      case ".dsf":
-        return "dsf";
-
-      case ".dff":
-        return "dsdiff";
-
-      case ".mka":
-      case ".mkv":
-      case ".mk3d":
-      case ".mks":
-      case ".webm":
-        return "matroska";
-    }
-  }
-
-  public static async loadParser(
-    moduleName: ParserType
-  ): Promise<ITokenParser> {
-    switch (moduleName) {
-      case "aiff":
-        return new AIFFParser();
-      case "adts":
-      case "mpeg":
-        return new MpegParser();
-      case "apev2":
-        return new APEv2Parser();
-      case "asf":
-        return new AsfParser();
-      case "dsf":
-        return new DsfParser();
-      case "dsdiff":
-        return new DsdiffParser();
-      case "flac":
-        return new FlacParser();
-      case "mp4":
-        return new MP4Parser();
-      case "musepack":
-        return new MusepackParser();
-      case "ogg":
-        return new OggParser();
-      case "riff":
-        return new WaveParser();
-      case "wavpack":
-        return new WavPackParser();
-      case "matroska":
-        return new MatroskaParser();
-      default:
-        throw new Error(`Unknown parser type: ${moduleName}`);
-    }
-  }
-
-  private static getExtension(fname: string): string {
-    const i = fname.lastIndexOf(".");
-    return i === -1 ? "" : fname.slice(i);
-  }
-}
-
-/**
- * Parse metadata from tokenizer
- * @param tokenizer - Tokenizer
- * @param opts - Options
- * @returns Native metadata
- */
-export const parseOnContentType = (
-  tokenizer: ITokenizer,
-  opts: IOptions
-): Promise<IAudioMetadata> => {
-  const { mimeType, path, url } = tokenizer.fileInfo;
-
-  // Resolve parser based on MIME-type or file extension
-  const parserId =
-    getParserIdForMimeType(mimeType) ||
-    ParserFactory.getParserIdForExtension(path) ||
-    ParserFactory.getParserIdForExtension(url);
-
-  if (!parserId) {
-    console.log("No parser found for MIME-type / extension: " + mimeType);
-  }
-
-  return ParserFactory.parse(tokenizer, parserId, opts);
 };
 
 /**
@@ -255,8 +141,8 @@ export const parseOnContentType = (
  * @returns Parser sub-module name
  */
 const getParserIdForMimeType = (
-  httpContentType: string | undefined
-): ParserType => {
+  httpContentType: string
+): ParserType | undefined => {
   let mime;
   try {
     mime = parseHttpContentType(httpContentType);
@@ -354,4 +240,5 @@ const getParserIdForMimeType = (
       }
       break;
   }
+  return;
 };

@@ -1,16 +1,15 @@
-import initDebug from "debug";
 import { EndOfStreamError, fromBuffer } from "strtok3/lib/core";
 import { Uint8ArrayType } from "token-types";
 
 import { BasicParser } from "../common/BasicParser";
 import { FourCcToken } from "../common/FourCC";
 import { ID3v2Parser } from "../id3v2/ID3v2Parser";
+import { Header } from "../iff";
 
-import * as iff from "../iff";
+import { Common } from "./AiffToken";
 
-import * as AiffToken from "./AiffToken";
-
-const debug = initDebug("music-metadata:parser:aiff");
+import type { IChunkHeader } from "../iff";
+import type { ICommon } from "./AiffToken";
 
 /**
  * AIFF - Audio Interchange File Format
@@ -20,10 +19,10 @@ const debug = initDebug("music-metadata:parser:aiff");
  * - http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/AIFF/Docs/AIFF-1.3.pdf
  */
 export class AIFFParser extends BasicParser {
-  private isCompressed: boolean;
+  private isCompressed = false;
 
   public async parse(): Promise<void> {
-    const header = await this.tokenizer.readToken<iff.IChunkHeader>(iff.Header);
+    const header = await this.tokenizer.readToken<IChunkHeader>(Header);
     if (header.chunkID !== "FORM")
       throw new Error("Invalid Chunk-ID, expected 'FORM'"); // Not AIFF format
 
@@ -47,32 +46,28 @@ export class AIFFParser extends BasicParser {
     try {
       while (
         !this.tokenizer.fileInfo.size ||
-        this.tokenizer.fileInfo.size - this.tokenizer.position >= iff.Header.len
+        this.tokenizer.fileInfo.size - this.tokenizer.position >= Header.len
       ) {
-        debug("Reading AIFF chunk at offset=" + this.tokenizer.position);
-        const chunkHeader = await this.tokenizer.readToken<iff.IChunkHeader>(
-          iff.Header
+        const chunkHeader = await this.tokenizer.readToken<IChunkHeader>(
+          Header
         );
 
-        debug(`Chunk id=${chunkHeader.chunkID}`);
         const nextChunk = 2 * Math.round(chunkHeader.chunkSize / 2);
         const bytesRead = await this.readData(chunkHeader);
         await this.tokenizer.ignore(nextChunk - bytesRead);
       }
     } catch (err) {
-      if (err instanceof EndOfStreamError) {
-        debug(`End-of-stream`);
-      } else {
+      if (!(err instanceof EndOfStreamError)) {
         throw err;
       }
     }
   }
 
-  public async readData(header: iff.IChunkHeader): Promise<number> {
+  public async readData(header: IChunkHeader): Promise<number> {
     switch (header.chunkID) {
       case "COMM": // The Common Chunk
-        const common = await this.tokenizer.readToken<AiffToken.ICommon>(
-          new AiffToken.Common(header, this.isCompressed)
+        const common = await this.tokenizer.readToken<ICommon>(
+          new Common(header, this.isCompressed)
         );
         this.metadata.setFormat("bitsPerSample", common.sampleSize);
         this.metadata.setFormat("sampleRate", common.sampleRate);

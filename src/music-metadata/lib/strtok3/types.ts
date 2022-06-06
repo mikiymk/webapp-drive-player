@@ -1,25 +1,11 @@
-export interface IFileInfo {
+export interface FileInfo {
   /**
    * File size in bytes
    */
   size?: number;
-  /**
-   * MIME-type of file
-   */
-  mimeType?: string;
-
-  /**
-   * File path
-   */
-  path?: string;
-
-  /**
-   * File URL
-   */
-  url?: string;
 }
 
-export interface IReadChunkOptions {
+export interface ReadChunkOptions {
   /**
    * The offset in the buffer to start writing at; default is 0
    */
@@ -47,11 +33,11 @@ export interface IReadChunkOptions {
  * The tokenizer allows us to read or peek from the tokenizer-stream.
  * The tokenizer-stream is an abstraction of a stream, file or Buffer.
  */
-export interface ITokenizer {
+export interface Tokenizer {
   /**
    * Provide access to information of the underlying information stream or file.
    */
-  fileInfo: IFileInfo;
+  fileInfo: FileInfo;
 
   /**
    * Offset in bytes (= number of bytes read) since beginning of file or stream
@@ -64,52 +50,56 @@ export interface ITokenizer {
    * @param options - Read behaviour options
    * @returns Promise with number of bytes read
    */
-  peekBuffer(buffer: Buffer, options?: IReadChunkOptions): Promise<number>;
+  peekBuffer(
+    buffer: Uint8Array,
+    options?: ReadChunkOptions | undefined
+  ): Promise<number>;
 
   /**
-   * Peek (read ahead) buffer from tokenizer
+   * Read buffer from tokenizer
    * @param buffer - Target buffer to fill with data peeked from the tokenizer-stream
    * @param options - Additional read options
    * @returns Promise with number of bytes read
    */
-  readBuffer(buffer: Buffer, options?: IReadChunkOptions): Promise<number>;
+  readBuffer(
+    buffer: Uint8Array,
+    options?: ReadChunkOptions | undefined
+  ): Promise<number>;
 
   /**
    * Peek a token from the tokenizer-stream.
    * @param token - Token to peek from the tokenizer-stream.
    * @param position - Offset where to begin reading within the file. If position is null, data will be read from the current file position.
-   * @param maybeless - If set, will not throw an EOF error if the less then the requested length could be read.
+   * @returns Promise with token data
    */
-  peekToken<T>(
-    token: IGetToken<T>,
-    position?: number | null,
-    maybeless?: boolean
-  ): Promise<T>;
+  peekToken<T>(token: GetToken<T>, position?: number): Promise<T>;
 
   /**
    * Read a token from the tokenizer-stream.
    * @param token - Token to peek from the tokenizer-stream.
    * @param position - Offset where to begin reading within the file. If position is null, data will be read from the current file position.
+   * @returns Promise with token data
    */
-  readToken<T>(token: IGetToken<T>, position?: number): Promise<T>;
+  readToken<T>(token: GetToken<T>, position?: number): Promise<T>;
 
   /**
    * Peek a numeric token from the stream
    * @param token - Numeric token
    * @returns Promise with number
    */
-  peekNumber(token: IGetToken<number>): Promise<number>;
+  peekNumber(token: GetToken<number>): Promise<number>;
 
   /**
    * Read a numeric token from the stream
    * @param token - Numeric token
    * @returns Promise with number
    */
-  readNumber(token: IGetToken<number>): Promise<number>;
+  readNumber(token: GetToken<number>): Promise<number>;
 
   /**
-   * Ignore given number of bytes
+   * Ignore number of bytes, advances the pointer in under tokenizer-stream.
    * @param length - Number of bytes ignored
+   * @return resolves the number of bytes ignored, equals length if this available, otherwise the number of bytes available
    */
   ignore(length: number): Promise<number>;
 
@@ -124,7 +114,7 @@ export interface ITokenizer {
  * Read-only token
  * See https://github.com/Borewit/strtok3 for more information
  */
-export interface IGetToken<Value, Array extends Uint8Array = Uint8Array> {
+export interface GetToken<T, Array extends Uint8Array = Uint8Array> {
   /**
    * Length of encoded token in bytes
    */
@@ -136,11 +126,11 @@ export interface IGetToken<Value, Array extends Uint8Array = Uint8Array> {
    * @param offset - Decode offset
    * @return decoded value
    */
-  get(array: Array, offset: number): Value;
+  get(array: Array, offset: number): T;
 }
 
-export interface IToken<Value, Array extends Uint8Array = Uint8Array>
-  extends IGetToken<Value, Array> {
+export interface Token<T, Array extends Uint8Array = Uint8Array>
+  extends GetToken<T, Array> {
   /**
    * Encode value to buffer
    * @param array - Uint8Array to write the encoded value to
@@ -148,5 +138,5 @@ export interface IToken<Value, Array extends Uint8Array = Uint8Array>
    * @param value - Value to decode of type T
    * @return offset plus number of bytes written
    */
-  put(array: Array, offset: number, value: Value): number;
+  put(array: Array, offset: number, value: T): number;
 }

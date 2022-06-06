@@ -1,28 +1,52 @@
-import { fromBuffer } from "strtok3";
+import { parseOnContentType } from "./ParserFactory";
+import { findApeFooterOffset } from "./apev2/APEv2Parser";
+import { hasID3v1Header } from "./id3v1/ID3v1Parser";
+import { getLyricsHeaderLength } from "./lyrics3/Lyrics3";
+import { fromBuffer } from "./strtok3";
 
-import { parseFromTokenizer, scanAppendingHeaders } from "./core";
+import type { IAudioMetadata, IOptions, IPrivateOptions } from "./type";
 
-import type { IAudioMetadata, IOptions } from "./type";
-import type { IFileInfo } from "strtok3";
+import type { ITokenizer } from "strtok3/lib/core";
 
 /**
  * Parse audio from Node Buffer
- * @param uint8Array - Uint8Array holding audio data
- * @param fileInfo - File information object or MIME-type string
- * @param options - Parsing options
+ * @param buffer - Uint8Array holding audio data
  * @returns Metadata
  * Ref: https://github.com/Borewit/strtok3/blob/e6938c81ff685074d5eb3064a11c0b03ca934c1d/src/index.ts#L15
  */
 export async function parseBuffer(
-  uint8Array: Uint8Array,
-  fileInfo?: IFileInfo | string,
-  options: IOptions = {}
+  buffer: ArrayBuffer
 ): Promise<IAudioMetadata> {
-  Object.assign(options, scanAppendingHeaders(uint8Array));
+  const uint8 = new Uint8Array(buffer);
+  const options = scanAppendingHeaders(uint8);
+  const tokenizer = fromBuffer(uint8);
 
-  const tokenizer = fromBuffer(
-    uint8Array,
-    typeof fileInfo === "string" ? { mimeType: fileInfo } : fileInfo
-  );
   return parseFromTokenizer(tokenizer, options);
 }
+
+/**
+ * Parse audio from ITokenizer source
+ * @param tokenizer - Audio source implementing the tokenizer interface
+ * @param options - Parsing options
+ * @returns Metadata
+ */
+const parseFromTokenizer = (
+  tokenizer: ITokenizer,
+  options?: IOptions
+): Promise<IAudioMetadata> => {
+  return parseOnContentType(tokenizer, options);
+};
+
+const scanAppendingHeaders = (reader: Uint8Array): IPrivateOptions => {
+  let apeOffset = reader.byteLength;
+  if (hasID3v1Header(reader)) {
+    apeOffset -= 128;
+    const lyricsLen = getLyricsHeaderLength(reader);
+    apeOffset -= lyricsLen;
+  }
+
+  const options: IPrivateOptions = {};
+  options.apeHeader = findApeFooterOffset(reader, apeOffset);
+
+  return options;
+};

@@ -1,4 +1,3 @@
-import initDebug from "debug";
 import * as strtok3 from "strtok3/lib/core";
 import { StringType } from "token-types";
 
@@ -23,8 +22,6 @@ import type {
   IHeader,
   ITagItemHeader,
 } from "./APEv2Token";
-
-const debug = initDebug("music-metadata:parser:APEv2");
 
 const tagFormat = "APEv2";
 

@@ -95,7 +95,7 @@ export const parseInfo = async (data: Blob) => {
   try {
     const { parseBuffer } = await import("./music-metadata");
     const buffer = await data.arrayBuffer();
-    metadata = await parseBuffer(new Uint8Array(buffer));
+    metadata = await parseBuffer(buffer);
     console.log(metadata);
   } catch (error) {
     console.log("error");
