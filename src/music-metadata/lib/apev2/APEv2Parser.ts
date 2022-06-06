@@ -4,8 +4,8 @@ import { StringType } from "token-types";
 
 import { BasicParser } from "../common/BasicParser";
 
-import { findZero } from "../common/Util";
-
+import { randomRead } from "../common/RandomUint8ArrayReader";
+import { findZero, uint8array } from "../common/Util";
 
 import {
   DataType,
@@ -21,7 +21,8 @@ import type {
   IDescriptor,
   IFooter,
   IHeader,
-  ITagItemHeader} from "./APEv2Token";
+  ITagItemHeader,
+} from "./APEv2Token";
 
 const debug = initDebug("music-metadata:parser:APEv2");
 
@@ -56,25 +57,6 @@ export class APEv2Parser extends BasicParser {
       ah.totalFrames > 1 ? ah.blocksPerFrame * (ah.totalFrames - 1) : 0;
     duration += ah.finalFrameBlocks;
     return duration / ah.sampleRate;
-  }
-
-  /**
-   * Calculates the APEv1 / APEv2 first field offset
-   * @param reader
-   * @param offset
-   */
-  public static async findApeFooterOffset(
-    reader: IRandomReader,
-    offset: number
-  ): Promise<IApeHeader> {
-    // Search for APE footer header at the end of the file
-    const apeBuf = Buffer.alloc(TagFooter.len);
-    await reader.randomRead(apeBuf, 0, TagFooter.len, offset - TagFooter.len);
-    const tagFooter = TagFooter.get(apeBuf, 0);
-    if (tagFooter.ID === "APETAGEX") {
-      debug(`APE footer header at offset=${offset}`);
-      return { footer: tagFooter, offset: offset - tagFooter.size };
-    }
   }
 
   private static parseTagFooter(
@@ -248,3 +230,24 @@ export class APEv2Parser extends BasicParser {
     };
   }
 }
+
+/**
+ * Calculates the APEv1 / APEv2 first field offset
+ * @param reader
+ * @param offset
+ */
+export const findApeFooterOffset = (
+  reader: Uint8Array,
+  offset: number
+): IApeHeader | undefined => {
+  // Search for APE footer header at the end of the file
+  const apeBuf = uint8array(TagFooter.len);
+  randomRead(reader, apeBuf, 0, TagFooter.len, offset - TagFooter.len);
+  const tagFooter = TagFooter.get(apeBuf, 0);
+  if (tagFooter.ID === "APETAGEX") {
+    debug(`APE footer header at offset=${offset}`);
+    return { footer: tagFooter, offset: offset - tagFooter.size };
+  }
+
+  return;
+};

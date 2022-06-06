@@ -193,3 +193,20 @@ export function toRatio(value: string): IRatio {
         };
   }
 }
+
+export const uint8array = (size: number) => {
+  return new Uint8Array(size);
+};
+
+// Buffer.toString('binary')
+export const ENCODING_ASCII = "latin1";
+
+const decoders = new Map<string, TextDecoder>();
+export const decoder = (encoding: string): TextDecoder => {
+  if (decoders.has(encoding)) return decoders.get(encoding) as TextDecoder;
+
+  const decoder = new TextDecoder(encoding);
+  decoders.set(encoding, decoder);
+
+  return decoder;
+};

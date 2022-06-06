@@ -1,15 +1,11 @@
 import { parse as ContentType_parse } from "content-type";
-import initDebug from "debug";
 import { fromBuffer } from "file-type/core";
 import { parse as MimeType_parse } from "media-typer";
-
 
 import { AIFFParser } from "./aiff/AiffParser";
 import { APEv2Parser } from "./apev2/APEv2Parser";
 import { AsfParser } from "./asf/AsfParser";
-import {
-  MetadataCollector,
-} from "./common/MetadataCollector";
+import { MetadataCollector } from "./common/MetadataCollector";
 import { DsdiffParser } from "./dsdiff/DsdiffParser";
 import { DsfParser } from "./dsf/DsfParser";
 import { FlacParser } from "./flac/FlacParser";
@@ -21,13 +17,10 @@ import { OggParser } from "./ogg/OggParser";
 import { WaveParser } from "./wav/WaveParser";
 import { WavPackParser } from "./wavpack/WavPackParser";
 
-import type {
-  INativeMetadataCollector} from "./common/MetadataCollector";
+import type { INativeMetadataCollector } from "./common/MetadataCollector";
 
 import type { IOptions, IAudioMetadata, ParserType } from "./type";
 import type { ITokenizer } from "strtok3/lib/core";
-
-const debug = initDebug("music-metadata:parser:factory");
 
 export interface ITokenParser {
   /**
@@ -50,7 +43,7 @@ export interface ITokenParser {
   parse(): Promise<void>;
 }
 
-export function parseHttpContentType(contentType: string): {
+export function parseHttpContentType(contentType: string | undefined): {
   type: string;
   subtype: string;
   suffix?: string;
@@ -79,31 +72,6 @@ async function parse(
 }
 
 export class ParserFactory {
-  /**
-   * Parse metadata from tokenizer
-   * @param tokenizer - Tokenizer
-   * @param opts - Options
-   * @returns Native metadata
-   */
-  public static async parseOnContentType(
-    tokenizer: ITokenizer,
-    opts: IOptions
-  ): Promise<IAudioMetadata> {
-    const { mimeType, path, url } = await tokenizer.fileInfo;
-
-    // Resolve parser based on MIME-type or file extension
-    const parserId =
-      ParserFactory.getParserIdForMimeType(mimeType) ||
-      ParserFactory.getParserIdForExtension(path) ||
-      ParserFactory.getParserIdForExtension(url);
-
-    if (!parserId) {
-      debug("No parser found for MIME-type / extension: " + mimeType);
-    }
-
-    return this.parse(tokenizer, parserId, opts);
-  }
-
   public static async parse(
     tokenizer: ITokenizer,
     parserId: ParserType,
@@ -255,110 +223,135 @@ export class ParserFactory {
     const i = fname.lastIndexOf(".");
     return i === -1 ? "" : fname.slice(i);
   }
-
-  /**
-   * @param httpContentType - HTTP Content-Type, extension, path or filename
-   * @returns Parser sub-module name
-   */
-  private static getParserIdForMimeType(httpContentType: string): ParserType {
-    let mime;
-    try {
-      mime = parseHttpContentType(httpContentType);
-    } catch (err) {
-      debug(`Invalid HTTP Content-Type header value: ${httpContentType}`);
-      return;
-    }
-
-    const subType =
-      mime.subtype.indexOf("x-") === 0
-        ? mime.subtype.substring(2)
-        : mime.subtype;
-
-    switch (mime.type) {
-      case "audio":
-        switch (subType) {
-          case "mp3": // Incorrect MIME-type, Chrome, in Web API File object
-          case "mpeg":
-            return "mpeg";
-
-          case "aac":
-          case "aacp":
-            return "adts";
-
-          case "flac":
-            return "flac";
-
-          case "ape":
-          case "monkeys-audio":
-            return "apev2";
-
-          case "mp4":
-          case "m4a":
-            return "mp4";
-
-          case "ogg": // RFC 7845
-          case "opus": // RFC 6716
-          case "speex": // RFC 5574
-            return "ogg";
-
-          case "ms-wma":
-          case "ms-wmv":
-          case "ms-asf":
-            return "asf";
-
-          case "aiff":
-          case "aif":
-          case "aifc":
-            return "aiff";
-
-          case "vnd.wave":
-          case "wav":
-          case "wave":
-            return "riff";
-
-          case "wavpack":
-            return "wavpack";
-
-          case "musepack":
-            return "musepack";
-
-          case "matroska":
-          case "webm":
-            return "matroska";
-
-          case "dsf":
-            return "dsf";
-        }
-        break;
-
-      case "video":
-        switch (subType) {
-          case "ms-asf":
-          case "ms-wmv":
-            return "asf";
-
-          case "m4v":
-          case "mp4":
-            return "mp4";
-
-          case "ogg":
-            return "ogg";
-
-          case "matroska":
-          case "webm":
-            return "matroska";
-        }
-        break;
-
-      case "application":
-        switch (subType) {
-          case "vnd.ms-asf":
-            return "asf";
-
-          case "ogg":
-            return "ogg";
-        }
-        break;
-    }
-  }
 }
+
+/**
+ * Parse metadata from tokenizer
+ * @param tokenizer - Tokenizer
+ * @param opts - Options
+ * @returns Native metadata
+ */
+export const parseOnContentType = (
+  tokenizer: ITokenizer,
+  opts: IOptions
+): Promise<IAudioMetadata> => {
+  const { mimeType, path, url } = tokenizer.fileInfo;
+
+  // Resolve parser based on MIME-type or file extension
+  const parserId =
+    getParserIdForMimeType(mimeType) ||
+    ParserFactory.getParserIdForExtension(path) ||
+    ParserFactory.getParserIdForExtension(url);
+
+  if (!parserId) {
+    console.log("No parser found for MIME-type / extension: " + mimeType);
+  }
+
+  return ParserFactory.parse(tokenizer, parserId, opts);
+};
+
+/**
+ * @param httpContentType - HTTP Content-Type, extension, path or filename
+ * @returns Parser sub-module name
+ */
+const getParserIdForMimeType = (
+  httpContentType: string | undefined
+): ParserType => {
+  let mime;
+  try {
+    mime = parseHttpContentType(httpContentType);
+  } catch (err) {
+    console.debug(`Invalid HTTP Content-Type header value: ${httpContentType}`);
+    return;
+  }
+
+  const subType =
+    mime.subtype.indexOf("x-") === 0 ? mime.subtype.substring(2) : mime.subtype;
+
+  switch (mime.type) {
+    case "audio":
+      switch (subType) {
+        case "mp3": // Incorrect MIME-type, Chrome, in Web API File object
+        case "mpeg":
+          return "mpeg";
+
+        case "aac":
+        case "aacp":
+          return "adts";
+
+        case "flac":
+          return "flac";
+
+        case "ape":
+        case "monkeys-audio":
+          return "apev2";
+
+        case "mp4":
+        case "m4a":
+          return "mp4";
+
+        case "ogg": // RFC 7845
+        case "opus": // RFC 6716
+        case "speex": // RFC 5574
+          return "ogg";
+
+        case "ms-wma":
+        case "ms-wmv":
+        case "ms-asf":
+          return "asf";
+
+        case "aiff":
+        case "aif":
+        case "aifc":
+          return "aiff";
+
+        case "vnd.wave":
+        case "wav":
+        case "wave":
+          return "riff";
+
+        case "wavpack":
+          return "wavpack";
+
+        case "musepack":
+          return "musepack";
+
+        case "matroska":
+        case "webm":
+          return "matroska";
+
+        case "dsf":
+          return "dsf";
+      }
+      break;
+
+    case "video":
+      switch (subType) {
+        case "ms-asf":
+        case "ms-wmv":
+          return "asf";
+
+        case "m4v":
+        case "mp4":
+          return "mp4";
+
+        case "ogg":
+          return "ogg";
+
+        case "matroska":
+        case "webm":
+          return "matroska";
+      }
+      break;
+
+    case "application":
+      switch (subType) {
+        case "vnd.ms-asf":
+          return "asf";
+
+        case "ogg":
+          return "ogg";
+      }
+      break;
+  }
+};

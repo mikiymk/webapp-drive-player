@@ -621,7 +621,7 @@ export interface IApeHeader extends IOptions {
 }
 
 export interface IPrivateOptions extends IOptions {
-  apeHeader?: IApeHeader;
+  apeHeader?: IApeHeader | undefined;
 }
 
 /**
@@ -675,7 +675,7 @@ export interface IRandomReader {
    * @return {Promise<number>} bytes read
    */
   randomRead(
-    buffer: Buffer,
+    uint8Array: Uint8Array,
     offset: number,
     length: number,
     position: number

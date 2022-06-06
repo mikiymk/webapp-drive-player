@@ -31,3 +31,23 @@ export class RandomUint8ArrayReader implements IRandomReader {
     return length;
   }
 }
+
+/**
+ * Read from a given position of an abstracted file or buffer.
+ * @param readFrom - Uint8Array that the data will be read from.
+ * @param writeTo - Uint8Array that the data will be written to.
+ * @param offset - Offset in the buffer to start writing at.
+ * @param length - Integer specifying the number of bytes to read.
+ * @param position - Specifies where to begin reading from in the file.
+ * @return providing bytes read
+ */
+export const randomRead = (
+  readFrom: Uint8Array,
+  writeTo: Uint8Array,
+  offset: number,
+  length: number,
+  position: number
+): number => {
+  writeTo.set(readFrom.subarray(position, position + length), offset);
+  return length;
+};

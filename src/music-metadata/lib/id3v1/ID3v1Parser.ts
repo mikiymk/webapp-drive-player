@@ -4,9 +4,14 @@ import { StringType, UINT8 } from "token-types";
 
 import { APEv2Parser } from "../apev2/APEv2Parser";
 import { BasicParser } from "../common/BasicParser";
-import { trimRightNull } from "../common/Util";
+import { randomRead } from "../common/RandomUint8ArrayReader";
+import {
+  decoder,
+  ENCODING_ASCII,
+  trimRightNull,
+  uint8array,
+} from "../common/Util";
 
-import type { IRandomReader } from "../type";
 import type { IGetToken } from "strtok3/lib/core";
 
 const debug = initDebug("music-metadata:parser:ID3v1");
@@ -332,11 +337,11 @@ export class ID3v1Parser extends BasicParser {
   }
 }
 
-export async function hasID3v1Header(reader: IRandomReader): Promise<boolean> {
-  if (reader.fileSize >= 128) {
-    const tag = Buffer.alloc(3);
-    await reader.randomRead(tag, 0, tag.length, reader.fileSize - 128);
-    return tag.toString("binary") === "TAG";
+export function hasID3v1Header(reader: Uint8Array): boolean {
+  if (reader.byteLength >= 128) {
+    const tag = uint8array(3);
+    randomRead(reader, tag, 0, tag.length, reader.byteLength - 128);
+    return decoder(ENCODING_ASCII).decode(tag) === "TAG";
   }
   return false;
 }
