@@ -1,6 +1,6 @@
 import { For, Show } from "solid-js";
 
-import { AudioInfo } from "~/audio/AudioInfo";
+import { namedInfo } from "~/audio/AudioInfo";
 import { IconAudioFile, IconFolder } from "~/components/Icon";
 import { addAudios } from "~/hooks/createAudios";
 
@@ -15,7 +15,7 @@ import { useGDriveParents } from "./useGDriveParents";
 export const DriveFiles = () => {
   const parents = useGDriveParents();
   const addAudioFile = (id: string, name: string) => {
-    addAudios([[id, AudioInfo.getNamedInfo(name)]]);
+    addAudios([[id, namedInfo(name)]]);
   };
 
   return (

@@ -1,7 +1,7 @@
 import { createEffect, createSignal, onMount } from "solid-js";
 
 import { AudioBufferSourcePlayer } from "~/audio/AudioBufferSourcePlayer";
-import { AudioInfo } from "~/audio/AudioInfo";
+import { copyInfo, emptyInfo } from "~/audio/AudioInfo";
 import { AudioManager } from "~/audio/AudioManager";
 import { Repeat } from "~/audio/Repeat";
 
@@ -15,7 +15,7 @@ const useMusicPlayer = () => {
   const [repeat, setRepeat] = createSignal(Repeat.DEFAULT);
   const [shuffle, setShuffle] = createSignal(false);
 
-  const [info, setInfo] = createSignal(AudioInfo.getEmptyInfo());
+  const [info, setInfo] = createSignal(emptyInfo());
 
   const player = new AudioBufferSourcePlayer();
   const manager = new AudioManager(player);
@@ -31,7 +31,7 @@ const useMusicPlayer = () => {
     manager.onLoadInfo = (id, info) => {
       setAudioInfo(id, info);
       if (id === currentID) {
-        setInfo(AudioInfo.copyInfo(info));
+        setInfo(copyInfo(info));
       }
     };
 
@@ -39,9 +39,9 @@ const useMusicPlayer = () => {
       let info;
       currentID = id;
       if (id !== undefined && (info = getAudio(id)) !== undefined) {
-        setInfo(AudioInfo.copyInfo(info));
+        setInfo(copyInfo(info));
       } else {
-        setInfo(AudioInfo.getEmptyInfo());
+        setInfo(emptyInfo());
       }
     };
   });

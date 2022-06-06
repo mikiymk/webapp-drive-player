@@ -1,20 +1,20 @@
 import { expect, test } from "vitest";
 
-import { AudioInfo } from "../AudioInfo";
+import { emptyInfo } from "../AudioInfo";
 
 test("AudioInfo empty", () => {
-  const emptyInfo = AudioInfo.getEmptyInfo();
+  const info = emptyInfo();
 
-  expect(emptyInfo).toHaveProperty("title");
-  expect(emptyInfo).toHaveProperty("artists");
-  expect(emptyInfo).toHaveProperty("album");
-  expect(emptyInfo).toHaveProperty("albumartist");
-  expect(emptyInfo).toHaveProperty("track");
-  expect(emptyInfo).toHaveProperty("disk");
-  expect(emptyInfo).toHaveProperty("date");
-  expect(emptyInfo).toHaveProperty("genre");
-  expect(emptyInfo).toHaveProperty("picture");
-  expect(emptyInfo).toHaveProperty("sort");
+  expect(info).toHaveProperty("title");
+  expect(info).toHaveProperty("artists");
+  expect(info).toHaveProperty("album");
+  expect(info).toHaveProperty("albumartist");
+  expect(info).toHaveProperty("track");
+  expect(info).toHaveProperty("disk");
+  expect(info).toHaveProperty("date");
+  expect(info).toHaveProperty("genre");
+  expect(info).toHaveProperty("picture");
+  expect(info).toHaveProperty("sort");
 });
 
 // test("AudioInfo blob", async () => {

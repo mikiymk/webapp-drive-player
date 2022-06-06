@@ -33,13 +33,13 @@ export const Playing = (props: PlayingProps) => {
         <dd>{props.info.artists.join()}</dd>
         <dt>Disk</dt>
         <dd>
-          {props.info.disk.no}
-          <Show when={props.info.disk.of}>{of => <>/ {of}</>}</Show>
+          {props.info.disk}
+          <Show when={props.info.diskOf}>{of => <>/ {of}</>}</Show>
         </dd>
         <dt>Track</dt>
         <dd>
-          {props.info.track.no}
-          <Show when={props.info.track.of}>{of => <>/ {of}</>}</Show>
+          {props.info.track}
+          <Show when={props.info.trackOf}>{of => <>/ {of}</>}</Show>
         </dd>
       </dl>
     </div>

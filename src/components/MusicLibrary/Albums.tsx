@@ -19,13 +19,13 @@ export const Albums = (props: AlbumsProps) => {
 
     for (const [id, info] of audios()) {
       const album = list[info.album] ?? {};
-      const disk = album[info.disk.no ?? -1] ?? {};
-      const track = disk[info.track.no ?? -1] ?? [];
+      const disk = album[info.disk ?? -1] ?? {};
+      const track = disk[info.track ?? -1] ?? [];
 
       track.push(id);
 
-      disk[info.track.no ?? -1] = track;
-      album[info.disk.no ?? -1] = disk;
+      disk[info.track ?? -1] = track;
+      album[info.disk ?? -1] = disk;
       list[info.album] = album;
     }
 

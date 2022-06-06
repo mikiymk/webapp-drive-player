@@ -1,6 +1,8 @@
 import { downloadFile } from "~/google/downloadFile";
 
-import { AudioInfo } from "./AudioInfo";
+import { emptyInfo, parseInfo } from "./AudioInfo";
+
+import type { AudioInfo } from "./AudioInfo";
 
 const CACHE_LENGTH = 5;
 const caches: {
@@ -26,15 +28,15 @@ export const downloadAudio = (
     return [data, info];
   }
   if (id === undefined || token === undefined) {
-    return [Promise.resolve(null), Promise.resolve(AudioInfo.getEmptyInfo())];
+    return [Promise.resolve(null), Promise.resolve(emptyInfo())];
   }
 
   const data = downloadAudioPromise(id, token);
   const info = data.then(data => {
     if (data === null) {
-      return AudioInfo.getEmptyInfo();
+      return emptyInfo();
     }
-    return AudioInfo.getInfo(data.slice());
+    return parseInfo(data.slice());
   });
 
   caches.push({ id, token, data, info });

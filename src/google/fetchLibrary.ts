@@ -1,8 +1,9 @@
-import { AudioInfo } from "~/audio/AudioInfo";
+import { copyInfo } from "~/audio/AudioInfo";
 import { downloadFile } from "~/google/downloadFile";
 import { getFileID } from "~/google/getFileList";
 import { createAppData, uploadAppData } from "~/google/uploadFile";
 
+import type { AudioInfo } from "~/audio/AudioInfo";
 import type { AudioEntries } from "~/hooks/createAudios";
 
 const FILE_NAME = "library.json";
@@ -28,7 +29,7 @@ export const getLibrary = async (
 
   const files = json.map(
     ([id, info]: [unknown, unknown]): [string, AudioInfo] => {
-      return ["" + id, AudioInfo.copyInfo(info as AudioInfo)];
+      return ["" + id, copyInfo(info as AudioInfo)];
     }
   );
 
