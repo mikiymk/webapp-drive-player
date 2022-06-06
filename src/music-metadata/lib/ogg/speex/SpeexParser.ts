@@ -1,14 +1,17 @@
-import {ITokenizer} from 'strtok3/lib/core';
-import initDebug from 'debug';
+import initDebug from "debug";
 
-import {IPageHeader} from '../Ogg';
-import {VorbisParser} from '../vorbis/VorbisParser';
-import {IOptions} from '../../type';
-import {INativeMetadataCollector} from '../../common/MetadataCollector';
 
-import * as Speex from './Speex';
+import { VorbisParser } from "../vorbis/VorbisParser";
 
-const debug = initDebug('music-metadata:parser:ogg:speex');
+import { Header } from "./Speex";
+
+import type { INativeMetadataCollector } from "../../common/MetadataCollector";
+import type { IOptions } from "../../type";
+import type { IPageHeader } from "../Ogg";
+import type { ITokenizer } from "strtok3/lib/core";
+
+
+const debug = initDebug("music-metadata:parser:ogg:speex");
 
 /**
  * Speex, RFC 5574
@@ -17,8 +20,11 @@ const debug = initDebug('music-metadata:parser:ogg:speex');
  * - https://tools.ietf.org/html/rfc5574
  */
 export class SpeexParser extends VorbisParser {
-
-  constructor(metadata: INativeMetadataCollector, options: IOptions, private tokenizer: ITokenizer) {
+  constructor(
+    metadata: INativeMetadataCollector,
+    options: IOptions,
+    private tokenizer: ITokenizer
+  ) {
     super(metadata, options);
   }
 
@@ -28,14 +34,13 @@ export class SpeexParser extends VorbisParser {
    * @param {Buffer} pageData
    */
   protected parseFirstPage(header: IPageHeader, pageData: Buffer) {
-    debug('First Ogg/Speex page');
-    const speexHeader = Speex.Header.get(pageData, 0);
-    this.metadata.setFormat('codec', `Speex ${speexHeader.version}`);
-    this.metadata.setFormat('numberOfChannels', speexHeader.nb_channels);
-    this.metadata.setFormat('sampleRate', speexHeader.rate);
+    debug("First Ogg/Speex page");
+    const speexHeader = Header.get(pageData, 0);
+    this.metadata.setFormat("codec", `Speex ${speexHeader.version}`);
+    this.metadata.setFormat("numberOfChannels", speexHeader.nb_channels);
+    this.metadata.setFormat("sampleRate", speexHeader.rate);
     if (speexHeader.bitrate !== -1) {
-      this.metadata.setFormat('bitrate', speexHeader.bitrate);
+      this.metadata.setFormat("bitrate", speexHeader.bitrate);
     }
   }
-
 }

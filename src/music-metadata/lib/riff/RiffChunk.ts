@@ -1,8 +1,9 @@
-import * as Token from 'token-types';
-import { IGetToken } from 'strtok3/lib/core';
+import { UINT32_LE, StringType } from "token-types";
 
-import {IChunkHeader} from '../iff';
-export {IChunkHeader} from '../iff';
+import type { IChunkHeader } from "../iff";
+import type { IGetToken } from "strtok3/lib/core";
+
+export { IChunkHeader } from "../iff";
 
 /**
  * Common RIFF chunk header
@@ -13,18 +14,17 @@ export const Header: IGetToken<IChunkHeader> = {
   get: (buf: Buffer, off): IChunkHeader => {
     return {
       // Group-ID
-      chunkID: buf.toString('binary', off, off + 4),
+      chunkID: buf.toString("binary", off, off + 4),
       // Size
-      chunkSize: Token.UINT32_LE.get(buf, 4)
+      chunkSize: UINT32_LE.get(buf, 4),
     };
-  }
+  },
 };
 
 /**
  * Token to parse RIFF-INFO tag value
  */
 export class ListInfoTagValue implements IGetToken<string> {
-
   public len: number;
 
   public constructor(private tagHeader: IChunkHeader) {
@@ -33,6 +33,9 @@ export class ListInfoTagValue implements IGetToken<string> {
   }
 
   public get(buf, off): string {
-    return new Token.StringType(this.tagHeader.chunkSize, 'ascii').get(buf, off);
+    return new StringType(this.tagHeader.chunkSize, "ascii").get(
+      buf,
+      off
+    );
   }
 }

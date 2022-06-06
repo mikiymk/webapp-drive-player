@@ -1,17 +1,35 @@
-import * as Stream from 'stream';
-import * as strtok3 from 'strtok3';
 
-import * as Core from './core';
-import { ParserFactory } from './ParserFactory';
-import { IAudioMetadata, IOptions } from './type';
-import initDebug from 'debug';
-import { RandomFileReader } from './common/RandomFileReader';
+import initDebug from "debug";
+import * as strtok3 from "strtok3";
 
-export { IAudioMetadata, IOptions, ITag, INativeTagDict, ICommonTagsResult, IFormat, IPicture, IRatio, IChapter } from './type';
+import { ParserFactory } from "./ParserFactory";
+import { RandomFileReader } from "./common/RandomFileReader";
+import { parseFromTokenizer, scanAppendingHeaders, orderTags as Core_orderTags, ratingToStars as Core_ratingToStars, parseBuffer, selectCover } from "./core";
+
+import type { IAudioMetadata, IOptions } from "./type";
+
+import type * as Stream from "stream";
+
+export {
+  IAudioMetadata,
+  IOptions,
+  ITag,
+  INativeTagDict,
+  ICommonTagsResult,
+  IFormat,
+  IPicture,
+  IRatio,
+  IChapter,
+} from "./type";
 
 const debug = initDebug("music-metadata:parser");
 
-export { parseFromTokenizer, parseBuffer, IFileInfo, selectCover } from './core';
+export {
+  parseFromTokenizer,
+  parseBuffer,
+  IFileInfo,
+  selectCover,
+} from "./core";
 
 /**
  * Parse audio from Node Stream.Readable
@@ -20,9 +38,16 @@ export { parseFromTokenizer, parseBuffer, IFileInfo, selectCover } from './core'
  * @param options - Parsing options
  * @returns Metadata
  */
-export async function parseStream(stream: Stream.Readable, fileInfo?: strtok3.IFileInfo | string, options: IOptions = {}): Promise<IAudioMetadata> {
-  const tokenizer = await strtok3.fromStream(stream, typeof fileInfo === 'string' ? {mimeType: fileInfo} : fileInfo);
-  return Core.parseFromTokenizer(tokenizer, options);
+export async function parseStream(
+  stream: Stream.Readable,
+  fileInfo?: strtok3.IFileInfo | string,
+  options: IOptions = {}
+): Promise<IAudioMetadata> {
+  const tokenizer = await strtok3.fromStream(
+    stream,
+    typeof fileInfo === "string" ? { mimeType: fileInfo } : fileInfo
+  );
+  return parseFromTokenizer(tokenizer, options);
 }
 
 /**
@@ -31,23 +56,27 @@ export async function parseStream(stream: Stream.Readable, fileInfo?: strtok3.IF
  * @param options - Parsing options
  * @returns Metadata
  */
-export async function parseFile(filePath: string, options: IOptions = {}): Promise<IAudioMetadata> {
-
+export async function parseFile(
+  filePath: string,
+  options: IOptions = {}
+): Promise<IAudioMetadata> {
   debug(`parseFile: ${filePath}`);
 
   const fileTokenizer = await strtok3.fromFile(filePath);
 
-  const fileReader = await RandomFileReader.init(filePath, fileTokenizer.fileInfo.size);
+  const fileReader = await RandomFileReader.init(
+    filePath,
+    fileTokenizer.fileInfo.size
+  );
   try {
-    await Core.scanAppendingHeaders(fileReader, options);
+    await scanAppendingHeaders(fileReader, options);
   } finally {
     await fileReader.close();
   }
 
   try {
     const parserName = ParserFactory.getParserIdForExtension(filePath);
-    if (!parserName)
-      debug(' Parser could not be determined by file extension');
+    if (!parserName) debug(" Parser could not be determined by file extension");
 
     return await ParserFactory.parse(fileTokenizer, parserName, options);
   } finally {
@@ -60,14 +89,14 @@ export async function parseFile(filePath: string, options: IOptions = {}): Promi
  * @param nativeTags - List of tags
  * @returns Tags indexed by id
  */
-export const orderTags = Core.orderTags;
+export const orderTags = Core_orderTags;
 
 /**
  * Convert rating to 1-5 star rating
  * @param rating - Normalized rating [0..1] (common.rating[n].rating)
  * @returns Number of stars: 1, 2, 3, 4 or 5 stars
  */
-export const ratingToStars = Core.ratingToStars;
+export const ratingToStars = Core_ratingToStars;
 
 /**
  * Define default module exports
@@ -75,7 +104,7 @@ export const ratingToStars = Core.ratingToStars;
 export default {
   parseStream,
   parseFile,
-  parseFromTokenizer: Core.parseFromTokenizer,
-  parseBuffer: Core.parseBuffer,
-  selectCover: Core.selectCover
+  parseFromTokenizer: parseFromTokenizer,
+  parseBuffer: parseBuffer,
+  selectCover: selectCover,
 };
