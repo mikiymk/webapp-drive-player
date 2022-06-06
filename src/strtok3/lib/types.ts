@@ -1,5 +1,3 @@
-import { IGetToken } from '@tokenizer/token';
-
 export interface IFileInfo {
   /**
    * File size in bytes
@@ -22,7 +20,6 @@ export interface IFileInfo {
 }
 
 export interface IReadChunkOptions {
-
   /**
    * The offset in the buffer to start writing at; default is 0
    */
@@ -51,7 +48,6 @@ export interface IReadChunkOptions {
  * The tokenizer-stream is an abstraction of a stream, file or Buffer.
  */
 export interface ITokenizer {
-
   /**
    * Provide access to information of the underlying information stream or file.
    */
@@ -84,7 +80,11 @@ export interface ITokenizer {
    * @param position - Offset where to begin reading within the file. If position is null, data will be read from the current file position.
    * @param maybeless - If set, will not throw an EOF error if the less then the requested length could be read.
    */
-  peekToken<T>(token: IGetToken<T>, position?: number | null, maybeless?: boolean): Promise<T>;
+  peekToken<T>(
+    token: IGetToken<T>,
+    position?: number | null,
+    maybeless?: boolean
+  ): Promise<T>;
 
   /**
    * Read a token from the tokenizer-stream.
@@ -118,4 +118,35 @@ export interface ITokenizer {
    * It does not close the stream for StreamReader, but is does close the file-descriptor.
    */
   close(): Promise<void>;
+}
+
+/**
+ * Read-only token
+ * See https://github.com/Borewit/strtok3 for more information
+ */
+export interface IGetToken<Value, Array extends Uint8Array = Uint8Array> {
+  /**
+   * Length of encoded token in bytes
+   */
+  len: number;
+
+  /**
+   * Decode value from buffer at offset
+   * @param array - Uint8Array to read the decoded value from
+   * @param offset - Decode offset
+   * @return decoded value
+   */
+  get(array: Array, offset: number): Value;
+}
+
+export interface IToken<Value, Array extends Uint8Array = Uint8Array>
+  extends IGetToken<Value, Array> {
+  /**
+   * Encode value to buffer
+   * @param array - Uint8Array to write the encoded value to
+   * @param offset - Buffer write offset
+   * @param value - Value to decode of type T
+   * @return offset plus number of bytes written
+   */
+  put(array: Array, offset: number, value: Value): number;
 }

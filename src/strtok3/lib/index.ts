@@ -1,25 +1,20 @@
-import { Readable } from 'stream';
-import * as fs from './FsPromise';
-import { ReadStreamTokenizer } from './ReadStreamTokenizer';
-import * as core from './core';
+import { BufferTokenizer } from "./BufferTokenizer";
 
-export { fromFile } from './FileTokenizer';
-export { ITokenizer, EndOfStreamError, fromBuffer, IFileInfo } from './core';
-export { IToken, IGetToken } from '@tokenizer/token';
+import type { IFileInfo } from "./types";
+
+export { EndOfStreamError } from "./EndOfStreamError";
+
+export type { ITokenizer, IFileInfo, IToken, IGetToken } from "./types";
 
 /**
- * Construct ReadStreamTokenizer from given Stream.
- * Will set fileSize, if provided given Stream has set the .path property.
- * @param stream - Node.js Stream.Readable
+ * Construct ReadStreamTokenizer from given Buffer.
+ * @param uint8Array - Uint8Array to tokenize
  * @param fileInfo - Pass additional file information to the tokenizer
- * @returns Tokenizer
+ * @returns BufferTokenizer
  */
-export async function fromStream(stream: Readable, fileInfo?: core.IFileInfo): Promise<ReadStreamTokenizer> {
-  fileInfo = fileInfo ? fileInfo : {};
-  if ((stream as any).path) {
-    const stat = await fs.stat((stream as any).path);
-    fileInfo.path = (stream as any).path;
-    fileInfo.size = stat.size;
-  }
-  return core.fromStream(stream, fileInfo);
+export function fromBuffer(
+  uint8Array: Uint8Array,
+  fileInfo?: IFileInfo
+): BufferTokenizer {
+  return new BufferTokenizer(uint8Array, fileInfo);
 }
