@@ -8,13 +8,15 @@
     "test:watch": "vitest",
     "build": "vite build",
     "build:analyze": "vite build --mode analyze",
+    "build:wasm": "wasm-pack build --release",
     "start": "vite",
-    "check": "run-s format lint type test",
+    "check": "run-s format lint type test cargo",
     "format": "prettier -w index.html src",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "type": "tsc",
     "type:watch": "tsc --watch",
+    "cargo": "cargo check",
     "watch": "run-p type:watch start"
   },
   "repository": {
