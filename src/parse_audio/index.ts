@@ -1,11 +1,15 @@
 import { parseFileType } from "./fileType";
+import { parseAiff } from "./parseAiff";
 
-export const parseBuffer = (buffer: ArrayBuffer) => {
+import type { Tags } from "./type";
+
+export const parseBuffer = (buffer: ArrayBuffer): Tags => {
   const view = new DataView(buffer);
   const fileType = parseFileType(view);
+
   switch (fileType) {
     case "aiff":
-      return new AIFFParser();
+      return parseAiff(buffer);
     case "adts":
     case "mpeg":
       return new MpegParser();
