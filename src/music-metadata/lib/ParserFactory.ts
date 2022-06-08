@@ -76,8 +76,6 @@ export const parseOnContentType = async (
 export function parseHttpContentType(contentType: string | undefined): {
   type: string;
   subtype: string;
-  suffix: string | undefined;
-  parameters: { [id: string]: string };
 } {
   if (!contentType) throw new Error("content type required");
   const type = ContentTypeParse(contentType);
@@ -85,8 +83,6 @@ export function parseHttpContentType(contentType: string | undefined): {
   return {
     type: mime.type,
     subtype: mime.subtype,
-    suffix: mime.suffix,
-    parameters: type.parameters,
   };
 }
 
