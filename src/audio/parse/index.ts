@@ -1,5 +1,6 @@
 import { parseFileType } from "./fileType";
-import { parseAiff } from "./parseAiff";
+import { parseAiff } from "./parse/parseAiff";
+import { parseMpeg } from "./parse/parseMpeg";
 
 import type { Tags } from "./type";
 
@@ -12,7 +13,7 @@ export const parseBuffer = (buffer: ArrayBuffer): Tags => {
       return parseAiff(buffer);
     case "adts":
     case "mpeg":
-      return new MpegParser();
+      return parseMpeg(buffer);
     case "apev2":
       return new APEv2Parser();
     case "asf":

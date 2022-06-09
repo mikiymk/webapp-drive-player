@@ -11,8 +11,7 @@ import {
   readXingHeader,
 } from "./XingTag";
 
-import type {
-  IXingInfoTag} from "./XingTag";
+import type { IXingInfoTag } from "./XingTag";
 
 const debug = initDebug("music-metadata:parser:mpeg");
 
@@ -291,12 +290,7 @@ class MpegFrameHeader {
 
     debug(`MPEG-4 audio-codec=${this.codec}`);
 
-    const samplingFrequencyIndex = getBitAllignedNumber(
-      buf,
-      off + 2,
-      2,
-      4
-    );
+    const samplingFrequencyIndex = getBitAllignedNumber(buf, off + 2, 2, 4);
     this.samplingRate = MPEG4.SamplingFrequencies[samplingFrequencyIndex];
     debug(`sampling-rate=${this.samplingRate}`);
 
@@ -400,7 +394,7 @@ export class MpegParser extends AbstractID3Parser {
   /**
    * Called after file has been fully parsed, this allows, if present, to exclude the ID3v1.1 header length
    */
-  protected finalize() {
+  protected override finalize() {
     const format = this.metadata.format;
     const hasID3v1 = this.metadata.native.hasOwnProperty("ID3v1");
     if (format.duration && this.tokenizer.fileInfo.size) {

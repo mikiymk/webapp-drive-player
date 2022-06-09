@@ -5,13 +5,13 @@ import {
   readU32BE,
   restLength,
   seek,
-} from "./BufferReader";
+} from "../BufferReader";
 
-import { EndOfStreamError, InvalidFormatError } from "./errors";
+import { EndOfStreamError, InvalidFormatError } from "../errors";
 
-import type { BufferReader } from "./BufferReader";
+import type { BufferReader } from "../BufferReader";
 
-import type { Tags } from "./type";
+import type { Tags } from "../type";
 
 export const parseAiff = (buffer: ArrayBuffer): Tags => {
   const reader = getReader(buffer);
@@ -66,7 +66,7 @@ const readFourCC = (reader: BufferReader): string => {
   const id = readString(reader, 4);
 
   if (!validFourCC.test(id)) {
-    throw new Error(invalidFormat + id);
+    throw new InvalidFormatError(id);
   }
 
   return id;
