@@ -54,7 +54,7 @@
     "buffer": "^6.0.3",
     "destyle.css": "^3.0.2",
     "events": "^3.3.0",
-    "music-metadata": "^7.12.3",
+    "music-metadata": "github:mikiymk/music-metadata-browser#package",
     "process": "^0.11.10",
     "solid-js": "^1.4.1"
   }

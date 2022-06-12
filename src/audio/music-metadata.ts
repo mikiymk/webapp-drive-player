@@ -1,4 +1,4 @@
-import { parseBuffer } from "~/music-metadata/lib";
+import { parseBuffer } from "music-metadata/dist/core";
 import "~/polyfills";
 
 export { parseBuffer };
