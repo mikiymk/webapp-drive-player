@@ -23,7 +23,6 @@ export const AudioList = (props: AudioListProps) => {
         <tr>
           <th>title</th>
           <th class={sItemArtist}>artists</th>
-
           <th></th>
         </tr>
       </thead>

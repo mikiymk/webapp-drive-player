@@ -2,15 +2,17 @@ import { style } from "@vanilla-extract/css";
 
 export const sList = style({
   width: "100%",
+  overflowY: "scroll",
 });
 
 export const sHead = style({
   background: "#808080",
+  position: "sticky",
+  top: 0,
 });
 
 export const sBody = style({
   height: "100%",
-  overflowY: "scroll",
 });
 
 export const sItem = style({
