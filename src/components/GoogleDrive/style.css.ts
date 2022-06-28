@@ -2,7 +2,7 @@ import { style } from "@vanilla-extract/css";
 
 export const styleDrive = style({
   overflowY: "scroll",
-  height: "100%",
+  flex: "1 0 0",
 });
 
 export const styleItem = style({
