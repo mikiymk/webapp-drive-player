@@ -49,7 +49,7 @@ export const Albums = (props: AlbumsProps) => {
   });
 
   return (
-    <div>
+    <>
       <h2>
         <button onclick={props.reset}>Albums</button>
         {" > "}
@@ -75,6 +75,6 @@ export const Albums = (props: AlbumsProps) => {
           {selected => <AudioList audios={selected} play={props.play} />}
         </Show>
       </div>
-    </div>
+    </>
   );
 };
