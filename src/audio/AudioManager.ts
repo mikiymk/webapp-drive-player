@@ -126,6 +126,7 @@ export class AudioManager {
 
     this.onChangeMusic?.(id);
     await this.player.setBuffer(data);
+    return id;
   }
 
   setRepeat(repeat: Repeat) {
@@ -162,7 +163,9 @@ export class AudioManager {
   }
 
   start() {
-    this.setBuffer().then(() => this.player.start());
+    this.setBuffer().then(
+      id => this.musicIds.get(this.index) === id && this.player.start()
+    );
   }
 
   stop() {
@@ -170,7 +173,9 @@ export class AudioManager {
   }
 
   play() {
-    this.setBuffer().then(() => this.player.play());
+    this.setBuffer().then(
+      id => this.musicIds.get(this.index) === id && this.player.play()
+    );
   }
 
   pause() {
