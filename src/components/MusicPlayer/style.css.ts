@@ -1,4 +1,4 @@
-import { globalStyle, style } from "@vanilla-extract/css";
+import { createTheme, globalStyle, style } from "@vanilla-extract/css";
 
 export const stylePlayer = style({
   display: "flex",
@@ -11,4 +11,10 @@ export const stylePlayer = style({
 globalStyle(":root, body, #root", {
   height: "100%",
   width: "100%",
+});
+
+export const [themeClass, vars] = createTheme({
+  length: {
+    top: "",
+  },
 });

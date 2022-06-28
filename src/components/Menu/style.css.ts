@@ -28,7 +28,8 @@ export const styleNavSelected = style({
 export const styleContent = style({
   flex: "1 0 0",
   backgroundColor: "rgb(207, 207, 207)",
-  overflow: "hidden",
+  display: "flex",
+  flexDirection: "column",
 });
 
 export const styleLabel = style({

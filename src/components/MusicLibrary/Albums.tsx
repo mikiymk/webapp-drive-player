@@ -4,6 +4,8 @@ import { audios } from "~/hooks/createAudios";
 
 import { AudioList } from "../AudioList";
 
+import { styleList } from "./style.css";
+
 export type AlbumsProps = {
   play: (idList: readonly string[], index: number) => void;
   reset: () => void;
@@ -56,21 +58,23 @@ export const Albums = (props: AlbumsProps) => {
         </Show>
       </h2>
 
-      <Show
-        when={album()}
-        fallback={
-          <ul>
-            <For each={Object.keys(albums())}>
-              {artist => (
-                <li>
-                  <button onclick={() => select(artist)}>{artist}</button>
-                </li>
-              )}
-            </For>
-          </ul>
-        }>
-        {selected => <AudioList audios={selected} play={props.play} />}
-      </Show>
+      <div class={styleList}>
+        <Show
+          when={album()}
+          fallback={
+            <ul>
+              <For each={Object.keys(albums())}>
+                {artist => (
+                  <li>
+                    <button onclick={() => select(artist)}>{artist}</button>
+                  </li>
+                )}
+              </For>
+            </ul>
+          }>
+          {selected => <AudioList audios={selected} play={props.play} />}
+        </Show>
+      </div>
     </div>
   );
 };
