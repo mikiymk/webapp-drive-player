@@ -42,7 +42,10 @@ const config = defineConfig(({ mode, command }) => {
       }),
     ],
     resolve: {
-      alias: { "~/": path.join(__dirname, "src/") },
+      alias: {
+        "~": path.join(__dirname, "src", ""),
+        "node:buffer": "buffer",
+      },
     },
     build: {
       rollupOptions: {

@@ -14,59 +14,44 @@ import { styleSettings } from "./style.css";
 export const Settings = () => {
   return (
     <div class={styleSettings}>
-      <Load load={uploadLibrary}>
+      <Load load={syncLibrary}>
         <IconUpload />
-        send library data to google drive
-      </Load>
-      <Load load={downloadLibrary}>
         <IconDownload />
-        get library data from google drive
-      </Load>
-      <Load load={uploadPlaylists}>
-        <IconUpload />
-        send playlist data from google drive
-      </Load>
-      <Load load={downloadPlaylists}>
-        <IconDownload />
-        get playlist data from google drive
+        Sync library and playlists data with drive
       </Load>
     </div>
   );
 };
 
-const uploadLibrary = async () => {
+const syncLibrary = async () => {
   const token = accessToken();
-  if (token === undefined) throw new Error("not logged in");
+  if (token === undefined) throw new Error("You are not logged in");
 
-  const response = await sendLibrary(token, Array.from(audios().entries()));
-  if (response.status !== 200) throw new Error(response.statusText);
-};
+  // download
 
-const downloadLibrary = async () => {
-  const token = accessToken();
-  if (token === undefined) throw new Error("not logged in");
+  const downloadedLibraryPromise = getLibrary(token);
+  const downloadedPlaylistsPromise = getPlaylists(token);
 
-  const data = await getLibrary(token);
-  if (data === null) throw new Error("data not found");
-  addAudios(data);
-};
+  const [downloadedLibrary, downloadedPlaylists] = await Promise.all([
+    downloadedLibraryPromise,
+    downloadedPlaylistsPromise,
+  ]);
+  if (downloadedLibrary !== null) addAudios(downloadedLibrary);
+  if (downloadedPlaylists !== null) addPlaylists(downloadedPlaylists);
 
-const uploadPlaylists = async () => {
-  const token = accessToken();
-  if (token === undefined) throw new Error("not logged in");
+  // upload
 
-  const response = await sendPlaylists(
-    token,
-    Array.from(playlists().entries())
-  );
-  if (response.status !== 200) throw new Error(response.statusText);
-};
+  const libraryResponsePromise = sendLibrary(token, Array.from(audios()));
+  const playlistResponsePromise = sendPlaylists(token, Array.from(playlists()));
 
-const downloadPlaylists = async () => {
-  const token = accessToken();
-  if (token === undefined) throw new Error("not logged in");
+  const [libraryResponse, playlistResponse] = await Promise.all([
+    libraryResponsePromise,
+    playlistResponsePromise,
+  ]);
 
-  const data = await getPlaylists(token);
-  if (data === null) throw new Error("data not found");
-  addPlaylists(data);
+  if (libraryResponse.status !== 200)
+    throw new Error(libraryResponse.statusText);
+
+  if (playlistResponse.status !== 200)
+    throw new Error(playlistResponse.statusText);
 };
