@@ -1,7 +1,6 @@
 import { onMount } from "solid-js";
 
 import { Controller } from "~/components/Controller";
-import { DriveFiles } from "~/components/GoogleDrive";
 import {
   IconDrive,
   IconLibrary,
@@ -10,11 +9,14 @@ import {
   IconSettings,
 } from "~/components/Icon";
 import { Menu, MenuItem } from "~/components/Menu";
-import { Library } from "~/components/MusicLibrary";
-import { Playing } from "~/components/Playing";
-import { Playlists } from "~/components/Playlist";
+
 import { ExclusiveMenuRoot } from "~/components/PopUpMenu";
-import { Settings } from "~/components/Settings";
+import { DriveFiles } from "~/pages/GoogleDrive";
+import { Library } from "~/pages/MusicLibrary";
+import { Playing } from "~/pages/Playing";
+
+import { Playlists } from "~/pages/Playlist";
+import { Settings } from "~/pages/Settings";
 
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "./useMusicPlayer";
@@ -49,6 +51,7 @@ export const MusicPlayer = () => {
           <MenuItem key="playing" icon={<IconPlay />} label="Now Playing">
             <Playing info={status.info()} />
           </MenuItem>
+
           <MenuItem key="library" icon={<IconLibrary />} label="Library">
             <Library play={playWithIdList} />
           </MenuItem>

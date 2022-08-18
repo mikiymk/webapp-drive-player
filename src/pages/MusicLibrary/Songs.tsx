@@ -1,6 +1,5 @@
+import { AudioList } from "~/components/AudioList";
 import { audios } from "~/signals/audios";
-
-import { AudioList } from "../AudioList";
 
 import { styleList } from "./style.css";
 
