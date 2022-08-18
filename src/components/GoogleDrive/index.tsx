@@ -1,11 +1,12 @@
 import { For, Show } from "solid-js";
 
-import { AudioInfo } from "~/audio/AudioInfo";
 import { IconAudioFile, IconFolder } from "~/components/Icon";
 import { addAudios } from "~/hooks/createAudios";
 
 import { Breadcrumbs } from "./Breadcrumbs";
 import { Loading } from "./Loading";
+import { audioEntryFromFile } from "./audioEntryFromGoogleFile";
+import { getAudiosFromFolder } from "./getAudiosFromFolder";
 import { styleDrive, styleItem } from "./style.css";
 import { useGDriveParents } from "./useGDriveParents";
 
@@ -14,9 +15,6 @@ import { useGDriveParents } from "./useGDriveParents";
  */
 export const DriveFiles = () => {
   const parents = useGDriveParents();
-  const addAudioFile = (id: string, name: string) => {
-    addAudios([[id, AudioInfo.getNamedInfo(name)]]);
-  };
 
   return (
     <div class={styleDrive}>
@@ -28,6 +26,7 @@ export const DriveFiles = () => {
               <ItemFolder
                 name={folder.name}
                 move={() => parents.addParents(folder)}
+                addFiles={() => getAudiosFromFolder(folder).then(addAudios)}
               />
             )}
           </For>
@@ -35,7 +34,7 @@ export const DriveFiles = () => {
             {file => (
               <ItemFile
                 name={file.name}
-                addFile={() => addAudioFile(file.id, file.name)}
+                addFile={() => addAudios([audioEntryFromFile(file)])}
               />
             )}
           </For>
@@ -48,6 +47,7 @@ export const DriveFiles = () => {
 type ItemFolderProps = {
   name: string;
   move: () => void;
+  addFiles: () => void;
 };
 
 const ItemFolder = (props: ItemFolderProps) => {
