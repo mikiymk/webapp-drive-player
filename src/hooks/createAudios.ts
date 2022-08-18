@@ -4,7 +4,8 @@ import type { AudioInfo } from "~/audio/AudioInfo";
 
 export type AudioID = string;
 export type AudioMap = Map<AudioID, AudioInfo>;
-export type AudioEntries = [AudioID, AudioInfo][];
+export type AudioEntry = [AudioID, AudioInfo];
+export type AudioEntries = AudioEntry[];
 
 const [audios, setAudios] = createSignal<AudioMap>(new Map());
 export { audios };
