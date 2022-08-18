@@ -8,9 +8,9 @@ import {
   IconPlayList,
   IconSettings,
 } from "~/components/Icon";
-import { Menu, MenuItem } from "~/components/Menu";
-
 import { ExclusiveMenuRoot } from "~/components/PopUpMenu";
+import { Menu, MenuItem } from "~/components/TabMenu";
+
 import { DriveFiles } from "~/pages/GoogleDrive";
 import { Library } from "~/pages/MusicLibrary";
 import { Playing } from "~/pages/Playing";
