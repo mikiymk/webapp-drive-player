@@ -5,9 +5,8 @@ import { AudioInfo } from "~/audio/AudioInfo";
 import { AudioManager } from "~/audio/AudioManager";
 import { Repeat } from "~/audio/Repeat";
 
+import { accessToken } from "~/signals/access-token";
 import { getAudio, setAudioInfo } from "~/signals/audios";
-
-import { accessToken } from "../signals/access-token";
 
 const useMusicPlayer = () => {
   const [paused, setPaused] = createSignal(true);

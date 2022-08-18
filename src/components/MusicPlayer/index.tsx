@@ -16,9 +16,8 @@ import { Playlists } from "~/components/Playlist";
 import { ExclusiveMenuRoot } from "~/components/PopUpMenu";
 import { Settings } from "~/components/Settings";
 
-import useMusicPlayer from "~/hooks/useMusicPlayer";
-
 import { stylePlayer } from "./style.css";
+import useMusicPlayer from "./useMusicPlayer";
 
 import type { GoogleFile } from "~/google/type";
 
