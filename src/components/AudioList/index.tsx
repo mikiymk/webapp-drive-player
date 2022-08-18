@@ -2,7 +2,7 @@ import { For, Show } from "solid-js";
 
 import { MenuProvider } from "~/components/PopUpMenu";
 
-import { getAudio } from "~/hooks/createAudios";
+import { getAudio } from "~/signals/audios";
 
 import { AudioListItem } from "./AudioListItem";
 import { AudioListMenu } from "./AudioListMenu";
@@ -23,7 +23,7 @@ export const AudioList = (props: AudioListProps) => {
         <tr>
           <th>title</th>
           <th class={sItemArtist}>artists</th>
-          <th></th>
+          <th />
         </tr>
       </thead>
       <tbody class={sBody}>

@@ -1,5 +1,5 @@
 import { Menu, MenuItem, MenuSeparator } from "~/components/PopUpMenu";
-import { deletePlaylist, renamePlaylist } from "~/hooks/createPlaylists";
+import { deletePlaylist, renamePlaylist } from "~/signals/playlists";
 
 export type PlaylistListMenuProps = {
   name: string;

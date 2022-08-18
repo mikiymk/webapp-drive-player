@@ -1,8 +1,7 @@
 import { createMemo, createSignal, For, Show } from "solid-js";
 
-import { audios } from "~/hooks/createAudios";
-
-import { AudioList } from "../AudioList";
+import { AudioList } from "~/components/AudioList";
+import { audios } from "~/signals/audios";
 
 import { styleList } from "./style.css";
 
@@ -38,10 +37,10 @@ export const Artists = (props: ArtistsProps) => {
   return (
     <>
       <h2>
-        <button onclick={props.reset}>Artists</button>
+        <button onClick={props.reset}>Artists</button>
         {" > "}
         <Show when={selected()} fallback="select Artist">
-          {selected => <button onclick={() => select()}>{selected}</button>}
+          {selected => <button onClick={() => select()}>{selected}</button>}
         </Show>
       </h2>
 
@@ -53,7 +52,7 @@ export const Artists = (props: ArtistsProps) => {
               <For each={Object.keys(artists())}>
                 {artist => (
                   <li>
-                    <button onclick={() => select(artist)}>{artist}</button>
+                    <button onClick={() => select(artist)}>{artist}</button>
                   </li>
                 )}
               </For>

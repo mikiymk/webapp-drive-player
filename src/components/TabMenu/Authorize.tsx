@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 
 import { IconSignIn, IconSignOut } from "~/components/Icon";
-import { accessToken, useSignIn } from "~/hooks/useSignIn";
+import { accessToken, useSignIn } from "~/signals/access-token";
 
 import { NavItem } from "./NavItem";
 

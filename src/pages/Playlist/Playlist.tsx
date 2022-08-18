@@ -1,6 +1,6 @@
 import { AudioList } from "~/components/AudioList";
 import { MenuItem } from "~/components/PopUpMenu";
-import { playlists, removeAudio } from "~/hooks/createPlaylists";
+import { playlists, removeAudio } from "~/signals/playlists";
 
 import { stylePlaylist } from "./style.css";
 

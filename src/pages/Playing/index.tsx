@@ -1,9 +1,8 @@
 import { Show } from "solid-js";
 
-import useJacket from "~/hooks/useJacket";
-
 import { NoImage } from "./NoImage";
 import { styleImage, styleInfo, stylePlaying } from "./style.css";
+import useJacket from "./useJacket";
 
 import type { AudioInfo } from "~/audio/AudioInfo";
 
