@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
 
-import type { AudioID } from "./createAudios";
+import type { AudioID } from "./audios";
 
 export type PlaylistName = string;
 export type PlaylistMap = Map<PlaylistName, readonly AudioID[]>;

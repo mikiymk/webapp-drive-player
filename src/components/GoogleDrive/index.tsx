@@ -1,7 +1,7 @@
 import { For, Show } from "solid-js";
 
 import { IconAudioFile, IconFolder } from "~/components/Icon";
-import { addAudios } from "~/hooks/createAudios";
+import { addAudios } from "~/signals/audios";
 
 import { Breadcrumbs } from "./Breadcrumbs";
 import { Loading } from "./Loading";

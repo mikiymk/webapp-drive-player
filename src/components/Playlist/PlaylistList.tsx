@@ -1,7 +1,7 @@
 import { batch, createSignal, For, Show } from "solid-js";
 
 import { MenuProvider } from "~/components/PopUpMenu";
-import { makePlaylist, playlists } from "~/hooks/createPlaylists";
+import { makePlaylist, playlists } from "~/signals/playlists";
 
 import { MakePlaylistButton } from "./MakePlaylistButton";
 import { PlaylistListItem } from "./PlaylistListItem";

@@ -3,7 +3,7 @@ import { downloadFile } from "~/google/downloadFile";
 import { getFileID } from "~/google/getFileList";
 import { createAppData, uploadAppData } from "~/google/uploadFile";
 
-import type { AudioEntries } from "~/hooks/createAudios";
+import type { AudioEntries } from "~/signals/audios";
 
 const FILE_NAME = "library.json";
 

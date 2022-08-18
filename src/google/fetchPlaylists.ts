@@ -2,7 +2,7 @@ import { downloadFile } from "./downloadFile";
 import { getFileID } from "./getFileList";
 import { createAppData, uploadAppData } from "./uploadFile";
 
-import type { PlaylistEntries } from "~/hooks/createPlaylists";
+import type { PlaylistEntries } from "~/signals/playlists";
 
 const FILE_NAME = "playlists.json";
 

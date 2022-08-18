@@ -1,6 +1,9 @@
-export function createRef<T>(): [() => T | undefined, (value?: T) => void];
-export function createRef<T>(initialValue: T): [() => T, (value: T) => void];
-export function createRef<T>(initialValue?: T) {
+type CreateRef = {
+  <T>(): [() => T | undefined, (value?: T) => void];
+  <T>(initialValue: T): [() => T, (value: T) => void];
+};
+
+export const createRef: CreateRef = <T>(initialValue?: T) => {
   let current = initialValue;
   return [
     () => current,
@@ -8,4 +11,4 @@ export function createRef<T>(initialValue?: T) {
       current = value;
     },
   ];
-}
+};

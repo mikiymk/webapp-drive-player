@@ -1,4 +1,4 @@
-import { audios } from "~/hooks/createAudios";
+import { audios } from "~/signals/audios";
 
 import { AudioList } from "../AudioList";
 
@@ -16,7 +16,7 @@ export const Songs = (props: SongsProps) => {
   return (
     <>
       <h2>
-        <button onclick={props.reset}>Songs</button>
+        <button onClick={props.reset}>Songs</button>
       </h2>
       <div class={styleList}>
         <AudioList audios={Array.from(audios().keys())} play={props.play} />

@@ -1,6 +1,6 @@
 import { createEffect, createSignal } from "solid-js";
 
-import { playlists } from "~/hooks/createPlaylists";
+import { playlists } from "~/signals/playlists";
 
 import { styleDialog, styleDialogButton, styleDialogInput } from "./style.css";
 
@@ -44,17 +44,17 @@ export const RenameDialog = (props: RenameDialogProps) => {
         <input
           class={styleDialogInput}
           value={newName()}
-          onchange={handleChange}
-          onkeypress={handleKey}
+          onChange={handleChange}
+          onKeyPress={handleKey}
         />
       </label>
       <p>{error()}</p>
-      <button class={styleDialogButton} onclick={() => props.close()}>
+      <button class={styleDialogButton} onClick={() => props.close()}>
         Cancel
       </button>
       <button
         class={styleDialogButton}
-        onclick={() => props.close(newName())}
+        onClick={() => props.close(newName())}
         disabled={Boolean(error())}>
         Rename
       </button>

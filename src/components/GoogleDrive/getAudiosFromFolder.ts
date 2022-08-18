@@ -1,11 +1,11 @@
 import { getAllMusics, getAllFolders } from "~/file";
 
-import { accessToken } from "~/hooks/useSignIn";
+import { accessToken } from "~/signals/access-token";
 
 import { audioEntryFromFile } from "./audioEntryFromGoogleFile";
 
 import type { GoogleFile } from "~/google/type";
-import type { AudioEntries } from "~/hooks/createAudios";
+import type { AudioEntries } from "~/signals/audios";
 
 export const getAudiosFromFolder = async (
   rootFolder: GoogleFile

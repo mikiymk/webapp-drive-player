@@ -2,7 +2,7 @@ import { createEffect, createSignal } from "solid-js";
 
 import { getAllFolders, getAllMusics } from "~/file";
 
-import { accessToken } from "~/hooks/useSignIn";
+import { accessToken } from "~/signals/access-token";
 
 import type { GoogleFile } from "~/google/type";
 

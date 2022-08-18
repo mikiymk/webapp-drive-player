@@ -1,9 +1,10 @@
 import { IconDownload, IconUpload } from "~/components/Icon";
 import { getLibrary, sendLibrary } from "~/google/fetchLibrary";
 import { getPlaylists, sendPlaylists } from "~/google/fetchPlaylists";
-import { addAudios, audios } from "~/hooks/createAudios";
-import { addPlaylists, playlists } from "~/hooks/createPlaylists";
-import { accessToken } from "~/hooks/useSignIn";
+
+import { accessToken } from "~/signals/access-token";
+import { addAudios, audios } from "~/signals/audios";
+import { addPlaylists, playlists } from "~/signals/playlists";
 
 import { Load } from "./Load";
 import { styleSettings } from "./style.css";
