@@ -55,6 +55,9 @@ const ItemFolder = (props: ItemFolderProps) => {
     <li class={styleItem} onClick={() => props.move()}>
       <IconFolder />
       <span>{props.name}</span>
+      <button onClick={() => props.addFiles()}>
+        click to add all files in the folder
+      </button>
     </li>
   );
 };

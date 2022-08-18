@@ -10,22 +10,31 @@ import type { AudioEntries } from "~/hooks/createAudios";
 export const getAudiosFromFolder = async (
   rootFolder: GoogleFile
 ): Promise<AudioEntries> => {
+  console.log("get all");
   const folders = new Set([rootFolder.id]);
-  let audioEntries: AudioEntries = [];
+  const filesPromises = [];
 
   const token = accessToken();
   if (!token) return [];
 
   for (const folder of folders) {
-    const childFiles = await getAllMusics(token, folder);
+    const childFiles = getAllMusics(token, folder);
     const childFolders = await getAllFolders(token, folder);
 
-    audioEntries = audioEntries.concat(childFiles.map(audioEntryFromFile));
+    filesPromises.push(childFiles);
 
     for (const childFolder of childFolders) {
       folders.add(childFolder.id);
     }
   }
 
-  return audioEntries;
+  console.log("got all folders");
+
+  const files = await Promise.allSettled(filesPromises);
+
+  console.log("got all");
+
+  return files
+    .flatMap(file => (file.status === "fulfilled" ? file.value : []))
+    .map(audioEntryFromFile);
 };
