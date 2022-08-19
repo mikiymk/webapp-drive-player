@@ -1,5 +1,9 @@
 /* eslint-disable camelcase */
 
+import { boolToStr, co, lp, mp, tl, uniqueKey } from "./common";
+
+import type { AuthClient } from "./common";
+
 type PromptType = "" | "none" | "consent" | "select_account";
 
 type TokenResponse = {
@@ -49,7 +53,7 @@ type OverridableTokenClientConfig = {
 
 const pp = "g_auth_token_window";
 
-export class TokenClient {
+export class TokenClient implements AuthClient {
   i: string;
   g: string | undefined;
   h: "token";
@@ -110,14 +114,6 @@ const normalize = function (b: TokenClientConfig): NormalizedTokenClientConfig {
   };
 };
 
-const bb = "about:invalid#zClosurez";
-
-const co = function (a: string[], b: string, c?: string | undefined) {
-  c && a.push(b + "=" + encodeURIComponent(c.trim()));
-};
-
-const boolToStr = (a: boolean | undefined) => (false === a ? "false" : "true");
-
 const eo = function (b: string, c: NormalizedTokenClientConfig): string {
   const cc: string[] = [];
   co(cc, "gsiwebsdk", "3");
@@ -133,77 +129,4 @@ const eo = function (b: string, c: NormalizedTokenClientConfig): string {
   co(cc, "include_granted_scopes", boolToStr(c.include_granted_scopes));
   co(cc, "enable_serial_consent", boolToStr(c.enable_serial_consent));
   return b + "?" + cc.join("&");
-};
-
-const lp = function (a: TokenClient) {
-  if (a.m) return;
-  a.m = true;
-  window.addEventListener(
-    "message",
-    function (b) {
-      try {
-        if (!b.data) return;
-        const c = JSON.parse(b.data).params;
-        if (!c) return;
-        if (!a.g || c.id !== a.g) return;
-        if (c.clientId !== a.j.client_id) return;
-        if ("authResult" !== c.type) return;
-        a.g = undefined;
-        a.l(c.authResult);
-      } catch (d) {
-        console.log(d);
-      }
-    },
-    false
-  );
-};
-
-const uniqueKey = () => "auth" + Math.floor(1e6 * Math.random() + 1);
-
-const mp = function (a: string) {
-  let c = location.protocol;
-  const d = location.host;
-  const e = c.indexOf(":");
-  if (0 < e) {
-    c = c.substring(0, e);
-  }
-
-  return ["storagerelay://", c, "/", d, "?", "id=" + a].join("");
-};
-
-const Sk = /^(?:(?:https?|mailto|ftp):|[^:/?#]*(?:[/?#]|$))/i;
-const sl = /^data:(.*);base64,[a-z0-9+/]+=*$/i;
-
-const tl = function (a: string, b: string) {
-  const c = Math.min(500, screen.width - 40);
-  const d = Math.min(550, screen.height - 40);
-  const k = [
-    "toolbar=no",
-    "location=no",
-    "directories=no",
-    "status=no",
-    "menubar=no",
-    "scrollbars=no",
-    "resizable=no",
-    "copyhistory=no",
-    "width=" + c,
-    "height=" + d,
-    "top=" + (screen.height / 2 - d / 2),
-    "left=" + (screen.width / 2 - c / 2),
-  ].join();
-
-  let i;
-  if (Sk.test(a)) {
-    i = a;
-  } else {
-    const j = String(a).replace(/(%0A|%0D)/g, "");
-    i = j.match(sl) ? j : null;
-  }
-
-  const e = window.open(i || bb, b, k);
-  if (!e || e.closed || "undefined" === typeof e.closed) {
-    return null;
-  }
-  e.focus();
-  return e;
 };

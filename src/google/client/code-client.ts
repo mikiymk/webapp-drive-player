@@ -1,5 +1,9 @@
 /* eslint-disable camelcase */
 
+import { boolToStr, co, lp, mp, tl, uniqueKey, Xk } from "./common";
+
+import type { AuthClient } from "./common";
+
 type CodeResponse = {
   code: number;
   scope: string;
@@ -34,7 +38,7 @@ type NormalizedCodeClientConfig = {
   hint: string | undefined;
   state: string | undefined;
   hosted_domain: string | undefined;
-  // include_granted_scopes: b.include_granted_scopes,
+  include_granted_scopes: undefined;
   enable_serial_consent: boolean | undefined;
   select_account: boolean | undefined;
   ux_mode: "popup" | "redirect" | undefined;
@@ -43,7 +47,7 @@ type NormalizedCodeClientConfig = {
 
 const np = "g_auth_code_window";
 
-export class CodeClient {
+export class CodeClient implements AuthClient {
   i: string;
   g: string | undefined;
   h: "code";
@@ -76,7 +80,7 @@ export class CodeClient {
       lp(this);
 
       this.g = uniqueKey();
-      a.redirect_uri = mp(this);
+      a.redirect_uri = mp(this.g);
       tl(eo(this.i, a), np);
     }
   }
@@ -91,7 +95,7 @@ const goCode = function (b: CodeClientConfig): NormalizedCodeClientConfig {
     hint: b.hint,
     state: b.state,
     hosted_domain: b.hosted_domain,
-    // include_granted_scopes: b.include_granted_scopes,
+    include_granted_scopes: undefined,
     enable_serial_consent: b.enable_serial_consent,
 
     select_account: b.select_account,
@@ -107,49 +111,6 @@ const goCode = function (b: CodeClientConfig): NormalizedCodeClientConfig {
   return c;
 };
 
-class ld {
-  Vc: (a: string) => boolean;
-  constructor(a: (a: string) => boolean) {
-    this.Vc = a;
-  }
-}
-
-const md = function (a: string) {
-  return new ld(function (b) {
-    return b.substr(0, a.length + 1).toLowerCase() === a + ":";
-  });
-};
-
-const df = [
-  md("data"),
-  md("http"),
-  md("https"),
-  md("mailto"),
-  md("ftp"),
-  new ld(function (a) {
-    return /^[^:]*([/?#]|$)/.test(a);
-  }),
-];
-
-const bb = "about:invalid#zClosurez";
-
-const Xk = function (a: string) {
-  for (let c = 0; c < df.length; ++c) {
-    const d = df[c];
-    if (d instanceof ld && d.Vc(a)) {
-      return a;
-    }
-  }
-
-  return bb;
-};
-
-const co = function (a: string[], b: string, c?: string | undefined) {
-  c && a.push(b + "=" + encodeURIComponent(c.trim()));
-};
-
-const boolToStr = (a: boolean | undefined) => (false === a ? "false" : "true");
-
 const eo = function (b: string, c: NormalizedCodeClientConfig): string {
   const cc: string[] = [];
   co(cc, "gsiwebsdk", "3");
@@ -162,80 +123,7 @@ const eo = function (b: string, c: NormalizedCodeClientConfig): string {
   co(cc, "access_type", "offline");
   co(cc, "hd", c.hosted_domain);
   co(cc, "response_type", "code");
-  // co(cc, "include_granted_scopes", boolToStr(c.include_granted_scopes));
+  co(cc, "include_granted_scopes", boolToStr(c.include_granted_scopes));
   co(cc, "enable_serial_consent", boolToStr(c.enable_serial_consent));
   return b + "?" + cc.join("&");
-};
-
-const lp = function (a: CodeClient) {
-  if (a.m) return;
-  a.m = true;
-  window.addEventListener(
-    "message",
-    function (b) {
-      try {
-        if (!b.data) return;
-        const c = JSON.parse(b.data).params;
-        if (!c) return;
-        if (!a.g || c.id !== a.g) return;
-        if (c.clientId !== a.j.client_id) return;
-        if ("authResult" !== c.type) return;
-        a.g = undefined;
-        a.l(c.authResult);
-      } catch (d) {
-        console.log(d);
-      }
-    },
-    false
-  );
-};
-
-const uniqueKey = () => "auth" + Math.floor(1e6 * Math.random() + 1);
-
-const mp = function (a: CodeClient) {
-  let c = location.protocol;
-  const d = location.host;
-  const e = c.indexOf(":");
-  if (0 < e) {
-    c = c.substring(0, e);
-  }
-
-  return ["storagerelay://", c, "/", d, "?", "id=" + a.g].join("");
-};
-
-const Sk = /^(?:(?:https?|mailto|ftp):|[^:/?#]*(?:[/?#]|$))/i;
-const sl = /^data:(.*);base64,[a-z0-9+/]+=*$/i;
-
-const tl = function (a: string, b: string) {
-  const c = Math.min(500, screen.width - 40);
-  const d = Math.min(550, screen.height - 40);
-  const k = [
-    "toolbar=no",
-    "location=no",
-    "directories=no",
-    "status=no",
-    "menubar=no",
-    "scrollbars=no",
-    "resizable=no",
-    "copyhistory=no",
-    "width=" + c,
-    "height=" + d,
-    "top=" + (screen.height / 2 - d / 2),
-    "left=" + (screen.width / 2 - c / 2),
-  ].join();
-  let i;
-
-  if (Sk.test(a)) {
-    i = a;
-  } else {
-    const j = String(a).replace(/(%0A|%0D)/g, "");
-    i = j.match(sl) ? j : null;
-  }
-
-  const e = window.open(i || bb, b, k);
-  if (!e || e.closed || "undefined" === typeof e.closed) {
-    return null;
-  }
-  e.focus();
-  return e;
 };
