@@ -1,11 +1,4 @@
-import { AbstractClient } from "./abstract-client";
-
-import type { BaseClientConfig } from "./abstract-client";
-
 /* eslint-disable camelcase */
-export default 1;
-
-type PromptType = "" | "none" | "consent" | "select_account";
 
 type CodeResponse = {
   code: number;
@@ -17,47 +10,53 @@ type CodeResponse = {
   error_uri: string;
 };
 
-type CodeClientConfig = BaseClientConfig & {
-  callback?: ((a: CodeResponse) => void) | undefined;
-  redirect_uri?: string | undefined;
-  state?: string | undefined;
-
+type CodeClientConfig = {
   client_id: string;
   scope: string;
 
-  enable_serial_consent?: boolean | undefined;
-  hint?: string | undefined;
-  hosted_domain?: string | undefined;
+  redirect_uri?: string;
+  callback?: (a: CodeResponse) => void;
 
-  include_granted_scopes?: boolean | undefined;
+  state?: string;
+  enable_serial_consent?: boolean;
+  hint?: string;
+  hosted_domain?: string;
+  auth_url?: string;
 
-  ux_mode?: "popup" | "redirect" | undefined;
-  select_account?: boolean | undefined;
+  ux_mode?: "popup" | "redirect";
+
+  select_account?: boolean;
 };
 
-const ul = {};
+type NormalizedCodeClientConfig = {
+  client_id: string;
+  scope: string;
+  hint: string | undefined;
+  state: string | undefined;
+  hosted_domain: string | undefined;
+  // include_granted_scopes: b.include_granted_scopes,
+  enable_serial_consent: boolean | undefined;
+  select_account: boolean | undefined;
+  ux_mode: "popup" | "redirect" | undefined;
+  redirect_uri?: string;
+};
 
-class vl {
-  g: string;
-  constructor(a: string) {
-    this.g = (ul === ul && a) || "";
-  }
-  fa = true;
+const np = "g_auth_code_window";
 
-  Z() {
-    return this.g;
-  }
-}
-
-const np = new vl("g_auth_code_window");
-
-export class CodeClient extends AbstractClient {
+export class CodeClient {
+  i: string;
+  g: string | undefined;
+  h: "code";
+  m: boolean;
   Ba: "popup" | "redirect";
   callback: ((a: CodeResponse) => void) | undefined;
-  j: CodeClientConfig;
+  j: NormalizedCodeClientConfig;
 
   constructor(a: CodeClientConfig) {
-    super("code", a);
+    this.i = a.auth_url || "https://accounts.google.com/o/oauth2/auth";
+    this.g = undefined;
+    this.h = "code";
+    this.m = false;
     this.callback = a.callback;
     this.j = goCode(a);
 
@@ -71,26 +70,28 @@ export class CodeClient extends AbstractClient {
   requestCode() {
     const a = this.j;
     if ("redirect" === this.Ba) {
-      const x = Xk(eo(this.h, this.i, a));
-      window.location.assign(Rk(x));
+      const x = Xk(eo(this.i, a));
+      window.location.assign(x);
     } else {
       lp(this);
-      mp(this, a);
-      tl(eo(this.h, this.i, a), np);
+
+      this.g = uniqueKey();
+      a.redirect_uri = mp(this);
+      tl(eo(this.i, a), np);
     }
   }
 }
 
-const goCode = function (b: CodeClientConfig): CodeClientConfig {
+const goCode = function (b: CodeClientConfig): NormalizedCodeClientConfig {
   if (!b.client_id) throw new Error("Missing required parameter client_id.");
   if (!b.scope) throw new Error("Missing required parameter scope.");
-  const c: CodeClientConfig = {
+  const c: NormalizedCodeClientConfig = {
     client_id: b.client_id,
     scope: b.scope,
     hint: b.hint,
     state: b.state,
     hosted_domain: b.hosted_domain,
-    include_granted_scopes: b.include_granted_scopes,
+    // include_granted_scopes: b.include_granted_scopes,
     enable_serial_consent: b.enable_serial_consent,
 
     select_account: b.select_account,
@@ -130,25 +131,13 @@ const df = [
   }),
 ];
 
-const ab = {};
-
-class D {
-  g: string;
-
-  constructor(a: string, b: Record<string, never>) {
-    this.g = b === ab ? a : "";
-  }
-}
-
-const bb = new D("about:invalid#zClosurez", ab);
+const bb = "about:invalid#zClosurez";
 
 const Xk = function (a: string) {
-  const b = df;
-
-  for (let c = 0; c < b.length; ++c) {
-    const d = b[c];
+  for (let c = 0; c < df.length; ++c) {
+    const d = df[c];
     if (d instanceof ld && d.Vc(a)) {
-      return new D(a, ab);
+      return a;
     }
   }
 
@@ -159,88 +148,26 @@ const co = function (a: string[], b: string, c?: string | undefined) {
   c && a.push(b + "=" + encodeURIComponent(c.trim()));
 };
 
-const eo = function (
-  a: ClientType,
-  b: string,
-  c: CodeClientConfig | InternalTokenClientConfig
-): string {
-  const d = c.client_id,
-    e = c.scope,
-    f = "code" === a ? "code" : "token";
-  let g, h;
-  if ("code" === a) {
-    g = "offline";
-    h = c.select_account ? "select_account consent" : "consent";
-  } else if (void 0 === c.prompt) {
-    h = "select_account";
-  } else if (c.prompt) {
-    h = c.prompt;
-  }
+const boolToStr = (a: boolean | undefined) => (false === a ? "false" : "true");
 
-  a = c.redirect_uri;
-  let k, m, n, p, t;
-  if (c.hint) k = c.hint;
-  if (c.state) m = c.state;
-  if (c.hosted_domain) n = c.hosted_domain;
-  if (void 0 !== c.include_granted_scopes) p = c.include_granted_scopes;
-  if (void 0 !== c.enable_serial_consent) t = c.enable_serial_consent;
+const eo = function (b: string, c: NormalizedCodeClientConfig): string {
   const cc: string[] = [];
   co(cc, "gsiwebsdk", "3");
-  co(cc, "client_id", d);
-  co(cc, "scope", e);
-  co(cc, "redirect_uri", a);
-  co(cc, "prompt", h);
-  co(cc, "login_hint", k);
-  co(cc, "state", m);
-  co(cc, "access_type", g);
-  co(cc, "hd", n);
-  co(cc, "response_type", f);
-  co(cc, "include_granted_scopes", !1 === p ? "false" : "true");
-  co(cc, "enable_serial_consent", !1 === t ? "false" : "true");
+  co(cc, "client_id", c.client_id);
+  co(cc, "scope", c.scope);
+  co(cc, "redirect_uri", c.redirect_uri);
+  co(cc, "prompt", c.select_account ? "select_account consent" : "consent");
+  co(cc, "login_hint", c.hint);
+  co(cc, "state", c.state);
+  co(cc, "access_type", "offline");
+  co(cc, "hd", c.hosted_domain);
+  co(cc, "response_type", "code");
+  // co(cc, "include_granted_scopes", boolToStr(c.include_granted_scopes));
+  co(cc, "enable_serial_consent", boolToStr(c.enable_serial_consent));
   return b + "?" + cc.join("&");
 };
 
-const oe = function (a: D) {
-  return a instanceof D && a.constructor === D ? a.g : "type_error:SafeUrl";
-};
-
-const cf = (() => {
-  try {
-    new URL("s://g");
-    return true;
-  } catch {
-    return false;
-  }
-})();
-
-const Rk = function (a: D) {
-  if (a instanceof D) {
-    return oe(a);
-  }
-  let b;
-  if (cf) {
-    let c;
-    try {
-      c = new URL(a);
-    } catch (c) {
-      return a;
-    }
-    b = c.protocol;
-  } else {
-    {
-      const c = document.createElement("a");
-      try {
-        c.href = a;
-      } catch (c) {
-        return a;
-      }
-      b = -1 !== [":", ""].indexOf(c.protocol) ? "https:" : c.protocol;
-    }
-  }
-  return "javascript:" === b ? "about:invalid" : a;
-};
-
-const lp = function (a: AbstractClient) {
+const lp = function (a: CodeClient) {
   if (a.m) return;
   a.m = true;
   window.addEventListener(
@@ -250,10 +177,10 @@ const lp = function (a: AbstractClient) {
         if (!b.data) return;
         const c = JSON.parse(b.data).params;
         if (!c) return;
-        if (!(a.g && c.id === a.g)) return;
+        if (!a.g || c.id !== a.g) return;
         if (c.clientId !== a.j.client_id) return;
         if ("authResult" !== c.type) return;
-        a.g = void 0;
+        a.g = undefined;
         a.l(c.authResult);
       } catch (d) {
         console.log(d);
@@ -263,8 +190,9 @@ const lp = function (a: AbstractClient) {
   );
 };
 
-const mp = function (a: AbstractClient, b: CodeClientConfig) {
-  a.g = "auth" + Math.floor(1e6 * Math.random() + 1);
+const uniqueKey = () => "auth" + Math.floor(1e6 * Math.random() + 1);
+
+const mp = function (a: CodeClient) {
   let c = location.protocol;
   const d = location.host;
   const e = c.indexOf(":");
@@ -272,13 +200,13 @@ const mp = function (a: AbstractClient, b: CodeClientConfig) {
     c = c.substring(0, e);
   }
 
-  b.redirect_uri = ["storagerelay://", c, "/", d, "?", "id=" + a.g].join("");
+  return ["storagerelay://", c, "/", d, "?", "id=" + a.g].join("");
 };
 
 const Sk = /^(?:(?:https?|mailto|ftp):|[^:/?#]*(?:[/?#]|$))/i;
 const sl = /^data:(.*);base64,[a-z0-9+/]+=*$/i;
 
-const tl = function (a: string, b: vl) {
+const tl = function (a: string, b: string) {
   const c = Math.min(500, screen.width - 40);
   const d = Math.min(550, screen.height - 40);
   const k = [
@@ -296,18 +224,15 @@ const tl = function (a: string, b: vl) {
     "left=" + (screen.width / 2 - c / 2),
   ].join();
   let i;
-  const g = a;
-  if (!(g instanceof D)) {
-    const h = "object" === typeof g && g.fa ? g.Z() : String(g);
-    if (Sk.test(h)) {
-      i = new D(h, ab);
-    } else {
-      const j = String(h).replace(/(%0A|%0D)/g, "");
-      i = j.match(sl) ? new D(j, ab) : null;
-    }
+
+  if (Sk.test(a)) {
+    i = a;
+  } else {
+    const j = String(a).replace(/(%0A|%0D)/g, "");
+    i = j.match(sl) ? j : null;
   }
-  const f = b.Z();
-  const e = window.open(Rk(i || bb), f, k);
+
+  const e = window.open(i || bb, b, k);
   if (!e || e.closed || "undefined" === typeof e.closed) {
     return null;
   }
