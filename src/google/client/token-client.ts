@@ -1,6 +1,13 @@
 /* eslint-disable camelcase */
 
-import { boolToStr, co, lp, mp, tl, uniqueKey } from "./common";
+import {
+  boolToStr,
+  pushIfDefined,
+  addMessageEventListener,
+  getRedirectUri,
+  openAuthWindow,
+  uniqueKey,
+} from "./common";
 
 import type { AuthClient } from "./common";
 
@@ -22,7 +29,7 @@ type TokenResponse = {
 
 type TokenClientConfig = {
   client_id: string;
-  callback: (a: TokenResponse) => void;
+  callback: (this: TokenClient, response: TokenResponse) => void;
   scope: string;
   prompt?: PromptType;
   enable_serial_consent?: boolean;
@@ -31,7 +38,7 @@ type TokenClientConfig = {
   state?: string;
 };
 
-type NormalizedTokenClientConfig = {
+type TokenClientQuery = {
   client_id: string;
   scope: string;
   prompt: PromptType | undefined;
@@ -51,82 +58,85 @@ type OverridableTokenClientConfig = {
   state?: string;
 };
 
-const pp = "g_auth_token_window";
+const tokenTarget = "g_auth_token_window";
 
 export class TokenClient implements AuthClient {
-  i: string;
-  g: string | undefined;
-  h: "token";
-  m: boolean;
-  j: NormalizedTokenClientConfig;
-  callback: ((a: TokenResponse) => void) | undefined;
+  authUniqueId: string | undefined;
+  isMessageEventListenerAdded: boolean;
+  query: TokenClientQuery;
+  callback: (this: TokenClient, response: TokenResponse) => void;
 
-  constructor(a: TokenClientConfig) {
-    this.i = "https://accounts.google.com/o/oauth2/auth";
-    this.g = undefined;
-    this.h = "token";
-    this.m = false;
-    this.j = normalize(a);
+  constructor(config: TokenClientConfig) {
+    this.authUniqueId = undefined;
+    this.isMessageEventListenerAdded = false;
+    this.query = normalize(config);
 
-    this.callback = a.callback;
+    this.callback = config.callback;
   }
 
-  l(a: TokenResponse) {
-    this.callback && this.callback.call(this, a);
+  onMessage(response: TokenResponse) {
+    this.callback.call(this, response);
   }
 
-  requestAccessToken(a?: OverridableTokenClientConfig) {
-    let b = this.j;
-    a = a || {};
-    b = {
-      client_id: b.client_id,
-      scope: b.scope,
-      prompt: void 0 === a.prompt ? b.prompt : a.prompt,
-      hint: void 0 === a.hint ? b.hint : a.hint,
-      state: void 0 === a.state ? b.state : a.state,
-      hosted_domain: b.hosted_domain,
-      include_granted_scopes: b.include_granted_scopes,
+  requestAccessToken(config?: OverridableTokenClientConfig) {
+    let query = this.query;
+    config = config || {};
+    query = {
+      client_id: query.client_id,
+      scope: query.scope,
+      prompt: void 0 === config.prompt ? query.prompt : config.prompt,
+      hint: void 0 === config.hint ? query.hint : config.hint,
+      state: void 0 === config.state ? query.state : config.state,
+      hosted_domain: query.hosted_domain,
+      include_granted_scopes: query.include_granted_scopes,
       enable_serial_consent:
-        void 0 === a.enable_serial_consent
-          ? b.enable_serial_consent
-          : a.enable_serial_consent,
+        void 0 === config.enable_serial_consent
+          ? query.enable_serial_consent
+          : config.enable_serial_consent,
     };
-    lp(this);
-    this.g = uniqueKey();
 
-    b.redirect_uri = mp(this.g);
-    tl(eo(this.i, b), pp);
+    addMessageEventListener(this);
+    this.authUniqueId = uniqueKey();
+
+    query.redirect_uri = getRedirectUri(this.authUniqueId);
+    openAuthWindow(buildAuthUrl(query), tokenTarget);
   }
 }
 
-const normalize = function (b: TokenClientConfig): NormalizedTokenClientConfig {
-  if (!b.client_id) throw new Error("Missing required parameter client_id.");
-  if (!b.scope) throw new Error("Missing required parameter scope.");
+const normalize = function (config: TokenClientConfig): TokenClientQuery {
   return {
-    client_id: b.client_id,
-    scope: b.scope,
-    hint: b.hint,
-    state: b.state,
-    hosted_domain: b.hosted_domain,
+    client_id: config.client_id,
+    scope: config.scope,
+    hint: config.hint,
+    state: config.state,
+    hosted_domain: config.hosted_domain,
     include_granted_scopes: undefined,
-    enable_serial_consent: b.enable_serial_consent,
-    prompt: b.prompt,
+    enable_serial_consent: config.enable_serial_consent,
+    prompt: config.prompt,
   };
 };
 
-const eo = function (b: string, c: NormalizedTokenClientConfig): string {
-  const cc: string[] = [];
-  co(cc, "gsiwebsdk", "3");
-  co(cc, "client_id", c.client_id);
-  co(cc, "scope", c.scope);
-  co(cc, "redirect_uri", c.redirect_uri);
-  co(cc, "prompt", c.prompt ?? "select_account");
-  co(cc, "login_hint", c.hint);
-  co(cc, "state", c.state);
-  co(cc, "access_type", undefined);
-  co(cc, "hd", c.hosted_domain);
-  co(cc, "response_type", "token");
-  co(cc, "include_granted_scopes", boolToStr(c.include_granted_scopes));
-  co(cc, "enable_serial_consent", boolToStr(c.enable_serial_consent));
-  return b + "?" + cc.join("&");
+const buildAuthUrl = function (query: TokenClientQuery): string {
+  const queryStrings: string[] = [];
+  pushIfDefined(queryStrings, "gsiwebsdk", "3");
+  pushIfDefined(queryStrings, "client_id", query.client_id);
+  pushIfDefined(queryStrings, "scope", query.scope);
+  pushIfDefined(queryStrings, "redirect_uri", query.redirect_uri);
+  pushIfDefined(queryStrings, "prompt", query.prompt ?? "select_account");
+  pushIfDefined(queryStrings, "login_hint", query.hint);
+  pushIfDefined(queryStrings, "state", query.state);
+  pushIfDefined(queryStrings, "access_type", undefined);
+  pushIfDefined(queryStrings, "hd", query.hosted_domain);
+  pushIfDefined(queryStrings, "response_type", "token");
+  pushIfDefined(
+    queryStrings,
+    "include_granted_scopes",
+    boolToStr(query.include_granted_scopes)
+  );
+  pushIfDefined(
+    queryStrings,
+    "enable_serial_consent",
+    boolToStr(query.enable_serial_consent)
+  );
+  return `https://accounts.google.com/o/oauth2/auth?${queryStrings.join("&")}`;
 };

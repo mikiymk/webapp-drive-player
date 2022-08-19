@@ -1,48 +1,39 @@
-class ld {
-  Vc: (a: string) => boolean;
-  constructor(a: (a: string) => boolean) {
-    this.Vc = a;
-  }
-}
-
-const md = function (a: string) {
-  return new ld(function (b) {
-    return b.substr(0, a.length + 1).toLowerCase() === a + ":";
-  });
+const validateScheme = function (scheme: string, uri: string) {
+  return uri.slice(0, scheme.length + 1).toLowerCase() === scheme + ":";
 };
 
-const df = [
-  md("data"),
-  md("http"),
-  md("https"),
-  md("mailto"),
-  md("ftp"),
-  new ld(function (a) {
-    return /^[^:]*([/?#]|$)/.test(a);
-  }),
-];
+const validSchemes = ["data", "http", "https", "mailto", "ftp"];
 
-export const Xk = function (a: string) {
-  for (let c = 0; c < df.length; ++c) {
-    const d = df[c];
-    if (d instanceof ld && d.Vc(a)) {
-      return a;
+export const validateRedirectUrl = function (uri: string) {
+  for (const scheme of validSchemes) {
+    if (validateScheme(scheme, uri)) {
+      return uri;
     }
   }
 
-  return bb;
+  if (/^[^:]*([/?#]|$)/.test(uri)) {
+    return uri;
+  }
+
+  return invalidUrl;
 };
 
-export const co = function (a: string[], b: string, c?: string | undefined) {
-  c && a.push(b + "=" + encodeURIComponent(c.trim()));
+export const pushIfDefined = function (
+  array: string[],
+  key: string,
+  value?: string | undefined
+) {
+  value && array.push(key + "=" + encodeURIComponent(value.trim()));
 };
 
-export const boolToStr = (a: boolean | undefined) =>
-  false === a ? "false" : "true";
+export const boolToStr = (bool: boolean | undefined) =>
+  false === bool ? "false" : "true";
 
-export const uniqueKey = () => "auth" + Math.floor(1e6 * Math.random() + 1);
+export const uniqueKey = () => {
+  return "auth" + Math.floor(1e6 * Math.random() + 1);
+};
 
-export const mp = function (a: string) {
+export const getRedirectUri = function (a: string) {
   let c = location.protocol;
   const d = location.host;
   const e = c.indexOf(":");
@@ -53,14 +44,23 @@ export const mp = function (a: string) {
   return ["storagerelay://", c, "/", d, "?", "id=" + a].join("");
 };
 
-const Sk = /^(?:(?:https?|mailto|ftp):|[^:/?#]*(?:[/?#]|$))/i;
-const sl = /^data:(.*);base64,[a-z0-9+/]+=*$/i;
-const bb = "about:invalid#zClosurez";
+const validUri = /^(?:(?:https?|mailto|ftp):|[^:/?#]*(?:[/?#]|$))/i;
+const validDataUri = /^data:(.*);base64,[a-z0-9+/]+=*$/i;
+const invalidUrl = "about:invalid#zClosurez";
 
-export const tl = function (a: string, b: string) {
-  const c = Math.min(500, screen.width - 40);
-  const d = Math.min(550, screen.height - 40);
-  const k = [
+const validatePopUpUrl = (url: string) => {
+  if (validUri.test(url)) {
+    return url;
+  } else {
+    const noSpaceUrl = String(url).replace(/(%0A|%0D)/g, "");
+    return noSpaceUrl.match(validDataUri) ? noSpaceUrl : invalidUrl;
+  }
+};
+
+export const openAuthWindow = function (url: string, target: string) {
+  const width = Math.min(500, screen.width - 40);
+  const height = Math.min(550, screen.height - 40);
+  const features = [
     "toolbar=no",
     "location=no",
     "directories=no",
@@ -69,26 +69,18 @@ export const tl = function (a: string, b: string) {
     "scrollbars=no",
     "resizable=no",
     "copyhistory=no",
-    "width=" + c,
-    "height=" + d,
-    "top=" + (screen.height / 2 - d / 2),
-    "left=" + (screen.width / 2 - c / 2),
+    "width=" + width,
+    "height=" + height,
+    "top=" + (screen.height / 2 - height / 2),
+    "left=" + (screen.width / 2 - width / 2),
   ].join();
 
-  let i;
-  if (Sk.test(a)) {
-    i = a;
-  } else {
-    const j = String(a).replace(/(%0A|%0D)/g, "");
-    i = j.match(sl) ? j : null;
-  }
-
-  const e = window.open(i || bb, b, k);
-  if (!e || e.closed || "undefined" === typeof e.closed) {
+  const authWindow = window.open(validatePopUpUrl(url), target, features);
+  if (!authWindow || authWindow.closed) {
     return null;
   }
-  e.focus();
-  return e;
+  authWindow.focus();
+  return authWindow;
 };
 
 type BaseResponse = {
@@ -99,30 +91,30 @@ type BaseResponse = {
 };
 
 export interface AuthClient {
-  m: boolean;
-  g: string | undefined;
-  j: { client_id: string };
+  isMessageEventListenerAdded: boolean;
+  authUniqueId: string | undefined;
+  query: { client_id: string };
 
-  l(a: BaseResponse): void;
+  onMessage(a: BaseResponse): void;
 }
 
-export const lp = function (a: AuthClient) {
-  if (a.m) return;
-  a.m = true;
+export const addMessageEventListener = function (client: AuthClient) {
+  if (client.isMessageEventListenerAdded) return;
+  client.isMessageEventListenerAdded = true;
   window.addEventListener(
     "message",
-    function (b) {
+    function (event) {
       try {
-        if (!b.data) return;
-        const c = JSON.parse(b.data).params;
-        if (!c) return;
-        if (!a.g || c.id !== a.g) return;
-        if (c.clientId !== a.j.client_id) return;
-        if ("authResult" !== c.type) return;
-        a.g = undefined;
-        a.l(c.authResult);
-      } catch (d) {
-        console.log(d);
+        if (!event.data) return;
+        const params = JSON.parse(event.data).params;
+        if (!params) return;
+        if (!client.authUniqueId || params.id !== client.authUniqueId) return;
+        if (params.clientId !== client.query.client_id) return;
+        if ("authResult" !== params.type) return;
+        client.authUniqueId = undefined;
+        client.onMessage(params.authResult);
+      } catch (error) {
+        console.log(error);
       }
     },
     false
