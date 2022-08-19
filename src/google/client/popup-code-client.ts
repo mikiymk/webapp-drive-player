@@ -7,7 +7,6 @@ import {
   getRedirectUri,
   openAuthWindow,
   uniqueKey,
-  validateRedirectUrl,
 } from "./common";
 
 import type { AuthClient } from "./common";
@@ -22,18 +21,17 @@ type CodeResponse = {
   error_uri: string;
 };
 
-type CodeClientConfig = {
+type PopupCodeClientConfig = {
   client_id: string;
   scope: string;
 
   redirect_uri?: string;
-  callback?: (this: CodeClient, response: CodeResponse) => void;
+  callback: (response: CodeResponse) => void;
 
   state?: string;
   enable_serial_consent?: boolean;
   hint?: string;
   hosted_domain?: string;
-  ux_mode?: "popup" | "redirect";
   select_account?: boolean;
 };
 
@@ -46,49 +44,41 @@ type CodeClientQuery = {
   include_granted_scopes: undefined;
   enable_serial_consent: boolean | undefined;
   select_account: boolean | undefined;
-  ux_mode: "popup" | "redirect" | undefined;
   redirect_uri?: string;
 };
 
 const codeTarget = "g_auth_code_window";
 
-export class CodeClient implements AuthClient {
+export class PopupCodeClient implements AuthClient {
   authUniqueId: string | undefined;
   isMessageEventListenerAdded: boolean;
-  uxMode: "popup" | "redirect";
-  callback: ((this: CodeClient, response: CodeResponse) => void) | undefined;
+  callback: (response: CodeResponse) => void;
   query: CodeClientQuery;
 
-  constructor(config: CodeClientConfig) {
+  constructor(config: PopupCodeClientConfig) {
     this.authUniqueId = undefined;
     this.isMessageEventListenerAdded = false;
     this.callback = config.callback;
     this.query = normalize(config);
-
-    this.uxMode = config.ux_mode ?? "popup";
   }
 
   onMessage(response: CodeResponse) {
-    this.callback && this.callback.call(this, response);
+    this.callback(response);
   }
 
   requestCode() {
     const query = this.query;
-    if ("redirect" === this.uxMode) {
-      const url = validateRedirectUrl(buildAuthUrl(query));
-      window.location.assign(url);
-    } else {
-      addMessageEventListener(this);
 
-      this.authUniqueId = uniqueKey();
-      query.redirect_uri = getRedirectUri(this.authUniqueId);
-      openAuthWindow(buildAuthUrl(query), codeTarget);
-    }
+    addMessageEventListener(this);
+
+    this.authUniqueId = uniqueKey();
+    query.redirect_uri = getRedirectUri(this.authUniqueId);
+    openAuthWindow(buildAuthUrl(query), codeTarget);
   }
 }
 
-const normalize = function (config: CodeClientConfig): CodeClientQuery {
-  const query: CodeClientQuery = {
+const normalize = function (config: PopupCodeClientConfig): CodeClientQuery {
+  return {
     client_id: config.client_id,
     scope: config.scope,
     hint: config.hint,
@@ -96,18 +86,8 @@ const normalize = function (config: CodeClientConfig): CodeClientQuery {
     hosted_domain: config.hosted_domain,
     include_granted_scopes: undefined,
     enable_serial_consent: config.enable_serial_consent,
-
     select_account: config.select_account,
-    ux_mode: config.ux_mode,
   };
-
-  if ("redirect" === query.ux_mode) {
-    query.redirect_uri =
-      config.redirect_uri ||
-      location.protocol + "//" + location.host + location.pathname;
-  }
-
-  return query;
 };
 
 const buildAuthUrl = function (query: CodeClientQuery): string {
