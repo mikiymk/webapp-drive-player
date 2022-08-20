@@ -29,7 +29,6 @@ type TokenResponse = {
 
 type TokenClientConfig = {
   clientId: string;
-  callback: (this: TokenClient, response: TokenResponse) => void;
   scope: string;
   prompt?: PromptType;
   enableSerialConsent?: boolean;

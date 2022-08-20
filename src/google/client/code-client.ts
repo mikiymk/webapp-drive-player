@@ -13,7 +13,7 @@ import { PromiseCallBack } from "./promise-callback";
 import type { AuthClient } from "./common";
 
 type CodeResponse = {
-  code: number;
+  code: string;
   scope: string;
 
   state: string;
@@ -27,7 +27,6 @@ type PopupCodeClientConfig = {
   scope: string;
 
   redirectUri?: string;
-  callback: (response: CodeResponse) => void;
 
   state?: string;
   enableSerialConsent?: boolean;
@@ -41,7 +40,6 @@ type RedirectCodeClientConfig = {
   scope: string;
 
   redirectUri: string;
-  callback?: (response: CodeResponse) => void;
 
   state?: string;
   enableSerialConsent?: boolean;
