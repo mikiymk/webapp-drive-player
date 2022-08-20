@@ -101,7 +101,7 @@ type BaseResponse = {
 export interface AuthClient {
   isListens: boolean;
   authUniqueId: string | undefined;
-  query: { client_id: string };
+  query: { clientId: string };
 
   onMessage(a: BaseResponse): void;
 }
@@ -117,7 +117,7 @@ export const addMessageEventListener = (client: AuthClient) => {
         const params = JSON.parse(event.data).params;
         if (!params) return;
         if (!client.authUniqueId || params.id !== client.authUniqueId) return;
-        if (params.clientId !== client.query.client_id) return;
+        if (params.clientId !== client.query.clientId) return;
         if ("authResult" !== params.type) return;
         client.authUniqueId = undefined;
         client.onMessage(params.authResult);

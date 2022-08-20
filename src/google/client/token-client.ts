@@ -28,24 +28,24 @@ type TokenResponse = {
 };
 
 type TokenClientConfig = {
-  client_id: string;
+  clientId: string;
   callback: (this: TokenClient, response: TokenResponse) => void;
   scope: string;
   prompt?: PromptType;
-  enable_serial_consent?: boolean;
+  enableSerialConsent?: boolean;
   hint?: string;
-  hosted_domain?: string;
+  hostedDomain?: string;
   state?: string;
 };
 
 type TokenClientQuery = {
-  client_id: string;
+  clientId: string;
   scope: string;
   prompt: PromptType | undefined;
-  enable_serial_consent: boolean | undefined;
-  include_granted_scopes: undefined;
+  enableSerialConsent: boolean | undefined;
+  includeGrantedScopes: undefined;
   hint: string | undefined;
-  hosted_domain: string | undefined;
+  hostedDomain: string | undefined;
   state: string | undefined;
 
   redirect_uri?: string;
@@ -53,7 +53,7 @@ type TokenClientQuery = {
 
 type OverridableTokenClientConfig = {
   prompt?: PromptType;
-  enable_serial_consent?: boolean;
+  enableSerialConsent?: boolean;
   hint?: string;
   state?: string;
 };
@@ -82,17 +82,17 @@ export class TokenClient implements AuthClient {
     let query = this.query;
     config = config || {};
     query = {
-      client_id: query.client_id,
+      clientId: query.clientId,
       scope: query.scope,
       prompt: void 0 === config.prompt ? query.prompt : config.prompt,
       hint: void 0 === config.hint ? query.hint : config.hint,
       state: void 0 === config.state ? query.state : config.state,
-      hosted_domain: query.hosted_domain,
-      include_granted_scopes: query.include_granted_scopes,
-      enable_serial_consent:
-        void 0 === config.enable_serial_consent
-          ? query.enable_serial_consent
-          : config.enable_serial_consent,
+      hostedDomain: query.hostedDomain,
+      includeGrantedScopes: query.includeGrantedScopes,
+      enableSerialConsent:
+        void 0 === config.enableSerialConsent
+          ? query.enableSerialConsent
+          : config.enableSerialConsent,
     };
 
     addMessageEventListener(this);
@@ -104,28 +104,28 @@ export class TokenClient implements AuthClient {
 }
 
 const normalize = (config: TokenClientConfig): TokenClientQuery => ({
-  client_id: config.client_id,
+  clientId: config.clientId,
   scope: config.scope,
   hint: config.hint,
   state: config.state,
-  hosted_domain: config.hosted_domain,
-  include_granted_scopes: undefined,
-  enable_serial_consent: config.enable_serial_consent,
+  hostedDomain: config.hostedDomain,
+  includeGrantedScopes: undefined,
+  enableSerialConsent: config.enableSerialConsent,
   prompt: config.prompt,
 });
 
 const buildAuthUrl = (query: TokenClientQuery): string =>
   buildQueriedUri([
     ["gsiwebsdk", "3"],
-    ["client_id", query.client_id],
+    ["client_id", query.clientId],
     ["scope", query.scope],
     ["redirect_uri", query.redirect_uri],
     ["prompt", query.prompt ?? "select_account"],
     ["login_hint", query.hint],
     ["state", query.state],
     ["access_type", undefined],
-    ["hd", query.hosted_domain],
+    ["hd", query.hostedDomain],
     ["response_type", "token"],
-    ["include_granted_scopes", boolToStr(query.include_granted_scopes)],
-    ["enable_serial_consent", boolToStr(query.enable_serial_consent)],
+    ["include_granted_scopes", boolToStr(query.includeGrantedScopes)],
+    ["enable_serial_consent", boolToStr(query.enableSerialConsent)],
   ]);
