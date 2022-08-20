@@ -2,11 +2,11 @@
 
 import {
   boolToStr,
-  pushIfDefined,
   addMessageEventListener,
   getRedirectUri,
   openAuthWindow,
   uniqueKey,
+  buildQueriedUri,
 } from "./common";
 
 import type { AuthClient } from "./common";
@@ -62,13 +62,13 @@ const tokenTarget = "g_auth_token_window";
 
 export class TokenClient implements AuthClient {
   authUniqueId: string | undefined;
-  isMessageEventListenerAdded: boolean;
+  isListens: boolean;
   query: TokenClientQuery;
   callback: (this: TokenClient, response: TokenResponse) => void;
 
   constructor(config: TokenClientConfig) {
     this.authUniqueId = undefined;
-    this.isMessageEventListenerAdded = false;
+    this.isListens = false;
     this.query = normalize(config);
 
     this.callback = config.callback;
@@ -103,40 +103,29 @@ export class TokenClient implements AuthClient {
   }
 }
 
-const normalize = function (config: TokenClientConfig): TokenClientQuery {
-  return {
-    client_id: config.client_id,
-    scope: config.scope,
-    hint: config.hint,
-    state: config.state,
-    hosted_domain: config.hosted_domain,
-    include_granted_scopes: undefined,
-    enable_serial_consent: config.enable_serial_consent,
-    prompt: config.prompt,
-  };
-};
+const normalize = (config: TokenClientConfig): TokenClientQuery => ({
+  client_id: config.client_id,
+  scope: config.scope,
+  hint: config.hint,
+  state: config.state,
+  hosted_domain: config.hosted_domain,
+  include_granted_scopes: undefined,
+  enable_serial_consent: config.enable_serial_consent,
+  prompt: config.prompt,
+});
 
-const buildAuthUrl = function (query: TokenClientQuery): string {
-  const queryStrings: string[] = [];
-  pushIfDefined(queryStrings, "gsiwebsdk", "3");
-  pushIfDefined(queryStrings, "client_id", query.client_id);
-  pushIfDefined(queryStrings, "scope", query.scope);
-  pushIfDefined(queryStrings, "redirect_uri", query.redirect_uri);
-  pushIfDefined(queryStrings, "prompt", query.prompt ?? "select_account");
-  pushIfDefined(queryStrings, "login_hint", query.hint);
-  pushIfDefined(queryStrings, "state", query.state);
-  pushIfDefined(queryStrings, "access_type", undefined);
-  pushIfDefined(queryStrings, "hd", query.hosted_domain);
-  pushIfDefined(queryStrings, "response_type", "token");
-  pushIfDefined(
-    queryStrings,
-    "include_granted_scopes",
-    boolToStr(query.include_granted_scopes)
-  );
-  pushIfDefined(
-    queryStrings,
-    "enable_serial_consent",
-    boolToStr(query.enable_serial_consent)
-  );
-  return `https://accounts.google.com/o/oauth2/auth?${queryStrings.join("&")}`;
-};
+const buildAuthUrl = (query: TokenClientQuery): string =>
+  buildQueriedUri([
+    ["gsiwebsdk", "3"],
+    ["client_id", query.client_id],
+    ["scope", query.scope],
+    ["redirect_uri", query.redirect_uri],
+    ["prompt", query.prompt ?? "select_account"],
+    ["login_hint", query.hint],
+    ["state", query.state],
+    ["access_type", undefined],
+    ["hd", query.hosted_domain],
+    ["response_type", "token"],
+    ["include_granted_scopes", boolToStr(query.include_granted_scopes)],
+    ["enable_serial_consent", boolToStr(query.enable_serial_consent)],
+  ]);

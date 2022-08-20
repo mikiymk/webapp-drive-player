@@ -1,10 +1,9 @@
-const validateScheme = function (scheme: string, uri: string) {
-  return uri.slice(0, scheme.length + 1).toLowerCase() === scheme + ":";
-};
+const validateScheme = (scheme: string, uri: string) =>
+  uri.slice(0, scheme.length + 1).toLowerCase() === scheme + ":";
 
 const validSchemes = ["data", "http", "https", "mailto", "ftp"];
 
-export const validateRedirectUrl = function (uri: string) {
+export const validateRedirectUrl = (uri: string) => {
   for (const scheme of validSchemes) {
     if (validateScheme(scheme, uri)) {
       return uri;
@@ -18,11 +17,11 @@ export const validateRedirectUrl = function (uri: string) {
   return invalidUrl;
 };
 
-export const pushIfDefined = function (
+export const pushIfDefined = (
   array: string[],
   key: string,
   value?: string | undefined
-) {
+) => {
   value && array.push(key + "=" + encodeURIComponent(value.trim()));
 };
 
@@ -33,7 +32,7 @@ export const uniqueKey = () => {
   return "auth" + Math.floor(1e6 * Math.random() + 1);
 };
 
-export const getRedirectUri = function (a: string) {
+export const getRedirectUri = (a: string) => {
   let c = location.protocol;
   const d = location.host;
   const e = c.indexOf(":");
@@ -57,7 +56,17 @@ const validatePopUpUrl = (url: string) => {
   }
 };
 
-export const openAuthWindow = function (url: string, target: string) {
+export const buildQueriedUri = (
+  query: [key: string, value: string | undefined][]
+) =>
+  "https://accounts.google.com/o/oauth2/auth?" +
+  query
+    .flatMap(([key, value]) =>
+      value ? [key + "=" + encodeURIComponent(value.trim())] : []
+    )
+    .join("&");
+
+export const openAuthWindow = (url: string, target: string) => {
   const width = Math.min(500, screen.width - 40);
   const height = Math.min(550, screen.height - 40);
   const features = [
@@ -76,9 +85,8 @@ export const openAuthWindow = function (url: string, target: string) {
   ].join();
 
   const authWindow = window.open(validatePopUpUrl(url), target, features);
-  if (!authWindow || authWindow.closed) {
-    return null;
-  }
+  if (!authWindow || authWindow.closed) return null;
+
   authWindow.focus();
   return authWindow;
 };
@@ -91,19 +99,19 @@ type BaseResponse = {
 };
 
 export interface AuthClient {
-  isMessageEventListenerAdded: boolean;
+  isListens: boolean;
   authUniqueId: string | undefined;
   query: { client_id: string };
 
   onMessage(a: BaseResponse): void;
 }
 
-export const addMessageEventListener = function (client: AuthClient) {
-  if (client.isMessageEventListenerAdded) return;
-  client.isMessageEventListenerAdded = true;
+export const addMessageEventListener = (client: AuthClient) => {
+  if (client.isListens) return;
+  client.isListens = true;
   window.addEventListener(
     "message",
-    function (event) {
+    event => {
       try {
         if (!event.data) return;
         const params = JSON.parse(event.data).params;
