@@ -102,11 +102,12 @@ export interface AuthClient {
   isListens: boolean;
   authUniqueId: string | undefined;
   query: { clientId: string };
-
-  onMessage(a: BaseResponse): void;
 }
 
-export const addMessageEventListener = (client: AuthClient) => {
+export const addMessageEventListener = (
+  client: AuthClient,
+  onMessage: (message: BaseResponse) => void
+) => {
   if (client.isListens) return;
   client.isListens = true;
   window.addEventListener(
@@ -120,7 +121,7 @@ export const addMessageEventListener = (client: AuthClient) => {
         if (params.clientId !== client.query.clientId) return;
         if ("authResult" !== params.type) return;
         client.authUniqueId = undefined;
-        client.onMessage(params.authResult);
+        onMessage(params.authResult);
       } catch (error) {
         console.log(error);
       }

@@ -79,33 +79,27 @@ const codeTarget = "g_auth_code_window";
 export class PopupCodeClient implements AuthClient {
   authUniqueId: string | undefined;
   isListens: boolean;
-  promiseCallback: PromiseCallBack<CodeResponse> | undefined;
   query: PopupCodeClientQuery;
 
   constructor(config: PopupCodeClientConfig) {
     this.authUniqueId = undefined;
     this.isListens = false;
     this.query = normalizePopup(config);
-
-    this.promiseCallback = undefined;
-  }
-
-  onMessage(response: CodeResponse) {
-    this.promiseCallback?.resolve(response);
   }
 
   requestCode() {
     const query = this.query;
 
-    addMessageEventListener(this);
+    const promiseCallback = new PromiseCallBack<CodeResponse>();
+    addMessageEventListener(this, response =>
+      promiseCallback?.resolve(response as CodeResponse)
+    );
 
     this.authUniqueId = uniqueKey();
     query.redirectUri = getRedirectUri(this.authUniqueId);
     openAuthWindow(buildAuthUrl(query), codeTarget);
 
-    this.promiseCallback = new PromiseCallBack();
-
-    return this.promiseCallback.promise;
+    return promiseCallback.promise;
   }
 }
 

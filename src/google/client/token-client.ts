@@ -64,18 +64,11 @@ export class TokenClient implements AuthClient {
   authUniqueId: string | undefined;
   isListens: boolean;
   query: TokenClientQuery;
-  promiseCallback: PromiseCallBack<TokenResponse> | undefined;
 
   constructor(config: TokenClientConfig) {
     this.authUniqueId = undefined;
     this.isListens = false;
     this.query = normalize(config);
-
-    this.promiseCallback = undefined;
-  }
-
-  onMessage(response: TokenResponse) {
-    this.promiseCallback?.resolve(response);
   }
 
   requestAccessToken(
@@ -97,15 +90,16 @@ export class TokenClient implements AuthClient {
           : config.enableSerialConsent,
     };
 
-    addMessageEventListener(this);
+    const promiseCallback = new PromiseCallBack<TokenResponse>();
+    addMessageEventListener(this, response =>
+      promiseCallback?.resolve(response as TokenResponse)
+    );
     this.authUniqueId = uniqueKey();
 
     query.redirectUri = getRedirectUri(this.authUniqueId);
     openAuthWindow(buildAuthUrl(query), tokenTarget);
 
-    this.promiseCallback = new PromiseCallBack();
-
-    return this.promiseCallback.promise;
+    return promiseCallback.promise;
   }
 }
 
