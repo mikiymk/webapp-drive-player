@@ -6,3 +6,4 @@ dist/
 
 # rust target output
 target/
+.vercel

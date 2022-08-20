@@ -33,6 +33,7 @@
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",
     "@vanilla-extract/vite-plugin": "^3.3.0",
+    "@vercel/node": "^2.5.8",
     "eslint": "^8.21.0",
     "eslint-import-resolver-typescript": "^3.4.0",
     "eslint-plugin-import": "^2.26.0",
