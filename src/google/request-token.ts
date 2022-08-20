@@ -7,11 +7,11 @@ type AccessTokenResponse = {
 };
 
 export const requestAccessToken = async (
-  code: string
+  code?: string
 ): Promise<AccessTokenResponse> => {
-  const response = await fetch(
-    "https://iron-ragdoll.vercel.app/api/token?code=" + code
-  );
+  const url =
+    "https://iron-ragdoll.vercel.app/api/token" + (code ? "?code=" + code : "");
+  const response = await fetch(url);
   const json = await response.json();
   if (!("access_token" in json)) {
     throw new Error("authorize failure");

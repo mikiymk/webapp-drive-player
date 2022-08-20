@@ -38,6 +38,10 @@ export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
   const code = apiReq.cookies["code"] ?? apiReq.query["code"];
   const response = await requestAuth(code as string);
 
-  if (code) apiRes.setHeader("Set-Cookie", `code=${code};`);
+  if (code)
+    apiRes.setHeader(
+      "Set-Cookie",
+      `code=${code}; SameSite=Strict; Secure; HttpOnly;`
+    );
   apiRes.status(200).send(response);
 };
