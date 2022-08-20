@@ -2,14 +2,13 @@ import { request } from "https";
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const requestAuth = (code: string) =>
+const requestAuth = (refreshToken: string) =>
   new Promise((resolve, reject) => {
     const body = [
-      "code=" + code,
+      "refresh_token=" + refreshToken,
       "client_id=" + process.env["CLIENT_ID"],
       "client_secret=" + process.env["CLIENT_SECRET"],
-      "redirect_uri=https%3A%2F%2Firon-ragdoll.vercel.app%2F",
-      "grant_type=authorization_code",
+      "grant_type=refresh_token",
     ].join("&");
 
     const req = request(
@@ -35,9 +34,7 @@ const requestAuth = (code: string) =>
   });
 
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
-  const code = apiReq.cookies["code"] ?? apiReq.query["code"];
-  const response = await requestAuth(code as string);
+  const response = await requestAuth(apiReq.query["refresh_token"] as string);
 
-  if (code) apiRes.setHeader("Set-Cookie", `code=${code};`);
   apiRes.status(200).send(response);
 };
