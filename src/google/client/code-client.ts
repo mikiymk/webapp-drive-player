@@ -8,6 +8,8 @@ import {
   validateRedirectUrl,
 } from "./common";
 
+import { PromiseCallBack } from "./promise-callback";
+
 import type { AuthClient } from "./common";
 
 type CodeResponse = {
@@ -77,18 +79,19 @@ const codeTarget = "g_auth_code_window";
 export class PopupCodeClient implements AuthClient {
   authUniqueId: string | undefined;
   isListens: boolean;
-  callback: (response: CodeResponse) => void;
+  promiseCallback: PromiseCallBack<CodeResponse> | undefined;
   query: PopupCodeClientQuery;
 
   constructor(config: PopupCodeClientConfig) {
     this.authUniqueId = undefined;
     this.isListens = false;
-    this.callback = config.callback;
     this.query = normalizePopup(config);
+
+    this.promiseCallback = undefined;
   }
 
   onMessage(response: CodeResponse) {
-    this.callback(response);
+    this.promiseCallback?.resolve(response);
   }
 
   requestCode() {
@@ -99,6 +102,10 @@ export class PopupCodeClient implements AuthClient {
     this.authUniqueId = uniqueKey();
     query.redirectUri = getRedirectUri(this.authUniqueId);
     openAuthWindow(buildAuthUrl(query), codeTarget);
+
+    this.promiseCallback = new PromiseCallBack();
+
+    return this.promiseCallback.promise;
   }
 }
 

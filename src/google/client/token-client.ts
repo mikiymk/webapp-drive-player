@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import {
   boolToStr,
   addMessageEventListener,
@@ -8,6 +6,8 @@ import {
   uniqueKey,
   buildQueriedUri,
 } from "./common";
+
+import { PromiseCallBack } from "./promise-callback";
 
 import type { AuthClient } from "./common";
 
@@ -48,7 +48,7 @@ type TokenClientQuery = {
   hostedDomain: string | undefined;
   state: string | undefined;
 
-  redirect_uri?: string;
+  redirectUri?: string;
 };
 
 type OverridableTokenClientConfig = {
@@ -64,21 +64,23 @@ export class TokenClient implements AuthClient {
   authUniqueId: string | undefined;
   isListens: boolean;
   query: TokenClientQuery;
-  callback: (this: TokenClient, response: TokenResponse) => void;
+  promiseCallback: PromiseCallBack<TokenResponse> | undefined;
 
   constructor(config: TokenClientConfig) {
     this.authUniqueId = undefined;
     this.isListens = false;
     this.query = normalize(config);
 
-    this.callback = config.callback;
+    this.promiseCallback = undefined;
   }
 
   onMessage(response: TokenResponse) {
-    this.callback.call(this, response);
+    this.promiseCallback?.resolve(response);
   }
 
-  requestAccessToken(config?: OverridableTokenClientConfig) {
+  requestAccessToken(
+    config?: OverridableTokenClientConfig
+  ): Promise<TokenResponse> {
     let query = this.query;
     config = config || {};
     query = {
@@ -98,8 +100,12 @@ export class TokenClient implements AuthClient {
     addMessageEventListener(this);
     this.authUniqueId = uniqueKey();
 
-    query.redirect_uri = getRedirectUri(this.authUniqueId);
+    query.redirectUri = getRedirectUri(this.authUniqueId);
     openAuthWindow(buildAuthUrl(query), tokenTarget);
+
+    this.promiseCallback = new PromiseCallBack();
+
+    return this.promiseCallback.promise;
   }
 }
 
@@ -119,7 +125,7 @@ const buildAuthUrl = (query: TokenClientQuery): string =>
     ["gsiwebsdk", "3"],
     ["client_id", query.clientId],
     ["scope", query.scope],
-    ["redirect_uri", query.redirect_uri],
+    ["redirect_uri", query.redirectUri],
     ["prompt", query.prompt ?? "select_account"],
     ["login_hint", query.hint],
     ["state", query.state],
