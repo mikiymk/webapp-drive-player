@@ -77,3 +77,7 @@ export const removeAudio = (name: PlaylistName, index: number) => {
     return map;
   });
 };
+
+export const clearPlaylists = () => {
+  setPlaylists(new Map());
+};

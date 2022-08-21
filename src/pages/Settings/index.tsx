@@ -1,10 +1,10 @@
 import { IconDownload, IconUpload } from "~/components/Icon";
-import { getLibrary, sendLibrary } from "~/google/fetchLibrary";
-import { getPlaylists, sendPlaylists } from "~/google/fetchPlaylists";
+import { sendLibrary } from "~/google/fetchLibrary";
+import { sendPlaylists } from "~/google/fetchPlaylists";
 
 import { accessToken } from "~/signals/access-token";
-import { addAudios, audios } from "~/signals/audios";
-import { addPlaylists, playlists } from "~/signals/playlists";
+import { audios } from "~/signals/audios";
+import { playlists } from "~/signals/playlists";
 
 import { Load } from "./Load";
 import { styleSettings } from "./style.css";
@@ -27,18 +27,6 @@ export const Settings = () => {
 const syncLibrary = async () => {
   const token = accessToken();
   if (token === undefined) throw new Error("You are not logged in");
-
-  // download
-
-  const downloadedLibraryPromise = getLibrary(token);
-  const downloadedPlaylistsPromise = getPlaylists(token);
-
-  const [downloadedLibrary, downloadedPlaylists] = await Promise.all([
-    downloadedLibraryPromise,
-    downloadedPlaylistsPromise,
-  ]);
-  if (downloadedLibrary !== null) addAudios(downloadedLibrary);
-  if (downloadedPlaylists !== null) addPlaylists(downloadedPlaylists);
 
   // upload
 

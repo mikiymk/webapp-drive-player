@@ -1,4 +1,4 @@
-import { onMount } from "solid-js";
+import { createEffect, onMount } from "solid-js";
 
 import { Controller } from "~/components/Controller";
 import {
@@ -11,12 +11,20 @@ import {
 import { ExclusiveMenuRoot } from "~/components/PopUpMenu";
 import { Menu, MenuItem } from "~/components/TabMenu";
 
+import { getLibrary } from "~/google/fetchLibrary";
+import { getPlaylists } from "~/google/fetchPlaylists";
 import { DriveFiles } from "~/pages/GoogleDrive";
 import { Library } from "~/pages/MusicLibrary";
 import { Playing } from "~/pages/Playing";
 
 import { Playlists } from "~/pages/Playlist";
 import { Settings } from "~/pages/Settings";
+
+import { accessToken } from "~/signals/access-token";
+
+import { addAudios, clearAudios } from "~/signals/audios";
+
+import { addPlaylists, clearPlaylists } from "~/signals/playlists";
 
 import { stylePlayer } from "./style.css";
 import useMusicPlayer from "./useMusicPlayer";
@@ -41,6 +49,16 @@ export const MusicPlayer = () => {
     const element = document.getElementById("beforeload");
     if (element) {
       document.body.removeChild(element);
+    }
+  });
+
+  createEffect(() => {
+    const token = accessToken();
+    clearAudios();
+    clearPlaylists();
+    if (token) {
+      getLibrary(token).then(lib => lib && addAudios(lib));
+      getPlaylists(token).then(lib => lib && addPlaylists(lib));
     }
   });
 

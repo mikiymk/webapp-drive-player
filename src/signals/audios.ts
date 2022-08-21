@@ -25,3 +25,7 @@ export const setAudioInfo = (id: AudioID, info: AudioInfo) => {
     return map;
   });
 };
+
+export const clearAudios = () => {
+  setAudios(new Map());
+};
