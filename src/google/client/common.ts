@@ -1,3 +1,5 @@
+import type { PromiseCallBack } from "./promise-callback";
+
 const validateScheme = (scheme: string, uri: string) =>
   uri.slice(0, scheme.length + 1).toLowerCase() === scheme + ":";
 
@@ -66,7 +68,11 @@ export const buildQueriedUri = (
     )
     .join("&");
 
-export const openAuthWindow = (url: string, target: string) => {
+export const openAuthWindow = <T>(
+  url: string,
+  target: string,
+  promise: PromiseCallBack<T>
+) => {
   const width = Math.min(500, screen.width - 40);
   const height = Math.min(550, screen.height - 40);
   const features = [
@@ -88,6 +94,7 @@ export const openAuthWindow = (url: string, target: string) => {
   if (!authWindow || authWindow.closed) return null;
 
   authWindow.focus();
+  authWindow.onclose = () => promise.reject("window closed");
   return authWindow;
 };
 
@@ -102,14 +109,14 @@ export interface AuthClient {
   isListens: boolean;
   authUniqueId: string | undefined;
   query: { clientId: string };
+
+  onMessage(response: BaseResponse): void;
 }
 
-export const addMessageEventListener = (
-  client: AuthClient,
-  onMessage: (message: BaseResponse) => void
-) => {
+export const addMessageEventListener = (client: AuthClient) => {
   if (client.isListens) return;
   client.isListens = true;
+
   window.addEventListener(
     "message",
     event => {
@@ -121,7 +128,7 @@ export const addMessageEventListener = (
         if (params.clientId !== client.query.clientId) return;
         if ("authResult" !== params.type) return;
         client.authUniqueId = undefined;
-        onMessage(params.authResult);
+        client.onMessage(params.authResult);
       } catch (error) {
         console.log(error);
       }

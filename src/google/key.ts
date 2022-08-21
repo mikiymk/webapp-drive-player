@@ -1,5 +1,5 @@
 export const CLIENT_ID =
-  "820614082295-ob2em235vu1va9b5mhu0uhpvo299ipt7.apps.googleusercontent.com";
+  "820614082295-i9n9mthosbeammp24u81e3isqgbavku0.apps.googleusercontent.com";
 
 export const SCOPES =
   "https://www.googleapis.com/auth/drive.appdata " +

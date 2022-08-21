@@ -7,12 +7,14 @@ type AccessTokenResponse = {
 };
 
 export const requestAccessToken = async (
+  redirectUri: string,
   code?: string
 ): Promise<AccessTokenResponse> => {
   const url =
-    "https://iron-ragdoll.vercel.app/api/token" + (code ? "?code=" + code : "");
+    "/api/token?redirect_uri=" + redirectUri + (code ? "&code=" + code : "");
   const response = await fetch(url);
   const json = await response.json();
+  console.log("request response", json);
   if (!("access_token" in json)) {
     throw new Error("authorize failure");
   }
@@ -20,13 +22,10 @@ export const requestAccessToken = async (
   return snake2camel(json) as AccessTokenResponse;
 };
 
-export const refreshAccessToken = async (
-  refreshToken: string
-): Promise<AccessTokenResponse> => {
-  const response = await fetch(
-    "https://iron-ragdoll.vercel.app/api/refresh?refresh_token=" + refreshToken
-  );
+export const refreshAccessToken = async (): Promise<AccessTokenResponse> => {
+  const response = await fetch("/api/refresh");
   const json = await response.json();
+  console.log("refresh response", json);
   if (!("access_token" in json)) {
     throw new Error("authorize failure");
   }

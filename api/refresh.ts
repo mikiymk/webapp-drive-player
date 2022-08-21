@@ -27,14 +27,28 @@ const requestAuth = (refreshToken: string) =>
       }
     );
 
-    req.on("error", () => reject(""));
+    req.on("error", error =>
+      resolve(JSON.stringify({ requestError: error.message }))
+    );
 
     req.write(body);
     req.end();
   });
 
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
-  const response = await requestAuth(apiReq.query["refresh_token"] as string);
+  const refreshToken = apiReq.cookies["refresh_token"];
+
+  if (!refreshToken) {
+    apiRes.status(200).send("{}");
+    return;
+  }
+
+  let response;
+  try {
+    response = await requestAuth(refreshToken as string);
+  } catch {
+    response = "";
+  }
 
   apiRes.status(200).send(response);
 };

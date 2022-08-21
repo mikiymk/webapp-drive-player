@@ -9,22 +9,28 @@ export { accessToken };
 export const useSignIn = () => {
   const client = initClient();
 
-  let intervalId: number;
+  refresh(0);
 
   return {
     signIn: async () => {
       const { code } = await client.requestCode();
-      const { accessToken, refreshToken, expiresIn } = await requestAccessToken(
+      const { accessToken, expiresIn } = await requestAccessToken(
+        location.origin,
         code
       );
       setAccessToken(accessToken);
-
-      if (intervalId) window.clearInterval(intervalId);
-      intervalId = window.setInterval(async () => {
-        const { accessToken } = await refreshAccessToken(refreshToken);
-        setAccessToken(accessToken);
-      }, expiresIn * 950);
+      refresh(expiresIn);
     },
-    signOut: () => setAccessToken(),
+    signOut: () => {
+      setAccessToken();
+    },
   };
+};
+
+const refresh = async (expiresIn: number) => {
+  setTimeout(async () => {
+    const { accessToken, expiresIn } = await refreshAccessToken();
+    setAccessToken(accessToken);
+    refresh(expiresIn);
+  }, expiresIn * 950);
 };
