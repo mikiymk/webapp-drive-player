@@ -10,7 +10,8 @@ export const requestAccessToken = async (
   code: string,
   redirectUri: string
 ): Promise<AccessTokenResponse> => {
-  const url = "/api/token" + "?code=" + code + "&redirect_uri=" + redirectUri;
+  const url =
+    "/api/token?redirect_uri=" + redirectUri + (code ? "&code=" + code : "");
   const response = await fetch(url);
   const json = await response.json();
   console.log("request response", json);

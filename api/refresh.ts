@@ -36,9 +36,6 @@ const requestAuth = (refreshToken: string) =>
   });
 
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
-  apiRes.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
-  apiRes.setHeader("Access-Control-Allow-Methods", "GET");
-
   let response;
   try {
     response = await requestAuth(apiReq.query["refresh_token"] as string);

@@ -40,19 +40,24 @@ export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
   const code = apiReq.query["code"] ?? apiReq.cookies["code"];
   const redirectUri = apiReq.query["redirect_uri"];
 
-  if (code)
+  if (code) {
     apiRes.setHeader(
       "Set-Cookie",
       `code=${code}; SameSite=Strict; Secure; HttpOnly;`
     );
-  apiRes.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
-  apiRes.setHeader("Access-Control-Allow-Methods", "GET");
+  }
+
+  if (!redirectUri) {
+    apiRes
+      .status(200)
+      .send(JSON.stringify({ requestError: "redirect_uri required" }));
+  }
 
   let response;
   try {
     response = await requestAuth(code as string, redirectUri as string);
-  } catch {
-    response = "";
+  } catch (error) {
+    response = String(error);
   }
 
   apiRes.status(200).send(response);
