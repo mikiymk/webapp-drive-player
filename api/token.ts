@@ -28,18 +28,17 @@ const requestAuth = (code: string, redirectUri: string) =>
       }
     );
 
-    req.on("error", () => reject(""));
+    req.on("error", error =>
+      resolve(JSON.stringify({ requestError: error.message }))
+    );
 
     req.write(body);
     req.end();
   });
 
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
-  const code = apiReq.cookies["code"] ?? apiReq.query["code"];
-  const redirectUri =
-    apiReq.cookies["redirect_uri"] ??
-    apiReq.query["redirect_uri"] ??
-    "https://iron-ragdoll.vercel.app/";
+  const code = apiReq.query["code"] ?? apiReq.cookies["code"];
+  const redirectUri = apiReq.query["redirect_uri"];
 
   if (code)
     apiRes.setHeader(

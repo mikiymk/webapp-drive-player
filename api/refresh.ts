@@ -27,7 +27,9 @@ const requestAuth = (refreshToken: string) =>
       }
     );
 
-    req.on("error", error => resolve(JSON.stringify({ error: error.message })));
+    req.on("error", error =>
+      resolve(JSON.stringify({ requestError: error.message }))
+    );
 
     req.write(body);
     req.end();
