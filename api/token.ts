@@ -2,7 +2,20 @@ import { request } from "https";
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const requestAuth = (code: string, redirectUri: string) =>
+type AuthResponse =
+  | {
+      access_token: string;
+      expires_in: number;
+      refresh_token: string;
+      scope: string;
+      token_type: string;
+    }
+  | { requestError: string };
+
+const requestAuth = (
+  code: string,
+  redirectUri: string
+): Promise<AuthResponse> =>
   new Promise((resolve, reject) => {
     const body = [
       "code=" + code,
@@ -23,31 +36,22 @@ const requestAuth = (code: string, redirectUri: string) =>
         },
       },
       res => {
-        res.on("data", data => resolve(data));
+        res.on("data", data => resolve(JSON.parse(data) as AuthResponse));
         res.on("end", () => reject(""));
       }
     );
 
-    req.on("error", error =>
-      resolve(JSON.stringify({ requestError: error.message }))
-    );
+    req.on("error", error => resolve({ requestError: error.message }));
 
     req.write(body);
     req.end();
   });
 
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
-  const code = apiReq.query["code"] ?? apiReq.cookies["code"];
+  const code = apiReq.query["code"];
   const redirectUri = apiReq.query["redirect_uri"];
 
-  if (code) {
-    apiRes.setHeader(
-      "Set-Cookie",
-      `code=${code}; SameSite=Strict; Secure; HttpOnly;`
-    );
-  }
-
-  if (!redirectUri) {
+  if (!code || !redirectUri) {
     apiRes
       .status(200)
       .send(JSON.stringify({ requestError: "redirect_uri required" }));
@@ -56,6 +60,11 @@ export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
   let response;
   try {
     response = await requestAuth(code as string, redirectUri as string);
+    "refresh_token" in response &&
+      apiRes.setHeader(
+        "Set-Cookie",
+        `refresh_token=${response.refresh_token}; SameSite=Strict; Secure; HttpOnly;`
+      );
   } catch (error) {
     response = String(error);
   }

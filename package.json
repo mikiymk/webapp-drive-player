@@ -15,7 +15,10 @@
     "lint:fix": "eslint src --fix",
     "type": "tsc",
     "type:watch": "tsc --watch",
-    "watch": "run-p type:watch start"
+    "watch": "run-p type:watch start",
+    "vercel:dev": "vercel dev",
+    "vercel:prev": "vercel",
+    "vercel:prod": "vercel --prod"
   },
   "repository": {
     "type": "git",

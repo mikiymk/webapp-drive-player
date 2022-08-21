@@ -36,9 +36,16 @@ const requestAuth = (refreshToken: string) =>
   });
 
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
+  const refreshToken = apiReq.cookies["refresh_token"];
+
+  if (!refreshToken) {
+    apiRes.status(200).send("{}");
+    return;
+  }
+
   let response;
   try {
-    response = await requestAuth(apiReq.query["refresh_token"] as string);
+    response = await requestAuth(refreshToken as string);
   } catch {
     response = "";
   }

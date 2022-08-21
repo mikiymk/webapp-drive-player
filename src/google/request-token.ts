@@ -7,8 +7,8 @@ type AccessTokenResponse = {
 };
 
 export const requestAccessToken = async (
-  code: string,
-  redirectUri: string
+  redirectUri: string,
+  code?: string
 ): Promise<AccessTokenResponse> => {
   const url =
     "/api/token?redirect_uri=" + redirectUri + (code ? "&code=" + code : "");
@@ -22,10 +22,8 @@ export const requestAccessToken = async (
   return snake2camel(json) as AccessTokenResponse;
 };
 
-export const refreshAccessToken = async (
-  refreshToken: string
-): Promise<AccessTokenResponse> => {
-  const response = await fetch("/api/refresh?refresh_token=" + refreshToken);
+export const refreshAccessToken = async (): Promise<AccessTokenResponse> => {
+  const response = await fetch("/api/refresh");
   const json = await response.json();
   console.log("refresh response", json);
   if (!("access_token" in json)) {

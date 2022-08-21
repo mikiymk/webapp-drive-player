@@ -9,27 +9,28 @@ export { accessToken };
 export const useSignIn = () => {
   const client = initClient();
 
+  refresh(0);
+
   return {
     signIn: async () => {
-      console.log("sign in 1 request code start");
       const { code } = await client.requestCode();
-      console.log("sign in 1 request code end");
-
-      console.log("sign in 2 request token start");
-      const { accessToken, refreshToken, expiresIn } = await requestAccessToken(
-        code,
-        location.origin
+      const { accessToken, expiresIn } = await requestAccessToken(
+        location.origin,
+        code
       );
-      console.log("sign in 2 request token end");
       setAccessToken(accessToken);
-
-      window.setInterval(async () => {
-        const { accessToken } = await refreshAccessToken(refreshToken);
-        setAccessToken(accessToken);
-      }, expiresIn * 950);
+      refresh(expiresIn);
     },
     signOut: () => {
       setAccessToken();
     },
   };
+};
+
+const refresh = async (expiresIn: number) => {
+  setTimeout(async () => {
+    const { accessToken, expiresIn } = await refreshAccessToken();
+    setAccessToken(accessToken);
+    refresh(expiresIn);
+  }, expiresIn * 950);
 };
