@@ -78,26 +78,33 @@ export class PopupCodeClient implements AuthClient {
   authUniqueId: string | undefined;
   isListens: boolean;
   query: PopupCodeClientQuery;
+  promiseCallback: PromiseCallBack<CodeResponse>;
 
   constructor(config: PopupCodeClientConfig) {
     this.authUniqueId = undefined;
     this.isListens = false;
     this.query = normalizePopup(config);
+    this.promiseCallback = new PromiseCallBack<CodeResponse>();
+
+    console.log("new PopupCodeClient");
+  }
+
+  onMessage(response: CodeResponse) {
+    this.promiseCallback.resolve(response);
   }
 
   requestCode() {
+    console.log("start request code");
     const query = this.query;
 
-    const promiseCallback = new PromiseCallBack<CodeResponse>();
-    addMessageEventListener(this, response =>
-      promiseCallback?.resolve(response as CodeResponse)
-    );
+    this.promiseCallback = new PromiseCallBack<CodeResponse>();
+    addMessageEventListener(this);
 
     this.authUniqueId = uniqueKey();
     query.redirectUri = getRedirectUri(this.authUniqueId);
-    openAuthWindow(buildAuthUrl(query), codeTarget);
+    openAuthWindow(buildAuthUrl(query), codeTarget, this.promiseCallback);
 
-    return promiseCallback.promise;
+    return this.promiseCallback.promise;
   }
 }
 
@@ -106,9 +113,12 @@ export class RedirectCodeClient {
 
   constructor(config: RedirectCodeClientConfig) {
     this.query = normalizeRedirect(config);
+
+    console.log("new RedirectCodeClient");
   }
 
   requestCode() {
+    console.log("start request code");
     window.location.assign(validateRedirectUrl(buildAuthUrl(this.query)));
   }
 }

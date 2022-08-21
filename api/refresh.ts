@@ -27,14 +27,22 @@ const requestAuth = (refreshToken: string) =>
       }
     );
 
-    req.on("error", () => reject(""));
+    req.on("error", error => resolve(JSON.stringify({ error: error.message })));
 
     req.write(body);
     req.end();
   });
 
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
-  const response = await requestAuth(apiReq.query["refresh_token"] as string);
+  apiRes.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5173");
+  apiRes.setHeader("Access-Control-Allow-Methods", "GET");
+
+  let response;
+  try {
+    response = await requestAuth(apiReq.query["refresh_token"] as string);
+  } catch {
+    response = "";
+  }
 
   apiRes.status(200).send(response);
 };

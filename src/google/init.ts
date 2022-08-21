@@ -5,5 +5,6 @@ export const initClient = () => {
   return new PopupCodeClient({
     clientId: CLIENT_ID,
     scope: SCOPES,
+    // redirectUri: location.origin,
   });
 };
