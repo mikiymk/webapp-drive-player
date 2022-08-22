@@ -52,15 +52,17 @@ export const MusicPlayer = () => {
     }
   });
 
-  createEffect(() => {
+  createEffect(isAccountUpdated => {
     const token = accessToken();
     clearAudios();
     clearPlaylists();
-    if (token) {
+    if (!token) return true;
+    if (isAccountUpdated) {
       getLibrary(token).then(lib => lib && addAudios(lib));
       getPlaylists(token).then(lib => lib && addPlaylists(lib));
     }
-  });
+    return false;
+  }, true);
 
   return (
     <ExclusiveMenuRoot>
