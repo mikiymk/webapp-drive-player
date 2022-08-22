@@ -54,9 +54,11 @@ export const MusicPlayer = () => {
 
   createEffect(isAccountUpdated => {
     const token = accessToken();
-    clearAudios();
-    clearPlaylists();
-    if (!token) return true;
+    if (!token) {
+      clearAudios();
+      clearPlaylists();
+      return true;
+    }
     if (isAccountUpdated) {
       getLibrary(token).then(lib => lib && addAudios(lib));
       getPlaylists(token).then(lib => lib && addPlaylists(lib));
