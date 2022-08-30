@@ -23,7 +23,7 @@ export const requestAccessToken = async (
 };
 
 export const refreshAccessToken = async (): Promise<AccessTokenResponse> => {
-  const response = await fetch("/api/refresh");
+  const response = await fetch("/api/token");
   const json = await response.json();
   console.log("refresh response", json);
   if (!("access_token" in json)) {
