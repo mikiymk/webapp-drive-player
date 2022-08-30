@@ -2,6 +2,10 @@ import { request } from "https";
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
+const accessCodeAge = 60 * 60 * 24 * 30;
+const refreshTokenAge = 60 * 60 * 24;
+
+type RequestError = { requestError: string };
 type AuthResponse =
   | {
       access_token: string;
@@ -10,20 +14,22 @@ type AuthResponse =
       scope: string;
       token_type: string;
     }
-  | { requestError: string };
+  | {
+      access_token: string;
+      expires_in: number;
+      scope: string;
+      token_type: string;
+    }
+  | {
+      error: string;
+      error_description: string;
+    };
 
-const requestAuth = (
-  code: string,
-  redirectUri: string
-): Promise<AuthResponse> =>
-  new Promise((resolve, reject) => {
-    const body = [
-      "code=" + code,
-      "client_id=" + process.env["CLIENT_ID"],
-      "client_secret=" + process.env["CLIENT_SECRET"],
-      "redirect_uri=" + redirectUri,
-      "grant_type=authorization_code",
-    ].join("&");
+const requestToken = (
+  bodies: string[]
+): Promise<AuthResponse | RequestError> => {
+  return new Promise(resolve => {
+    const body = bodies.join("&");
 
     const req = request(
       {
@@ -37,7 +43,7 @@ const requestAuth = (
       },
       res => {
         res.on("data", data => resolve(JSON.parse(data) as AuthResponse));
-        res.on("end", () => reject(""));
+        res.on("end", () => resolve({ requestError: "end of response" }));
       }
     );
 
@@ -46,27 +52,87 @@ const requestAuth = (
     req.write(body);
     req.end();
   });
+};
+
+const exchangeToken = (
+  code: string,
+  redirectUri: string
+): Promise<AuthResponse | RequestError> => {
+  return requestToken([
+    "code=" + code,
+    "client_id=" + process.env["CLIENT_ID"],
+    "client_secret=" + process.env["CLIENT_SECRET"],
+    "redirect_uri=" + redirectUri,
+    "grant_type=authorization_code",
+  ]);
+};
+
+const refresh = (refreshToken: string) => {
+  return requestToken([
+    "refresh_token=" + refreshToken,
+    "client_id=" + process.env["CLIENT_ID"],
+    "client_secret=" + process.env["CLIENT_SECRET"],
+    "grant_type=refresh_token",
+  ]);
+};
+
+const setCodeCookie = (apiRes: VercelResponse, code: string) => {
+  apiRes.setHeader(
+    "Set-Cookie",
+    `code=${code}; SameSite=Strict; Secure; HttpOnly; Max-Age=${accessCodeAge};`
+  );
+};
+
+const setRefreshTokenCookie = (
+  apiRes: VercelResponse,
+  refreshToken: string
+) => {
+  apiRes.setHeader(
+    "Set-Cookie",
+    `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${refreshTokenAge};`
+  );
+};
+
+const requestAuth = async (
+  code: string | undefined,
+  codeCookie: string | undefined,
+  redirectUri: string | undefined
+): Promise<AuthResponse | RequestError> => {
+  if (code && redirectUri) return exchangeToken(code, redirectUri);
+  if (codeCookie && redirectUri) return exchangeToken(codeCookie, redirectUri);
+
+  // missing required parameter
+  return {
+    requestError: "missing required parameter: code, refresh_token",
+  };
+};
 
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
-  const code = apiReq.query["code"];
-  const redirectUri = apiReq.query["redirect_uri"];
+  let t;
+  const code = typeof (t = apiReq.query["code"]) === "string" ? t : t?.[0];
+  const codeCookie = apiReq.cookies["code"];
+  const redirectUri =
+    typeof (t = apiReq.query["redirect_uri"]) === "string" ? t : t?.[0];
+  const refreshToken = apiReq.cookies["refresh_token"];
 
-  if (!code || !redirectUri) {
-    apiRes
-      .status(200)
-      .send(JSON.stringify({ requestError: "redirect_uri required" }));
+  if (code) {
+    setCodeCookie(apiRes, code);
+  } else if (codeCookie) {
+    setCodeCookie(apiRes, codeCookie);
   }
 
   let response;
-  try {
-    response = await requestAuth(code as string, redirectUri as string);
-    "refresh_token" in response &&
-      apiRes.setHeader(
-        "Set-Cookie",
-        `refresh_token=${response.refresh_token}; SameSite=Strict; Secure; HttpOnly;`
-      );
-  } catch (error) {
-    response = String(error);
+  if (refreshToken) {
+    setRefreshTokenCookie(apiRes, refreshToken);
+    response = await refresh(refreshToken);
+  }
+
+  if (!response || "requestError" in response) {
+    response = await requestAuth(code, codeCookie, redirectUri);
+
+    if ("refresh_token" in response) {
+      setRefreshTokenCookie(apiRes, response.refresh_token);
+    }
   }
 
   apiRes.status(200).send(response);
