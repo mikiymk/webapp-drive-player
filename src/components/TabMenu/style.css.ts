@@ -1,8 +1,10 @@
 import { style } from "@vanilla-extract/css";
 
+import { vars } from "../AppRoot/style.css";
+
 export const styleNav = style({
   flex: "0 0 max-content",
-  backgroundColor: "rgb(165, 165, 165)",
+  backgroundColor: vars.color.prim,
   textAlign: "center",
 });
 
@@ -16,18 +18,18 @@ export const styleNavItemButton = style({
 
   selectors: {
     "&:hover": {
-      backgroundColor: "rgba(0, 0, 0, 0.2)",
+      backgroundColor: vars.color.hoverShadow,
     },
   },
 });
 
 export const styleNavSelected = style({
-  backgroundColor: "rgba(0, 0, 0, 0.1)",
+  backgroundColor: vars.color.primLight,
 });
 
 export const styleContent = style({
   flex: "1 0 0",
-  backgroundColor: "rgb(207, 207, 207)",
+  backgroundColor: vars.color.primLight,
   display: "flex",
   flexDirection: "column",
 });

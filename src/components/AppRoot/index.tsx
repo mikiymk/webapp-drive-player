@@ -26,7 +26,7 @@ import { addAudios, clearAudios } from "~/signals/audios";
 
 import { addPlaylists, clearPlaylists } from "~/signals/playlists";
 
-import { stylePlayer } from "./style.css";
+import { stylePlayer, themeClass } from "./style.css";
 import useMusicPlayer from "./useMusicPlayer";
 
 import type { GoogleFile } from "~/google/type";
@@ -68,7 +68,7 @@ export const MusicPlayer = () => {
 
   return (
     <ExclusiveMenuRoot>
-      <div class={stylePlayer}>
+      <div class={stylePlayer + " " + themeClass}>
         <Menu defaultKey="playing">
           <MenuItem key="playing" icon={<IconPlay />} label="Now Playing">
             <Playing info={status.info()} />

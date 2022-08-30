@@ -1,5 +1,7 @@
 import { style } from "@vanilla-extract/css";
 
+import { vars } from "~/components/AppRoot/style.css";
+
 export const stylePlaying = style({
   display: "flex",
   flexWrap: "wrap",
@@ -16,13 +18,13 @@ export const styleImage = style({
 });
 
 export const styleNoImage = style({
-  fill: "#333",
+  fill: vars.color.secoDark,
   font: "bold 10px sans-serif",
   textAnchor: "middle",
 });
 
 export const styleNoImageBG = style({
-  fill: "#888",
+  fill: vars.color.seco,
 });
 
 export const styleInfo = style({

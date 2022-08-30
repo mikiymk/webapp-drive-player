@@ -1,12 +1,14 @@
 import { style } from "@vanilla-extract/css";
 
+import { vars } from "../AppRoot/style.css";
+
 export const sList = style({
   width: "100%",
   overflowY: "scroll",
 });
 
 export const sHead = style({
-  background: "#808080",
+  background: vars.color.primDark,
   position: "sticky",
   top: 0,
 });
@@ -16,7 +18,7 @@ export const sBody = style({
 });
 
 export const sItem = style({
-  borderBottom: "solid 1px rgb(162, 162, 162)",
+  borderBottom: "solid 1px " + vars.color.prim,
 });
 
 export const sItemArtist = style({
