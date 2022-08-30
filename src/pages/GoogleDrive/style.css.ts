@@ -1,5 +1,7 @@
 import { style } from "@vanilla-extract/css";
 
+import { vars } from "~/components/AppRoot/style.css";
+
 export const styleDrive = style({
   overflowY: "scroll",
   flex: "1 0 0",
@@ -8,7 +10,7 @@ export const styleDrive = style({
 export const styleItem = style({
   fontSize: "1rem",
   padding: "0 0.2rem",
-  borderBottom: "solid gray 1px",
+  borderBottom: "solid 1px " + vars.color.primDark,
   cursor: "pointer",
 });
 
@@ -18,7 +20,7 @@ export const styleItemIcon = style({
 });
 
 export const styleBreadcrumbs = style({
-  backgroundColor: "gray",
+  backgroundColor: vars.color.primDark,
 });
 
 export const styleBread = style({

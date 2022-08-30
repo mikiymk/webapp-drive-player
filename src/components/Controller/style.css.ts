@@ -1,11 +1,13 @@
 import { style } from "@vanilla-extract/css";
 
+import { vars } from "../AppRoot/style.css";
+
 export const styleController = style({
   display: "grid",
   justifyContent: "center",
   flex: "0 0 3rem",
   fontSize: "2rem",
-  backgroundColor: "rgb(173,173,173)",
+  backgroundColor: vars.color.prim,
   grid: "3rem / repeat(5, 1fr)",
 
   "@media": {
@@ -24,7 +26,7 @@ export const styleButton = style({
 
 export const styleSeekBar = style({
   flex: "0 0 0.5rem",
-  backgroundColor: "rgb(79,81,99)",
+  backgroundColor: vars.color.primDark,
 
   selectors: {
     "&:focus, &:active": {
