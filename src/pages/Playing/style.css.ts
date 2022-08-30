@@ -18,13 +18,13 @@ export const styleImage = style({
 });
 
 export const styleNoImage = style({
-  fill: vars.color.prim,
+  fill: vars.color.secoDark,
   font: "bold 10px sans-serif",
   textAnchor: "middle",
 });
 
 export const styleNoImageBG = style({
-  fill: vars.color.primDark,
+  fill: vars.color.seco,
 });
 
 export const styleInfo = style({

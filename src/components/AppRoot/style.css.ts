@@ -1,4 +1,9 @@
-import { createTheme, globalStyle, style } from "@vanilla-extract/css";
+import {
+  assignVars,
+  createTheme,
+  globalStyle,
+  style,
+} from "@vanilla-extract/css";
 
 export const [themeClass, vars] = createTheme({
   color: {
@@ -21,6 +26,27 @@ export const stylePlayer = style({
 
   width: "100%",
   height: "100%",
+
+  color: vars.color.text,
+
+  "@media": {
+    "(prefers-color-scheme: dark)": {
+      vars: assignVars(vars, {
+        color: {
+          prim: "#444",
+          primLight: "#222",
+          primDark: "#777",
+
+          seco: "#456",
+          secoLight: "#134",
+          secoDark: "#789",
+
+          text: "#FFF",
+          hoverShadow: "#FFF3",
+        },
+      }),
+    },
+  },
 });
 
 globalStyle(":root, body, #root", {
