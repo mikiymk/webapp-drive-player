@@ -125,7 +125,7 @@ export class AudioManager {
     const data = this.loadBuffer();
 
     this.onChangeMusic?.(id);
-    await this.player.setBuffer(data);
+    await this.player.setBuffer(id, data);
     return id;
   }
 
