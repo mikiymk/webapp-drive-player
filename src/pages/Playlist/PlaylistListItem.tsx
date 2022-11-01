@@ -1,5 +1,22 @@
+import { createMemo } from "solid-js";
+
 import { IconDotInfo } from "~/components/Icon";
 import { usePopMenu } from "~/components/PopUpMenu";
+import { formatTime } from "~/format";
+import { audios } from "~/signals/audios";
+import { playlists } from "~/signals/playlists";
+
+const calcTotalDuration = (audioList: readonly string[]): number => {
+  const audioMap = audios();
+
+  let totalDuration = 0;
+  for (const audio of audioList) {
+    const { duration } = audioMap.get(audio) ?? { duration: 0 };
+    totalDuration += duration;
+  }
+
+  return totalDuration;
+};
 
 export type PlaylistListItemProps = {
   name: string;
@@ -7,9 +24,15 @@ export type PlaylistListItemProps = {
 
 export const PlaylistListItem = (props: PlaylistListItemProps) => {
   const popMenu = usePopMenu();
+  const playlistDuration = createMemo(() => {
+    const playlist = playlists().get(props.name);
+    if (!playlist) return 0;
+    return calcTotalDuration(playlist);
+  });
+
   return (
-    <li oncontextmenu={popMenu}>
-      {props.name}
+    <li onContextMenu={popMenu}>
+      {props.name} {formatTime(playlistDuration())}
       <button onClick={popMenu}>
         <IconDotInfo />
       </button>
