@@ -29,7 +29,7 @@ export const AudioList = (props: AudioListProps) => {
       <tbody class={sBody}>
         <For each={props.audios}>
           {(item, index) => (
-            <Show when={getAudio(item)}>
+            <Show when={getAudio(item)} keyed>
               {audio => (
                 <MenuProvider
                   menu={
@@ -37,7 +37,7 @@ export const AudioList = (props: AudioListProps) => {
                       item={item}
                       play={() => props.play(props.audios, index())}
                       extendMenu={
-                        <Show when={props.extendMenu}>
+                        <Show when={props.extendMenu} keyed>
                           {ExtendMenu => (
                             <ExtendMenu item={item} index={index()} />
                           )}

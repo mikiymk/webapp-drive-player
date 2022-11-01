@@ -42,8 +42,6 @@ export class AudioInfo {
       albumartist,
       track,
       disk,
-      date,
-      genre,
       picture,
 
       albumsort,
@@ -68,8 +66,7 @@ export class AudioInfo {
       albumartist,
       { of: track.of ?? undefined, no: track.no ?? undefined },
       { of: disk.of ?? undefined, no: disk.no ?? undefined },
-      date,
-      genre,
+      0,
       picture?.[0]?.data.buffer,
       sort
     );
@@ -83,8 +80,7 @@ export class AudioInfo {
       base.albumartist,
       base.track,
       base.disk,
-      base.date,
-      base.genre,
+      base.duration,
       base.picture,
       base.sort
     );
@@ -97,8 +93,8 @@ export class AudioInfo {
 
   readonly track: AudioInfoNumber;
   readonly disk: AudioInfoNumber;
-  readonly date: string;
-  readonly genre: string[];
+
+  duration: number;
 
   readonly picture: ArrayBuffer;
   readonly sort: AudioInfoSort;
@@ -110,8 +106,7 @@ export class AudioInfo {
     albumartist?: string,
     track?: AudioInfoNumber,
     disk?: AudioInfoNumber,
-    date?: string,
-    genre?: string[],
+    duration?: number,
     picture?: ArrayBuffer,
     sort?: Partial<AudioInfoSort>
   ) {
@@ -121,8 +116,7 @@ export class AudioInfo {
     this.albumartist = albumartist ?? "";
     this.track = { no: track?.no ?? undefined, of: track?.of ?? undefined };
     this.disk = { no: disk?.no ?? undefined, of: disk?.of ?? undefined };
-    this.date = date ?? "";
-    this.genre = genre ?? [];
+    this.duration = duration ?? 0;
     this.picture = picture ?? new ArrayBuffer(0);
     this.sort = {
       albumsort: sort?.albumsort ?? "",

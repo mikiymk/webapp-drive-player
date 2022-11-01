@@ -14,7 +14,8 @@ export const Playlists = (props: PlaylistsProps) => {
   return (
     <Show
       when={selectedPlaylist()}
-      fallback={<PlaylistList select={setSelectedPlaylist} />}>
+      fallback={<PlaylistList select={setSelectedPlaylist} />}
+      keyed>
       {name => (
         <Playlist
           name={name}

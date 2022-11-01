@@ -1,3 +1,5 @@
+import { audios } from "~/signals/audios";
+
 import type { AudioPlayer } from "./AudioPlayer";
 
 export class AudioBufferSourcePlayer implements AudioPlayer {
@@ -35,7 +37,10 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
     requestAnimationFrame(timeUpdate);
   }
 
-  async setBuffer(blob: Promise<Blob | null>): Promise<void> {
+  async setBuffer(
+    id: string | undefined,
+    blob: Promise<Blob | null>
+  ): Promise<void> {
     const awaited = await blob;
     if (awaited === this.blob) {
       return;
@@ -52,6 +57,9 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
     this.buffer = await this.context.decodeAudioData(
       await awaited.arrayBuffer()
     );
+
+    const info = id && audios().get(id);
+    info && (info.duration = this.buffer.duration);
     this.onUpdateDuration?.(this.buffer.duration);
   }
 
