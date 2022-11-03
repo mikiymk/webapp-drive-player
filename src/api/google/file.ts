@@ -1,4 +1,4 @@
-import { fetchGet } from "./fetchGet";
+import { fetchGetWithBearer } from "../util/withBearer";
 
 /**
  * Google Drive からファイルをダウンロードする
@@ -11,7 +11,7 @@ export const getGoogleFile = async (
   try {
     if (accessToken === undefined) return undefined;
     const url = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
-    const response = await fetchGet(url, accessToken);
+    const response = await fetchGetWithBearer(url, accessToken);
 
     if (!response.ok) {
       const responseData = JSON.stringify(await response.json(), null, 2);

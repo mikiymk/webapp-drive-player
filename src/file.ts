@@ -1,4 +1,4 @@
-import { getFileList } from "./api/google/getFileList";
+import { getGoogleMetadata } from "./api/google/metadata";
 
 /**
  * 全フォルダの一覧を入手
@@ -6,7 +6,7 @@ import { getFileList } from "./api/google/getFileList";
  * @returns folders list in parent folder
  */
 export const getAllFolders = async (accessToken: string, parent?: string) =>
-  getFileList(
+  getGoogleMetadata(
     accessToken,
     `mimeType = 'application/vnd.google-apps.folder' and parents in '${
       parent ?? "root"
@@ -20,7 +20,7 @@ export const getAllFolders = async (accessToken: string, parent?: string) =>
  * @returns music files list in parent folder
  */
 export const getAllMusics = async (accessToken: string, parent?: string) =>
-  getFileList(
+  getGoogleMetadata(
     accessToken,
     `mimeType contains 'audio/' and parents in '${parent ?? "root"}'`,
     false
