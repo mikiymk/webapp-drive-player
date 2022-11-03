@@ -1,4 +1,4 @@
-import { downloadFile } from "~/api/google/downloadFile";
+import { getGoogleFile } from "~/api/google/file";
 import { getFileID } from "~/api/google/getFileList";
 import { createAppData, uploadAppData } from "~/api/google/uploadFile";
 import { AudioInfo } from "~/audio/AudioInfo";
@@ -20,7 +20,7 @@ export const getLibrary = async (
   const id = await getLibraryID(token);
   if (id === undefined) return null;
 
-  const response = await downloadFile(token, id);
+  const response = await getGoogleFile(token, id);
   if (response === null) return null;
 
   const json: unknown = await response.json();

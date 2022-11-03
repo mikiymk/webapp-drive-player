@@ -1,4 +1,4 @@
-import { downloadFile } from "./downloadFile";
+import { getGoogleFile } from "./file";
 import { getFileID } from "./getFileList";
 import { createAppData, uploadAppData } from "./uploadFile";
 
@@ -20,7 +20,7 @@ export const getPlaylists = async (
   const id = await getPlaylistsID(accessToken);
   if (id === undefined) return null;
 
-  const response = await downloadFile(accessToken, id);
+  const response = await getGoogleFile(accessToken, id);
   if (response === null) return null;
   return response.json();
 };

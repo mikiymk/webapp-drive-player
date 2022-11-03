@@ -1,4 +1,4 @@
-import { downloadFile } from "~/api/google/downloadFile";
+import { getGoogleFile } from "~/api/google/file";
 
 import { AudioInfo } from "./AudioInfo";
 
@@ -50,7 +50,7 @@ const downloadAudioPromise = async (
   token: string
 ): Promise<Blob | null> => {
   try {
-    const fileData = await downloadFile(token, id);
+    const fileData = await getGoogleFile(token, id);
 
     if (fileData === null) {
       return null;
