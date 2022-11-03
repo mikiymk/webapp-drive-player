@@ -1,7 +1,10 @@
 import { createSignal } from "solid-js";
 
-import { initClient } from "~/google/init";
-import { refreshAccessToken, requestAccessToken } from "~/google/request-token";
+import { initClient } from "~/api/google/init";
+import {
+  refreshAccessToken,
+  requestAccessToken,
+} from "~/api/google/request-token";
 
 const [accessToken, setAccessToken] = createSignal<string>();
 export { accessToken };

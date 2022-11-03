@@ -1,4 +1,4 @@
-import { getFileList } from "./google/getFileList";
+import { getFileList } from "./api/google/getFileList";
 
 /**
  * 全フォルダの一覧を入手

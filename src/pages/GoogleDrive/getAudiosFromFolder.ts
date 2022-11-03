@@ -4,7 +4,7 @@ import { accessToken } from "~/signals/access-token";
 
 import { audioEntryFromFile } from "./audioEntryFromGoogleFile";
 
-import type { GoogleFile } from "~/google/type";
+import type { GoogleFile } from "~/api/google/type";
 import type { AudioEntries } from "~/signals/audios";
 
 export const getAudiosFromFolder = async (
