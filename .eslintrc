@@ -60,5 +60,14 @@
     "no-throw-literal": "error",
     "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/no-empty-function": "off"
-  }
+  },
+
+  "overrides": [
+    {
+      "files": ["**/*.test.ts"],
+      "rules": {
+        "@typescript-eslint/no-non-null-assertion": "off"
+      }
+    }
+  ]
 }

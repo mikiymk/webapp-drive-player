@@ -4,6 +4,9 @@ node_modules/
 # build / generate output
 dist/
 
+# test coverage
+coverage/
+
 # rust target output
 target/
 .vercel
