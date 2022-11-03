@@ -50,7 +50,7 @@ export const Albums = (props: AlbumsProps) => {
   return (
     <>
       <h2>
-        <button onClick={props.reset}>Albums</button>
+        <button onClick={() => props.reset()}>Albums</button>
         {" > "}
         <Show when={selected()} fallback="select Album" keyed>
           {selected => <button onClick={() => select()}>{selected}</button>}

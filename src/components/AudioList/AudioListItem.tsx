@@ -24,8 +24,9 @@ export const AudioListItem = (props: AudioListItemProps) => {
         selected: selected(),
       }}
       onClick={() => setSelected(true)}
+      // eslint-disable-next-line solid/event-handlers
       onDblClick={() => props.play()}
-      oncontextmenu={popMenu}>
+      onContextMenu={popMenu}>
       <td>{props.audio?.title}</td>
       <td class={sItemArtist}>{props.audio?.artists.join()}</td>
       <td class={sDot}>
