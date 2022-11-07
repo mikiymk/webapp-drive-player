@@ -1,4 +1,5 @@
-import { fetchGet } from "./fetchGet";
+import { fetchGetWithBearer } from "../util/withBearer";
+
 import { generateUrl } from "./generateUrl";
 
 import type { GoogleFile, GoogleFileList } from "./type";
@@ -25,7 +26,7 @@ const getFileListPart = async (
     ["q", query],
   ]);
 
-  const response: Response = await fetchGet(url, accessToken);
+  const response: Response = await fetchGetWithBearer(url, accessToken);
   return await response.json();
 };
 
