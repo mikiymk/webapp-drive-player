@@ -6,6 +6,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "build": "vite build",
     "build:analyze": "vite build --mode analyze",
     "start": "vite",
