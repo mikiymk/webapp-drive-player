@@ -10,11 +10,11 @@ const [playlists, setPlaylists] = createSignal<PlaylistMap>(new Map());
 export { playlists };
 
 export const addPlaylists = (playlists: PlaylistEntries) => {
-  setPlaylists(value => new Map([...value, ...playlists]));
+  setPlaylists((value) => new Map([...value, ...playlists]));
 };
 
 export const makePlaylist = (name: PlaylistName) => {
-  setPlaylists(value => {
+  setPlaylists((value) => {
     if (value.has(name)) return value;
 
     const map = new Map(value);
@@ -25,7 +25,7 @@ export const makePlaylist = (name: PlaylistName) => {
 };
 
 export const deletePlaylist = (name: PlaylistName) => {
-  setPlaylists(value => {
+  setPlaylists((value) => {
     if (!value.has(name)) return value;
 
     const map = new Map(value);
@@ -36,7 +36,7 @@ export const deletePlaylist = (name: PlaylistName) => {
 };
 
 export const renamePlaylist = (name: PlaylistName, newName: PlaylistName) => {
-  setPlaylists(value => {
+  setPlaylists((value) => {
     const audios = value.get(name);
     if (audios === undefined) return value;
 
@@ -49,7 +49,7 @@ export const renamePlaylist = (name: PlaylistName, newName: PlaylistName) => {
 };
 
 export const addAudio = (name: PlaylistName, id: AudioID) => {
-  setPlaylists(value => {
+  setPlaylists((value) => {
     const map = new Map(value);
 
     const audios = map.get(name);
@@ -64,7 +64,7 @@ export const addAudio = (name: PlaylistName, id: AudioID) => {
 };
 
 export const removeAudio = (name: PlaylistName, index: number) => {
-  setPlaylists(value => {
+  setPlaylists((value) => {
     const map = new Map(value);
 
     const audios = map.get(name);

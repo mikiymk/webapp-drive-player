@@ -22,7 +22,7 @@ export const DriveFiles = () => {
       <Show when={!parents.loading()} fallback={<Loading />}>
         <ul class="drive-list">
           <For each={parents.folders()}>
-            {folder => (
+            {(folder) => (
               <ItemFolder
                 name={folder.name}
                 move={() => parents.addParents(folder)}
@@ -31,7 +31,7 @@ export const DriveFiles = () => {
             )}
           </For>
           <For each={parents.files()}>
-            {file => (
+            {(file) => (
               <ItemFile
                 name={file.name}
                 addFile={() => addAudios([audioEntryFromFile(file)])}

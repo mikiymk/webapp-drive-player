@@ -29,7 +29,7 @@ export const SubMenu = (props: SubMenuProps) => {
 
   return (
     <div class={styleItem}>
-      <button onClick={() => setVisible(v => !v)}>{props.label}</button>
+      <button onClick={() => setVisible((v) => !v)}>{props.label}</button>
       <Show when={visible()}>
         <div
           class={styleSubMenu}
@@ -37,7 +37,8 @@ export const SubMenu = (props: SubMenuProps) => {
             "max-height": maxHeight(),
             "max-width": maxWidth(),
           }}
-          ref={ref}>
+          ref={ref}
+        >
           {props.children}
         </div>
       </Show>

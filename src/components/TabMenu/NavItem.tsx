@@ -21,7 +21,8 @@ export const NavItem = (props: Props) => {
       classList={{
         [styleNavItem]: true,
         [styleNavSelected]: props.selected,
-      }}>
+      }}
+    >
       <button class={styleNavItemButton} onClick={() => props.onClick()}>
         {props.icon}
         <span class={styleLabel}>{props.children}</span>

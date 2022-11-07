@@ -60,16 +60,20 @@ export class TokenClient {
     if (this.resolve) return Promise.reject("duplicate request is ignored");
 
     const promise = Promise.resolve(this).then(
-      client =>
+      (client) =>
         new Promise<authResult>((resolve, reject) => {
-          client.resolve = value => resolve(value);
-          client.reject = reason => reject(reason);
-        })
+          client.resolve = (value) => resolve(value);
+          client.reject = (reason) => reject(reason);
+        }),
     );
 
     if (!this.isSetted) {
       this.isSetted = true;
-      window.addEventListener("message", event => this.onMessage(event), false);
+      window.addEventListener(
+        "message",
+        (event) => this.onMessage(event),
+        false,
+      );
     }
 
     this.authID = createAuthID();
@@ -91,7 +95,7 @@ const generateRedirectUri = (authID: string) => {
 };
 
 const generateQuery = (
-  option: TokenClientOption
+  option: TokenClientOption,
 ): [string, string | undefined][] => {
   return [
     ["gsiwebsdk", "3"],

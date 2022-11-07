@@ -22,7 +22,7 @@ export const validateRedirectUrl = (uri: string) => {
 export const pushIfDefined = (
   array: string[],
   key: string,
-  value?: string | undefined
+  value?: string | undefined,
 ) => {
   value && array.push(key + "=" + encodeURIComponent(value.trim()));
 };
@@ -59,19 +59,19 @@ const validatePopUpUrl = (url: string) => {
 };
 
 export const buildQueriedUri = (
-  query: [key: string, value: string | undefined][]
+  query: [key: string, value: string | undefined][],
 ) =>
   "https://accounts.google.com/o/oauth2/auth?" +
   query
     .flatMap(([key, value]) =>
-      value ? [key + "=" + encodeURIComponent(value.trim())] : []
+      value ? [key + "=" + encodeURIComponent(value.trim())] : [],
     )
     .join("&");
 
 export const openAuthWindow = <T>(
   url: string,
   target: string,
-  promise: PromiseCallBack<T>
+  promise: PromiseCallBack<T>,
 ) => {
   const width = Math.min(500, screen.width - 40);
   const height = Math.min(550, screen.height - 40);
@@ -119,7 +119,7 @@ export const addMessageEventListener = (client: AuthClient) => {
 
   window.addEventListener(
     "message",
-    event => {
+    (event) => {
       try {
         if (!event.data) return;
         const params = JSON.parse(event.data).params;
@@ -133,6 +133,6 @@ export const addMessageEventListener = (client: AuthClient) => {
         console.log(error);
       }
     },
-    false
+    false,
   );
 };

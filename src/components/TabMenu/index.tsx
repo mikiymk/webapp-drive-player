@@ -41,8 +41,8 @@ export const Menu = (props: MenuProps) => {
   const [items, setItems] = createSignal<MenuItem[]>([]);
 
   const addItem = (key: string, icon: JSXElement, label: string) => {
-    setItems(items => {
-      if (items.some(item => item.key === key)) {
+    setItems((items) => {
+      if (items.some((item) => item.key === key)) {
         return items;
       } else {
         return [...items, { key, icon, label }];
@@ -54,11 +54,12 @@ export const Menu = (props: MenuProps) => {
     <MenuContext.Provider value={{ selected, addItem }}>
       <ul class={styleNav}>
         <For each={items()}>
-          {item => (
+          {(item) => (
             <NavItem
               icon={item.icon}
               onClick={() => setSelected(item.key)}
-              selected={item.key === selected()}>
+              selected={item.key === selected()}
+            >
               {item.label}
             </NavItem>
           )}

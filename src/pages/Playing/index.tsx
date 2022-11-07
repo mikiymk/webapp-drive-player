@@ -19,7 +19,7 @@ export const Playing = (props: PlayingProps) => {
   return (
     <div class={stylePlaying}>
       <Show when={jacket()} fallback={<NoImage />} keyed>
-        {jacket => <img src={jacket} alt="album jacket" class={styleImage} />}
+        {(jacket) => <img src={jacket} alt="album jacket" class={styleImage} />}
       </Show>
       <dl class={styleInfo}>
         <dt>Album</dt>
@@ -34,14 +34,14 @@ export const Playing = (props: PlayingProps) => {
         <dd>
           {props.info.disk.no}
           <Show when={props.info.disk.of} keyed>
-            {of => <>/ {of}</>}
+            {(of) => <>/ {of}</>}
           </Show>
         </dd>
         <dt>Track</dt>
         <dd>
           {props.info.track.no}
           <Show when={props.info.track.of} keyed>
-            {of => <>/ {of}</>}
+            {(of) => <>/ {of}</>}
           </Show>
         </dd>
       </dl>

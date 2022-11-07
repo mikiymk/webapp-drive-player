@@ -16,10 +16,11 @@ export const MenuItem = (props: MenuItemProps) => {
   return (
     <div class={styleItem}>
       <button
-        onClick={event => {
+        onClick={(event) => {
           props.onClick(event);
           closeMenu();
-        }}>
+        }}
+      >
         {props.children}
       </button>
     </div>

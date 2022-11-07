@@ -15,7 +15,8 @@ export const Authorize = () => {
         <NavItem icon={<IconSignIn />} onClick={() => signIn()}>
           Sign In
         </NavItem>
-      }>
+      }
+    >
       <NavItem icon={<IconSignOut />} onClick={() => signOut()}>
         Sign Out
       </NavItem>

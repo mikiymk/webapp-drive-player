@@ -39,7 +39,7 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
 
   async setBuffer(
     id: string | undefined,
-    blob: Promise<Blob | null>
+    blob: Promise<Blob | null>,
   ): Promise<void> {
     const awaited = await blob;
     if (awaited === this.blob) {
@@ -55,7 +55,7 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
     }
 
     this.buffer = await this.context.decodeAudioData(
-      await awaited.arrayBuffer()
+      await awaited.arrayBuffer(),
     );
 
     const info = id && audios().get(id);
@@ -88,7 +88,7 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
           Math.abs(
             this.startTime +
               (this.buffer?.duration ?? 0) -
-              this.context.currentTime
+              this.context.currentTime,
           ) < 1
         )
           this.onEnd?.();

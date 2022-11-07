@@ -15,7 +15,7 @@ const getPlaylistsID = async (accessToken: string) => {
 };
 
 export const getPlaylists = async (
-  accessToken: string
+  accessToken: string,
 ): Promise<PlaylistEntries | null> => {
   const id = await getPlaylistsID(accessToken);
   if (id === undefined) return null;

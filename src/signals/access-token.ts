@@ -16,7 +16,7 @@ export const useSignIn = () => {
       const { code } = await client.requestCode();
       const { accessToken, expiresIn } = await requestAccessToken(
         location.origin,
-        code
+        code,
       );
       setAccessToken(accessToken);
       refresh(expiresIn);

@@ -17,9 +17,10 @@ export const PlaylistListMenu = (props: PlaylistListMenuProps) => {
         onClick={() =>
           props.openDialog(
             props.name,
-            name => name && renamePlaylist(props.name, name)
+            (name) => name && renamePlaylist(props.name, name),
           )
-        }>
+        }
+      >
         rename playlist
       </MenuItem>
       <MenuSeparator />

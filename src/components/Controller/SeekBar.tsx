@@ -11,7 +11,7 @@ export type SeekBarProps = {
 export const SeekBar = (props: SeekBarProps) => {
   const { seekTime, onChange, onClickDown, onClickUp } = useSeekTime(
     () => props.time,
-    time => props.seek(time)
+    (time) => props.seek(time),
   );
 
   return (

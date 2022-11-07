@@ -15,7 +15,7 @@ const ramdomString = () => Math.random().toString(16).substring(2);
 export const uploadAppData = async (
   token: string,
   fileId: string,
-  data: string
+  data: string,
 ) => {
   const url = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`;
 
@@ -39,7 +39,7 @@ export const uploadAppData = async (
 export const createAppData = async (
   token: string,
   fileName: string,
-  data: string
+  data: string,
 ) => {
   const url =
     "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
@@ -48,7 +48,7 @@ export const createAppData = async (
   const body = getMultipartBody(
     data,
     { name: fileName, parents: ["appDataFolder"] },
-    boundary
+    boundary,
   );
 
   const response = await fetch(url, {

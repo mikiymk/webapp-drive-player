@@ -4,7 +4,7 @@ import type { Accessor, JSX } from "solid-js";
 
 export const useSeekTime = (
   time: Accessor<number>,
-  seek: (time: number) => void
+  seek: (time: number) => void,
 ) => {
   const [seekTime, setSeekTime] = createSignal(0);
   const [click, setClick] = createSignal(false);
@@ -24,7 +24,7 @@ export const useSeekTime = (
     setClick(false);
   };
 
-  const onChange: JSX.EventHandler<HTMLInputElement, Event> = event => {
+  const onChange: JSX.EventHandler<HTMLInputElement, Event> = (event) => {
     setSeekTime(parseInt(event.currentTarget.value, 10));
   };
 

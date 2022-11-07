@@ -27,7 +27,7 @@ export const RenameDialog = (props: RenameDialogProps) => {
   };
 
   const handleKey = (
-    event: KeyboardEvent & { currentTarget: HTMLInputElement }
+    event: KeyboardEvent & { currentTarget: HTMLInputElement },
   ) => {
     if (event.key === "Enter") {
       handleChange(event);
@@ -55,7 +55,8 @@ export const RenameDialog = (props: RenameDialogProps) => {
       <button
         class={styleDialogButton}
         onClick={() => props.close(newName())}
-        disabled={Boolean(error())}>
+        disabled={Boolean(error())}
+      >
         Rename
       </button>
     </dialog>

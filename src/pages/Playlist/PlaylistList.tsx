@@ -34,15 +34,16 @@ export const PlaylistList = (props: PlaylistListProps) => {
     <>
       <ul class={stylePlaylists}>
         <For each={Array.from(playlists())}>
-          {playlist => (
+          {(playlist) => (
             <MenuProvider
               menu={
                 <PlaylistListMenu
                   name={playlist[0]}
-                  select={name => props.select(name)}
+                  select={(name) => props.select(name)}
                   openDialog={openDialog}
                 />
-              }>
+              }
+            >
               <PlaylistListItem name={playlist[0]} />
             </MenuProvider>
           )}

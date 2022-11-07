@@ -18,13 +18,14 @@ export const Playlist = (props: PlaylistProps) => {
       <h3>{props.name}</h3>
       <button onClick={() => props.reset()}>back to list</button>
       <button
-        onClick={() => props.playsList(playlists().get(props.name) ?? [], 0)}>
+        onClick={() => props.playsList(playlists().get(props.name) ?? [], 0)}
+      >
         play this playlist
       </button>
       <AudioList
         audios={playlists().get(props.name) ?? []}
         play={props.playsList}
-        extendMenu={innerProps => (
+        extendMenu={(innerProps) => (
           <MenuItem onClick={() => removeAudio(props.name, innerProps.index)}>
             remove from playlist
           </MenuItem>

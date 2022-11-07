@@ -8,7 +8,7 @@ type AccessTokenResponse = {
 
 export const requestAccessToken = async (
   redirectUri: string,
-  code?: string
+  code?: string,
 ): Promise<AccessTokenResponse> => {
   const url =
     "/api/token?redirect_uri=" + redirectUri + (code ? "&code=" + code : "");
@@ -38,6 +38,6 @@ const snake2camel = (json: Record<string, unknown>) => {
     Object.entries(json).map(([k, v]) => [
       k.replace(/_+(.?)/g, (_, p1) => p1.toUpperCase()),
       v,
-    ])
+    ]),
   );
 };

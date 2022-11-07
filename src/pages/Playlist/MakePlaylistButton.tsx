@@ -29,10 +29,10 @@ export const MakePlaylistButton = (props: MakePlaylistButtonProps) => {
       <button onClick={addPlaylist}>add playlist</button>
       <input
         type="text"
-        onInput={event => {
+        onInput={(event) => {
           setValue(event.currentTarget.value);
         }}
-        onKeyPress={event => {
+        onKeyPress={(event) => {
           if (event.key === "Enter") addPlaylist();
         }}
       />

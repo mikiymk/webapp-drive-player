@@ -60,7 +60,8 @@ export const Controller = (props: ControllerProps) => {
             <button class={styleButton} onClick={() => props.pause()}>
               <IconPause />
             </button>
-          }>
+          }
+        >
           <button class={styleButton} onClick={() => props.play()}>
             <IconPlay />
           </button>

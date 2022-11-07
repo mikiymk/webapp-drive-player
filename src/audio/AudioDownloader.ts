@@ -18,9 +18,11 @@ const caches: {
  */
 export const downloadAudio = (
   id: string | undefined,
-  token: string | undefined
+  token: string | undefined,
 ): [Promise<Blob | null>, Promise<AudioInfo>] => {
-  const cached = caches.find(cache => id === cache.id && token === cache.token);
+  const cached = caches.find(
+    (cache) => id === cache.id && token === cache.token,
+  );
   if (cached) {
     const { data, info } = cached;
     return [data, info];
@@ -30,7 +32,7 @@ export const downloadAudio = (
   }
 
   const data = downloadAudioPromise(id, token);
-  const info = data.then(data => {
+  const info = data.then((data) => {
     if (data === null) {
       return AudioInfo.getEmptyInfo();
     }
@@ -47,7 +49,7 @@ export const downloadAudio = (
 
 const downloadAudioPromise = async (
   id: string,
-  token: string
+  token: string,
 ): Promise<Blob | null> => {
   try {
     const fileData = await getGoogleFile(token, id);

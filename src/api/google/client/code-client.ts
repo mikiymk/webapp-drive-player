@@ -124,7 +124,7 @@ export class RedirectCodeClient {
 }
 
 const normalizePopup = (
-  config: PopupCodeClientConfig
+  config: PopupCodeClientConfig,
 ): PopupCodeClientQuery => ({
   clientId: config.clientId,
   scope: config.scope,
@@ -137,7 +137,7 @@ const normalizePopup = (
 });
 
 const normalizeRedirect = (
-  config: RedirectCodeClientConfig
+  config: RedirectCodeClientConfig,
 ): RedirectCodeClientQuery => ({
   clientId: config.clientId,
   scope: config.scope,

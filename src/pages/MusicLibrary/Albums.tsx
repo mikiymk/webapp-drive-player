@@ -41,10 +41,10 @@ export const Albums = (props: AlbumsProps) => {
     return Object.entries(album)
       .map(([k, v]) => [parseInt(k), v] as const)
       .sort((a, b) => a[0] - b[0])
-      .flatMap(v => Object.entries(v[1]))
+      .flatMap((v) => Object.entries(v[1]))
       .map(([k, v]) => [parseInt(k), v] as const)
       .sort((a, b) => a[0] - b[0])
-      .flatMap(v => v[1]);
+      .flatMap((v) => v[1]);
   });
 
   return (
@@ -53,7 +53,7 @@ export const Albums = (props: AlbumsProps) => {
         <button onClick={() => props.reset()}>Albums</button>
         {" > "}
         <Show when={selected()} fallback="select Album" keyed>
-          {selected => <button onClick={() => select()}>{selected}</button>}
+          {(selected) => <button onClick={() => select()}>{selected}</button>}
         </Show>
       </h2>
 
@@ -63,7 +63,7 @@ export const Albums = (props: AlbumsProps) => {
           fallback={
             <ul>
               <For each={Object.keys(albums())}>
-                {artist => (
+                {(artist) => (
                   <li>
                     <button onClick={() => select(artist)}>{artist}</button>
                   </li>
@@ -71,8 +71,9 @@ export const Albums = (props: AlbumsProps) => {
               </For>
             </ul>
           }
-          keyed>
-          {selected => <AudioList audios={selected} play={props.play} />}
+          keyed
+        >
+          {(selected) => <AudioList audios={selected} play={props.play} />}
         </Show>
       </div>
     </>

@@ -27,15 +27,16 @@ export const Menu = (props: MenuProps) => {
           top: getMenuSize(
             top(),
             current()?.clientHeight ?? 0,
-            window.innerHeight
+            window.innerHeight,
           ),
           left: getMenuSize(
             left(),
             current()?.clientWidth ?? 0,
-            window.innerWidth
+            window.innerWidth,
           ),
         }}
-        ref={ref}>
+        ref={ref}
+      >
         <button onClick={() => closeMenu()}>
           <IconClose />
         </button>

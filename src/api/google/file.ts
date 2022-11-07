@@ -6,7 +6,7 @@ import { fetchGetWithBearer } from "../util/withBearer";
  */
 export const getGoogleFile = async (
   accessToken: string | undefined,
-  fileId: string
+  fileId: string,
 ) => {
   try {
     if (accessToken === undefined) return undefined;
@@ -16,7 +16,7 @@ export const getGoogleFile = async (
     if (!response.ok) {
       const responseData = JSON.stringify(await response.json(), null, 2);
       throw new Error(
-        `${response.status} ${response.statusText} ${responseData}`
+        `${response.status} ${response.statusText} ${responseData}`,
       );
     }
 

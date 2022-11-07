@@ -21,7 +21,7 @@ export const ExclusiveMenuRoot = (props: ExclusiveMenuRootProps) => {
   };
 
   const closeMenu = () => {
-    closeMenus.forEach(close => close());
+    closeMenus.forEach((close) => close());
     close();
   };
 
@@ -39,7 +39,8 @@ export const ExclusiveMenuRoot = (props: ExclusiveMenuRootProps) => {
         apply: collectCloseMenu,
         remove: dropCloseMenu,
         close: closeMenu,
-      }}>
+      }}
+    >
       {props.children}
     </ExclusiveContext.Provider>
   );

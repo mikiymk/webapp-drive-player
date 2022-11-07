@@ -8,7 +8,7 @@ import type { GoogleFile } from "~/api/google/type";
 import type { AudioEntries } from "~/signals/audios";
 
 export const getAudiosFromFolder = async (
-  rootFolder: GoogleFile
+  rootFolder: GoogleFile,
 ): Promise<AudioEntries> => {
   console.log("get all");
   const folders = new Set([rootFolder.id]);
@@ -35,6 +35,6 @@ export const getAudiosFromFolder = async (
   console.log("got all");
 
   return files
-    .flatMap(file => (file.status === "fulfilled" ? file.value : []))
+    .flatMap((file) => (file.status === "fulfilled" ? file.value : []))
     .map(audioEntryFromFile);
 };

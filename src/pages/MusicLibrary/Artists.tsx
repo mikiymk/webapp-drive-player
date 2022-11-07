@@ -40,7 +40,7 @@ export const Artists = (props: ArtistsProps) => {
         <button onClick={() => props.reset()}>Artists</button>
         {" > "}
         <Show when={selected()} fallback="select Artist" keyed>
-          {selected => <button onClick={() => select()}>{selected}</button>}
+          {(selected) => <button onClick={() => select()}>{selected}</button>}
         </Show>
       </h2>
 
@@ -50,7 +50,7 @@ export const Artists = (props: ArtistsProps) => {
           fallback={
             <ul>
               <For each={Object.keys(artists())}>
-                {artist => (
+                {(artist) => (
                   <li>
                     <button onClick={() => select(artist)}>{artist}</button>
                   </li>
@@ -58,8 +58,9 @@ export const Artists = (props: ArtistsProps) => {
               </For>
             </ul>
           }
-          keyed>
-          {selected => <AudioList audios={selected} play={props.play} />}
+          keyed
+        >
+          {(selected) => <AudioList audios={selected} play={props.play} />}
         </Show>
       </div>
     </>

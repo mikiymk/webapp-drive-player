@@ -26,9 +26,9 @@ type AuthResponse =
     };
 
 const requestToken = (
-  bodies: string[]
+  bodies: string[],
 ): Promise<AuthResponse | RequestError> => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     const body = bodies.join("&");
 
     const req = request(
@@ -41,13 +41,13 @@ const requestToken = (
           "Content-Length": Buffer.byteLength(body),
         },
       },
-      res => {
-        res.on("data", data => resolve(JSON.parse(data) as AuthResponse));
+      (res) => {
+        res.on("data", (data) => resolve(JSON.parse(data) as AuthResponse));
         res.on("end", () => resolve({ requestError: "end of response" }));
-      }
+      },
     );
 
-    req.on("error", error => resolve({ requestError: error.message }));
+    req.on("error", (error) => resolve({ requestError: error.message }));
 
     req.write(body);
     req.end();
@@ -56,7 +56,7 @@ const requestToken = (
 
 const exchangeToken = (
   code: string,
-  redirectUri: string
+  redirectUri: string,
 ): Promise<AuthResponse | RequestError> => {
   return requestToken([
     "code=" + code,
@@ -79,24 +79,24 @@ const refresh = (refreshToken: string) => {
 const setCodeCookie = (apiRes: VercelResponse, code: string) => {
   apiRes.setHeader(
     "Set-Cookie",
-    `code=${code}; SameSite=Strict; Secure; HttpOnly; Max-Age=${accessCodeAge};`
+    `code=${code}; SameSite=Strict; Secure; HttpOnly; Max-Age=${accessCodeAge};`,
   );
 };
 
 const setRefreshTokenCookie = (
   apiRes: VercelResponse,
-  refreshToken: string
+  refreshToken: string,
 ) => {
   apiRes.setHeader(
     "Set-Cookie",
-    `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${refreshTokenAge};`
+    `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${refreshTokenAge};`,
   );
 };
 
 const requestAuth = async (
   code: string | undefined,
   codeCookie: string | undefined,
-  redirectUri: string | undefined
+  redirectUri: string | undefined,
 ): Promise<AuthResponse | RequestError> => {
   if (code && redirectUri) return exchangeToken(code, redirectUri);
   if (codeCookie && redirectUri) return exchangeToken(codeCookie, redirectUri);

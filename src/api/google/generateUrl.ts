@@ -5,7 +5,7 @@ export const generateUrl = (url: string, querys: Query[]) => {
     "?" +
     querys
       .map(param)
-      .filter(v => v)
+      .filter((v) => v)
       .join("&")
   );
 };

@@ -19,7 +19,7 @@ test("1 second", () => {
           nextPageToken: undefined,
         };
       },
-    } as Response)
+    } as Response),
   );
 
   const root = document.createElement("div");

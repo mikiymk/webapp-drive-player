@@ -15,7 +15,7 @@ const getFileListPart = async (
   accessToken: string,
   query: string,
   appData: boolean,
-  token?: string | undefined
+  token?: string | undefined,
 ): Promise<GoogleFileList> => {
   const url: string = generateUrl("https://www.googleapis.com/drive/v3/files", [
     ["spaces", appData && "appDataFolder"],
@@ -34,7 +34,7 @@ const getFileListPart = async (
 export const getGoogleMetadata = async (
   accessToken: string,
   query: string,
-  appData: boolean
+  appData: boolean,
 ) => {
   let nextPageToken: string | undefined = undefined;
   let allFiles: GoogleFile[] = [];
@@ -44,7 +44,7 @@ export const getGoogleMetadata = async (
       accessToken,
       query,
       appData,
-      nextPageToken
+      nextPageToken,
     );
 
     allFiles = allFiles.concat(files.files);

@@ -6,7 +6,7 @@ const useJacket = (picture: Accessor<ArrayBuffer | undefined>) => {
   const [jacket, setJacket] = createSignal<string>();
   const defaultBuffer = new ArrayBuffer(0);
 
-  createEffect(prev => {
+  createEffect((prev) => {
     const pictureBuffer = picture() ?? defaultBuffer;
     if (prev === pictureBuffer) {
       return prev;

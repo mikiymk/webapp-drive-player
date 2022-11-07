@@ -12,7 +12,7 @@ describe("Google APIを使用したアクセストークンをダウンロード
             access_token: "access token",
           });
         },
-      } as Response)
+      } as Response),
     );
 
     const response = await requestAccessToken("redirect uri", "code");
@@ -20,7 +20,7 @@ describe("Google APIを使用したアクセストークンをダウンロード
     expect(response).toBeDefined();
     expect(window.fetch).toBeCalledTimes(1);
     expect(window.fetch).toBeCalledWith(
-      "/api/token?redirect_uri=redirect uri&code=code"
+      "/api/token?redirect_uri=redirect uri&code=code",
     );
   });
 
@@ -32,7 +32,7 @@ describe("Google APIを使用したアクセストークンをダウンロード
             access_token: "access token",
           });
         },
-      } as Response)
+      } as Response),
     );
 
     const response = await requestAccessToken("redirect uri");
@@ -54,7 +54,7 @@ describe("Google APIを使用したアクセストークンをダウンロード
             token_type: "token type",
           });
         },
-      } as Response)
+      } as Response),
     );
 
     const response = await requestAccessToken("redirect uri", "code");
@@ -72,7 +72,7 @@ describe("Google APIを使用したアクセストークンをダウンロード
             error: "error",
           });
         },
-      } as Response)
+      } as Response),
     );
 
     const response = requestAccessToken("redirect uri", "code");

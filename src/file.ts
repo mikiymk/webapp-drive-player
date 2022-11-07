@@ -11,7 +11,7 @@ export const getAllFolders = async (accessToken: string, parent?: string) =>
     `mimeType = 'application/vnd.google-apps.folder' and parents in '${
       parent ?? "root"
     }'`,
-    false
+    false,
   );
 
 /**
@@ -23,5 +23,5 @@ export const getAllMusics = async (accessToken: string, parent?: string) =>
   getGoogleMetadata(
     accessToken,
     `mimeType contains 'audio/' and parents in '${parent ?? "root"}'`,
-    false
+    false,
   );

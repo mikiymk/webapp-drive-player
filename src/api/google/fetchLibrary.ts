@@ -15,7 +15,7 @@ const getLibraryID = async (accessToken: string) => {
 };
 
 export const getLibrary = async (
-  token: string
+  token: string,
 ): Promise<AudioEntries | null> => {
   const id = await getLibraryID(token);
   if (id === undefined) return null;

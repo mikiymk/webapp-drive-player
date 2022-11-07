@@ -79,7 +79,7 @@ export class TokenClient implements AuthClient {
   }
 
   requestAccessToken(
-    config?: OverridableTokenClientConfig
+    config?: OverridableTokenClientConfig,
   ): Promise<TokenResponse> {
     console.log("start request token");
 

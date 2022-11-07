@@ -52,7 +52,7 @@ export const MusicPlayer = () => {
     }
   });
 
-  createEffect(isAccountUpdated => {
+  createEffect((isAccountUpdated) => {
     const token = accessToken();
     if (!token) {
       clearAudios();
@@ -60,8 +60,8 @@ export const MusicPlayer = () => {
       return true;
     }
     if (isAccountUpdated) {
-      getLibrary(token).then(lib => lib && addAudios(lib));
-      getPlaylists(token).then(lib => lib && addPlaylists(lib));
+      getLibrary(token).then((lib) => lib && addAudios(lib));
+      getPlaylists(token).then((lib) => lib && addPlaylists(lib));
     }
     return false;
   }, true);
@@ -98,13 +98,13 @@ export const MusicPlayer = () => {
           paused={status.paused()}
           repeat={status.repeat()}
           shuffle={status.shuffle()}
-          seek={time => player?.seek(time)}
+          seek={(time) => player?.seek(time)}
           play={() => player?.play()}
           pause={() => player?.pause()}
           playNext={() => player?.playToNext()}
           playPrev={() => player?.playToPrev()}
-          setRepeat={repeat => player?.setRepeat(repeat)}
-          setShuffle={shuffle => player?.setShuffle(shuffle)}
+          setRepeat={(repeat) => player?.setRepeat(repeat)}
+          setShuffle={(shuffle) => player?.setShuffle(shuffle)}
         />
       </div>
     </ExclusiveMenuRoot>

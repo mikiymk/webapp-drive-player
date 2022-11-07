@@ -11,7 +11,7 @@
     "build:analyze": "vite build --mode analyze",
     "start": "vite",
     "check": "run-s format type lint test",
-    "format": "prettier -w index.html src",
+    "format": "prettier -w index.html src api",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "type": "tsc",

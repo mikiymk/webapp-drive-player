@@ -30,7 +30,7 @@ export const AudioList = (props: AudioListProps) => {
         <For each={props.audios}>
           {(item, index) => (
             <Show when={getAudio(item)} keyed>
-              {audio => (
+              {(audio) => (
                 <MenuProvider
                   menu={
                     <AudioListMenu
@@ -38,13 +38,14 @@ export const AudioList = (props: AudioListProps) => {
                       play={() => props.play(props.audios, index())}
                       extendMenu={
                         <Show when={props.extendMenu} keyed>
-                          {ExtendMenu => (
+                          {(ExtendMenu) => (
                             <ExtendMenu item={item} index={index()} />
                           )}
                         </Show>
                       }
                     />
-                  }>
+                  }
+                >
                   <AudioListItem
                     audio={audio}
                     play={() => props.play(props.audios, index())}

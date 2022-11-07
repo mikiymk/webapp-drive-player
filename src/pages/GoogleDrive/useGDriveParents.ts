@@ -31,10 +31,10 @@ export const useGDriveParents = () => {
   });
 
   const addParents = (folder: GoogleFile) =>
-    setParents(parents => parents.concat([folder]));
+    setParents((parents) => parents.concat([folder]));
 
   const move = (index: number) =>
-    setParents(parents => parents.slice(0, index + 1));
+    setParents((parents) => parents.slice(0, index + 1));
 
   return { parents, loading, folders, files, addParents, move };
 };
