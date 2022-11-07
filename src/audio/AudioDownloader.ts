@@ -52,7 +52,7 @@ const downloadAudioPromise = async (
   try {
     const fileData = await getGoogleFile(token, id);
 
-    if (fileData === null) {
+    if (fileData === undefined) {
       return null;
     }
 

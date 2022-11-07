@@ -21,19 +21,13 @@ export const getLibrary = async (
   if (id === undefined) return null;
 
   const response = await getGoogleFile(token, id);
-  if (response === null) return null;
+  if (response === undefined) return null;
 
-  const json: unknown = await response.json();
-  if (!Array.isArray(json)) return null;
+  const json: [string, AudioInfo][] = await response.json();
 
-  const files = json.map(
-    ([id, info]: [unknown, unknown]): [string, AudioInfo] => {
-      return ["" + id, AudioInfo.copyInfo(info as AudioInfo)];
-    }
-  );
-
-  console.log(files);
-  return files;
+  return json.map(([id, info]): [string, AudioInfo] => {
+    return [id, AudioInfo.copyInfo(info)];
+  });
 };
 
 export const sendLibrary = async (token: string, data: AudioEntries) => {

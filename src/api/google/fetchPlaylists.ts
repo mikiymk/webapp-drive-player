@@ -21,20 +21,17 @@ export const getPlaylists = async (
   if (id === undefined) return null;
 
   const response = await getGoogleFile(accessToken, id);
-  if (response === null) return null;
+  if (response === undefined) return null;
   return response.json();
 };
 
-export const sendPlaylists = async (
-  accessToken: string,
-  data: PlaylistEntries
-) => {
-  const id = await getPlaylistsID(accessToken);
+export const sendPlaylists = async (token: string, data: PlaylistEntries) => {
+  const id = await getPlaylistsID(token);
   const jsonData = JSON.stringify(data);
 
   if (id !== undefined) {
-    return uploadAppData(accessToken, id, jsonData);
+    return uploadAppData(token, id, jsonData);
   } else {
-    return createAppData(accessToken, FILE_NAME, jsonData);
+    return createAppData(token, FILE_NAME, jsonData);
   }
 };
