@@ -1,6 +1,6 @@
+import { sendLibrary } from "~/api/google/fetchLibrary";
+import { sendPlaylists } from "~/api/google/fetchPlaylists";
 import { IconDownload, IconUpload } from "~/components/Icon";
-import { sendLibrary } from "~/google/fetchLibrary";
-import { sendPlaylists } from "~/google/fetchPlaylists";
 
 import { accessToken } from "~/signals/access-token";
 import { audios } from "~/signals/audios";

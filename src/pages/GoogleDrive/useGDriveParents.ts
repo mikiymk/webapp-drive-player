@@ -4,7 +4,7 @@ import { getAllFolders, getAllMusics } from "~/file";
 
 import { accessToken } from "~/signals/access-token";
 
-import type { GoogleFile } from "~/google/type";
+import type { GoogleFile } from "~/api/google/type";
 
 export const useGDriveParents = () => {
   const [parents, setParents] = createSignal<GoogleFile[]>([

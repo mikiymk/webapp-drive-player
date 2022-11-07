@@ -1,5 +1,7 @@
 import { createEffect, onMount } from "solid-js";
 
+import { getLibrary } from "~/api/google/fetchLibrary";
+import { getPlaylists } from "~/api/google/fetchPlaylists";
 import { Controller } from "~/components/Controller";
 import {
   IconDrive,
@@ -11,8 +13,6 @@ import {
 import { ExclusiveMenuRoot } from "~/components/PopUpMenu";
 import { Menu, MenuItem } from "~/components/TabMenu";
 
-import { getLibrary } from "~/google/fetchLibrary";
-import { getPlaylists } from "~/google/fetchPlaylists";
 import { DriveFiles } from "~/pages/GoogleDrive";
 import { Library } from "~/pages/MusicLibrary";
 import { Playing } from "~/pages/Playing";
@@ -29,7 +29,7 @@ import { addPlaylists, clearPlaylists } from "~/signals/playlists";
 import { stylePlayer, themeClass } from "./style.css";
 import useMusicPlayer from "./useMusicPlayer";
 
-import type { GoogleFile } from "~/google/type";
+import type { GoogleFile } from "~/api/google/type";
 
 export type Files = {
   [name: string]: GoogleFile;

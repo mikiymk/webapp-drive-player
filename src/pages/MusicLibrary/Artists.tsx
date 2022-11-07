@@ -37,7 +37,7 @@ export const Artists = (props: ArtistsProps) => {
   return (
     <>
       <h2>
-        <button onClick={props.reset}>Artists</button>
+        <button onClick={() => props.reset()}>Artists</button>
         {" > "}
         <Show when={selected()} fallback="select Artist" keyed>
           {selected => <button onClick={() => select()}>{selected}</button>}

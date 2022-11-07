@@ -1,7 +1,7 @@
+import { getGoogleFile } from "~/api/google/file";
+import { getFileID } from "~/api/google/metadata";
+import { createAppData, uploadAppData } from "~/api/google/uploadFile";
 import { AudioInfo } from "~/audio/AudioInfo";
-import { downloadFile } from "~/google/downloadFile";
-import { getFileID } from "~/google/getFileList";
-import { createAppData, uploadAppData } from "~/google/uploadFile";
 
 import type { AudioEntries } from "~/signals/audios";
 
@@ -20,20 +20,14 @@ export const getLibrary = async (
   const id = await getLibraryID(token);
   if (id === undefined) return null;
 
-  const response = await downloadFile(token, id);
-  if (response === null) return null;
+  const response = await getGoogleFile(token, id);
+  if (response === undefined) return null;
 
-  const json: unknown = await response.json();
-  if (!Array.isArray(json)) return null;
+  const json: [string, AudioInfo][] = await response.json();
 
-  const files = json.map(
-    ([id, info]: [unknown, unknown]): [string, AudioInfo] => {
-      return ["" + id, AudioInfo.copyInfo(info as AudioInfo)];
-    }
-  );
-
-  console.log(files);
-  return files;
+  return json.map(([id, info]): [string, AudioInfo] => {
+    return [id, AudioInfo.copyInfo(info)];
+  });
 };
 
 export const sendLibrary = async (token: string, data: AudioEntries) => {

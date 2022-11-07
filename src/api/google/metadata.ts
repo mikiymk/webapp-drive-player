@@ -1,9 +1,10 @@
-import { fetchGet } from "./fetchGet";
+import { fetchGetWithBearer } from "../util/withBearer";
+
 import { generateUrl } from "./generateUrl";
 
 import type { GoogleFile, GoogleFileList } from "./type";
 
-const GET_PAGE_SIZE = 100;
+const PageSize = 100;
 
 /**
  * Google Drive からファイルリストを入手
@@ -19,18 +20,18 @@ const getFileListPart = async (
   const url: string = generateUrl("https://www.googleapis.com/drive/v3/files", [
     ["spaces", appData && "appDataFolder"],
     ["fields", "nextPageToken, files(id, name)"],
-    ["pageSize", GET_PAGE_SIZE],
+    ["pageSize", PageSize],
     ["pageToken", token],
     ["orderBy", "name"],
     ["q", query],
   ]);
 
-  const response: Response = await fetchGet(url, accessToken);
+  const response: Response = await fetchGetWithBearer(url, accessToken);
   return await response.json();
 };
 
 /** ファイルリストをまとめて全ファイルリストを入手 */
-export const getFileList = async (
+export const getGoogleMetadata = async (
   accessToken: string,
   query: string,
   appData: boolean

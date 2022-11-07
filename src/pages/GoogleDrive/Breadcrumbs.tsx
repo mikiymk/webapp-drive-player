@@ -2,7 +2,7 @@ import { For, Show } from "solid-js";
 
 import { styleBread, styleBreadcrumbs } from "./style.css";
 
-import type { GoogleFile } from "~/google/type";
+import type { GoogleFile } from "~/api/google/type";
 
 export type BreadcrumbsProps = {
   parents: GoogleFile[];
