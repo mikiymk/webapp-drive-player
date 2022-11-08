@@ -12,7 +12,7 @@ export const MakePlaylistButton = (props: MakePlaylistButtonProps) => {
 
   const addPlaylist = () => {
     const name = value();
-    if (name === undefined || name === null || name === "") {
+    if (name === "") {
       console.log("input playlist name");
       return;
     }

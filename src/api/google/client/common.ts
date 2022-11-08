@@ -31,7 +31,7 @@ export const boolToStr = (bool: boolean | undefined) =>
   false === bool ? "false" : "true";
 
 export const uniqueKey = () => {
-  return "auth" + Math.floor(1e6 * Math.random() + 1);
+  return `auth${Math.floor(1e6 * Math.random() + 1)}`;
 };
 
 export const getRedirectUri = (a: string) => {
@@ -84,10 +84,10 @@ export const openAuthWindow = <T>(
     "scrollbars=no",
     "resizable=no",
     "copyhistory=no",
-    "width=" + width,
-    "height=" + height,
-    "top=" + (screen.height / 2 - height / 2),
-    "left=" + (screen.width / 2 - width / 2),
+    `width=${width}`,
+    `height=${height}`,
+    `top=${screen.height / 2 - height / 2}`,
+    `left=${screen.width / 2 - width / 2}`,
   ].join();
 
   const authWindow = window.open(validatePopUpUrl(url), target, features);
@@ -119,10 +119,17 @@ export const addMessageEventListener = (client: AuthClient) => {
 
   window.addEventListener(
     "message",
-    (event) => {
+    (event: { data: string }) => {
       try {
         if (!event.data) return;
-        const params = JSON.parse(event.data).params;
+        const { params } = JSON.parse(event.data) as {
+          params?: {
+            id: string;
+            clientId: string;
+            type: string;
+            authResult: BaseResponse;
+          };
+        };
         if (!params) return;
         if (!client.authUniqueId || params.id !== client.authUniqueId) return;
         if (params.clientId !== client.query.clientId) return;

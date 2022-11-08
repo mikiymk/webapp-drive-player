@@ -77,6 +77,6 @@ describe("Google APIを使用したアクセストークンをダウンロード
 
     const response = requestAccessToken("redirect uri", "code");
 
-    expect(response).rejects.toThrow("authorize failure");
+    await expect(response).rejects.toThrow("authorize failure");
   });
 });

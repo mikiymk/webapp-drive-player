@@ -22,8 +22,8 @@ export const SubMenu = (props: SubMenuProps) => {
     visible();
     const rect = current()?.getBoundingClientRect();
     if (rect) {
-      setMaxHeight(window.innerHeight - rect.top + "px");
-      setMaxWidth(window.innerWidth - rect.left + "px");
+      setMaxHeight(`${window.innerHeight - rect.top}px`);
+      setMaxWidth(`${window.innerWidth - rect.left}px`);
     }
   });
 

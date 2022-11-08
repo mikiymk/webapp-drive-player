@@ -84,7 +84,7 @@ export class TokenClient implements AuthClient {
     console.log("start request token");
 
     let query = this.query;
-    config = config || {};
+    config = config ?? {};
     query = {
       clientId: query.clientId,
       scope: query.scope,

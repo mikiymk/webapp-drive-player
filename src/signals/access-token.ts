@@ -27,10 +27,11 @@ export const useSignIn = () => {
   };
 };
 
-const refresh = async (expiresIn: number) => {
-  setTimeout(async () => {
-    const { accessToken, expiresIn } = await refreshAccessToken();
-    setAccessToken(accessToken);
-    refresh(expiresIn);
+const refresh = (expiresIn: number) => {
+  setTimeout(() => {
+    void refreshAccessToken().then(({ accessToken, expiresIn }) => {
+      setAccessToken(accessToken);
+      refresh(expiresIn);
+    });
   }, expiresIn * 950);
 };

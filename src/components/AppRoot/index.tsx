@@ -58,8 +58,8 @@ export const MusicPlayer = () => {
       return true;
     }
     if (isAccountUpdated) {
-      getLibrary(token).then((lib) => lib && addAudios(lib));
-      getPlaylists(token).then((lib) => lib && addPlaylists(lib));
+      void getLibrary(token).then((lib) => lib && addAudios(lib));
+      void getPlaylists(token).then((lib) => lib && addPlaylists(lib));
     }
     return false;
   }, true);

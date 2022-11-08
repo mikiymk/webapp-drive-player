@@ -27,7 +27,7 @@ const getFileListPart = async (
   ]);
 
   const response: Response = await fetchGetWithBearer(url, accessToken);
-  return await response.json();
+  return response.json() as Promise<GoogleFileList>;
 };
 
 /** ファイルリストをまとめて全ファイルリストを入手 */

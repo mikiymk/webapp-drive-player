@@ -26,7 +26,9 @@ export const DriveFiles = () => {
               <ItemFolder
                 name={folder.name}
                 move={() => parents.addParents(folder)}
-                addFiles={() => getAudiosFromFolder(folder).then(addAudios)}
+                addFiles={() =>
+                  void getAudiosFromFolder(folder).then(addAudios)
+                }
               />
             )}
           </For>

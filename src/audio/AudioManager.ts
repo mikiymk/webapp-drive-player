@@ -43,7 +43,7 @@ export class AudioManager {
   private loadBuffer() {
     const id = this.musicIds.get(this.index);
     const [data, info] = downloadAudio(id, this.accessToken);
-    info.then((info) => id && this.loadInfo(id, info));
+    void info.then((info) => id && this.loadInfo(id, info));
     return data;
   }
 
@@ -53,7 +53,7 @@ export class AudioManager {
   private loadNextBuffer() {
     const id = this.musicIds.get(this.nextIndex);
     const [data, info] = downloadAudio(id, this.accessToken);
-    info.then((info) => id && this.loadInfo(id, info));
+    void info.then((info) => id && this.loadInfo(id, info));
     return data;
   }
 
@@ -87,11 +87,11 @@ export class AudioManager {
   /**
    * ロードと再生をまとめて行う
    */
-  async playAndLoad() {
+  playAndLoad() {
     this.stop();
 
-    this.loadBuffer();
-    this.loadNextBuffer();
+    void this.loadBuffer();
+    void this.loadNextBuffer();
 
     this.start();
   }
@@ -133,13 +133,13 @@ export class AudioManager {
     this.repeat = repeat;
     this.player.setLoop(repeat.value === "repeat one");
     this.onSetRepeat?.(repeat);
-    this.loadNextBuffer();
+    void this.loadNextBuffer();
   }
 
   setShuffle(shuffle: boolean) {
     this.musicIds.shuffle = shuffle;
     this.onSetShuffle?.(shuffle);
-    this.loadNextBuffer();
+    void this.loadNextBuffer();
   }
 
   setAccessToken(accessToken: string | undefined) {
@@ -163,7 +163,7 @@ export class AudioManager {
   }
 
   start() {
-    this.setBuffer().then(
+    void this.setBuffer().then(
       (id) => this.musicIds.get(this.index) === id && this.player.start(),
     );
   }
@@ -173,7 +173,7 @@ export class AudioManager {
   }
 
   play() {
-    this.setBuffer().then(
+    void this.setBuffer().then(
       (id) => this.musicIds.get(this.index) === id && this.player.play(),
     );
   }

@@ -23,7 +23,7 @@ export const useGDriveParents = () => {
     const newFiles = getAllMusics(token, parent);
     const newFolders = getAllFolders(token, parent);
 
-    Promise.all([newFiles, newFolders]).then(([newFiles, newFolders]) => {
+    void Promise.all([newFiles, newFolders]).then(([newFiles, newFolders]) => {
       setFiles(newFiles);
       setFolders(newFolders);
       setLoading(false);

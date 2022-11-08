@@ -23,7 +23,7 @@ export const getLibrary = async (
   const response = await getGoogleFile(token, id);
   if (response === undefined) return null;
 
-  const json: [string, AudioInfo][] = await response.json();
+  const json = (await response.json()) as [string, AudioInfo][];
 
   return json.map(([id, info]): [string, AudioInfo] => {
     return [id, AudioInfo.copyInfo(info)];

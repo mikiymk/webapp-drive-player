@@ -35,7 +35,14 @@ export class TokenClient {
   private onMessage(event: { data: string }) {
     try {
       if (event.data) {
-        const params = JSON.parse(event.data).params;
+        const { params } = JSON.parse(event.data) as {
+          params: {
+            id: string;
+            clientId: string;
+            authResult: authResult;
+            type: string;
+          };
+        };
         if (
           params &&
           this.authID &&
@@ -44,13 +51,13 @@ export class TokenClient {
           "authResult" === params.type
         ) {
           this.authID = undefined;
-          this.resolve && this.resolve(params.authResult);
+          this.resolve?.(params.authResult);
         }
       }
     } catch (error) {
-      this.reject && this.reject(error);
+      this.reject?.(error);
     } finally {
-      this.reject && this.reject(event);
+      this.reject?.(event);
       this.resolve = undefined;
       this.reject = undefined;
     }
@@ -85,7 +92,7 @@ export class TokenClient {
   }
 }
 
-const createAuthID = () => "auth" + Math.floor(1e6 * Math.random() + 1);
+const createAuthID = () => `auth${Math.floor(1e6 * Math.random() + 1)}`;
 
 const generateRedirectUri = (authID: string) => {
   const i = location.protocol.indexOf(":");
@@ -121,10 +128,10 @@ const openWindow = function (authUrl: string) {
     "scrollbars=no",
     "resizable=no",
     "copyhistory=no",
-    "width=" + wwidth,
-    "height=" + wheight,
-    "top=" + (screen.height / 2 - wheight / 2),
-    "left=" + (screen.width / 2 - wwidth / 2),
+    `width=${wwidth}`,
+    `height=${wheight}`,
+    `top=${screen.height / 2 - wheight / 2}`,
+    `left=${screen.width / 2 - wwidth / 2}`,
   ].join(",");
 
   const authWin = window.open(authUrl, "auth_window", features);

@@ -22,7 +22,7 @@ export const getPlaylists = async (
 
   const response = await getGoogleFile(accessToken, id);
   if (response === undefined) return null;
-  return response.json();
+  return response.json() as Promise<PlaylistEntries>;
 };
 
 export const sendPlaylists = async (token: string, data: PlaylistEntries) => {
