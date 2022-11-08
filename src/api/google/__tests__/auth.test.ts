@@ -20,7 +20,7 @@ describe("Google APIを使用したアクセストークンをダウンロード
     expect(response).toBeDefined();
     expect(window.fetch).toBeCalledTimes(1);
     expect(window.fetch).toBeCalledWith(
-      "/api/token?redirect_uri=redirect uri&code=code",
+      "/api/token?redirect_uri=redirect+uri&code=code",
     );
   });
 
@@ -39,7 +39,7 @@ describe("Google APIを使用したアクセストークンをダウンロード
 
     expect(response).toBeDefined();
     expect(window.fetch).toBeCalledTimes(1);
-    expect(window.fetch).toBeCalledWith("/api/token?redirect_uri=redirect uri");
+    expect(window.fetch).toBeCalledWith("/api/token?redirect_uri=redirect+uri");
   });
 
   test("レスポンスを返す", async () => {
