@@ -6,10 +6,10 @@ import { styleItem, styleSubMenu } from "./style.css";
 
 import type { JSXElement } from "solid-js";
 
-export type SubMenuProps = {
+export interface SubMenuProps {
   label: string;
   children: JSXElement;
-};
+}
 
 /** show on right click */
 export const SubMenu = (props: SubMenuProps) => {

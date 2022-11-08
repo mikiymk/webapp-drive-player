@@ -4,10 +4,10 @@ import { styleBread, styleBreadcrumbs } from "./style.css";
 
 import type { GoogleFile } from "~/api/google/type";
 
-export type BreadcrumbsProps = {
+export interface BreadcrumbsProps {
   parents: GoogleFile[];
   move: (index: number) => void;
-};
+}
 
 export const Breadcrumbs = (props: BreadcrumbsProps) => {
   return (
@@ -24,10 +24,10 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
   );
 };
 
-type BreadProps = {
+interface BreadProps {
   parent: GoogleFile;
   move: () => void;
-};
+}
 
 const Bread = (props: BreadProps) => {
   return (

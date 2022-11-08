@@ -5,10 +5,10 @@ import { MenuContext } from "./MenuContext";
 
 import type { JSXElement } from "solid-js";
 
-export type MenuProviderProps = {
+export interface MenuProviderProps {
   menu: JSXElement;
   children: JSXElement;
-};
+}
 
 export const MenuProvider = (props: MenuProviderProps) => {
   const [visible, setVisible] = createSignal(false);

@@ -4,9 +4,9 @@ import { ExclusiveContext } from "./ExclusiveContext";
 
 import type { JSXElement } from "solid-js";
 
-export type ExclusiveMenuRootProps = {
+export interface ExclusiveMenuRootProps {
   children: JSXElement;
-};
+}
 
 export const ExclusiveMenuRoot = (props: ExclusiveMenuRootProps) => {
   const { apply, remove, close } = useContext(ExclusiveContext);

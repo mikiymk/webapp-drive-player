@@ -31,9 +31,7 @@ import useMusicPlayer from "./useMusicPlayer";
 
 import type { GoogleFile } from "~/api/google/type";
 
-export type Files = {
-  [name: string]: GoogleFile;
-};
+export type Files = Record<string, GoogleFile>;
 
 /**
  * react component root.
@@ -42,7 +40,7 @@ export const MusicPlayer = () => {
   const { player, status } = useMusicPlayer();
 
   const playWithIdList = (idList: readonly string[], index: number) => {
-    player?.playWithIdList(idList, index);
+    player.playWithIdList(idList, index);
   };
 
   onMount(() => {
@@ -98,13 +96,13 @@ export const MusicPlayer = () => {
           paused={status.paused()}
           repeat={status.repeat()}
           shuffle={status.shuffle()}
-          seek={(time) => player?.seek(time)}
-          play={() => player?.play()}
-          pause={() => player?.pause()}
-          playNext={() => player?.playToNext()}
-          playPrev={() => player?.playToPrev()}
-          setRepeat={(repeat) => player?.setRepeat(repeat)}
-          setShuffle={(shuffle) => player?.setShuffle(shuffle)}
+          seek={(time) => player.seek(time)}
+          play={() => player.play()}
+          pause={() => player.pause()}
+          playNext={() => player.playToNext()}
+          playPrev={() => player.playToPrev()}
+          setRepeat={(repeat) => player.setRepeat(repeat)}
+          setShuffle={(shuffle) => player.setShuffle(shuffle)}
         />
       </div>
     </ExclusiveMenuRoot>

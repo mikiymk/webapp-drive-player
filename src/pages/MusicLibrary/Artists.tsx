@@ -5,10 +5,10 @@ import { audios } from "~/signals/audios";
 
 import { styleList } from "./style.css";
 
-export type ArtistsProps = {
+export interface ArtistsProps {
   play: (idList: readonly string[], index: number) => void;
   reset: () => void;
-};
+}
 
 /**
  * list of musics

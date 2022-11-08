@@ -4,9 +4,9 @@ import { styleArtist, styleTitle, styleTitleView } from "./style.css";
 
 import type { AudioInfo } from "~/audio/AudioInfo";
 
-export type MusicTitleProps = {
+export interface MusicTitleProps {
   info: AudioInfo;
-};
+}
 
 /** タイトルとアーティストをマーキーで表示 */
 export const MusicTitle = (props: MusicTitleProps) => {

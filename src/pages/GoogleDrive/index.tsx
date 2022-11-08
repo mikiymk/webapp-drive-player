@@ -44,11 +44,11 @@ export const DriveFiles = () => {
   );
 };
 
-type ItemFolderProps = {
+interface ItemFolderProps {
   name: string;
   move: () => void;
   addFiles: () => void;
-};
+}
 
 const ItemFolder = (props: ItemFolderProps) => {
   return (
@@ -62,10 +62,10 @@ const ItemFolder = (props: ItemFolderProps) => {
   );
 };
 
-type ItemFileProps = {
+interface ItemFileProps {
   name: string;
   addFile: () => void;
-};
+}
 
 const ItemFile = (props: ItemFileProps) => {
   return (

@@ -18,9 +18,9 @@ const calcTotalDuration = (audioList: readonly string[]): number => {
   return totalDuration;
 };
 
-export type PlaylistListItemProps = {
+export interface PlaylistListItemProps {
   name: string;
-};
+}
 
 export const PlaylistListItem = (props: PlaylistListItemProps) => {
   const popMenu = usePopMenu();

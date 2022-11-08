@@ -7,12 +7,12 @@ import {
 
 import type { JSXElement } from "solid-js";
 
-export type Props = {
+export interface Props {
   icon: JSXElement;
   selected?: boolean;
   onClick: () => void;
   children: string;
-};
+}
 
 /** Google Material Icon テキスト付き */
 export const NavItem = (props: Props) => {

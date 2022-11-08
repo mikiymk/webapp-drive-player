@@ -13,7 +13,7 @@ import type { AuthClient } from "./common";
 
 type PromptType = "" | "none" | "consent" | "select_account";
 
-type TokenResponse = {
+interface TokenResponse {
   access_token: string;
   expires_in: number;
   hd: string;
@@ -25,9 +25,9 @@ type TokenResponse = {
   error: string;
   error_description: string;
   error_uri: string;
-};
+}
 
-type TokenClientConfig = {
+interface TokenClientConfig {
   clientId: string;
   scope: string;
   prompt?: PromptType;
@@ -35,9 +35,9 @@ type TokenClientConfig = {
   hint?: string;
   hostedDomain?: string;
   state?: string;
-};
+}
 
-type TokenClientQuery = {
+interface TokenClientQuery {
   clientId: string;
   scope: string;
   prompt: PromptType | undefined;
@@ -48,14 +48,14 @@ type TokenClientQuery = {
   state: string | undefined;
 
   redirectUri?: string;
-};
+}
 
-type OverridableTokenClientConfig = {
+interface OverridableTokenClientConfig {
   prompt?: PromptType;
   enableSerialConsent?: boolean;
   hint?: string;
   state?: string;
-};
+}
 
 const tokenTarget = "g_auth_token_window";
 

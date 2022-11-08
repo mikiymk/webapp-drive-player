@@ -2,9 +2,9 @@ import { createSignal } from "solid-js";
 
 import { styleMakePlaylist } from "./style.css";
 
-export type MakePlaylistButtonProps = {
+export interface MakePlaylistButtonProps {
   makePlaylist: (playlist: string) => void;
-};
+}
 
 /** show on right click */
 export const MakePlaylistButton = (props: MakePlaylistButtonProps) => {

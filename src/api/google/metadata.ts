@@ -56,5 +56,5 @@ export const getGoogleMetadata = async (
 
 export const getFileID = async (token: string, name: string, app: boolean) => {
   const files = await getFileListPart(token, `name = '${name}'`, app);
-  return files?.files[0]?.id;
+  return files.files[0]?.id;
 };

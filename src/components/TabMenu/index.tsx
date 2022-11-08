@@ -13,11 +13,11 @@ import { styleContent, styleNav } from "./style.css";
 
 import type { Accessor, JSXElement } from "solid-js";
 
-type MenuItem = {
+interface MenuItem {
   key: string;
   icon: JSXElement;
   label: string;
-};
+}
 
 const MenuContext = createContext<{
   selected: Accessor<string>;
@@ -27,11 +27,11 @@ const MenuContext = createContext<{
   addItem: () => 0,
 });
 
-export type MenuProps = {
+export interface MenuProps {
   defaultKey: string;
 
   children: JSXElement;
-};
+}
 
 /**
  * menu list click menu and change view
@@ -71,12 +71,12 @@ export const Menu = (props: MenuProps) => {
   );
 };
 
-export type MenuItemProps = {
+export interface MenuItemProps {
   key: string;
   icon: JSXElement;
   label: string;
   children: JSXElement;
-};
+}
 
 export const MenuItem = (props: MenuItemProps) => {
   const menu = useContext(MenuContext);

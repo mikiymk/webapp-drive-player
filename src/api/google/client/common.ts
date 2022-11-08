@@ -98,12 +98,12 @@ export const openAuthWindow = <T>(
   return authWindow;
 };
 
-type BaseResponse = {
+interface BaseResponse {
   state: string;
   error: string;
   error_description: string;
   error_uri: string;
-};
+}
 
 export interface AuthClient {
   isListens: boolean;

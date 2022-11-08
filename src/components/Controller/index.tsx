@@ -20,7 +20,7 @@ import { styleButton, styleController } from "./style.css";
 import type { AudioInfo } from "~/audio/AudioInfo";
 import type { Repeat } from "~/audio/Repeat";
 
-export type ControllerProps = {
+export interface ControllerProps {
   info: AudioInfo;
   duration: number;
   currentTime: number;
@@ -34,7 +34,7 @@ export type ControllerProps = {
   playPrev: () => void;
   setRepeat: (repeat: Repeat) => void;
   setShuffle: (shuffle: boolean) => void;
-};
+}
 
 /**
  * 曲の再生・停止などのコントロールする

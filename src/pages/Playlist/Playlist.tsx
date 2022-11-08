@@ -4,12 +4,12 @@ import { playlists, removeAudio } from "~/signals/playlists";
 
 import { stylePlaylist } from "./style.css";
 
-export type PlaylistProps = {
+export interface PlaylistProps {
   name: string;
 
   reset: () => void;
   playsList: (list: readonly string[], index: number) => void;
-};
+}
 
 /** show on right click */
 export const Playlist = (props: PlaylistProps) => {

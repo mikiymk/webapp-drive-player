@@ -8,10 +8,10 @@ import type { JSXElement } from "solid-js";
 
 type Status = "loading" | "done" | "error";
 
-type LoadProps = {
+interface LoadProps {
   load: () => Promise<void>;
   children: JSXElement;
-};
+}
 
 /**
  * now playing audio info view

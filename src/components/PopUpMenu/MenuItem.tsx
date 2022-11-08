@@ -5,10 +5,10 @@ import { styleItem } from "./style.css";
 
 import type { JSX } from "solid-js";
 
-export type MenuItemProps = {
+export interface MenuItemProps {
   onClick: JSX.EventHandler<HTMLButtonElement, MouseEvent>;
   children: string;
-};
+}
 
 /** show on right click */
 export const MenuItem = (props: MenuItemProps) => {

@@ -1,10 +1,10 @@
-type AccessTokenResponse = {
+interface AccessTokenResponse {
   accessToken: string;
   expiresIn: number;
   refreshToken: string;
   scope: string;
   tokenType: string;
-};
+}
 
 export const requestAccessToken = async (
   redirectUri: string,

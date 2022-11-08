@@ -9,9 +9,9 @@ import { PlaylistListMenu } from "./PlaylistListMenu";
 import { RenameDialog } from "./RenameDialog";
 import { stylePlaylists } from "./style.css";
 
-export type PlaylistListProps = {
+export interface PlaylistListProps {
   select: (playlist: string) => void;
-};
+}
 
 /** show on right click */
 export const PlaylistList = (props: PlaylistListProps) => {

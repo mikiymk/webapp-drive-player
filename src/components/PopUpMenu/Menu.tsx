@@ -10,9 +10,9 @@ import { styleRightMenu } from "./style.css";
 
 import type { JSXElement } from "solid-js";
 
-export type MenuProps = {
+export interface MenuProps {
   children: JSXElement;
-};
+}
 
 /** show on right click */
 export const Menu = (props: MenuProps) => {

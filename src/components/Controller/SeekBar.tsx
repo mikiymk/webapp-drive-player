@@ -1,11 +1,11 @@
 import { styleSeekBar } from "./style.css";
 import { useSeekTime } from "./useSeekTime";
 
-export type SeekBarProps = {
+export interface SeekBarProps {
   duration: number;
   time: number;
   seek: (time: number) => void;
-};
+}
 
 /** 現在位置が左から右にいって時間を表す */
 export const SeekBar = (props: SeekBarProps) => {

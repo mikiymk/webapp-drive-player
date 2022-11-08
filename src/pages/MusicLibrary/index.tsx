@@ -6,9 +6,9 @@ import { Artists } from "./Artists";
 import { TopMenu } from "./Menu";
 import { Songs } from "./Songs";
 
-export type LibraryProps = {
+export interface LibraryProps {
   play: (idList: readonly string[], index: number) => void;
-};
+}
 
 /**
  * list of musics

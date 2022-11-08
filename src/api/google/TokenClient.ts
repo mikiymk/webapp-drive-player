@@ -1,16 +1,16 @@
 import { generateUrl } from "./generateUrl";
 
-type TokenClientOption = {
+interface TokenClientOption {
   clientId: string;
   scope: string;
 
   redirectUri?: string;
-};
+}
 
-export type authResult = {
+export interface authResult {
   access_token: string;
   expires_in: number;
-};
+}
 
 export class TokenClient {
   authUrl: string;

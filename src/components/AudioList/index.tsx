@@ -10,11 +10,11 @@ import { sBody, sHead, sItemArtist, sList } from "./style.css";
 
 import type { JSXElement } from "solid-js";
 
-export type AudioListProps = {
+export interface AudioListProps {
   audios: readonly string[];
   play: (idList: readonly string[], index: number) => void;
   extendMenu?: (props: { item: string; index: number }) => JSXElement;
-};
+}
 
 export const AudioList = (props: AudioListProps) => {
   return (

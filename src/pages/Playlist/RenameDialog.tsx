@@ -4,10 +4,10 @@ import { playlists } from "~/signals/playlists";
 
 import { styleDialog, styleDialogButton, styleDialogInput } from "./style.css";
 
-export type RenameDialogProps = {
+export interface RenameDialogProps {
   name: string | undefined;
   close: (data?: string) => void;
-};
+}
 
 /** show on right click */
 export const RenameDialog = (props: RenameDialogProps) => {

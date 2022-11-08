@@ -2,10 +2,10 @@ import { styleInner, styleMarquee } from "./style.css";
 
 import type { JSX } from "solid-js";
 
-export type MarqueeProps = {
+export interface MarqueeProps {
   children: JSX.Element;
   class?: string;
-};
+}
 
 /** CSSで横に動く */
 export const Marquee = (props: MarqueeProps) => {

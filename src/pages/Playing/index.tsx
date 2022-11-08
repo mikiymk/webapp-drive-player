@@ -6,9 +6,9 @@ import useJacket from "./useJacket";
 
 import type { AudioInfo } from "~/audio/AudioInfo";
 
-export type PlayingProps = {
+export interface PlayingProps {
   info: AudioInfo;
-};
+}
 
 /**
  * now playing audio info view

@@ -1,12 +1,12 @@
 type Partial<T> = { [P in keyof T]?: T[P] | undefined };
-type AudioInfoNumber = { of: number | undefined; no: number | undefined };
+interface AudioInfoNumber { of: number | undefined; no: number | undefined }
 
-type AudioInfoSort = {
+interface AudioInfoSort {
   albumsort: string;
   titlesort: string;
   artistsort: string;
   albumartistsort: string;
-};
+}
 
 export class AudioInfo {
   static getEmptyInfo() {
