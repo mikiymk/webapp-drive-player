@@ -4,34 +4,41 @@ import { createAppData, uploadAppData } from "./uploadFile";
 
 import type { PlaylistEntries } from "~/signals/playlists";
 
-const FILE_NAME = "playlists.json";
-
 let playlistsID: string | undefined;
-const getPlaylistsID = async (accessToken: string) => {
+const getPlaylistsID = async (
+  token: string,
+  fileName: string,
+): Promise<string | undefined> => {
   if (playlistsID !== undefined) return playlistsID;
 
-  playlistsID = await getFileID(accessToken, FILE_NAME, true);
+  playlistsID = await getFileID(token, fileName, true);
   return playlistsID;
 };
 
 export const getPlaylists = async (
-  accessToken: string,
+  token: string,
+  fileName: string,
 ): Promise<PlaylistEntries | null> => {
-  const id = await getPlaylistsID(accessToken);
+  const id = await getPlaylistsID(token, fileName);
   if (id === undefined) return null;
 
-  const response = await getGoogleFile(accessToken, id);
+  const response = await getGoogleFile(token, id);
   if (response === undefined) return null;
+
   return response.json() as Promise<PlaylistEntries>;
 };
 
-export const sendPlaylists = async (token: string, data: PlaylistEntries) => {
-  const id = await getPlaylistsID(token);
+export const sendPlaylists = async (
+  token: string,
+  fileName: string,
+  data: PlaylistEntries,
+): Promise<Response> => {
+  const id = await getPlaylistsID(token, fileName);
   const jsonData = JSON.stringify(data);
 
   if (id !== undefined) {
     return uploadAppData(token, id, jsonData);
   } else {
-    return createAppData(token, FILE_NAME, jsonData);
+    return createAppData(token, fileName, jsonData);
   }
 };

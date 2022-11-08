@@ -1,42 +1,44 @@
 import { getGoogleFile } from "~/api/google/file";
 import { getFileID } from "~/api/google/metadata";
 import { createAppData, uploadAppData } from "~/api/google/uploadFile";
-import { AudioInfo } from "~/audio/AudioInfo";
 
 import type { AudioEntries } from "~/signals/audios";
 
-const FILE_NAME = "library.json";
+const idMap: Record<string, string | undefined> = {};
+const getCachedFileID = async (
+  accessToken: string,
+  fileName: string,
+): Promise<string | undefined> => {
+  if (idMap[fileName]) return idMap[fileName];
 
-let libraryID: string | undefined;
-const getLibraryID = async (accessToken: string) => {
-  if (libraryID !== undefined) return libraryID;
-  libraryID = await getFileID(accessToken, FILE_NAME, true);
-  return libraryID;
+  idMap[fileName] = await getFileID(accessToken, fileName, true);
+  return idMap[fileName];
 };
 
 export const getLibrary = async (
   token: string,
+  fileName: string,
 ): Promise<AudioEntries | null> => {
-  const id = await getLibraryID(token);
+  const id = await getCachedFileID(token, fileName);
   if (id === undefined) return null;
 
   const response = await getGoogleFile(token, id);
   if (response === undefined) return null;
 
-  const json = (await response.json()) as [string, AudioInfo][];
-
-  return json.map(([id, info]): [string, AudioInfo] => {
-    return [id, AudioInfo.copyInfo(info)];
-  });
+  return response.json() as Promise<AudioEntries>;
 };
 
-export const sendLibrary = async (token: string, data: AudioEntries) => {
-  const id = await getLibraryID(token);
-  const jsonData = JSON.stringify(Array.from(data));
+export const sendLibrary = async (
+  token: string,
+  fileName: string,
+  data: AudioEntries,
+): Promise<Response> => {
+  const id = await getCachedFileID(token, fileName);
+  const jsonData = JSON.stringify(data);
 
   if (id !== undefined) {
     return uploadAppData(token, id, jsonData);
   } else {
-    return createAppData(token, FILE_NAME, jsonData);
+    return createAppData(token, fileName, jsonData);
   }
 };

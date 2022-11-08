@@ -30,8 +30,16 @@ const syncLibrary = async () => {
 
   // upload
 
-  const libraryResponsePromise = sendLibrary(token, Array.from(audios()));
-  const playlistResponsePromise = sendPlaylists(token, Array.from(playlists()));
+  const libraryResponsePromise = sendLibrary(
+    token,
+    "library.json",
+    Array.from(audios()),
+  );
+  const playlistResponsePromise = sendPlaylists(
+    token,
+    "playlists.json",
+    Array.from(playlists()),
+  );
 
   const [libraryResponse, playlistResponse] = await Promise.all([
     libraryResponsePromise,
