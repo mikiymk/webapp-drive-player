@@ -1,5 +1,8 @@
 type Partial<T> = { [P in keyof T]?: T[P] | undefined };
-interface AudioInfoNumber { of: number | undefined; no: number | undefined }
+interface AudioInfoNumber {
+  of: number | undefined;
+  no: number | undefined;
+}
 
 interface AudioInfoSort {
   albumsort: string;
