@@ -3,6 +3,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:@typescript-eslint/strict",
     "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:solid/typescript"
@@ -23,7 +25,9 @@
     "ecmaFeatures": { "jsx": true },
 
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+
+    "project": "tsconfig.json"
   },
   "ignorePatterns": ["**/*.vanilla.js"],
 
