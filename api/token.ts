@@ -108,11 +108,11 @@ export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
 
   const cookies: string[] = [];
 
-  if (code) {
-    cookies.push(setCodeCookie(code));
-  } else if (codeCookie) {
-    cookies.push(setCodeCookie(codeCookie));
-  }
+  // if (code) {
+  //   cookies.push(setCodeCookie(code));
+  // } else if (codeCookie) {
+  //   cookies.push(setCodeCookie(codeCookie));
+  // }
 
   let response;
   if (refreshToken) {
