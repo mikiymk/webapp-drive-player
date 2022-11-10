@@ -76,21 +76,12 @@ const refresh = (refreshToken: string) => {
   ]);
 };
 
-const setCodeCookie = (apiRes: VercelResponse, code: string) => {
-  apiRes.setHeader(
-    "Set-Cookie",
-    `code=${code}; SameSite=Strict; Secure; HttpOnly; Max-Age=${accessCodeAge};`
-  );
+const setCodeCookie = (code: string) => {
+  return `code=${code}; SameSite=Strict; Secure; HttpOnly; Max-Age=${accessCodeAge};`;
 };
 
-const setRefreshTokenCookie = (
-  apiRes: VercelResponse,
-  refreshToken: string
-) => {
-  apiRes.setHeader(
-    "Set-Cookie",
-    `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${refreshTokenAge};`
-  );
+const setRefreshTokenCookie = (refreshToken: string) => {
+  return `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${refreshTokenAge};`;
 };
 
 const requestAuth = async (
@@ -115,15 +106,18 @@ export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
     typeof (t = apiReq.query["redirect_uri"]) === "string" ? t : t?.[0];
   const refreshToken = apiReq.cookies["refresh_token"];
 
+  const cookies: string[] = [];
+
   if (code) {
-    setCodeCookie(apiRes, code);
+    cookies.push(setCodeCookie(code));
   } else if (codeCookie) {
-    setCodeCookie(apiRes, codeCookie);
+    cookies.push(setCodeCookie(codeCookie));
   }
 
   let response;
   if (refreshToken) {
-    setRefreshTokenCookie(apiRes, refreshToken);
+    cookies.push(setRefreshTokenCookie(refreshToken));
+
     response = await refresh(refreshToken);
   }
 
@@ -131,9 +125,10 @@ export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
     response = await requestAuth(code, codeCookie, redirectUri);
 
     if ("refresh_token" in response) {
-      setRefreshTokenCookie(apiRes, response.refresh_token);
+      cookies.push(setRefreshTokenCookie(response.refresh_token));
     }
   }
 
+  apiRes.setHeader("Set-Cookie", cookies);
   apiRes.status(200).send(response);
 };
