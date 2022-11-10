@@ -1,5 +1,6 @@
 import { Match, Show, Switch } from "solid-js";
 
+import { RepeatOn, RepeatOne, toggleRepeat as toggle } from "~/audio/Repeat";
 import {
   IconPause,
   IconPlay,
@@ -18,21 +19,21 @@ import { SeekBar } from "./SeekBar";
 import { styleButton, styleController } from "./style.css";
 
 import type { AudioInfo } from "~/audio/AudioInfo";
-import type { Repeat } from "~/audio/Repeat";
+import type { RepeatType } from "~/audio/Repeat";
 
 export interface ControllerProps {
   info: AudioInfo;
   duration: number;
   currentTime: number;
   paused: boolean;
-  repeat: Repeat;
+  repeat: RepeatType;
   shuffle: boolean;
   seek: (time: number) => void;
   play: () => void;
   pause: () => void;
   playNext: () => void;
   playPrev: () => void;
-  setRepeat: (repeat: Repeat) => void;
+  setRepeat: (repeat: RepeatType) => void;
   setShuffle: (shuffle: boolean) => void;
 }
 
@@ -40,7 +41,7 @@ export interface ControllerProps {
  * 曲の再生・停止などのコントロールする
  */
 export const Controller = (props: ControllerProps) => {
-  const toggleRepeat = () => props.setRepeat(props.repeat.toggle());
+  const toggleRepeat = () => props.setRepeat(toggle(props.repeat));
   const toggleShuffle = () => props.setShuffle(!props.shuffle);
 
   return (
@@ -72,10 +73,10 @@ export const Controller = (props: ControllerProps) => {
         <MusicTitle info={props.info} />
         <button class={styleButton} onClick={() => toggleRepeat()}>
           <Switch fallback={<IconRepeatOff />}>
-            <Match when={props.repeat.value === "repeat on"}>
+            <Match when={props.repeat === RepeatOn}>
               <IconRepeatOn />
             </Match>
-            <Match when={props.repeat.value === "repeat one"}>
+            <Match when={props.repeat === RepeatOne}>
               <IconRepeatOnce />
             </Match>
           </Switch>
