@@ -1,7 +1,6 @@
 import { createEffect, onMount } from "solid-js";
 
-import { getLibrary } from "~/api/google/fetchLibrary";
-import { getPlaylists } from "~/api/google/fetchPlaylists";
+import { getSettingFile } from "~/api/google/fetchLibrary";
 import { Controller } from "~/components/Controller";
 import {
   IconDrive,
@@ -30,6 +29,8 @@ import { stylePlayer, themeClass } from "./style.css";
 import useMusicPlayer from "./useMusicPlayer";
 
 import type { GoogleFile } from "~/api/google/type";
+import type { AudioEntries } from "~/signals/audios";
+import type { PlaylistEntries } from "~/signals/playlists";
 
 export type Files = Record<string, GoogleFile>;
 
@@ -58,10 +59,10 @@ export const MusicPlayer = () => {
       return true;
     }
     if (isAccountUpdated) {
-      void getLibrary(token, "library.json").then(
+      void getSettingFile<AudioEntries>(token, "library.json").then(
         (lib) => lib && addAudios(lib),
       );
-      void getPlaylists(token, "playlists.json").then(
+      void getSettingFile<PlaylistEntries>(token, "playlists.json").then(
         (lib) => lib && addPlaylists(lib),
       );
     }

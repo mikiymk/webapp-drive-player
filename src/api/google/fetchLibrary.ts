@@ -2,8 +2,6 @@ import { getGoogleFile } from "~/api/google/file";
 import { getFileID } from "~/api/google/metadata";
 import { createAppData, uploadAppData } from "~/api/google/uploadFile";
 
-import type { AudioEntries } from "~/signals/audios";
-
 const idMap: Record<string, string | undefined> = {};
 const getCachedFileID = async (
   accessToken: string,
@@ -15,23 +13,23 @@ const getCachedFileID = async (
   return idMap[fileName];
 };
 
-export const getLibrary = async (
+export const getSettingFile = async <T>(
   token: string,
   fileName: string,
-): Promise<AudioEntries | null> => {
+): Promise<T | null> => {
   const id = await getCachedFileID(token, fileName);
   if (id === undefined) return null;
 
   const response = await getGoogleFile(token, id);
   if (response === undefined) return null;
 
-  return response.json() as Promise<AudioEntries>;
+  return response.json() as Promise<T>;
 };
 
-export const sendLibrary = async (
+export const postSettingFile = async <T>(
   token: string,
   fileName: string,
-  data: AudioEntries,
+  data: T,
 ): Promise<Response> => {
   const id = await getCachedFileID(token, fileName);
   const jsonData = JSON.stringify(data);

@@ -1,5 +1,4 @@
-import { sendLibrary } from "~/api/google/fetchLibrary";
-import { sendPlaylists } from "~/api/google/fetchPlaylists";
+import { postSettingFile } from "~/api/google/fetchLibrary";
 import { IconDownload, IconUpload } from "~/components/Icon";
 
 import { accessToken } from "~/signals/access-token";
@@ -30,12 +29,12 @@ const syncLibrary = async () => {
 
   // upload
 
-  const libraryResponsePromise = sendLibrary(
+  const libraryResponsePromise = postSettingFile(
     token,
     "library.json",
     Array.from(audios()),
   );
-  const playlistResponsePromise = sendPlaylists(
+  const playlistResponsePromise = postSettingFile(
     token,
     "playlists.json",
     Array.from(playlists()),
