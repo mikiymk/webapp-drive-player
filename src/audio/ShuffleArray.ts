@@ -25,63 +25,41 @@ export class ShuffleArray implements Iterable<string> {
     return this._array[arrayIndex];
   }
 
-  [Symbol.iterator](): ShuffleIterator {
-    return new ShuffleIterator(this);
-  }
-}
-
-/** ShuffleArray のイテレータ */
-class ShuffleIterator implements Iterator<string, undefined> {
-  private readonly _array: ShuffleArray;
-  private _index = 0;
-
-  constructor(array: ShuffleArray) {
-    this._array = array;
-  }
-
-  next(): IteratorResult<string, undefined> {
-    const value = this._array.get(this._index++);
-
-    if (value !== undefined) {
-      return {
-        done: false,
-        value,
-      };
-    } else {
-      return {
-        done: true,
-        value,
-      };
+  *[Symbol.iterator](): Generator<string, void, undefined> {
+    for (let i = 0; i < this.length; i++) {
+      yield this.get(i)!;
     }
   }
 }
 
-/** 0 <= n < length の配列を作る */
+/**
+ * 要素が0からlength-1までの数字のlength個の配列を作る
+ * @param length 配列の長さ
+ * @returns 0からカウントアップする配列
+ */
 const makeArray = (length: number): number[] => {
   return Array.from({ length }, (_, i) => i);
 };
 
-/** 0 <= n < limit の整数乱数 */
+/** 0以上limit未満の整数の乱数 */
 const random = (limit: number): number => {
   return Math.floor(Math.random() * limit);
 };
 
-/** Fisher–Yates shuffle */
+/** Fisher-Yatesシャッフル */
 const shuffle = (array: number[]): number[] => {
   const len = array.length;
   for (let i = len - 1; i > 0; i--) {
     const j = random(i + 1);
 
-    [array[i], array[j]] = [array[j] ?? 0, array[i] ?? 0];
+    [array[i], array[j]] = [array[j]!, array[i]!];
   }
 
   return array;
 };
 
 const makeShuffledArray = (length: number, shuffled: boolean) => {
-  if (shuffled) {
-    return shuffle(makeArray(length));
-  } else {
-    return makeArray(length);
-  }
+  const array = makeArray(length);
+
+  return shuffled ? shuffle(array) : array;
 };
