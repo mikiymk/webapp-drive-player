@@ -4,7 +4,7 @@ import { ExclusiveContext } from "./ExclusiveContext";
 
 import type { JSXElement } from "solid-js";
 
-export interface ExclusiveMenuRootProps {
+interface ExclusiveMenuRootProps {
   children: JSXElement;
 }
 

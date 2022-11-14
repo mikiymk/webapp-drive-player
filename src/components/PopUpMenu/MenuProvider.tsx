@@ -5,7 +5,7 @@ import { MenuContext } from "./MenuContext";
 
 import type { JSXElement } from "solid-js";
 
-export interface MenuProviderProps {
+interface MenuProviderProps {
   menu: JSXElement;
   children: JSXElement;
 }

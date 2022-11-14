@@ -1,11 +1,11 @@
 import { useContext } from "solid-js";
 
 import { MenuContext } from "./MenuContext";
-import { styleItem } from "./style.css";
+import { menuItem } from "./style.css";
 
 import type { JSX } from "solid-js";
 
-export interface MenuItemProps {
+interface MenuItemProps {
   onClick: JSX.EventHandler<HTMLButtonElement, MouseEvent>;
   children: string;
 }
@@ -14,7 +14,7 @@ export interface MenuItemProps {
 export const MenuItem = (props: MenuItemProps) => {
   const { closeMenu } = useContext(MenuContext);
   return (
-    <div class={styleItem}>
+    <div class={menuItem}>
       <button
         onClick={(event) => {
           props.onClick(event);

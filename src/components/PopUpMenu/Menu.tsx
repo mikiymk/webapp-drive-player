@@ -6,11 +6,11 @@ import { createRef } from "~/hooks/createRef";
 import { MenuContext } from "./MenuContext";
 import { MenuSeparator } from "./MenuSeparator";
 import { getMenuSize } from "./getMenuSize";
-import { styleRightMenu } from "./style.css";
+import { rightMenu } from "./style.css";
 
 import type { JSXElement } from "solid-js";
 
-export interface MenuProps {
+interface MenuProps {
   children: JSXElement;
 }
 
@@ -22,7 +22,7 @@ export const Menu = (props: MenuProps) => {
   return (
     <Show when={visible()}>
       <div
-        class={styleRightMenu}
+        class={rightMenu}
         style={{
           top: getMenuSize(
             top(),

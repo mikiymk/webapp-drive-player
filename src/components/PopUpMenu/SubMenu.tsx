@@ -2,11 +2,11 @@ import { Show, createEffect, createSignal } from "solid-js";
 
 import { createRef } from "~/hooks/createRef";
 
-import { styleItem, styleSubMenu } from "./style.css";
+import { menuItem, subMenu } from "./style.css";
 
 import type { JSXElement } from "solid-js";
 
-export interface SubMenuProps {
+interface SubMenuProps {
   label: string;
   children: JSXElement;
 }
@@ -28,11 +28,11 @@ export const SubMenu = (props: SubMenuProps) => {
   });
 
   return (
-    <div class={styleItem}>
+    <div class={menuItem}>
       <button onClick={() => setVisible((v) => !v)}>{props.label}</button>
       <Show when={visible()}>
         <div
-          class={styleSubMenu}
+          class={subMenu}
           style={{
             "max-height": maxHeight(),
             "max-width": maxWidth(),
