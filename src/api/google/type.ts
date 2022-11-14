@@ -1,9 +1,9 @@
-export type GoogleFile = {
+export interface GoogleFile {
   readonly id: string;
   readonly name: string;
-};
+}
 
-export type GoogleFileList = {
+export interface GoogleFileList {
   readonly files: { readonly id: string; readonly name: string }[];
   readonly nextPageToken?: string;
-};
+}

@@ -1,11 +1,11 @@
 import { Menu, MenuItem, MenuSeparator } from "~/components/PopUpMenu";
 import { deletePlaylist, renamePlaylist } from "~/signals/playlists";
 
-export type PlaylistListMenuProps = {
+interface PlaylistListMenuProps {
   name: string;
   select: (name: string) => void;
   openDialog: (name: string, onClose: (name?: string) => void) => void;
-};
+}
 
 export const PlaylistListMenu = (props: PlaylistListMenuProps) => {
   return (
@@ -17,9 +17,10 @@ export const PlaylistListMenu = (props: PlaylistListMenuProps) => {
         onClick={() =>
           props.openDialog(
             props.name,
-            name => name && renamePlaylist(props.name, name)
+            (name) => name && renamePlaylist(props.name, name),
           )
-        }>
+        }
+      >
         rename playlist
       </MenuItem>
       <MenuSeparator />

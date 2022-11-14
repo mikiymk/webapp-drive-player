@@ -3,9 +3,9 @@ import { Show, createSignal } from "solid-js";
 import { Playlist } from "./Playlist";
 import { PlaylistList } from "./PlaylistList";
 
-export type PlaylistsProps = {
+interface PlaylistsProps {
   playsList: (list: readonly string[], index: number) => void;
-};
+}
 
 /** show on right click */
 export const Playlists = (props: PlaylistsProps) => {
@@ -15,8 +15,9 @@ export const Playlists = (props: PlaylistsProps) => {
     <Show
       when={selectedPlaylist()}
       fallback={<PlaylistList select={setSelectedPlaylist} />}
-      keyed>
-      {name => (
+      keyed
+    >
+      {(name) => (
         <Playlist
           name={name}
           reset={() => setSelectedPlaylist("")}

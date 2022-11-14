@@ -1,6 +1,6 @@
-type TopMenuProps = {
+interface TopMenuProps {
   select: (select: string) => void;
-};
+}
 
 export const TopMenu = (props: TopMenuProps) => {
   return (

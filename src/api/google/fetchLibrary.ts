@@ -1,42 +1,64 @@
 import { getGoogleFile } from "~/api/google/file";
 import { getFileID } from "~/api/google/metadata";
 import { createAppData, uploadAppData } from "~/api/google/uploadFile";
-import { AudioInfo } from "~/audio/AudioInfo";
 
-import type { AudioEntries } from "~/signals/audios";
+const idMap: Record<string, string | undefined> = {};
 
-const FILE_NAME = "library.json";
+/**
+ * ファイル名からファイルIDを取得する
+ * 前に取得している場合はリクエストを送らない
+ * @param accessToken アクセストークン
+ * @param fileName ファイル名
+ * @returns ファイルが存在するならファイルID
+ */
+const getCachedFileID = async (
+  accessToken: string,
+  fileName: string,
+): Promise<string | undefined> => {
+  // TODO 一度キャッシュした後に別のアカウントに切り替えた場合
+  if (idMap[fileName]) return idMap[fileName];
 
-let libraryID: string | undefined;
-const getLibraryID = async (accessToken: string) => {
-  if (libraryID !== undefined) return libraryID;
-  libraryID = await getFileID(accessToken, FILE_NAME, true);
-  return libraryID;
+  idMap[fileName] = await getFileID(accessToken, fileName, true);
+  return idMap[fileName];
 };
 
-export const getLibrary = async (
-  token: string
-): Promise<AudioEntries | null> => {
-  const id = await getLibraryID(token);
-  if (id === undefined) return null;
+/**
+ * ファイル名からファイルのデータを取得する
+ * @param token アクセストークン
+ * @param fileName ファイル名
+ * @returns ファイルの中身
+ */
+export const getSettingFile = async <T>(
+  token: string,
+  fileName: string,
+): Promise<T | undefined> => {
+  const id = await getCachedFileID(token, fileName);
+  if (id === undefined) return undefined;
 
   const response = await getGoogleFile(token, id);
-  if (response === undefined) return null;
+  if (response === undefined) return undefined;
 
-  const json: [string, AudioInfo][] = await response.json();
-
-  return json.map(([id, info]): [string, AudioInfo] => {
-    return [id, AudioInfo.copyInfo(info)];
-  });
+  return response.json() as Promise<T>;
 };
 
-export const sendLibrary = async (token: string, data: AudioEntries) => {
-  const id = await getLibraryID(token);
-  const jsonData = JSON.stringify(Array.from(data));
+/**
+ * ファイルの新しい内容を送信する
+ * @param token アクセストークン
+ * @param fileName ファイル名
+ * @param data 送信するデータ
+ * @returns 送信の結果
+ */
+export const postSettingFile = async <T>(
+  token: string,
+  fileName: string,
+  data: T,
+): Promise<Response> => {
+  const id = await getCachedFileID(token, fileName);
+  const jsonData = JSON.stringify(data);
 
   if (id !== undefined) {
     return uploadAppData(token, id, jsonData);
   } else {
-    return createAppData(token, FILE_NAME, jsonData);
+    return createAppData(token, fileName, jsonData);
   }
 };

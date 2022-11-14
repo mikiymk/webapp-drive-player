@@ -1,12 +1,14 @@
 import { fetchGetWithBearer } from "../util/withBearer";
 
 /**
- * Google Drive からファイルをダウンロードする
- * @returns エラーなら `undefined`
+ * Google Drive からファイルのデータをダウンロードする
+ * @param accessToken アクセストークン
+ * @param fileId ダウンロードするファイルのID
+ * @returns 成功ならレスポンス、失敗なら `undefined`
  */
 export const getGoogleFile = async (
   accessToken: string | undefined,
-  fileId: string
+  fileId: string,
 ) => {
   try {
     if (accessToken === undefined) return undefined;
@@ -16,7 +18,7 @@ export const getGoogleFile = async (
     if (!response.ok) {
       const responseData = JSON.stringify(await response.json(), null, 2);
       throw new Error(
-        `${response.status} ${response.statusText} ${responseData}`
+        `${response.status} ${response.statusText} ${responseData}`,
       );
     }
 

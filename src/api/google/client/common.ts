@@ -22,7 +22,7 @@ export const validateRedirectUrl = (uri: string) => {
 export const pushIfDefined = (
   array: string[],
   key: string,
-  value?: string | undefined
+  value?: string | undefined,
 ) => {
   value && array.push(key + "=" + encodeURIComponent(value.trim()));
 };
@@ -31,7 +31,7 @@ export const boolToStr = (bool: boolean | undefined) =>
   false === bool ? "false" : "true";
 
 export const uniqueKey = () => {
-  return "auth" + Math.floor(1e6 * Math.random() + 1);
+  return `auth${Math.floor(1e6 * Math.random() + 1)}`;
 };
 
 export const getRedirectUri = (a: string) => {
@@ -59,19 +59,19 @@ const validatePopUpUrl = (url: string) => {
 };
 
 export const buildQueriedUri = (
-  query: [key: string, value: string | undefined][]
+  query: [key: string, value: string | undefined][],
 ) =>
   "https://accounts.google.com/o/oauth2/auth?" +
   query
     .flatMap(([key, value]) =>
-      value ? [key + "=" + encodeURIComponent(value.trim())] : []
+      value ? [key + "=" + encodeURIComponent(value.trim())] : [],
     )
     .join("&");
 
 export const openAuthWindow = <T>(
   url: string,
   target: string,
-  promise: PromiseCallBack<T>
+  promise: PromiseCallBack<T>,
 ) => {
   const width = Math.min(500, screen.width - 40);
   const height = Math.min(550, screen.height - 40);
@@ -84,26 +84,26 @@ export const openAuthWindow = <T>(
     "scrollbars=no",
     "resizable=no",
     "copyhistory=no",
-    "width=" + width,
-    "height=" + height,
-    "top=" + (screen.height / 2 - height / 2),
-    "left=" + (screen.width / 2 - width / 2),
+    `width=${width}`,
+    `height=${height}`,
+    `top=${screen.height / 2 - height / 2}`,
+    `left=${screen.width / 2 - width / 2}`,
   ].join();
 
   const authWindow = window.open(validatePopUpUrl(url), target, features);
-  if (!authWindow || authWindow.closed) return null;
+  if (!authWindow || authWindow.closed) return undefined;
 
   authWindow.focus();
   authWindow.onclose = () => promise.reject("window closed");
   return authWindow;
 };
 
-type BaseResponse = {
+interface BaseResponse {
   state: string;
   error: string;
   error_description: string;
   error_uri: string;
-};
+}
 
 export interface AuthClient {
   isListens: boolean;
@@ -119,10 +119,17 @@ export const addMessageEventListener = (client: AuthClient) => {
 
   window.addEventListener(
     "message",
-    event => {
+    (event: { data: string }) => {
       try {
         if (!event.data) return;
-        const params = JSON.parse(event.data).params;
+        const { params } = JSON.parse(event.data) as {
+          params?: {
+            id: string;
+            clientId: string;
+            type: string;
+            authResult: BaseResponse;
+          };
+        };
         if (!params) return;
         if (!client.authUniqueId || params.id !== client.authUniqueId) return;
         if (params.clientId !== client.query.clientId) return;
@@ -133,6 +140,6 @@ export const addMessageEventListener = (client: AuthClient) => {
         console.log(error);
       }
     },
-    false
+    false,
   );
 };

@@ -3,12 +3,12 @@ import { keyframes, style } from "@vanilla-extract/css";
 /** https://qiita.com/nissuk/items/7d5545a9f6177ff965dc */
 
 /** マーキーアニメーション */
-const marquee = keyframes({
+const marqueeAnimation = keyframes({
   "0%": { transform: "translate(0)" },
   "100%": { transform: "translate(-100%)" },
 });
 
-export const styleMarquee = style({
+export const marquee = style({
   overflow: "hidden" /* スクロールバーが出ないように */,
   position: "relative" /* マーキーの内容部分の位置の基準になるように */,
   display: "inline",
@@ -32,13 +32,13 @@ export const styleInner = style({
   animation: "none linear infinite 20s 2s",
 
   selectors: {
-    [`${styleMarquee}:hover > &`]: {
-      animationName: marquee,
+    [`${marquee}:hover > &`]: {
+      animationName: marqueeAnimation,
     },
   },
   "@media": {
     "(hover: none)": {
-      animationName: marquee,
+      animationName: marqueeAnimation,
     },
   },
 });

@@ -12,7 +12,7 @@ describe("Google APIを使用したアクセストークンをダウンロード
             access_token: "access token",
           });
         },
-      } as Response)
+      } as Response),
     );
 
     const response = await requestAccessToken("redirect uri", "code");
@@ -20,7 +20,7 @@ describe("Google APIを使用したアクセストークンをダウンロード
     expect(response).toBeDefined();
     expect(window.fetch).toBeCalledTimes(1);
     expect(window.fetch).toBeCalledWith(
-      "/api/token?redirect_uri=redirect uri&code=code"
+      "/api/token?redirect_uri=redirect+uri&code=code",
     );
   });
 
@@ -32,14 +32,14 @@ describe("Google APIを使用したアクセストークンをダウンロード
             access_token: "access token",
           });
         },
-      } as Response)
+      } as Response),
     );
 
     const response = await requestAccessToken("redirect uri");
 
     expect(response).toBeDefined();
     expect(window.fetch).toBeCalledTimes(1);
-    expect(window.fetch).toBeCalledWith("/api/token?redirect_uri=redirect uri");
+    expect(window.fetch).toBeCalledWith("/api/token?redirect_uri=redirect+uri");
   });
 
   test("レスポンスを返す", async () => {
@@ -54,7 +54,7 @@ describe("Google APIを使用したアクセストークンをダウンロード
             token_type: "token type",
           });
         },
-      } as Response)
+      } as Response),
     );
 
     const response = await requestAccessToken("redirect uri", "code");
@@ -72,11 +72,11 @@ describe("Google APIを使用したアクセストークンをダウンロード
             error: "error",
           });
         },
-      } as Response)
+      } as Response),
     );
 
     const response = requestAccessToken("redirect uri", "code");
 
-    expect(response).rejects.toThrow("authorize failure");
+    await expect(response).rejects.toThrow("authorize failure");
   });
 });

@@ -6,31 +6,31 @@ import { getAudio } from "~/signals/audios";
 
 import { AudioListItem } from "./AudioListItem";
 import { AudioListMenu } from "./AudioListMenu";
-import { sBody, sHead, sItemArtist, sList } from "./style.css";
+import { body, head, itemArtist, list } from "./style.css";
 
 import type { JSXElement } from "solid-js";
 
-export type AudioListProps = {
+interface AudioListProps {
   audios: readonly string[];
   play: (idList: readonly string[], index: number) => void;
   extendMenu?: (props: { item: string; index: number }) => JSXElement;
-};
+}
 
 export const AudioList = (props: AudioListProps) => {
   return (
-    <table class={sList}>
-      <thead class={sHead}>
+    <table class={list}>
+      <thead class={head}>
         <tr>
           <th>title</th>
-          <th class={sItemArtist}>artists</th>
+          <th class={itemArtist}>artists</th>
           <th />
         </tr>
       </thead>
-      <tbody class={sBody}>
+      <tbody class={body}>
         <For each={props.audios}>
           {(item, index) => (
             <Show when={getAudio(item)} keyed>
-              {audio => (
+              {(audio) => (
                 <MenuProvider
                   menu={
                     <AudioListMenu
@@ -38,13 +38,14 @@ export const AudioList = (props: AudioListProps) => {
                       play={() => props.play(props.audios, index())}
                       extendMenu={
                         <Show when={props.extendMenu} keyed>
-                          {ExtendMenu => (
+                          {(ExtendMenu) => (
                             <ExtendMenu item={item} index={index()} />
                           )}
                         </Show>
                       }
                     />
-                  }>
+                  }
+                >
                   <AudioListItem
                     audio={audio}
                     play={() => props.play(props.audios, index())}

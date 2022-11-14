@@ -1,12 +1,12 @@
-import { audios } from "~/signals/audios";
+import { getAudio } from "~/signals/audios";
 
 import type { AudioPlayer } from "./AudioPlayer";
 
 export class AudioBufferSourcePlayer implements AudioPlayer {
   private context: AudioContext;
-  private node: AudioBufferSourceNode | null;
-  private buffer: AudioBuffer | null;
-  private blob: Blob | null = null;
+  private node: AudioBufferSourceNode | undefined;
+  private buffer: AudioBuffer | undefined;
+  private blob: Blob | undefined = undefined;
 
   /** `AudioContext.currentTime` 基準 */
   private startTime = 0;
@@ -21,8 +21,8 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
 
   constructor(context?: AudioContext) {
     this.context = context ?? new AudioContext();
-    this.node = null;
-    this.buffer = null;
+    this.node = undefined;
+    this.buffer = undefined;
 
     const timeUpdate = () => {
       if (this.startTime) {
@@ -39,7 +39,7 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
 
   async setBuffer(
     id: string | undefined,
-    blob: Promise<Blob | null>
+    blob: Promise<Blob | undefined>,
   ): Promise<void> {
     const awaited = await blob;
     if (awaited === this.blob) {
@@ -47,18 +47,18 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
     }
     this.blob = awaited;
 
-    if (awaited === null) {
+    if (awaited === undefined) {
       this.node?.disconnect();
-      this.node = null;
-      this.buffer = null;
+      this.node = undefined;
+      this.buffer = undefined;
       return;
     }
 
     this.buffer = await this.context.decodeAudioData(
-      await awaited.arrayBuffer()
+      await awaited.arrayBuffer(),
     );
 
-    const info = id && audios().get(id);
+    const info = id && getAudio(id);
     info && (info.duration = this.buffer.duration);
     this.onUpdateDuration?.(this.buffer.duration);
   }
@@ -88,7 +88,7 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
           Math.abs(
             this.startTime +
               (this.buffer?.duration ?? 0) -
-              this.context.currentTime
+              this.context.currentTime,
           ) < 1
         )
           this.onEnd?.();
@@ -111,7 +111,7 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
     this.currentTime = this.context.currentTime - this.startTime;
     this.startTime = 0;
     this.node?.disconnect();
-    this.node = null;
+    this.node = undefined;
     this.onChangePause?.(true);
   }
 

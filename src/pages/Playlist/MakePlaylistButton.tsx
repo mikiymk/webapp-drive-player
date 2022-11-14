@@ -1,10 +1,10 @@
 import { createSignal } from "solid-js";
 
-import { styleMakePlaylist } from "./style.css";
+import { makePlButton } from "./style.css";
 
-export type MakePlaylistButtonProps = {
+interface MakePlaylistButtonProps {
   makePlaylist: (playlist: string) => void;
-};
+}
 
 /** show on right click */
 export const MakePlaylistButton = (props: MakePlaylistButtonProps) => {
@@ -12,7 +12,7 @@ export const MakePlaylistButton = (props: MakePlaylistButtonProps) => {
 
   const addPlaylist = () => {
     const name = value();
-    if (name === undefined || name === null || name === "") {
+    if (name === "") {
       console.log("input playlist name");
       return;
     }
@@ -25,14 +25,14 @@ export const MakePlaylistButton = (props: MakePlaylistButtonProps) => {
   };
 
   return (
-    <span class={styleMakePlaylist}>
+    <span class={makePlButton}>
       <button onClick={addPlaylist}>add playlist</button>
       <input
         type="text"
-        onInput={event => {
+        onInput={(event) => {
           setValue(event.currentTarget.value);
         }}
-        onKeyPress={event => {
+        onKeyPress={(event) => {
           if (event.key === "Enter") addPlaylist();
         }}
       />

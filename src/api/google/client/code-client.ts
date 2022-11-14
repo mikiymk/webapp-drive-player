@@ -12,7 +12,7 @@ import { PromiseCallBack } from "./promise-callback";
 
 import type { AuthClient } from "./common";
 
-type CodeResponse = {
+interface CodeResponse {
   code: string;
   scope: string;
 
@@ -20,9 +20,9 @@ type CodeResponse = {
   error: string;
   error_description: string;
   error_uri: string;
-};
+}
 
-type PopupCodeClientConfig = {
+interface PopupCodeClientConfig {
   clientId: string;
   scope: string;
 
@@ -33,9 +33,9 @@ type PopupCodeClientConfig = {
   hint?: string;
   hostedDomain?: string;
   selectAccount?: boolean;
-};
+}
 
-type RedirectCodeClientConfig = {
+interface RedirectCodeClientConfig {
   clientId: string;
   scope: string;
 
@@ -46,9 +46,9 @@ type RedirectCodeClientConfig = {
   hint?: string;
   hostedDomain?: string;
   selectAccount?: boolean;
-};
+}
 
-type PopupCodeClientQuery = {
+interface PopupCodeClientQuery {
   clientId: string;
   scope: string;
   hint: string | undefined;
@@ -58,9 +58,9 @@ type PopupCodeClientQuery = {
   enableSerialConsent: boolean | undefined;
   selectAccount: boolean | undefined;
   redirectUri?: string;
-};
+}
 
-type RedirectCodeClientQuery = {
+interface RedirectCodeClientQuery {
   clientId: string;
   scope: string;
   hint: string | undefined;
@@ -70,7 +70,7 @@ type RedirectCodeClientQuery = {
   enableSerialConsent: boolean | undefined;
   selectAccount: boolean | undefined;
   redirectUri?: string;
-};
+}
 
 const codeTarget = "g_auth_code_window";
 
@@ -124,7 +124,7 @@ export class RedirectCodeClient {
 }
 
 const normalizePopup = (
-  config: PopupCodeClientConfig
+  config: PopupCodeClientConfig,
 ): PopupCodeClientQuery => ({
   clientId: config.clientId,
   scope: config.scope,
@@ -137,7 +137,7 @@ const normalizePopup = (
 });
 
 const normalizeRedirect = (
-  config: RedirectCodeClientConfig
+  config: RedirectCodeClientConfig,
 ): RedirectCodeClientQuery => ({
   clientId: config.clientId,
   scope: config.scope,

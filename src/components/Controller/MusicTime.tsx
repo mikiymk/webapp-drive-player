@@ -1,16 +1,16 @@
 import { formatTime } from "~/format";
 
-import { styleTime } from "./style.css";
+import { timeBox } from "./style.css";
 
-export type MusicTitleProps = {
+interface MusicTitleProps {
   duration: number;
   currentTime: number;
-};
+}
 
 /** 時間をフォーマットして表示 */
 export const MusicTime = (props: MusicTitleProps) => {
   return (
-    <span class={styleTime}>
+    <span class={timeBox}>
       {formatTime(props.currentTime)}/{formatTime(props.duration)}
     </span>
   );

@@ -2,7 +2,7 @@ import { style } from "@vanilla-extract/css";
 
 import { vars } from "../AppRoot/style.css";
 
-export const styleRightMenu = style({
+export const rightMenu = style({
   position: "fixed",
 
   top: 0,
@@ -13,7 +13,7 @@ export const styleRightMenu = style({
   minWidth: "10rem",
 });
 
-export const styleSubMenu = style({
+export const subMenu = style({
   position: "absolute",
   left: "0",
 
@@ -25,11 +25,11 @@ export const styleSubMenu = style({
   minWidth: "10rem",
 });
 
-export const styleItem = style({
+export const menuItem = style({
   margin: "0.5rem",
 });
 
-export const styleHorizon = style({
+export const menuHorizon = style({
   height: 0,
   width: "100%",
   borderBottom: "solid 1px " + vars.color.secoDark,

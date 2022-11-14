@@ -1,6 +1,6 @@
 import { style } from "@vanilla-extract/css";
 
-export const styleIcon = style({
+export const icon = style({
   fill: "currentcolor",
   height: "1em",
   width: "1em",

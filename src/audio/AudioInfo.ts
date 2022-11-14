@@ -1,12 +1,15 @@
 type Partial<T> = { [P in keyof T]?: T[P] | undefined };
-type AudioInfoNumber = { of: number | undefined; no: number | undefined };
+interface AudioInfoNumber {
+  of: number | undefined;
+  no: number | undefined;
+}
 
-type AudioInfoSort = {
+interface AudioInfoSort {
   albumsort: string;
   titlesort: string;
   artistsort: string;
   albumartistsort: string;
-};
+}
 
 export class AudioInfo {
   static getEmptyInfo() {
@@ -68,7 +71,7 @@ export class AudioInfo {
       { of: disk.of ?? undefined, no: disk.no ?? undefined },
       0,
       picture?.[0]?.data.buffer,
-      sort
+      sort,
     );
   }
 
@@ -82,7 +85,7 @@ export class AudioInfo {
       base.disk,
       base.duration,
       base.picture,
-      base.sort
+      base.sort,
     );
   }
 
@@ -108,7 +111,7 @@ export class AudioInfo {
     disk?: AudioInfoNumber,
     duration?: number,
     picture?: ArrayBuffer,
-    sort?: Partial<AudioInfoSort>
+    sort?: Partial<AudioInfoSort>,
   ) {
     this.title = title ?? "";
     this.artists = artists ?? [""];

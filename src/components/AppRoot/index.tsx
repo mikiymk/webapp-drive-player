@@ -1,7 +1,6 @@
 import { createEffect, onMount } from "solid-js";
 
-import { getLibrary } from "~/api/google/fetchLibrary";
-import { getPlaylists } from "~/api/google/fetchPlaylists";
+import { getSettingFile } from "~/api/google/fetchLibrary";
 import { Controller } from "~/components/Controller";
 import {
   IconDrive,
@@ -30,10 +29,10 @@ import { stylePlayer, themeClass } from "./style.css";
 import useMusicPlayer from "./useMusicPlayer";
 
 import type { GoogleFile } from "~/api/google/type";
+import type { AudioEntries } from "~/signals/audios";
+import type { PlaylistEntries } from "~/signals/playlists";
 
-export type Files = {
-  [name: string]: GoogleFile;
-};
+export type Files = Record<string, GoogleFile>;
 
 /**
  * react component root.
@@ -42,7 +41,7 @@ export const MusicPlayer = () => {
   const { player, status } = useMusicPlayer();
 
   const playWithIdList = (idList: readonly string[], index: number) => {
-    player?.playWithIdList(idList, index);
+    player.playWithIdList(idList, index);
   };
 
   onMount(() => {
@@ -52,7 +51,7 @@ export const MusicPlayer = () => {
     }
   });
 
-  createEffect(isAccountUpdated => {
+  createEffect((isAccountUpdated) => {
     const token = accessToken();
     if (!token) {
       clearAudios();
@@ -60,8 +59,12 @@ export const MusicPlayer = () => {
       return true;
     }
     if (isAccountUpdated) {
-      getLibrary(token).then(lib => lib && addAudios(lib));
-      getPlaylists(token).then(lib => lib && addPlaylists(lib));
+      void getSettingFile<AudioEntries>(token, "library.json").then(
+        (lib) => lib && addAudios(lib),
+      );
+      void getSettingFile<PlaylistEntries>(token, "playlists.json").then(
+        (lib) => lib && addPlaylists(lib),
+      );
     }
     return false;
   }, true);
@@ -98,13 +101,13 @@ export const MusicPlayer = () => {
           paused={status.paused()}
           repeat={status.repeat()}
           shuffle={status.shuffle()}
-          seek={time => player?.seek(time)}
-          play={() => player?.play()}
-          pause={() => player?.pause()}
-          playNext={() => player?.playToNext()}
-          playPrev={() => player?.playToPrev()}
-          setRepeat={repeat => player?.setRepeat(repeat)}
-          setShuffle={shuffle => player?.setShuffle(shuffle)}
+          seek={(time) => player.seek(time)}
+          play={() => player.play()}
+          pause={() => player.pause()}
+          playNext={() => player.playToNext()}
+          playPrev={() => player.playToPrev()}
+          setRepeat={(repeat) => player.setRepeat(repeat)}
+          setShuffle={(shuffle) => player.setShuffle(shuffle)}
         />
       </div>
     </ExclusiveMenuRoot>

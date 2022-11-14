@@ -2,16 +2,16 @@ import { Match, Switch, createSignal } from "solid-js";
 
 import { IconDone, IconError, IconLoading } from "~/components/Icon";
 
-import { styleDownload } from "./style.css";
+import { download } from "./style.css";
 
 import type { JSXElement } from "solid-js";
 
 type Status = "loading" | "done" | "error";
 
-type LoadProps = {
+interface LoadProps {
   load: () => Promise<void>;
   children: JSXElement;
-};
+}
 
 /**
  * now playing audio info view
@@ -32,7 +32,7 @@ export const Load = (props: LoadProps) => {
   };
 
   return (
-    <div class={styleDownload}>
+    <div class={download}>
       <button onClick={onclick}>{props.children}</button>
       <Switch>
         <Match when={status() === "loading"}>

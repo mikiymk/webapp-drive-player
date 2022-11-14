@@ -1,33 +1,41 @@
 import { describe, expect, test } from "vitest";
 
-import { Repeat } from "../Repeat";
+import {
+  RepeatDefault,
+  RepeatOff,
+  RepeatOn,
+  RepeatOne,
+  toggleRepeat,
+} from "../Repeat";
 
-describe("Repeat", () => {
-  let item = Repeat.ON;
+import type { RepeatType } from "../Repeat";
+
+describe("リピート切り替え3回で戻る", () => {
+  let item: RepeatType = RepeatOn;
   test("repeat on", () => {
-    expect(item.toggle()).not.toEqual(item);
-    expect(item.toggle().toggle()).not.toEqual(item);
-    expect(item.toggle().toggle().toggle()).toEqual(item);
+    expect(toggleRepeat(item)).not.toEqual(item);
+    expect(toggleRepeat(toggleRepeat(item))).not.toEqual(item);
+    expect(toggleRepeat(toggleRepeat(toggleRepeat(item)))).toEqual(item);
   });
 
-  item = Repeat.OFF;
+  item = RepeatOff;
   test("repeat off", () => {
-    expect(item.toggle()).not.toEqual(item);
-    expect(item.toggle().toggle()).not.toEqual(item);
-    expect(item.toggle().toggle().toggle()).toEqual(item);
+    expect(toggleRepeat(item)).not.toEqual(item);
+    expect(toggleRepeat(toggleRepeat(item))).not.toEqual(item);
+    expect(toggleRepeat(toggleRepeat(toggleRepeat(item)))).toEqual(item);
   });
 
-  item = Repeat.ONE;
+  item = RepeatOne;
   test("repeat one", () => {
-    expect(item.toggle()).not.toEqual(item);
-    expect(item.toggle().toggle()).not.toEqual(item);
-    expect(item.toggle().toggle().toggle()).toEqual(item);
+    expect(toggleRepeat(item)).not.toEqual(item);
+    expect(toggleRepeat(toggleRepeat(item))).not.toEqual(item);
+    expect(toggleRepeat(toggleRepeat(toggleRepeat(item)))).toEqual(item);
   });
 
-  item = Repeat.DEFAULT;
+  item = RepeatDefault;
   test("repeat default", () => {
-    expect(item.toggle()).not.toEqual(item);
-    expect(item.toggle().toggle()).not.toEqual(item);
-    expect(item.toggle().toggle().toggle()).toEqual(item);
+    expect(toggleRepeat(item)).not.toEqual(item);
+    expect(toggleRepeat(toggleRepeat(item))).not.toEqual(item);
+    expect(toggleRepeat(toggleRepeat(toggleRepeat(item)))).toEqual(item);
   });
 });

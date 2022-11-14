@@ -1,15 +1,19 @@
 export type Query = [string, string | number | boolean | undefined];
+
+/**
+ * GETリクエスト用のクエリ付きURLを作成する関数
+ * @param url URL
+ * @param querys ？の後につけるクエリの組リスト 値がundefinedの場合は組ごと飛ばす
+ * @returns クエリ付きURL
+ */
 export const generateUrl = (url: string, querys: Query[]) => {
   return (
     url +
     "?" +
-    querys
-      .map(param)
-      .filter(v => v)
-      .join("&")
+    new URLSearchParams(
+      querys
+        .filter(([, value]) => value !== undefined)
+        .map(([key, value]) => [key, String(value)]),
+    ).toString()
   );
-};
-
-const param = ([key, value]: Query) => {
-  return !!value && key + "=" + encodeURIComponent(value);
 };

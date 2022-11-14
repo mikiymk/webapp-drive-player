@@ -3,13 +3,13 @@ import { expect, test, vi } from "vitest";
 
 import { MusicPlayer } from "../index";
 
-test("1 second", () => {
+test("snapshot app", () => {
   window.AudioContext = vi.fn();
   window.fetch = vi.fn(() =>
     Promise.resolve({
-      async json() {
+      json() {
         /* eslint-disable camelcase */
-        return {
+        return Promise.resolve({
           access_token: "access token",
           expires_in: 3599,
           refresh_token: "refresh token",
@@ -17,9 +17,9 @@ test("1 second", () => {
           token_type: "token type",
           files: [],
           nextPageToken: undefined,
-        };
+        });
       },
-    } as Response)
+    } as Response),
   );
 
   const root = document.createElement("div");

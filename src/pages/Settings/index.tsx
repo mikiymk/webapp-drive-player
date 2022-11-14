@@ -1,20 +1,19 @@
-import { sendLibrary } from "~/api/google/fetchLibrary";
-import { sendPlaylists } from "~/api/google/fetchPlaylists";
+import { postSettingFile } from "~/api/google/fetchLibrary";
 import { IconDownload, IconUpload } from "~/components/Icon";
 
 import { accessToken } from "~/signals/access-token";
 import { audios } from "~/signals/audios";
-import { playlists } from "~/signals/playlists";
+import { getPlaylistEntries } from "~/signals/playlists";
 
 import { Load } from "./Load";
-import { styleSettings } from "./style.css";
+import { settings } from "./style.css";
 
 /**
  * now playing audio info view
  */
 export const Settings = () => {
   return (
-    <div class={styleSettings}>
+    <div class={settings}>
       <Load load={syncLibrary}>
         <IconUpload />
         <IconDownload />
@@ -30,8 +29,16 @@ const syncLibrary = async () => {
 
   // upload
 
-  const libraryResponsePromise = sendLibrary(token, Array.from(audios()));
-  const playlistResponsePromise = sendPlaylists(token, Array.from(playlists()));
+  const libraryResponsePromise = postSettingFile(
+    token,
+    "library.json",
+    Array.from(audios()),
+  );
+  const playlistResponsePromise = postSettingFile(
+    token,
+    "playlists.json",
+    getPlaylistEntries(),
+  );
 
   const [libraryResponse, playlistResponse] = await Promise.all([
     libraryResponsePromise,

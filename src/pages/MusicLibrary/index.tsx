@@ -6,16 +6,16 @@ import { Artists } from "./Artists";
 import { TopMenu } from "./Menu";
 import { Songs } from "./Songs";
 
-export type LibraryProps = {
+interface LibraryProps {
   play: (idList: readonly string[], index: number) => void;
-};
+}
 
 /**
  * list of musics
  */
 export const Library = (props: LibraryProps) => {
   const [selectTab, setSelectTab] = createSignal<string>();
-  const resetTab = () => {
+  const resetTab: () => void = () => {
     setSelectTab();
   };
   return (

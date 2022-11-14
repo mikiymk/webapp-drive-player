@@ -1,17 +1,17 @@
 import { batch, createSignal, For, Show } from "solid-js";
 
 import { MenuProvider } from "~/components/PopUpMenu";
-import { makePlaylist, playlists } from "~/signals/playlists";
+import { getPlaylistEntries, makePlaylist } from "~/signals/playlists";
 
 import { MakePlaylistButton } from "./MakePlaylistButton";
 import { PlaylistListItem } from "./PlaylistListItem";
 import { PlaylistListMenu } from "./PlaylistListMenu";
 import { RenameDialog } from "./RenameDialog";
-import { stylePlaylists } from "./style.css";
+import { plAll } from "./style.css";
 
-export type PlaylistListProps = {
+interface PlaylistListProps {
   select: (playlist: string) => void;
-};
+}
 
 /** show on right click */
 export const PlaylistList = (props: PlaylistListProps) => {
@@ -32,17 +32,18 @@ export const PlaylistList = (props: PlaylistListProps) => {
 
   return (
     <>
-      <ul class={stylePlaylists}>
-        <For each={Array.from(playlists())}>
-          {playlist => (
+      <ul class={plAll}>
+        <For each={getPlaylistEntries()}>
+          {(playlist) => (
             <MenuProvider
               menu={
                 <PlaylistListMenu
                   name={playlist[0]}
-                  select={name => props.select(name)}
+                  select={(name) => props.select(name)}
                   openDialog={openDialog}
                 />
-              }>
+              }
+            >
               <PlaylistListItem name={playlist[0]} />
             </MenuProvider>
           )}

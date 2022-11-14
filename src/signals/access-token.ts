@@ -1,6 +1,6 @@
 import { createSignal } from "solid-js";
 
-import { refreshAccessToken, requestAccessToken } from "~/api/google/auth";
+import { requestAccessToken } from "~/api/google/auth";
 import { initClient } from "~/api/google/init";
 
 const [accessToken, setAccessToken] = createSignal<string>();
@@ -16,7 +16,7 @@ export const useSignIn = () => {
       const { code } = await client.requestCode();
       const { accessToken, expiresIn } = await requestAccessToken(
         location.origin,
-        code
+        code,
       );
       setAccessToken(accessToken);
       refresh(expiresIn);
@@ -27,10 +27,15 @@ export const useSignIn = () => {
   };
 };
 
-const refresh = async (expiresIn: number) => {
-  setTimeout(async () => {
-    const { accessToken, expiresIn } = await refreshAccessToken();
-    setAccessToken(accessToken);
-    refresh(expiresIn);
+const refresh = (expiresIn: number) => {
+  setTimeout(() => {
+    requestAccessToken()
+      .then(({ accessToken, expiresIn }) => {
+        setAccessToken(accessToken);
+        refresh(expiresIn);
+      })
+      .catch((err) => {
+        console.warn(err);
+      });
   }, expiresIn * 950);
 };

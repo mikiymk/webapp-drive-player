@@ -9,15 +9,15 @@ import {
 
 import { Authorize } from "./Authorize";
 import { NavItem } from "./NavItem";
-import { styleContent, styleNav } from "./style.css";
+import { content, tab } from "./style.css";
 
 import type { Accessor, JSXElement } from "solid-js";
 
-type MenuItem = {
+interface MenuItem {
   key: string;
   icon: JSXElement;
   label: string;
-};
+}
 
 const MenuContext = createContext<{
   selected: Accessor<string>;
@@ -27,11 +27,11 @@ const MenuContext = createContext<{
   addItem: () => 0,
 });
 
-export type MenuProps = {
+export interface MenuProps {
   defaultKey: string;
 
   children: JSXElement;
-};
+}
 
 /**
  * menu list click menu and change view
@@ -41,8 +41,8 @@ export const Menu = (props: MenuProps) => {
   const [items, setItems] = createSignal<MenuItem[]>([]);
 
   const addItem = (key: string, icon: JSXElement, label: string) => {
-    setItems(items => {
-      if (items.some(item => item.key === key)) {
+    setItems((items) => {
+      if (items.some((item) => item.key === key)) {
         return items;
       } else {
         return [...items, { key, icon, label }];
@@ -52,30 +52,31 @@ export const Menu = (props: MenuProps) => {
 
   return (
     <MenuContext.Provider value={{ selected, addItem }}>
-      <ul class={styleNav}>
+      <ul class={tab}>
         <For each={items()}>
-          {item => (
+          {(item) => (
             <NavItem
               icon={item.icon}
               onClick={() => setSelected(item.key)}
-              selected={item.key === selected()}>
+              selected={item.key === selected()}
+            >
               {item.label}
             </NavItem>
           )}
         </For>
         <Authorize />
       </ul>
-      <div class={styleContent}>{props.children}</div>
+      <div class={content}>{props.children}</div>
     </MenuContext.Provider>
   );
 };
 
-export type MenuItemProps = {
+export interface MenuItemProps {
   key: string;
   icon: JSXElement;
   label: string;
   children: JSXElement;
-};
+}
 
 export const MenuItem = (props: MenuItemProps) => {
   const menu = useContext(MenuContext);

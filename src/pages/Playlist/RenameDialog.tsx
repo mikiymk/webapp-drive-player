@@ -2,12 +2,12 @@ import { createEffect, createSignal } from "solid-js";
 
 import { playlists } from "~/signals/playlists";
 
-import { styleDialog, styleDialogButton, styleDialogInput } from "./style.css";
+import { renamePlDialog, renamePlButton, renamePlInput } from "./style.css";
 
-export type RenameDialogProps = {
+interface RenameDialogProps {
   name: string | undefined;
   close: (data?: string) => void;
-};
+}
 
 /** show on right click */
 export const RenameDialog = (props: RenameDialogProps) => {
@@ -27,7 +27,7 @@ export const RenameDialog = (props: RenameDialogProps) => {
   };
 
   const handleKey = (
-    event: KeyboardEvent & { currentTarget: HTMLInputElement }
+    event: KeyboardEvent & { currentTarget: HTMLInputElement },
   ) => {
     if (event.key === "Enter") {
       handleChange(event);
@@ -38,24 +38,25 @@ export const RenameDialog = (props: RenameDialogProps) => {
   };
 
   return (
-    <dialog class={styleDialog} open>
+    <dialog class={renamePlDialog} open>
       <label>
         playlist name
         <input
-          class={styleDialogInput}
+          class={renamePlInput}
           value={newName()}
           onChange={handleChange}
           onKeyPress={handleKey}
         />
       </label>
       <p>{error()}</p>
-      <button class={styleDialogButton} onClick={() => props.close()}>
+      <button class={renamePlButton} onClick={() => props.close()}>
         Cancel
       </button>
       <button
-        class={styleDialogButton}
+        class={renamePlButton}
         onClick={() => props.close(newName())}
-        disabled={Boolean(error())}>
+        disabled={Boolean(error())}
+      >
         Rename
       </button>
     </dialog>

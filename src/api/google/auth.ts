@@ -1,43 +1,51 @@
-type AccessTokenResponse = {
+import { generateUrl } from "./generateUrl";
+
+interface AccessTokenResponse {
   accessToken: string;
   expiresIn: number;
   refreshToken: string;
   scope: string;
   tokenType: string;
-};
+}
 
+/**
+ * 認証コードやリフレッシュトークンとアクセストークンを交換する
+ * @param redirectUri 認証コードの交換に使用するリダイレクトURI文字列
+ * @param code 認証コード
+ * @returns 成功した場合はアクセストークンを含むオブジェクト
+ * @throws {Error} 認証が失敗した場合
+ */
 export const requestAccessToken = async (
-  redirectUri: string,
-  code?: string
+  redirectUri?: string,
+  code?: string,
 ): Promise<AccessTokenResponse> => {
-  const url =
-    "/api/token?redirect_uri=" + redirectUri + (code ? "&code=" + code : "");
+  const url = generateUrl("/api/token", [
+    ["redirect_uri", redirectUri],
+    ["code", code],
+  ]);
   const response = await fetch(url);
-  const json = await response.json();
-  console.log("request response", json);
-  if (!("access_token" in json)) {
+  const {
+    access_token: accessToken,
+    expires_in: expiresIn,
+    refresh_token: refreshToken,
+    scope,
+    token_type: tokenType,
+  } = (await response.json()) as {
+    access_token?: string;
+    expires_in: number;
+    refresh_token: string;
+    scope: string;
+    token_type: string;
+  };
+  if (accessToken === undefined) {
     throw new Error("authorize failure");
   }
 
-  return snake2camel(json) as AccessTokenResponse;
-};
-
-export const refreshAccessToken = async (): Promise<AccessTokenResponse> => {
-  const response = await fetch("/api/token");
-  const json = await response.json();
-  console.log("refresh response", json);
-  if (!("access_token" in json)) {
-    throw new Error("authorize failure");
-  }
-
-  return snake2camel(json) as AccessTokenResponse;
-};
-
-const snake2camel = (json: Record<string, unknown>) => {
-  return Object.fromEntries(
-    Object.entries(json).map(([k, v]) => [
-      k.replace(/_+(.?)/g, (_, p1) => p1.toUpperCase()),
-      v,
-    ])
-  );
+  return {
+    accessToken,
+    expiresIn,
+    refreshToken,
+    scope,
+    tokenType,
+  };
 };

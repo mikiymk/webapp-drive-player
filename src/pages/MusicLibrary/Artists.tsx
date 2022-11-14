@@ -3,12 +3,12 @@ import { createMemo, createSignal, For, Show } from "solid-js";
 import { AudioList } from "~/components/AudioList";
 import { audios } from "~/signals/audios";
 
-import { styleList } from "./style.css";
+import { list } from "./style.css";
 
-export type ArtistsProps = {
+interface ArtistsProps {
   play: (idList: readonly string[], index: number) => void;
   reset: () => void;
-};
+}
 
 /**
  * list of musics
@@ -40,17 +40,17 @@ export const Artists = (props: ArtistsProps) => {
         <button onClick={() => props.reset()}>Artists</button>
         {" > "}
         <Show when={selected()} fallback="select Artist" keyed>
-          {selected => <button onClick={() => select()}>{selected}</button>}
+          {(selected) => <button onClick={() => select()}>{selected}</button>}
         </Show>
       </h2>
 
-      <div class={styleList}>
+      <div class={list}>
         <Show
           when={artist()}
           fallback={
             <ul>
               <For each={Object.keys(artists())}>
-                {artist => (
+                {(artist) => (
                   <li>
                     <button onClick={() => select(artist)}>{artist}</button>
                   </li>
@@ -58,8 +58,9 @@ export const Artists = (props: ArtistsProps) => {
               </For>
             </ul>
           }
-          keyed>
-          {selected => <AudioList audios={selected} play={props.play} />}
+          keyed
+        >
+          {(selected) => <AudioList audios={selected} play={props.play} />}
         </Show>
       </div>
     </>

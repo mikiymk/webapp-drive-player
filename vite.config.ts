@@ -39,7 +39,7 @@ const config = defineConfig(({ mode, command }) => {
         /* eslint-enable camelcase */
       },
       workbox: {},
-    })
+    }),
   );
   if (command === "serve") plugins.push(eslintPlugin());
 
@@ -64,7 +64,7 @@ const config = defineConfig(({ mode, command }) => {
         filename: "dist/stats.html",
         gzipSize: true,
         brotliSize: true,
-      })
+      }),
     );
 
   const test: UserConfig["test"] = {};

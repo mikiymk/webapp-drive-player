@@ -6,13 +6,13 @@ import { createRef } from "~/hooks/createRef";
 import { MenuContext } from "./MenuContext";
 import { MenuSeparator } from "./MenuSeparator";
 import { getMenuSize } from "./getMenuSize";
-import { styleRightMenu } from "./style.css";
+import { rightMenu } from "./style.css";
 
 import type { JSXElement } from "solid-js";
 
-export type MenuProps = {
+interface MenuProps {
   children: JSXElement;
-};
+}
 
 /** show on right click */
 export const Menu = (props: MenuProps) => {
@@ -22,20 +22,21 @@ export const Menu = (props: MenuProps) => {
   return (
     <Show when={visible()}>
       <div
-        class={styleRightMenu}
+        class={rightMenu}
         style={{
           top: getMenuSize(
             top(),
             current()?.clientHeight ?? 0,
-            window.innerHeight
+            window.innerHeight,
           ),
           left: getMenuSize(
             left(),
             current()?.clientWidth ?? 0,
-            window.innerWidth
+            window.innerWidth,
           ),
         }}
-        ref={ref}>
+        ref={ref}
+      >
         <button onClick={() => closeMenu()}>
           <IconClose />
         </button>

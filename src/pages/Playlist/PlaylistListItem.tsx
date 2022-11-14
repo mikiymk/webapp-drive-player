@@ -3,29 +3,27 @@ import { createMemo } from "solid-js";
 import { IconDotInfo } from "~/components/Icon";
 import { usePopMenu } from "~/components/PopUpMenu";
 import { formatTime } from "~/format";
-import { audios } from "~/signals/audios";
-import { playlists } from "~/signals/playlists";
+import { getAudio } from "~/signals/audios";
+import { getPlaylist } from "~/signals/playlists";
 
 const calcTotalDuration = (audioList: readonly string[]): number => {
-  const audioMap = audios();
-
   let totalDuration = 0;
   for (const audio of audioList) {
-    const { duration } = audioMap.get(audio) ?? { duration: 0 };
+    const { duration } = getAudio(audio) ?? { duration: 0 };
     totalDuration += duration;
   }
 
   return totalDuration;
 };
 
-export type PlaylistListItemProps = {
+interface PlaylistListItemProps {
   name: string;
-};
+}
 
 export const PlaylistListItem = (props: PlaylistListItemProps) => {
   const popMenu = usePopMenu();
   const playlistDuration = createMemo(() => {
-    const playlist = playlists().get(props.name);
+    const playlist = getPlaylist(props.name);
     if (!playlist) return 0;
     return calcTotalDuration(playlist);
   });

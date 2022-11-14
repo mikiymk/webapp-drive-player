@@ -12,10 +12,11 @@ export const Authorize = () => {
     <Show
       when={accessToken() !== undefined}
       fallback={
-        <NavItem icon={<IconSignIn />} onClick={() => signIn()}>
+        <NavItem icon={<IconSignIn />} onClick={() => void signIn()}>
           Sign In
         </NavItem>
-      }>
+      }
+    >
       <NavItem icon={<IconSignOut />} onClick={() => signOut()}>
         Sign Out
       </NavItem>
