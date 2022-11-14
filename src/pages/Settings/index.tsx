@@ -6,14 +6,14 @@ import { audios } from "~/signals/audios";
 import { playlists } from "~/signals/playlists";
 
 import { Load } from "./Load";
-import { styleSettings } from "./style.css";
+import { settings } from "./style.css";
 
 /**
  * now playing audio info view
  */
 export const Settings = () => {
   return (
-    <div class={styleSettings}>
+    <div class={settings}>
       <Load load={syncLibrary}>
         <IconUpload />
         <IconDownload />
