@@ -2,8 +2,7 @@ import { request } from "https";
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const accessCodeAge = 60 * 60 * 24 * 30;
-const refreshTokenAge = 60 * 60 * 24;
+const tokenAge = 60 * 60 * 24 * 30;
 
 type RequestError = { requestError: string };
 type AuthResponse =
@@ -76,30 +75,15 @@ const refresh = (refreshToken: string) => {
   ]);
 };
 
-const setCodeCookie = (apiRes: VercelResponse, code: string) => {
-  apiRes.setHeader(
-    "Set-Cookie",
-    `code=${code}; SameSite=Strict; Secure; HttpOnly; Max-Age=${accessCodeAge};`
-  );
-};
-
-const setRefreshTokenCookie = (
-  apiRes: VercelResponse,
-  refreshToken: string
-) => {
-  apiRes.setHeader(
-    "Set-Cookie",
-    `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${refreshTokenAge};`
-  );
+const setRefreshTokenCookie = (refreshToken: string) => {
+  return `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${tokenAge};`;
 };
 
 const requestAuth = async (
   code: string | undefined,
-  codeCookie: string | undefined,
   redirectUri: string | undefined
 ): Promise<AuthResponse | RequestError> => {
   if (code && redirectUri) return exchangeToken(code, redirectUri);
-  if (codeCookie && redirectUri) return exchangeToken(codeCookie, redirectUri);
 
   // missing required parameter
   return {
@@ -110,30 +94,27 @@ const requestAuth = async (
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
   let t;
   const code = typeof (t = apiReq.query["code"]) === "string" ? t : t?.[0];
-  const codeCookie = apiReq.cookies["code"];
   const redirectUri =
     typeof (t = apiReq.query["redirect_uri"]) === "string" ? t : t?.[0];
   const refreshToken = apiReq.cookies["refresh_token"];
 
-  if (code) {
-    setCodeCookie(apiRes, code);
-  } else if (codeCookie) {
-    setCodeCookie(apiRes, codeCookie);
-  }
+  const cookies: string[] = [];
 
   let response;
   if (refreshToken) {
-    setRefreshTokenCookie(apiRes, refreshToken);
+    cookies.push(setRefreshTokenCookie(refreshToken));
+
     response = await refresh(refreshToken);
   }
 
   if (!response || "requestError" in response) {
-    response = await requestAuth(code, codeCookie, redirectUri);
+    response = await requestAuth(code, redirectUri);
 
     if ("refresh_token" in response) {
-      setRefreshTokenCookie(apiRes, response.refresh_token);
+      cookies.push(setRefreshTokenCookie(response.refresh_token));
     }
   }
 
+  apiRes.setHeader("Set-Cookie", cookies);
   apiRes.status(200).send(response);
 };
