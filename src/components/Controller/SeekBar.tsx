@@ -1,7 +1,7 @@
-import { styleSeekBar } from "./style.css";
+import { seekBar } from "./style.css";
 import { useSeekTime } from "./useSeekTime";
 
-export interface SeekBarProps {
+interface SeekBarProps {
   duration: number;
   time: number;
   seek: (time: number) => void;
@@ -16,7 +16,7 @@ export const SeekBar = (props: SeekBarProps) => {
 
   return (
     <input
-      class={styleSeekBar}
+      class={seekBar}
       type="range"
       min="0"
       max={props.duration * 1000}

@@ -16,12 +16,12 @@ import {
 import { MusicTime } from "./MusicTime";
 import { MusicTitle } from "./MusicTitle";
 import { SeekBar } from "./SeekBar";
-import { styleButton, styleController } from "./style.css";
+import { iconButton, controller } from "./style.css";
 
 import type { AudioInfo } from "~/audio/AudioInfo";
 import type { RepeatType } from "~/audio/Repeat";
 
-export interface ControllerProps {
+interface ControllerProps {
   info: AudioInfo;
   duration: number;
   currentTime: number;
@@ -51,27 +51,27 @@ export const Controller = (props: ControllerProps) => {
         time={props.currentTime}
         seek={props.seek}
       />
-      <div class={styleController}>
-        <button class={styleButton} onClick={() => props.playPrev()}>
+      <div class={controller}>
+        <button class={iconButton} onClick={() => props.playPrev()}>
           <IconSkipPrev />
         </button>
         <Show
           when={props.paused}
           fallback={
-            <button class={styleButton} onClick={() => props.pause()}>
+            <button class={iconButton} onClick={() => props.pause()}>
               <IconPause />
             </button>
           }
         >
-          <button class={styleButton} onClick={() => props.play()}>
+          <button class={iconButton} onClick={() => props.play()}>
             <IconPlay />
           </button>
         </Show>
-        <button class={styleButton} onClick={() => props.playNext()}>
+        <button class={iconButton} onClick={() => props.playNext()}>
           <IconSkipNext />
         </button>
         <MusicTitle info={props.info} />
-        <button class={styleButton} onClick={() => toggleRepeat()}>
+        <button class={iconButton} onClick={() => toggleRepeat()}>
           <Switch fallback={<IconRepeatOff />}>
             <Match when={props.repeat === RepeatOn}>
               <IconRepeatOn />
@@ -81,7 +81,7 @@ export const Controller = (props: ControllerProps) => {
             </Match>
           </Switch>
         </button>
-        <button class={styleButton} onClick={() => toggleShuffle()}>
+        <button class={iconButton} onClick={() => toggleShuffle()}>
           <Show when={props.shuffle} fallback={<IconShuffleOff />}>
             <IconShuffleOn />
           </Show>

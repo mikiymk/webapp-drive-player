@@ -2,7 +2,7 @@ import { style } from "@vanilla-extract/css";
 
 import { vars } from "../AppRoot/style.css";
 
-export const styleController = style({
+export const controller = style({
   display: "grid",
   justifyContent: "center",
   flex: "0 0 3rem",
@@ -17,14 +17,14 @@ export const styleController = style({
   },
 });
 
-export const styleButton = style({
+export const iconButton = style({
   height: "3rem",
   width: "3rem",
   textAlign: "center",
   justifySelf: "center",
 });
 
-export const styleSeekBar = style({
+export const seekBar = style({
   flex: "0 0 0.5rem",
   backgroundColor: vars.color.primDark,
 
@@ -35,7 +35,7 @@ export const styleSeekBar = style({
   },
 });
 
-export const styleTitleView = style({
+export const titleBox = style({
   flex: "1 0 calc(100vw - 30rem)",
   gridColumn: "1 / -1",
   gridRow: "1",
@@ -44,17 +44,17 @@ export const styleTitleView = style({
   flexDirection: "column",
 });
 
-export const styleTitle = style({
+export const title = style({
   flex: "3 1 1rem",
   fontSize: "1.5rem",
 });
 
-export const styleArtist = style({
+export const artist = style({
   flex: "2 1 1rem",
   fontSize: "0.8rem",
 });
 
-export const styleTime = style({
+export const timeBox = style({
   display: "none",
   margin: "0.9rem 0",
   minWidth: "12ch",
