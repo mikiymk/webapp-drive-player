@@ -3,9 +3,9 @@ import { createMemo, createSignal, Show, For } from "solid-js";
 import { AudioList } from "~/components/AudioList";
 import { audios } from "~/signals/audios";
 
-import { styleList } from "./style.css";
+import { list } from "./style.css";
 
-export interface AlbumsProps {
+interface AlbumsProps {
   play: (idList: readonly string[], index: number) => void;
   reset: () => void;
 }
@@ -57,7 +57,7 @@ export const Albums = (props: AlbumsProps) => {
         </Show>
       </h2>
 
-      <div class={styleList}>
+      <div class={list}>
         <Show
           when={album()}
           fallback={
