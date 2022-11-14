@@ -1,21 +1,21 @@
 // Vitest Snapshot v1
 
-exports[`1 second 1`] = `
+exports[`snapshot app 1`] = `
 <div>
   <div
     class="style_stylePlayer__12rw3ob9 style_themeClass__12rw3ob0"
   >
     <ul
-      class="style_styleNav__1bi6wwc0"
+      class="style_tab__1bi6wwc0"
     >
       <li
-        class="style_styleNavItem__1bi6wwc1 style_styleNavSelected__1bi6wwc3"
+        class="style_tabItem__1bi6wwc1 style_tabItemSelected__1bi6wwc4"
       >
         <button
-          class="style_styleNavItemButton__1bi6wwc2"
+          class="style_tabItemButton__1bi6wwc2"
         >
           <svg
-            class="style_styleIcon__7h3wg50"
+            class="style_icon__7h3wg50"
             viewBox="0 0 24 24"
           >
             <path
@@ -23,20 +23,20 @@ exports[`1 second 1`] = `
             />
           </svg>
           <span
-            class="style_styleLabel__1bi6wwc5"
+            class="style_tabItemLabel__1bi6wwc3"
           >
             Now Playing
           </span>
         </button>
       </li>
       <li
-        class="style_styleNavItem__1bi6wwc1"
+        class="style_tabItem__1bi6wwc1"
       >
         <button
-          class="style_styleNavItemButton__1bi6wwc2"
+          class="style_tabItemButton__1bi6wwc2"
         >
           <svg
-            class="style_styleIcon__7h3wg50"
+            class="style_icon__7h3wg50"
             viewBox="0 0 24 24"
           >
             <path
@@ -44,20 +44,20 @@ exports[`1 second 1`] = `
             />
           </svg>
           <span
-            class="style_styleLabel__1bi6wwc5"
+            class="style_tabItemLabel__1bi6wwc3"
           >
             Library
           </span>
         </button>
       </li>
       <li
-        class="style_styleNavItem__1bi6wwc1"
+        class="style_tabItem__1bi6wwc1"
       >
         <button
-          class="style_styleNavItemButton__1bi6wwc2"
+          class="style_tabItemButton__1bi6wwc2"
         >
           <svg
-            class="style_styleIcon__7h3wg50"
+            class="style_icon__7h3wg50"
             viewBox="0 0 24 24"
           >
             <path
@@ -65,20 +65,20 @@ exports[`1 second 1`] = `
             />
           </svg>
           <span
-            class="style_styleLabel__1bi6wwc5"
+            class="style_tabItemLabel__1bi6wwc3"
           >
             Playlist
           </span>
         </button>
       </li>
       <li
-        class="style_styleNavItem__1bi6wwc1"
+        class="style_tabItem__1bi6wwc1"
       >
         <button
-          class="style_styleNavItemButton__1bi6wwc2"
+          class="style_tabItemButton__1bi6wwc2"
         >
           <svg
-            class="style_styleIcon__7h3wg50"
+            class="style_icon__7h3wg50"
             viewBox="0 0 24 24"
           >
             <path
@@ -86,20 +86,20 @@ exports[`1 second 1`] = `
             />
           </svg>
           <span
-            class="style_styleLabel__1bi6wwc5"
+            class="style_tabItemLabel__1bi6wwc3"
           >
             Google Drive
           </span>
         </button>
       </li>
       <li
-        class="style_styleNavItem__1bi6wwc1"
+        class="style_tabItem__1bi6wwc1"
       >
         <button
-          class="style_styleNavItemButton__1bi6wwc2"
+          class="style_tabItemButton__1bi6wwc2"
         >
           <svg
-            class="style_styleIcon__7h3wg50"
+            class="style_icon__7h3wg50"
             viewBox="0 0 24 24"
           >
             <path
@@ -107,20 +107,20 @@ exports[`1 second 1`] = `
             />
           </svg>
           <span
-            class="style_styleLabel__1bi6wwc5"
+            class="style_tabItemLabel__1bi6wwc3"
           >
             Settings
           </span>
         </button>
       </li>
       <li
-        class="style_styleNavItem__1bi6wwc1"
+        class="style_tabItem__1bi6wwc1"
       >
         <button
-          class="style_styleNavItemButton__1bi6wwc2"
+          class="style_tabItemButton__1bi6wwc2"
         >
           <svg
-            class="style_styleIcon__7h3wg50"
+            class="style_icon__7h3wg50"
             viewBox="0 0 24 24"
           >
             <path
@@ -128,7 +128,7 @@ exports[`1 second 1`] = `
             />
           </svg>
           <span
-            class="style_styleLabel__1bi6wwc5"
+            class="style_tabItemLabel__1bi6wwc3"
           >
             Sign In
           </span>
@@ -136,17 +136,17 @@ exports[`1 second 1`] = `
       </li>
     </ul>
     <div
-      class="style_styleContent__1bi6wwc4"
+      class="style_content__1bi6wwc5"
     >
       <div
-        class="style_stylePlaying__plyebw0"
+        class="style_playing__plyebw0"
       >
         <svg
-          class="style_styleImage__plyebw1 style_styleNoImage__plyebw2"
+          class="style_image__plyebw1 style_noImage__plyebw2"
           viewBox="0 0 100 100"
         >
           <path
-            class="style_styleNoImageBG__plyebw3"
+            class="style_noImageBG__plyebw3"
             d="M0,0V100H100V0"
           />
           <text
@@ -167,7 +167,7 @@ exports[`1 second 1`] = `
           />
         </svg>
         <dl
-          class="style_styleInfo__plyebw4"
+          class="style_info__plyebw4"
         >
           <dt>
             Album
@@ -203,19 +203,19 @@ exports[`1 second 1`] = `
       </div>
     </div>
     <input
-      class="style_styleSeekBar__10xjpva2"
+      class="style_seekBar__10xjpva2"
       max="0"
       min="0"
       type="range"
     />
     <div
-      class="style_styleController__10xjpva0"
+      class="style_controller__10xjpva0"
     >
       <button
-        class="style_styleButton__10xjpva1"
+        class="style_iconButton__10xjpva1"
       >
         <svg
-          class="style_styleIcon__7h3wg50"
+          class="style_icon__7h3wg50"
           viewBox="0 0 24 24"
         >
           <path
@@ -224,10 +224,10 @@ exports[`1 second 1`] = `
         </svg>
       </button>
       <button
-        class="style_styleButton__10xjpva1"
+        class="style_iconButton__10xjpva1"
       >
         <svg
-          class="style_styleIcon__7h3wg50"
+          class="style_icon__7h3wg50"
           viewBox="0 0 24 24"
         >
           <path
@@ -236,10 +236,10 @@ exports[`1 second 1`] = `
         </svg>
       </button>
       <button
-        class="style_styleButton__10xjpva1"
+        class="style_iconButton__10xjpva1"
       >
         <svg
-          class="style_styleIcon__7h3wg50"
+          class="style_icon__7h3wg50"
           viewBox="0 0 24 24"
         >
           <path
@@ -248,17 +248,17 @@ exports[`1 second 1`] = `
         </svg>
       </button>
       <span
-        class="style_styleTitleView__10xjpva3"
+        class="style_titleBox__10xjpva3"
       >
         <span
-          class="style_styleMarquee__r2bqb91 style_styleTitle__10xjpva4"
+          class="style_marquee__r2bqb91 style_title__10xjpva4"
         >
           <span
             class="style_styleInner__r2bqb92"
           />
         </span>
         <span
-          class="style_styleMarquee__r2bqb91 style_styleArtist__10xjpva5"
+          class="style_marquee__r2bqb91 style_artist__10xjpva5"
         >
           <span
             class="style_styleInner__r2bqb92"
@@ -266,10 +266,10 @@ exports[`1 second 1`] = `
         </span>
       </span>
       <button
-        class="style_styleButton__10xjpva1"
+        class="style_iconButton__10xjpva1"
       >
         <svg
-          class="style_styleIcon__7h3wg50"
+          class="style_icon__7h3wg50"
           viewBox="0 0 24 24"
         >
           <path
@@ -278,10 +278,10 @@ exports[`1 second 1`] = `
         </svg>
       </button>
       <button
-        class="style_styleButton__10xjpva1"
+        class="style_iconButton__10xjpva1"
       >
         <svg
-          class="style_styleIcon__7h3wg50"
+          class="style_icon__7h3wg50"
           viewBox="0 0 24 24"
         >
           <path
@@ -290,7 +290,7 @@ exports[`1 second 1`] = `
         </svg>
       </button>
       <span
-        class="style_styleTime__10xjpva6"
+        class="style_timeBox__10xjpva6"
       >
         00:00
         /

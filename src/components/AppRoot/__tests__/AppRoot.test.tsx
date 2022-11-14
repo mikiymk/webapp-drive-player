@@ -3,7 +3,7 @@ import { expect, test, vi } from "vitest";
 
 import { MusicPlayer } from "../index";
 
-test("1 second", () => {
+test("snapshot app", () => {
   window.AudioContext = vi.fn();
   window.fetch = vi.fn(() =>
     Promise.resolve({
