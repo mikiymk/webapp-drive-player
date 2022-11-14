@@ -12,7 +12,7 @@ export const generateUrl = (url: string, querys: Query[]) => {
     "?" +
     new URLSearchParams(
       querys
-        .filter(([, value]) => value !== undefined)
+        .filter(([, value]) => value)
         .map(([key, value]) => [key, String(value)]),
     ).toString()
   );
