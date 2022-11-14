@@ -1,12 +1,12 @@
 import { Show } from "solid-js";
 
 import { NoImage } from "./NoImage";
-import { styleImage, styleInfo, stylePlaying } from "./style.css";
+import { image, info, playing } from "./style.css";
 import useJacket from "./useJacket";
 
 import type { AudioInfo } from "~/audio/AudioInfo";
 
-export interface PlayingProps {
+interface PlayingProps {
   info: AudioInfo;
 }
 
@@ -17,11 +17,11 @@ export const Playing = (props: PlayingProps) => {
   const jacket = useJacket(() => props.info.picture);
 
   return (
-    <div class={stylePlaying}>
+    <div class={playing}>
       <Show when={jacket()} fallback={<NoImage />} keyed>
-        {(jacket) => <img src={jacket} alt="album jacket" class={styleImage} />}
+        {(jacket) => <img src={jacket} alt="album jacket" class={image} />}
       </Show>
-      <dl class={styleInfo}>
+      <dl class={info}>
         <dt>Album</dt>
         <dd>{props.info.album}</dd>
         <dt>Album Artist</dt>
