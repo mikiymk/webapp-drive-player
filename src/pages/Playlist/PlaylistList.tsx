@@ -7,9 +7,9 @@ import { MakePlaylistButton } from "./MakePlaylistButton";
 import { PlaylistListItem } from "./PlaylistListItem";
 import { PlaylistListMenu } from "./PlaylistListMenu";
 import { RenameDialog } from "./RenameDialog";
-import { stylePlaylists } from "./style.css";
+import { plAll } from "./style.css";
 
-export interface PlaylistListProps {
+interface PlaylistListProps {
   select: (playlist: string) => void;
 }
 
@@ -32,7 +32,7 @@ export const PlaylistList = (props: PlaylistListProps) => {
 
   return (
     <>
-      <ul class={stylePlaylists}>
+      <ul class={plAll}>
         <For each={Array.from(playlists())}>
           {(playlist) => (
             <MenuProvider

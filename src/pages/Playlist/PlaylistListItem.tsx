@@ -18,7 +18,7 @@ const calcTotalDuration = (audioList: readonly string[]): number => {
   return totalDuration;
 };
 
-export interface PlaylistListItemProps {
+interface PlaylistListItemProps {
   name: string;
 }
 

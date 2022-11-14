@@ -3,7 +3,7 @@ import { Show, createSignal } from "solid-js";
 import { Playlist } from "./Playlist";
 import { PlaylistList } from "./PlaylistList";
 
-export interface PlaylistsProps {
+interface PlaylistsProps {
   playsList: (list: readonly string[], index: number) => void;
 }
 

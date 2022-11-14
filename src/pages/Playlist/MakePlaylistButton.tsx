@@ -1,8 +1,8 @@
 import { createSignal } from "solid-js";
 
-import { styleMakePlaylist } from "./style.css";
+import { makePlButton } from "./style.css";
 
-export interface MakePlaylistButtonProps {
+interface MakePlaylistButtonProps {
   makePlaylist: (playlist: string) => void;
 }
 
@@ -25,7 +25,7 @@ export const MakePlaylistButton = (props: MakePlaylistButtonProps) => {
   };
 
   return (
-    <span class={styleMakePlaylist}>
+    <span class={makePlButton}>
       <button onClick={addPlaylist}>add playlist</button>
       <input
         type="text"

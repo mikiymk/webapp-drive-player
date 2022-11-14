@@ -1,7 +1,7 @@
 import { Menu, MenuItem, MenuSeparator } from "~/components/PopUpMenu";
 import { deletePlaylist, renamePlaylist } from "~/signals/playlists";
 
-export interface PlaylistListMenuProps {
+interface PlaylistListMenuProps {
   name: string;
   select: (name: string) => void;
   openDialog: (name: string, onClose: (name?: string) => void) => void;
