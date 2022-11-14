@@ -6,7 +6,7 @@ import { addAudio, playlists } from "~/signals/playlists";
 import type { JSXElement } from "solid-js";
 import type { AudioID } from "~/signals/audios";
 
-export interface AudioListMenuProps {
+interface AudioListMenuProps {
   item: AudioID;
   play: () => void;
   extendMenu: JSXElement;

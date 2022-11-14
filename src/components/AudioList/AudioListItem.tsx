@@ -4,11 +4,11 @@ import { IconDotInfo } from "~/components/Icon";
 
 import { usePopMenu } from "~/components/PopUpMenu";
 
-import { sDot, sItem, sItemArtist } from "./style.css";
+import { itemMore, item, itemArtist } from "./style.css";
 
 import type { AudioInfo } from "~/audio/AudioInfo";
 
-export interface AudioListItemProps {
+interface AudioListItemProps {
   audio: AudioInfo;
   play: () => void;
 }
@@ -20,7 +20,7 @@ export const AudioListItem = (props: AudioListItemProps) => {
   return (
     <tr
       classList={{
-        [sItem]: true,
+        [item]: true,
         selected: selected(),
       }}
       onClick={() => setSelected(true)}
@@ -29,8 +29,8 @@ export const AudioListItem = (props: AudioListItemProps) => {
       onContextMenu={popMenu}
     >
       <td>{props.audio.title}</td>
-      <td class={sItemArtist}>{props.audio.artists.join()}</td>
-      <td class={sDot}>
+      <td class={itemArtist}>{props.audio.artists.join()}</td>
+      <td class={itemMore}>
         <button onClick={popMenu}>
           <IconDotInfo />
         </button>

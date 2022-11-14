@@ -2,26 +2,26 @@ import { style } from "@vanilla-extract/css";
 
 import { vars } from "../AppRoot/style.css";
 
-export const sList = style({
+export const list = style({
   width: "100%",
   overflowY: "scroll",
 });
 
-export const sHead = style({
+export const head = style({
   background: vars.color.primDark,
   position: "sticky",
   top: 0,
 });
 
-export const sBody = style({
+export const body = style({
   height: "100%",
 });
 
-export const sItem = style({
+export const item = style({
   borderBottom: "solid 1px " + vars.color.prim,
 });
 
-export const sItemArtist = style({
+export const itemArtist = style({
   display: "none",
 
   "@media": {
@@ -31,6 +31,6 @@ export const sItemArtist = style({
   },
 });
 
-export const sDot = style({
+export const itemMore = style({
   width: "1rem",
 });
