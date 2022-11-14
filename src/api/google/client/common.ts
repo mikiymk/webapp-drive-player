@@ -91,7 +91,7 @@ export const openAuthWindow = <T>(
   ].join();
 
   const authWindow = window.open(validatePopUpUrl(url), target, features);
-  if (!authWindow || authWindow.closed) return null;
+  if (!authWindow || authWindow.closed) return undefined;
 
   authWindow.focus();
   authWindow.onclose = () => promise.reject("window closed");

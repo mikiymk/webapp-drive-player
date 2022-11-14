@@ -16,12 +16,12 @@ const getCachedFileID = async (
 export const getSettingFile = async <T>(
   token: string,
   fileName: string,
-): Promise<T | null> => {
+): Promise<T | undefined> => {
   const id = await getCachedFileID(token, fileName);
-  if (id === undefined) return null;
+  if (id === undefined) return undefined;
 
   const response = await getGoogleFile(token, id);
-  if (response === undefined) return null;
+  if (response === undefined) return undefined;
 
   return response.json() as Promise<T>;
 };
