@@ -106,20 +106,27 @@ const requestAuth = async (
 
   // missing required parameter
   return {
-    requestError: "missing required parameter: code, refresh_token",
+    requestError: "missing required parameter: code",
   };
 };
 
+const firstQuery = (
+  query: string | string[] | undefined,
+): string | undefined => {
+  if (typeof query === "object") {
+    return query[0];
+  }
+  return query;
+};
+
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
-  let t;
-  const code = typeof (t = apiReq.query["code"]) === "string" ? t : t?.[0];
-  const redirectUri =
-    typeof (t = apiReq.query["redirect_uri"]) === "string" ? t : t?.[0];
+  const code = apiReq.body as string;
+  const redirectUri = firstQuery(apiReq.query["redirect_uri"]);
   const refreshToken = apiReq.cookies["refresh_token"];
 
   const cookies: string[] = [];
 
-  let response;
+  let response: AuthResponse | RequestError | undefined;
   if (refreshToken) {
     cookies.push(setRefreshTokenCookie(refreshToken));
 
