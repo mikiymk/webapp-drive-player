@@ -2,17 +2,17 @@ import { style } from "@vanilla-extract/css";
 
 import { vars } from "../AppRoot/style.css";
 
-export const styleNav = style({
+export const tab = style({
   flex: "0 0 max-content",
   backgroundColor: vars.color.prim,
   textAlign: "center",
 });
 
-export const styleNavItem = style({
+export const tabItem = style({
   display: "inline-block",
 });
 
-export const styleNavItemButton = style({
+export const tabItemButton = style({
   padding: "0.5rem",
   whiteSpace: "nowrap",
 
@@ -23,18 +23,7 @@ export const styleNavItemButton = style({
   },
 });
 
-export const styleNavSelected = style({
-  backgroundColor: vars.color.primLight,
-});
-
-export const styleContent = style({
-  flex: "1 0 0",
-  backgroundColor: vars.color.primLight,
-  display: "flex",
-  flexDirection: "column",
-});
-
-export const styleLabel = style({
+export const tabItemLabel = style({
   display: "none",
   marginLeft: "0.5rem",
 
@@ -43,4 +32,15 @@ export const styleLabel = style({
       display: "unset",
     },
   },
+});
+
+export const tabItemSelected = style({
+  backgroundColor: vars.color.primLight,
+});
+
+export const content = style({
+  flex: "1 0 0",
+  backgroundColor: vars.color.primLight,
+  display: "flex",
+  flexDirection: "column",
 });

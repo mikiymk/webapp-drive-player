@@ -9,7 +9,7 @@ import {
 
 import { Authorize } from "./Authorize";
 import { NavItem } from "./NavItem";
-import { styleContent, styleNav } from "./style.css";
+import { content, tab } from "./style.css";
 
 import type { Accessor, JSXElement } from "solid-js";
 
@@ -52,7 +52,7 @@ export const Menu = (props: MenuProps) => {
 
   return (
     <MenuContext.Provider value={{ selected, addItem }}>
-      <ul class={styleNav}>
+      <ul class={tab}>
         <For each={items()}>
           {(item) => (
             <NavItem
@@ -66,7 +66,7 @@ export const Menu = (props: MenuProps) => {
         </For>
         <Authorize />
       </ul>
-      <div class={styleContent}>{props.children}</div>
+      <div class={content}>{props.children}</div>
     </MenuContext.Provider>
   );
 };

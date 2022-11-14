@@ -1,8 +1,8 @@
 import {
-  styleLabel,
-  styleNavItem,
-  styleNavItemButton,
-  styleNavSelected,
+  tabItemLabel,
+  tabItem,
+  tabItemButton,
+  tabItemSelected,
 } from "./style.css";
 
 import type { JSXElement } from "solid-js";
@@ -19,13 +19,13 @@ export const NavItem = (props: Props) => {
   return (
     <li
       classList={{
-        [styleNavItem]: true,
-        [styleNavSelected]: props.selected,
+        [tabItem]: true,
+        [tabItemSelected]: props.selected,
       }}
     >
-      <button class={styleNavItemButton} onClick={() => props.onClick()}>
+      <button class={tabItemButton} onClick={() => props.onClick()}>
         {props.icon}
-        <span class={styleLabel}>{props.children}</span>
+        <span class={tabItemLabel}>{props.children}</span>
       </button>
     </li>
   );
