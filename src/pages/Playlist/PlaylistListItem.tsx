@@ -4,7 +4,7 @@ import { IconDotInfo } from "~/components/Icon";
 import { usePopMenu } from "~/components/PopUpMenu";
 import { formatTime } from "~/format";
 import { getAudio } from "~/signals/audios";
-import { playlists } from "~/signals/playlists";
+import { getPlaylist } from "~/signals/playlists";
 
 const calcTotalDuration = (audioList: readonly string[]): number => {
   let totalDuration = 0;
@@ -23,7 +23,7 @@ interface PlaylistListItemProps {
 export const PlaylistListItem = (props: PlaylistListItemProps) => {
   const popMenu = usePopMenu();
   const playlistDuration = createMemo(() => {
-    const playlist = playlists().get(props.name);
+    const playlist = getPlaylist(props.name);
     if (!playlist) return 0;
     return calcTotalDuration(playlist);
   });

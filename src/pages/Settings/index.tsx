@@ -3,7 +3,7 @@ import { IconDownload, IconUpload } from "~/components/Icon";
 
 import { accessToken } from "~/signals/access-token";
 import { audios } from "~/signals/audios";
-import { playlists } from "~/signals/playlists";
+import { getPlaylistEntries } from "~/signals/playlists";
 
 import { Load } from "./Load";
 import { settings } from "./style.css";
@@ -37,7 +37,7 @@ const syncLibrary = async () => {
   const playlistResponsePromise = postSettingFile(
     token,
     "playlists.json",
-    Array.from(playlists()),
+    getPlaylistEntries(),
   );
 
   const [libraryResponse, playlistResponse] = await Promise.all([

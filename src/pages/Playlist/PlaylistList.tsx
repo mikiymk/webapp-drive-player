@@ -1,7 +1,7 @@
 import { batch, createSignal, For, Show } from "solid-js";
 
 import { MenuProvider } from "~/components/PopUpMenu";
-import { makePlaylist, playlists } from "~/signals/playlists";
+import { getPlaylistEntries, makePlaylist } from "~/signals/playlists";
 
 import { MakePlaylistButton } from "./MakePlaylistButton";
 import { PlaylistListItem } from "./PlaylistListItem";
@@ -33,7 +33,7 @@ export const PlaylistList = (props: PlaylistListProps) => {
   return (
     <>
       <ul class={plAll}>
-        <For each={Array.from(playlists())}>
+        <For each={getPlaylistEntries()}>
           {(playlist) => (
             <MenuProvider
               menu={
