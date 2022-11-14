@@ -2,8 +2,7 @@ import { request } from "https";
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-const accessCodeAge = 60 * 60 * 24 * 30;
-const refreshTokenAge = 60 * 60 * 24;
+const tokenAge = 60 * 60 * 24 * 30;
 
 type RequestError = { requestError: string };
 type AuthResponse =
@@ -76,21 +75,15 @@ const refresh = (refreshToken: string) => {
   ]);
 };
 
-const setCodeCookie = (code: string) => {
-  return `code=${code}; SameSite=Strict; Secure; HttpOnly; Max-Age=${accessCodeAge};`;
-};
-
 const setRefreshTokenCookie = (refreshToken: string) => {
-  return `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${refreshTokenAge};`;
+  return `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${tokenAge};`;
 };
 
 const requestAuth = async (
   code: string | undefined,
-  codeCookie: string | undefined,
   redirectUri: string | undefined
 ): Promise<AuthResponse | RequestError> => {
   if (code && redirectUri) return exchangeToken(code, redirectUri);
-  if (codeCookie && redirectUri) return exchangeToken(codeCookie, redirectUri);
 
   // missing required parameter
   return {
@@ -101,18 +94,11 @@ const requestAuth = async (
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
   let t;
   const code = typeof (t = apiReq.query["code"]) === "string" ? t : t?.[0];
-  const codeCookie = apiReq.cookies["code"];
   const redirectUri =
     typeof (t = apiReq.query["redirect_uri"]) === "string" ? t : t?.[0];
   const refreshToken = apiReq.cookies["refresh_token"];
 
   const cookies: string[] = [];
-
-  // if (code) {
-  //   cookies.push(setCodeCookie(code));
-  // } else if (codeCookie) {
-  //   cookies.push(setCodeCookie(codeCookie));
-  // }
 
   let response;
   if (refreshToken) {
@@ -122,7 +108,7 @@ export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
   }
 
   if (!response || "requestError" in response) {
-    response = await requestAuth(code, codeCookie, redirectUri);
+    response = await requestAuth(code, redirectUri);
 
     if ("refresh_token" in response) {
       cookies.push(setRefreshTokenCookie(response.refresh_token));
