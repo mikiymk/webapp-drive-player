@@ -23,22 +23,26 @@ export const requestAccessToken = async (
   const request = new Request(url, { method: "POST", body: code ?? null });
   const response = await fetch(request);
 
+  const json = (await response.json()) as
+    | {
+        access_token: string;
+        expires_in: number;
+        refresh_token: string;
+        scope: string;
+        token_type: string;
+      }
+    | { requestError: string };
+  if (!("access_token" in json)) {
+    throw new Error(json.requestError);
+  }
+
   const {
     access_token: accessToken,
     expires_in: expiresIn,
     refresh_token: refreshToken,
     scope,
     token_type: tokenType,
-  } = (await response.json()) as {
-    access_token?: string;
-    expires_in: number;
-    refresh_token: string;
-    scope: string;
-    token_type: string;
-  };
-  if (accessToken === undefined) {
-    throw new Error("authorize failure");
-  }
+  } = json;
 
   return {
     accessToken,
