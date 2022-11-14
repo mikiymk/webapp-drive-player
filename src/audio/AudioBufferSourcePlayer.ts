@@ -1,4 +1,4 @@
-import { audios } from "~/signals/audios";
+import { getAudio } from "~/signals/audios";
 
 import type { AudioPlayer } from "./AudioPlayer";
 
@@ -58,7 +58,7 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
       await awaited.arrayBuffer(),
     );
 
-    const info = id && audios().get(id);
+    const info = id && getAudio(id);
     info && (info.duration = this.buffer.duration);
     this.onUpdateDuration?.(this.buffer.duration);
   }

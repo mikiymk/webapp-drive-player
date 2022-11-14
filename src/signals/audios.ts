@@ -15,7 +15,7 @@ export const getAudio = (id: AudioID) => {
 };
 
 export const addAudios = (audios: AudioEntries) => {
-  setAudios((value) => new Map([...value, ...audios]));
+  setAudios((value) => new Map([...audios, ...value]));
 };
 
 export const setAudioInfo = (id: AudioID, info: AudioInfo) => {

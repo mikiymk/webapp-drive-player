@@ -3,15 +3,13 @@ import { createMemo } from "solid-js";
 import { IconDotInfo } from "~/components/Icon";
 import { usePopMenu } from "~/components/PopUpMenu";
 import { formatTime } from "~/format";
-import { audios } from "~/signals/audios";
+import { getAudio } from "~/signals/audios";
 import { playlists } from "~/signals/playlists";
 
 const calcTotalDuration = (audioList: readonly string[]): number => {
-  const audioMap = audios();
-
   let totalDuration = 0;
   for (const audio of audioList) {
-    const { duration } = audioMap.get(audio) ?? { duration: 0 };
+    const { duration } = getAudio(audio) ?? { duration: 0 };
     totalDuration += duration;
   }
 
