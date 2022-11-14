@@ -19,11 +19,10 @@ export const requestAccessToken = async (
   redirectUri?: string,
   code?: string,
 ): Promise<AccessTokenResponse> => {
-  const url = generateUrl("/api/token", [
-    ["redirect_uri", redirectUri],
-    ["code", code],
-  ]);
-  const response = await fetch(url);
+  const url = generateUrl("/api/token", [["redirect_uri", redirectUri]]);
+  const request = new Request(url, { method: "POST", body: code ?? null });
+  const response = await fetch(request);
+
   const {
     access_token: accessToken,
     expires_in: expiresIn,
