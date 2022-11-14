@@ -1,5 +1,5 @@
-import { styleLoading } from "./style.css";
+import { loading } from "./style.css";
 
 export const Loading = () => {
-  return <div class={styleLoading}>Loading...</div>;
+  return <div class={loading}>Loading...</div>;
 };

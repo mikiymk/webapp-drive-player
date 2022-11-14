@@ -7,7 +7,7 @@ import { Breadcrumbs } from "./Breadcrumbs";
 import { Loading } from "./Loading";
 import { audioEntryFromFile } from "./audioEntryFromGoogleFile";
 import { getAudiosFromFolder } from "./getAudiosFromFolder";
-import { styleDrive, styleItem } from "./style.css";
+import { gDrive, item } from "./style.css";
 import { useGDriveParents } from "./useGDriveParents";
 
 /**
@@ -17,7 +17,7 @@ export const DriveFiles = () => {
   const parents = useGDriveParents();
 
   return (
-    <div class={styleDrive}>
+    <div class={gDrive}>
       <Breadcrumbs parents={parents.parents()} move={parents.move} />
       <Show when={!parents.loading()} fallback={<Loading />}>
         <ul class="drive-list">
@@ -54,7 +54,7 @@ interface ItemFolderProps {
 
 const ItemFolder = (props: ItemFolderProps) => {
   return (
-    <li class={styleItem} onClick={() => props.move()}>
+    <li class={item} onClick={() => props.move()}>
       <IconFolder />
       <span>{props.name}</span>
       <button onClick={() => props.addFiles()}>
@@ -71,7 +71,7 @@ interface ItemFileProps {
 
 const ItemFile = (props: ItemFileProps) => {
   return (
-    <li class={styleItem} onClick={() => props.addFile()}>
+    <li class={item} onClick={() => props.addFile()}>
       <IconAudioFile />
       <span>{props.name}</span>
     </li>
