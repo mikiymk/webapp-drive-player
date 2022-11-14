@@ -8,6 +8,13 @@ interface AccessTokenResponse {
   tokenType: string;
 }
 
+/**
+ * 認証コードやリフレッシュトークンとアクセストークンを交換する
+ * @param redirectUri 認証コードの交換に使用するリダイレクトURI文字列
+ * @param code 認証コード
+ * @returns 成功した場合はアクセストークンを含むオブジェクト
+ * @throws {Error} 認証が失敗した場合
+ */
 export const requestAccessToken = async (
   redirectUri?: string,
   code?: string,

@@ -8,6 +8,10 @@ const SCOPES =
   "https://www.googleapis.com/auth/drive.readonly " +
   "https://www.googleapis.com/auth/drive.metadata.readonly";
 
+/**
+ * クライアントを初期化する
+ * @returns 新しいクライアントインスタンス
+ */
 export const initClient = () => {
   return new PopupCodeClient({
     clientId: CLIENT_ID,
