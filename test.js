@@ -1,7 +1,8 @@
 (() => {
   const performance = require("perf_hooks").performance;
-  let marr = length => Array.from({ length }).map((_, i) => ["s_" + i, i * i]);
-  let mmap = l => new Map(marr(l));
+  let marr = (length) =>
+    Array.from({ length }).map((_, i) => ["s_" + i, i * i]);
+  let mmap = (l) => new Map(marr(l));
   let len = 1000;
   let cnt = 10000;
 
@@ -23,13 +24,13 @@
   let a;
   a = test("foreach", (m, a) => {
     var n = new Map(m);
-    a.forEach(aa => n.set(aa[0] + aa[0], aa[1] + 1));
+    a.forEach((aa) => n.set(aa[0] + aa[0], aa[1] + 1));
     return n;
   });
   console.log(a);
 
   a = test("map    ", (m, a) => {
-    var n = new Map([...m, ...a.map(aa => [aa[0] + aa[0], aa[1] + 1])]);
+    var n = new Map([...m, ...a.map((aa) => [aa[0] + aa[0], aa[1] + 1])]);
     return n;
   });
   console.log(a);

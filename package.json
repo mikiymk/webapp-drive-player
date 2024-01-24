@@ -32,6 +32,7 @@
   },
   "homepage": "https://github.com/mikiymk/drive-player#readme",
   "devDependencies": {
+    "@biomejs/biome": "^1.5.3",
     "@tsconfig/strictest": "^2.0.2",
     "@types/node": "^20.11.5",
     "@typescript-eslint/eslint-plugin": "^6.19.1",
