@@ -10,7 +10,7 @@ export const gDrive = style({
 export const item = style({
   fontSize: "1rem",
   padding: "0 0.2rem",
-  borderBottom: "solid 1px " + vars.color.primDark,
+  borderBottom: `solid 1px ${vars.color.primDark}`,
   cursor: "pointer",
 });
 

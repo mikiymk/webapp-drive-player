@@ -1,4 +1,4 @@
-import { createMemo, createSignal, For, Show } from "solid-js";
+import { For, Show, createMemo, createSignal } from "solid-js";
 
 import { AudioList } from "~/components/AudioList";
 import { audios } from "~/signals/audios";
@@ -20,6 +20,7 @@ export const Artists = (props: ArtistsProps) => {
 
     for (const [id, info] of audios()) {
       for (const artist of info.artists) {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         list[artist] ??= [];
         list[artist]?.push(id);
       }
@@ -37,10 +38,26 @@ export const Artists = (props: ArtistsProps) => {
   return (
     <>
       <h2>
-        <button onClick={() => props.reset()}>Artists</button>
+        <button
+          type="button"
+          onClick={() => {
+            props.reset();
+          }}
+        >
+          Artists
+        </button>
         {" > "}
         <Show when={selected()} fallback="select Artist" keyed>
-          {(selected) => <button onClick={() => select()}>{selected}</button>}
+          {(selected) => (
+            <button
+              type="button"
+              onClick={() => {
+                select();
+              }}
+            >
+              {selected}
+            </button>
+          )}
         </Show>
       </h2>
 
@@ -52,7 +69,9 @@ export const Artists = (props: ArtistsProps) => {
               <For each={Object.keys(artists())}>
                 {(artist) => (
                   <li>
-                    <button onClick={() => select(artist)}>{artist}</button>
+                    <button type="button" onClick={() => select(artist)}>
+                      {artist}
+                    </button>
                   </li>
                 )}
               </For>

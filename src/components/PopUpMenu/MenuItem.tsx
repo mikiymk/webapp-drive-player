@@ -16,6 +16,7 @@ export const MenuItem = (props: MenuItemProps) => {
   return (
     <div class={menuItem}>
       <button
+        type="button"
         onClick={(event) => {
           props.onClick(event);
           closeMenu();

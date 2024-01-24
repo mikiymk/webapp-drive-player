@@ -37,14 +37,14 @@ export const uploadAppData = async (
 ) => {
   const url = `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=multipart`;
 
-  const boundary = "_boundary" + ramdomString();
+  const boundary = `_boundary${ramdomString()}`;
   const body = getMultipartBody(data, {}, boundary);
 
   const response = await fetch(url, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "multipart/related; boundary=" + boundary,
+      "Content-Type": `multipart/related; boundary=${boundary}`,
       "Content-Length": body.length.toString(),
     },
     body,
@@ -69,7 +69,7 @@ export const createAppData = async (
   const url =
     "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart";
 
-  const boundary = "_boundary" + ramdomString();
+  const boundary = `_boundary${ramdomString()}`;
   const body = getMultipartBody(
     data,
     { name: fileName, parents: ["appDataFolder"] },
@@ -80,7 +80,7 @@ export const createAppData = async (
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
-      "Content-Type": "multipart/related; boundary=" + boundary,
+      "Content-Type": `multipart/related; boundary=${boundary}`,
       "Content-Length": body.length.toString(),
     },
     body,

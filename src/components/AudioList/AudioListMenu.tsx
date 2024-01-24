@@ -15,12 +15,22 @@ interface AudioListMenuProps {
 export const AudioListMenu = (props: AudioListMenuProps) => {
   return (
     <Menu>
-      <MenuItem onClick={() => props.play()}>play</MenuItem>
+      <MenuItem
+        onClick={() => {
+          props.play();
+        }}
+      >
+        play
+      </MenuItem>
       <MenuSeparator />
       <SubMenu label="add to playlist">
         <For each={getPlaylistEntries()}>
           {(playlist) => (
-            <MenuItem onClick={() => addAudio(playlist[0], props.item)}>
+            <MenuItem
+              onClick={() => {
+                addAudio(playlist[0], props.item);
+              }}
+            >
               {playlist[0]}
             </MenuItem>
           )}

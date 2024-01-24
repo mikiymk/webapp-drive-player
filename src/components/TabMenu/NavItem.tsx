@@ -1,7 +1,7 @@
 import {
-  tabItemLabel,
   tabItem,
   tabItemButton,
+  tabItemLabel,
   tabItemSelected,
 } from "./style.css";
 
@@ -23,7 +23,13 @@ export const NavItem = (props: Props) => {
         [tabItemSelected]: props.selected,
       }}
     >
-      <button class={tabItemButton} onClick={() => props.onClick()}>
+      <button
+        type="button"
+        class={tabItemButton}
+        onClick={() => {
+          props.onClick();
+        }}
+      >
         {props.icon}
         <span class={tabItemLabel}>{props.children}</span>
       </button>

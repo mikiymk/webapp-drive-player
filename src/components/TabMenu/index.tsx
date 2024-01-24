@@ -44,9 +44,8 @@ export const Menu = (props: MenuProps) => {
     setItems((items) => {
       if (items.some((item) => item.key === key)) {
         return items;
-      } else {
-        return [...items, { key, icon, label }];
       }
+      return [...items, { key, icon, label }];
     });
   };
 

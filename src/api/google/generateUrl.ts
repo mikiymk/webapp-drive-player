@@ -7,13 +7,9 @@ export type Query = [string, string | number | boolean | undefined];
  * @returns クエリ付きURL
  */
 export const generateUrl = (url: string, querys: Query[]) => {
-  return (
-    url +
-    "?" +
-    new URLSearchParams(
-      querys
-        .filter(([, value]) => value)
-        .map(([key, value]) => [key, String(value)]),
-    ).toString()
-  );
+  return `${url}?${new URLSearchParams(
+    querys
+      .filter(([, value]) => value)
+      .map(([key, value]) => [key, String(value)]),
+  ).toString()}`;
 };

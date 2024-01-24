@@ -6,6 +6,7 @@ import { image, noImage, noImageBG } from "./style.css";
 export const NoImage = () => {
   return (
     <svg class={`${image} ${noImage}`} viewBox="0 0 100 100">
+      <title>no image</title>
       <path d="M0,0V100H100V0" class={noImageBG} />
       <text x="50%" y="25">
         no image

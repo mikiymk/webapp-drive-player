@@ -33,7 +33,9 @@ export const Load = (props: LoadProps) => {
 
   return (
     <div class={download}>
-      <button onClick={onclick}>{props.children}</button>
+      <button type="button" onClick={onclick}>
+        {props.children}
+      </button>
       <Switch>
         <Match when={status() === "loading"}>
           <IconLoading />

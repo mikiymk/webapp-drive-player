@@ -59,7 +59,9 @@ export class AudioBufferSourcePlayer implements AudioPlayer {
     );
 
     const info = id && getAudio(id);
-    info && (info.duration = this.buffer.duration);
+    if (info) {
+      info.duration = this.buffer.duration;
+    }
     this.onUpdateDuration?.(this.buffer.duration);
   }
 

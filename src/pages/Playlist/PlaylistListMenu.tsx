@@ -10,21 +10,29 @@ interface PlaylistListMenuProps {
 export const PlaylistListMenu = (props: PlaylistListMenuProps) => {
   return (
     <Menu>
-      <MenuItem onClick={() => props.select(props.name)}>
+      <MenuItem
+        onClick={() => {
+          props.select(props.name);
+        }}
+      >
         open playlist
       </MenuItem>
       <MenuItem
-        onClick={() =>
-          props.openDialog(
-            props.name,
-            (name) => name && renamePlaylist(props.name, name),
-          )
-        }
+        onClick={() => {
+          const name = props.name;
+          props.openDialog(name, (newName) => {
+            newName && renamePlaylist(name, newName);
+          });
+        }}
       >
         rename playlist
       </MenuItem>
       <MenuSeparator />
-      <MenuItem onClick={() => deletePlaylist(props.name)}>
+      <MenuItem
+        onClick={() => {
+          deletePlaylist(props.name);
+        }}
+      >
         delete playlist
       </MenuItem>
     </Menu>

@@ -18,7 +18,7 @@ export const subMenu = style({
   left: "0",
 
   backgroundColor: vars.color.seco,
-  border: "solid 1px " + vars.color.secoDark,
+  border: `solid 1px ${vars.color.secoDark}`,
 
   overflow: "hidden scroll",
   textOverflow: "ellipsis",
@@ -32,6 +32,6 @@ export const menuItem = style({
 export const menuHorizon = style({
   height: 0,
   width: "100%",
-  borderBottom: "solid 1px " + vars.color.secoDark,
+  borderBottom: `solid 1px ${vars.color.secoDark}`,
   margin: "0.2rem",
 });

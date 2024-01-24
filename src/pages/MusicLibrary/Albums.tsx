@@ -1,4 +1,4 @@
-import { createMemo, createSignal, Show, For } from "solid-js";
+import { For, Show, createMemo, createSignal } from "solid-js";
 
 import { AudioList } from "~/components/AudioList";
 import { audios } from "~/signals/audios";
@@ -50,10 +50,26 @@ export const Albums = (props: AlbumsProps) => {
   return (
     <>
       <h2>
-        <button onClick={() => props.reset()}>Albums</button>
+        <button
+          type="button"
+          onClick={() => {
+            props.reset();
+          }}
+        >
+          Albums
+        </button>
         {" > "}
         <Show when={selected()} fallback="select Album" keyed>
-          {(selected) => <button onClick={() => select()}>{selected}</button>}
+          {(selected) => (
+            <button
+              type="button"
+              onClick={() => {
+                select();
+              }}
+            >
+              {selected}
+            </button>
+          )}
         </Show>
       </h2>
 
@@ -65,7 +81,9 @@ export const Albums = (props: AlbumsProps) => {
               <For each={Object.keys(albums())}>
                 {(artist) => (
                   <li>
-                    <button onClick={() => select(artist)}>{artist}</button>
+                    <button type="button" onClick={() => select(artist)}>
+                      {artist}
+                    </button>
                   </li>
                 )}
               </For>

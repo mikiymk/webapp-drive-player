@@ -1,7 +1,7 @@
 import type { PromiseCallBack } from "./promise-callback";
 
 const validateScheme = (scheme: string, uri: string) =>
-  uri.slice(0, scheme.length + 1).toLowerCase() === scheme + ":";
+  uri.slice(0, scheme.length + 1).toLowerCase() === `${scheme}:`;
 
 const validSchemes = ["data", "http", "https", "mailto", "ftp"];
 
@@ -24,7 +24,7 @@ export const pushIfDefined = (
   key: string,
   value?: string | undefined,
 ) => {
-  value && array.push(key + "=" + encodeURIComponent(value.trim()));
+  value && array.push(`${key}=${encodeURIComponent(value.trim())}`);
 };
 
 export const boolToStr = (bool: boolean | undefined) =>
@@ -42,7 +42,7 @@ export const getRedirectUri = (a: string) => {
     c = c.substring(0, e);
   }
 
-  return ["storagerelay://", c, "/", d, "?", "id=" + a].join("");
+  return `storagerelay://${c}/${d}?id=${a}`;
 };
 
 const validUri = /^(?:(?:https?|mailto|ftp):|[^:/?#]*(?:[/?#]|$))/i;
@@ -52,21 +52,19 @@ const invalidUrl = "about:invalid#zClosurez";
 const validatePopUpUrl = (url: string) => {
   if (validUri.test(url)) {
     return url;
-  } else {
-    const noSpaceUrl = String(url).replace(/(%0A|%0D)/g, "");
-    return noSpaceUrl.match(validDataUri) ? noSpaceUrl : invalidUrl;
   }
+  const noSpaceUrl = String(url).replace(/(%0A|%0D)/g, "");
+  return noSpaceUrl.match(validDataUri) ? noSpaceUrl : invalidUrl;
 };
 
 export const buildQueriedUri = (
   query: [key: string, value: string | undefined][],
 ) =>
-  "https://accounts.google.com/o/oauth2/auth?" +
-  query
+  `https://accounts.google.com/o/oauth2/auth?${query
     .flatMap(([key, value]) =>
-      value ? [key + "=" + encodeURIComponent(value.trim())] : [],
+      value ? [`${key}=${encodeURIComponent(value.trim())}`] : [],
     )
-    .join("&");
+    .join("&")}`;
 
 export const openAuthWindow = <T>(
   url: string,
@@ -94,7 +92,9 @@ export const openAuthWindow = <T>(
   if (!authWindow || authWindow.closed) return undefined;
 
   authWindow.focus();
-  authWindow.onclose = () => promise.reject("window closed");
+  authWindow.onclose = () => {
+    promise.reject("window closed");
+  };
   return authWindow;
 };
 

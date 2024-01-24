@@ -1,3 +1,5 @@
+import type { IAudioMetadata } from "music-metadata";
+
 type Partial<T> = { [P in keyof T]?: T[P] | undefined };
 interface AudioInfoNumber {
   of: number | undefined;
@@ -25,7 +27,7 @@ export class AudioInfo {
    * @returns データから読み取ったオーディオ情報
    */
   static async getInfo(data: Blob) {
-    let metadata;
+    let metadata: IAudioMetadata;
     try {
       const { parseBuffer } = await import("./music-metadata");
       const buffer = await data.arrayBuffer();

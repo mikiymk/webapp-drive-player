@@ -29,7 +29,9 @@ export const SubMenu = (props: SubMenuProps) => {
 
   return (
     <div class={menuItem}>
-      <button onClick={() => setVisible((v) => !v)}>{props.label}</button>
+      <button type="button" onClick={() => setVisible((v) => !v)}>
+        {props.label}
+      </button>
       <Show when={visible()}>
         <div
           class={subMenu}

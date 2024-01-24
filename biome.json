@@ -11,5 +11,9 @@
     "rules": {
       "recommended": true
     }
+  },
+  "files": {
+    "ignore": ["dist", "coverage"],
+    "ignoreUnknown": true
   }
 }
