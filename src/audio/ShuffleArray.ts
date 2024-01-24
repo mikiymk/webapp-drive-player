@@ -27,6 +27,7 @@ export class ShuffleArray implements Iterable<string> {
 
   *[Symbol.iterator](): Generator<string, void, undefined> {
     for (let i = 0; i < this.length; i++) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       yield this.get(i)!;
     }
   }
@@ -52,6 +53,7 @@ const shuffle = (array: number[]): number[] => {
   for (let i = len - 1; i > 0; i--) {
     const j = random(i + 1);
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     [array[i], array[j]] = [array[j]!, array[i]!];
   }
 
