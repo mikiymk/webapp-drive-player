@@ -1,4 +1,4 @@
-import { batch, createSignal, For, Show } from "solid-js";
+import { For, Show, batch, createSignal } from "solid-js";
 
 import { MenuProvider } from "~/components/PopUpMenu";
 import { getPlaylistEntries, makePlaylist } from "~/signals/playlists";
@@ -39,7 +39,9 @@ export const PlaylistList = (props: PlaylistListProps) => {
               menu={
                 <PlaylistListMenu
                   name={playlist[0]}
-                  select={(name) => props.select(name)}
+                  select={(name) => {
+                    props.select(name);
+                  }}
                   openDialog={openDialog}
                 />
               }

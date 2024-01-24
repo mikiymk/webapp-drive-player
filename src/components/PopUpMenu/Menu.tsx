@@ -37,7 +37,12 @@ export const Menu = (props: MenuProps) => {
         }}
         ref={ref}
       >
-        <button onClick={() => closeMenu()}>
+        <button
+          type="button"
+          onClick={() => {
+            closeMenu();
+          }}
+        >
           <IconClose />
         </button>
         <MenuSeparator />

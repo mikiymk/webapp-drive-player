@@ -11,7 +11,7 @@ export const makePlButton = style({});
 export const renamePlDialog = style({});
 
 export const renamePlInput = style({
-  border: "solid 1px " + vars.color.text,
+  border: `solid 1px ${vars.color.text}`,
 });
 
 export const renamePlButton = style({

@@ -1,4 +1,4 @@
-import { styleInner, marquee } from "./style.css";
+import { marquee, styleInner } from "./style.css";
 
 import type { JSX } from "solid-js";
 

@@ -1,8 +1,8 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 import { ShuffleArray } from "../ShuffleArray";
 
-test("ShuffleArray", () => {
+describe("ShuffleArray", () => {
   const base = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   test("シャッフルがオフの場合、元の配列と同じになる", () => {

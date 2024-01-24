@@ -33,7 +33,9 @@ export class AudioManager {
 
   constructor(player: AudioPlayer) {
     this.player = player;
-    player.onEnd = () => this.onEnd();
+    player.onEnd = () => {
+      this.onEnd();
+    };
     player.onChangePause = (pause) => this.onSetPause?.(pause);
     player.onUpdateTime = (time) => this.onSetCurrentTime?.(time);
     player.onUpdateDuration = (duration) => this.onSetDuration?.(duration);
@@ -45,7 +47,9 @@ export class AudioManager {
   private loadBuffer() {
     const id = this.musicIds.get(this.index);
     const [data, info] = downloadAudio(id, this.accessToken);
-    void info.then((info) => id && this.loadInfo(id, info));
+    void info.then((info) => {
+      id && this.loadInfo(id, info);
+    });
     return data;
   }
 
@@ -55,7 +59,9 @@ export class AudioManager {
   private loadNextBuffer() {
     const id = this.musicIds.get(this.nextIndex);
     const [data, info] = downloadAudio(id, this.accessToken);
-    void info.then((info) => id && this.loadInfo(id, info));
+    void info.then((info) => {
+      id && this.loadInfo(id, info);
+    });
     return data;
   }
 
@@ -112,9 +118,8 @@ export class AudioManager {
   get nextIndex() {
     if (this.repeat === RepeatOn) {
       return (this.index + 1) % this.musicIds.length;
-    } else {
-      return this.index + 1;
     }
+    return this.index + 1;
   }
 
   /**
@@ -165,9 +170,9 @@ export class AudioManager {
   }
 
   start() {
-    void this.setBuffer().then(
-      (id) => this.musicIds.get(this.index) === id && this.player.start(),
-    );
+    void this.setBuffer().then((id) => {
+      this.musicIds.get(this.index) === id && this.player.start();
+    });
   }
 
   stop() {
@@ -175,9 +180,9 @@ export class AudioManager {
   }
 
   play() {
-    void this.setBuffer().then(
-      (id) => this.musicIds.get(this.index) === id && this.player.play(),
-    );
+    void this.setBuffer().then((id) => {
+      this.musicIds.get(this.index) === id && this.player.play();
+    });
   }
 
   pause() {

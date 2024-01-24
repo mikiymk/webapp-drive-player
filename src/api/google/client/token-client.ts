@@ -1,10 +1,10 @@
 import {
-  boolToStr,
   addMessageEventListener,
+  boolToStr,
+  buildQueriedUri,
   getRedirectUri,
   openAuthWindow,
   uniqueKey,
-  buildQueriedUri,
 } from "./common";
 
 import { PromiseCallBack } from "./promise-callback";
@@ -84,19 +84,16 @@ export class TokenClient implements AuthClient {
     console.log("start request token");
 
     let query = this.query;
-    config = config ?? {};
     query = {
       clientId: query.clientId,
       scope: query.scope,
-      prompt: void 0 === config.prompt ? query.prompt : config.prompt,
-      hint: void 0 === config.hint ? query.hint : config.hint,
-      state: void 0 === config.state ? query.state : config.state,
+      prompt: config?.prompt ?? query.prompt,
+      hint: config?.hint ?? query.hint,
+      state: config?.state ?? query.state,
       hostedDomain: query.hostedDomain,
       includeGrantedScopes: query.includeGrantedScopes,
       enableSerialConsent:
-        void 0 === config.enableSerialConsent
-          ? query.enableSerialConsent
-          : config.enableSerialConsent,
+        config?.enableSerialConsent ?? query.enableSerialConsent,
     };
 
     this.promiseCallback = new PromiseCallBack<TokenResponse>();

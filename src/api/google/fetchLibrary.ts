@@ -58,7 +58,6 @@ export const postSettingFile = async <T>(
 
   if (id !== undefined) {
     return uploadAppData(token, id, jsonData);
-  } else {
-    return createAppData(token, fileName, jsonData);
   }
+  return createAppData(token, fileName, jsonData);
 };
