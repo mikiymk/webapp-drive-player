@@ -38,7 +38,7 @@
     "@typescript-eslint/parser": "^6.19.1",
     "@vanilla-extract/vite-plugin": "^3.9.4",
     "@vercel/node": "^3.0.17",
-    "@vitest/coverage-c8": "^0.24.5",
+    "@vitest/coverage-v8": "^1.2.1",
     "eslint": "^8.56.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
