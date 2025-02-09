@@ -68,10 +68,5 @@
     "music-metadata": "^8.1.0",
     "process": "^0.11.10",
     "solid-js": "^1.8.12"
-  },
-  "overrides": {
-    "@vanilla-extract/vite-plugin": {
-      "vite": "^3"
-    }
   }
 }
