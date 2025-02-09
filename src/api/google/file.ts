@@ -18,12 +18,12 @@ export const getGoogleFile = async (
     if (!response.ok) {
       const responseData = JSON.stringify(await response.json(), null, 2);
       throw new Error(
-        `${response.status} ${response.statusText} ${responseData}`,
+        `${String(response.status)} ${response.statusText} ${responseData}`,
       );
     }
 
     return response;
-  } catch (error) {
+  } catch {
     return undefined;
   }
 };

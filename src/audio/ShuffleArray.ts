@@ -27,7 +27,6 @@ export class ShuffleArray implements Iterable<string> {
 
   *[Symbol.iterator](): Generator<string, void, undefined> {
     for (let i = 0; i < this.length; i++) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const item = this.get(i);
       if (item !== undefined) {
         yield item;

@@ -39,10 +39,10 @@ export const Albums = (props: AlbumsProps) => {
     const album = albums()[selectedAlbum];
     if (!album) return;
     return Object.entries(album)
-      .map(([k, v]) => [parseInt(k), v] as const)
+      .map(([k, v]) => [Number.parseInt(k), v] as const)
       .sort((a, b) => a[0] - b[0])
       .flatMap((v) => Object.entries(v[1]))
-      .map(([k, v]) => [parseInt(k), v] as const)
+      .map(([k, v]) => [Number.parseInt(k), v] as const)
       .sort((a, b) => a[0] - b[0])
       .flatMap((v) => v[1]);
   });

@@ -18,7 +18,7 @@ export class AudioManager {
   musicIds = new ShuffleArray([], false);
 
   /** play music ids index */
-  private index = NaN;
+  private index = Number.NaN;
 
   repeat: RepeatType = RepeatDefault;
   isPaused = true;
@@ -48,7 +48,7 @@ export class AudioManager {
     const id = this.musicIds.get(this.index);
     const [data, info] = downloadAudio(id, this.accessToken);
     void info.then((info) => {
-      id && this.loadInfo(id, info);
+      if (id) this.loadInfo(id, info);
     });
     return data;
   }
@@ -60,7 +60,7 @@ export class AudioManager {
     const id = this.musicIds.get(this.nextIndex);
     const [data, info] = downloadAudio(id, this.accessToken);
     void info.then((info) => {
-      id && this.loadInfo(id, info);
+      if (id) this.loadInfo(id, info);
     });
     return data;
   }
@@ -171,7 +171,7 @@ export class AudioManager {
 
   start() {
     void this.setBuffer().then((id) => {
-      this.musicIds.get(this.index) === id && this.player.start();
+      if (this.musicIds.get(this.index) === id) this.player.start();
     });
   }
 
@@ -181,7 +181,7 @@ export class AudioManager {
 
   play() {
     void this.setBuffer().then((id) => {
-      this.musicIds.get(this.index) === id && this.player.play();
+      if (this.musicIds.get(this.index) === id) this.player.play();
     });
   }
 

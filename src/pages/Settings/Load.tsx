@@ -25,9 +25,9 @@ export const Load = (props: LoadProps) => {
     props
       .load()
       .then(() => setStatus("done"))
-      .catch((e: Error) => {
+      .catch((e: unknown) => {
         setStatus("error");
-        setMessage(e.message);
+        setMessage((e as Error).message);
       });
   };
 

@@ -19,19 +19,15 @@ export const validateRedirectUrl = (uri: string) => {
   return invalidUrl;
 };
 
-export const pushIfDefined = (
-  array: string[],
-  key: string,
-  value?: string | undefined,
-) => {
-  value && array.push(`${key}=${encodeURIComponent(value.trim())}`);
+export const pushIfDefined = (array: string[], key: string, value?: string) => {
+  if (value) array.push(`${key}=${encodeURIComponent(value.trim())}`);
 };
 
 export const boolToStr = (bool: boolean | undefined) =>
   false === bool ? "false" : "true";
 
 export const uniqueKey = () => {
-  return `auth${Math.floor(1e6 * Math.random() + 1)}`;
+  return `auth${String(Math.floor(1e6 * Math.random() + 1))}`;
 };
 
 export const getRedirectUri = (a: string) => {
@@ -54,7 +50,7 @@ const validatePopUpUrl = (url: string) => {
     return url;
   }
   const noSpaceUrl = String(url).replace(/(%0A|%0D)/g, "");
-  return noSpaceUrl.match(validDataUri) ? noSpaceUrl : invalidUrl;
+  return validDataUri.exec(noSpaceUrl) ? noSpaceUrl : invalidUrl;
 };
 
 export const buildQueriedUri = (
@@ -82,10 +78,10 @@ export const openAuthWindow = <T>(
     "scrollbars=no",
     "resizable=no",
     "copyhistory=no",
-    `width=${width}`,
-    `height=${height}`,
-    `top=${screen.height / 2 - height / 2}`,
-    `left=${screen.width / 2 - width / 2}`,
+    `width=${String(width)}`,
+    `height=${String(height)}`,
+    `top=${String(screen.height / 2 - height / 2)}`,
+    `left=${String(screen.width / 2 - width / 2)}`,
   ].join();
 
   const authWindow = window.open(validatePopUpUrl(url), target, features);

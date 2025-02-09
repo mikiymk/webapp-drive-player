@@ -60,11 +60,11 @@ export const MusicPlayer = () => {
     }
     if (isAccountUpdated) {
       void getSettingFile<AudioEntries>(token, "library.json").then((lib) => {
-        lib && addAudios(lib);
+        if (lib) addAudios(lib);
       });
       void getSettingFile<PlaylistEntries>(token, "playlists.json").then(
         (lib) => {
-          lib && addPlaylists(lib);
+          if (lib) addPlaylists(lib);
         },
       );
     }

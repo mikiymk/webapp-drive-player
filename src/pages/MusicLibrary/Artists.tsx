@@ -20,9 +20,8 @@ export const Artists = (props: ArtistsProps) => {
 
     for (const [id, info] of audios()) {
       for (const artist of info.artists) {
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         list[artist] ??= [];
-        list[artist]?.push(id);
+        list[artist].push(id);
       }
     }
 

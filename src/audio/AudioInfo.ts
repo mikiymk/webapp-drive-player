@@ -72,7 +72,7 @@ export class AudioInfo {
       { of: track.of ?? undefined, no: track.no ?? undefined },
       { of: disk.of ?? undefined, no: disk.no ?? undefined },
       0,
-      picture?.[0]?.data.buffer,
+      picture?.[0]?.data.buffer as ArrayBuffer,
       sort,
     );
   }
