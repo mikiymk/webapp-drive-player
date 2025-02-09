@@ -25,7 +25,6 @@ export const AudioListItem = (props: AudioListItemProps) => {
       }}
       onClick={() => setSelected(true)}
       onKeyPress={() => setSelected(true)}
-      // eslint-disable-next-line solid/event-handlers
       onDblClick={() => {
         props.play();
       }}

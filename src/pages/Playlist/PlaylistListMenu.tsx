@@ -21,7 +21,7 @@ export const PlaylistListMenu = (props: PlaylistListMenuProps) => {
         onClick={() => {
           const name = props.name;
           props.openDialog(name, (newName) => {
-            newName && renamePlaylist(name, newName);
+            if (newName) renamePlaylist(name, newName);
           });
         }}
       >

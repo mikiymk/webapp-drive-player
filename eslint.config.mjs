@@ -1,8 +1,9 @@
-import globals from "globals";
 import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
+import biomeConfig from "eslint-config-biome";
 import importEslint from "eslint-plugin-import";
 import solidEslint from "eslint-plugin-solid";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default tseslint.config([
   {
@@ -46,6 +47,7 @@ export default tseslint.config([
   importEslint.flatConfigs.recommended,
   importEslint.flatConfigs.typescript,
   solidEslint.configs["flat/typescript"],
+  biomeConfig,
 
   {
     rules: {

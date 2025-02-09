@@ -34,7 +34,7 @@ const refresh = (expiresIn: number) => {
         setAccessToken(accessToken);
         refresh(expiresIn);
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         console.warn(err);
       });
   }, expiresIn * 950);

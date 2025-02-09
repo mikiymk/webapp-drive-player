@@ -103,7 +103,7 @@ const refresh = (
 };
 
 const setRefreshTokenCookie = (refreshToken: string) => {
-  return `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${tokenAge};`;
+  return `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${String(tokenAge)};`;
 };
 
 const requestAuth = async (

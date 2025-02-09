@@ -11,7 +11,7 @@ export const getMenuSize = (
   menuSize: number,
   winSize: number,
 ) => {
-  return `${Math.trunc(
-    offset + menuSize > winSize ? winSize - menuSize : offset,
+  return `${String(
+    Math.trunc(offset + menuSize > winSize ? winSize - menuSize : offset),
   )}px`;
 };
