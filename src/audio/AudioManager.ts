@@ -18,7 +18,7 @@ export class AudioManager {
   musicIds = new ShuffleArray([], false);
 
   /** play music ids index */
-  private index = NaN;
+  private index = Number.NaN;
 
   repeat: RepeatType = RepeatDefault;
   isPaused = true;

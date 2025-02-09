@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 
 import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 import { visualizer } from "rollup-plugin-visualizer";

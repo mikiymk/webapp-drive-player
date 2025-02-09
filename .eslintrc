@@ -7,18 +7,18 @@
     "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:import/recommended",
     "plugin:import/typescript",
-    "plugin:solid/typescript"
+    "plugin:solid/typescript",
   ],
   "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
+      "@typescript-eslint/parser": [".ts", ".tsx"],
     },
     "import/resolver": {
       "typescript": {
-        "alwaysTryTypes": true
+        "alwaysTryTypes": true,
         // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
-      }
-    }
+      },
+    },
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -27,7 +27,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module",
 
-    "project": "tsconfig.json"
+    "project": "tsconfig.json",
   },
   "ignorePatterns": ["**/*.vanilla.js"],
 
@@ -39,23 +39,6 @@
     "import/first": "error",
     "import/newline-after-import": "error",
     "import/no-namespace": "error",
-    "import/order": [
-      "error",
-      {
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          "parent",
-          "sibling",
-          "index",
-          "object",
-          "type"
-        ],
-        "newlines-between": "always-and-inside-groups",
-        "alphabetize": { "order": "asc", "caseInsensitive": false }
-      }
-    ],
     "max-statements": ["error", 30],
     "no-constant-condition": ["error", { "checkLoops": false }],
     "no-empty-function": "warn",
@@ -63,15 +46,15 @@
     "no-implied-eval": "error",
     "no-throw-literal": "error",
     "@typescript-eslint/consistent-type-imports": "error",
-    "@typescript-eslint/no-empty-function": "off"
+    "@typescript-eslint/no-empty-function": "off",
   },
 
   "overrides": [
     {
       "files": ["**/*.test.ts"],
       "rules": {
-        "@typescript-eslint/no-non-null-assertion": "off"
-      }
-    }
-  ]
+        "@typescript-eslint/no-non-null-assertion": "off",
+      },
+    },
+  ],
 }

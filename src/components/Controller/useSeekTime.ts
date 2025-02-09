@@ -25,7 +25,7 @@ export const useSeekTime = (
   };
 
   const onChange: JSX.EventHandler<HTMLInputElement, Event> = (event) => {
-    setSeekTime(parseInt(event.currentTarget.value, 10));
+    setSeekTime(Number.parseInt(event.currentTarget.value, 10));
   };
 
   return {
