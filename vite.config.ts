@@ -13,34 +13,34 @@ const config = defineConfig(({ mode, command }) => {
   const plugins: UserConfig["plugins"] = [];
   plugins.push(vanillaExtractPlugin());
   plugins.push(solidPlugin());
-  // plugins.push(
-  //   VitePWA({
-  //     includeAssets: [],
-  //     manifest: {
-  //       /* eslint-disable camelcase */
-  //       name: "Iron Ragdoll",
-  //       short_name: "IronRagdoll",
-  //       start_url: "/",
-  //       display: "standalone",
-  //       theme_color: "#888",
-  //       background_color: "#888",
-  //       description: "Web App Audio Player with Google Drive",
-  //       categories: ["music"],
-  //       icons: [
-  //         { src: "/icon.svg", type: "image/svg+xml" },
-  //         {
-  //           src: "/icon.webp",
-  //           type: "image/webp",
-  //           sizes: "512x512",
-  //           purpose: "any maskable",
-  //         },
-  //         { src: "/icon.png", type: "image/png", sizes: "144x144" },
-  //       ],
-  //       /* eslint-enable camelcase */
-  //     },
-  //     workbox: {},
-  //   }),
-  // );
+  plugins.push(
+    VitePWA({
+      includeAssets: [],
+      manifest: {
+        /* eslint-disable camelcase */
+        name: "Iron Ragdoll",
+        short_name: "IronRagdoll",
+        start_url: "/",
+        display: "standalone",
+        theme_color: "#888",
+        background_color: "#888",
+        description: "Web App Audio Player with Google Drive",
+        categories: ["music"],
+        icons: [
+          { src: "/icon.svg", type: "image/svg+xml" },
+          {
+            src: "/icon.webp",
+            type: "image/webp",
+            sizes: "512x512",
+            purpose: "any maskable",
+          },
+          { src: "/icon.png", type: "image/png", sizes: "144x144" },
+        ],
+        /* eslint-enable camelcase */
+      },
+      workbox: {},
+    }),
+  );
   if (command === "serve") plugins.push(eslintPlugin());
 
   const resolve: UserConfig["resolve"] = {
