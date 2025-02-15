@@ -36,7 +36,9 @@ export const DriveFiles = () => {
             {(file) => (
               <ItemFile
                 name={file.name}
-                addFile={() => addAudios([audioEntryFromFile(file)])}
+                addFile={() => {
+                  addAudios([audioEntryFromFile(file)]);
+                }}
               />
             )}
           </For>
@@ -54,10 +56,23 @@ interface ItemFolderProps {
 
 const ItemFolder = (props: ItemFolderProps) => {
   return (
-    <li class={item} onClick={() => props.move()}>
+    <li
+      class={item}
+      onClick={() => {
+        props.move();
+      }}
+      onKeyPress={() => {
+        props.move();
+      }}
+    >
       <IconFolder />
       <span>{props.name}</span>
-      <button onClick={() => props.addFiles()}>
+      <button
+        type="button"
+        onClick={() => {
+          props.addFiles();
+        }}
+      >
         click to add all files in the folder
       </button>
     </li>
@@ -71,7 +86,15 @@ interface ItemFileProps {
 
 const ItemFile = (props: ItemFileProps) => {
   return (
-    <li class={item} onClick={() => props.addFile()}>
+    <li
+      class={item}
+      onClick={() => {
+        props.addFile();
+      }}
+      onKeyPress={() => {
+        props.addFile();
+      }}
+    >
       <IconAudioFile />
       <span>{props.name}</span>
     </li>

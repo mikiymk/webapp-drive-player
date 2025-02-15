@@ -1,4 +1,4 @@
-import { request } from "https";
+import { request } from "node:https";
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
@@ -47,14 +47,18 @@ const requestToken = (
         },
       },
       (res) => {
-        res.on("data", (data: string) =>
-          resolve(JSON.parse(data) as AuthResponse),
-        );
-        res.on("end", () => resolve({ requestError: "end of response" }));
+        res.on("data", (data: string) => {
+          resolve(JSON.parse(data) as AuthResponse);
+        });
+        res.on("end", () => {
+          resolve({ requestError: "end of response" });
+        });
       },
     );
 
-    req.on("error", (error) => resolve({ requestError: error.message }));
+    req.on("error", (error) => {
+      resolve({ requestError: error.message });
+    });
 
     req.write(body);
     req.end();
@@ -65,7 +69,9 @@ const exchangeToken = (
   code: string,
   redirectUri: string,
 ): Promise<AuthResponse | RequestError> | undefined => {
+  // biome-ignore lint/complexity/useLiteralKeys: typescript noPropertyAccessFromIndexSignature config
   const clientId = process.env["CLIENT_ID"];
+  // biome-ignore lint/complexity/useLiteralKeys: typescript noPropertyAccessFromIndexSignature config
   const clientSecret = process.env["CLIENT_SECRET"];
   if (clientId === undefined) return;
   if (clientSecret === undefined) return;
@@ -82,7 +88,9 @@ const exchangeToken = (
 const refresh = (
   refreshToken: string,
 ): Promise<AuthResponse | RequestError> | undefined => {
+  // biome-ignore lint/complexity/useLiteralKeys: typescript noPropertyAccessFromIndexSignature config
   const clientId = process.env["CLIENT_ID"];
+  // biome-ignore lint/complexity/useLiteralKeys: typescript noPropertyAccessFromIndexSignature config
   const clientSecret = process.env["CLIENT_SECRET"];
   if (clientId === undefined) return;
   if (clientSecret === undefined) return;
@@ -95,7 +103,7 @@ const refresh = (
 };
 
 const setRefreshTokenCookie = (refreshToken: string) => {
-  return `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${tokenAge};`;
+  return `refresh_token=${refreshToken}; SameSite=Strict; Secure; HttpOnly; Max-Age=${String(tokenAge)};`;
 };
 
 const requestAuth = async (
@@ -121,7 +129,9 @@ const firstQuery = (
 
 export default async (apiReq: VercelRequest, apiRes: VercelResponse) => {
   const code = apiReq.body as string;
+  // biome-ignore lint/complexity/useLiteralKeys: typescript noPropertyAccessFromIndexSignature config
   const redirectUri = firstQuery(apiReq.query["redirect_uri"]);
+  // biome-ignore lint/complexity/useLiteralKeys: typescript noPropertyAccessFromIndexSignature config
   const refreshToken = apiReq.cookies["refresh_token"];
 
   const cookies: string[] = [];

@@ -22,14 +22,16 @@ export const SubMenu = (props: SubMenuProps) => {
     visible();
     const rect = current()?.getBoundingClientRect();
     if (rect) {
-      setMaxHeight(`${window.innerHeight - rect.top}px`);
-      setMaxWidth(`${window.innerWidth - rect.left}px`);
+      setMaxHeight(`${String(window.innerHeight - rect.top)}px`);
+      setMaxWidth(`${String(window.innerWidth - rect.left)}px`);
     }
   });
 
   return (
     <div class={menuItem}>
-      <button onClick={() => setVisible((v) => !v)}>{props.label}</button>
+      <button type="button" onClick={() => setVisible((v) => !v)}>
+        {props.label}
+      </button>
       <Show when={visible()}>
         <div
           class={subMenu}

@@ -1,4 +1,4 @@
-import { createSignal, Match, Switch } from "solid-js";
+import { Match, Switch, createSignal } from "solid-js";
 
 import { Albums } from "./Albums";
 import { Artists } from "./Artists";

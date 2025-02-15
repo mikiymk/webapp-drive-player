@@ -2,7 +2,7 @@ import { createEffect, createSignal } from "solid-js";
 
 import { playlists } from "~/signals/playlists";
 
-import { renamePlDialog, renamePlButton, renamePlInput } from "./style.css";
+import { renamePlButton, renamePlDialog, renamePlInput } from "./style.css";
 
 interface RenameDialogProps {
   name: string | undefined;
@@ -49,12 +49,21 @@ export const RenameDialog = (props: RenameDialogProps) => {
         />
       </label>
       <p>{error()}</p>
-      <button class={renamePlButton} onClick={() => props.close()}>
+      <button
+        type="button"
+        class={renamePlButton}
+        onClick={() => {
+          props.close();
+        }}
+      >
         Cancel
       </button>
       <button
+        type="button"
         class={renamePlButton}
-        onClick={() => props.close(newName())}
+        onClick={() => {
+          props.close(newName());
+        }}
         disabled={Boolean(error())}
       >
         Rename

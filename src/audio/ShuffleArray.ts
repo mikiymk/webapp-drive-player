@@ -27,7 +27,10 @@ export class ShuffleArray implements Iterable<string> {
 
   *[Symbol.iterator](): Generator<string, void, undefined> {
     for (let i = 0; i < this.length; i++) {
-      yield this.get(i)!;
+      const item = this.get(i);
+      if (item !== undefined) {
+        yield item;
+      }
     }
   }
 }
@@ -52,7 +55,13 @@ const shuffle = (array: number[]): number[] => {
   for (let i = len - 1; i > 0; i--) {
     const j = random(i + 1);
 
-    [array[i], array[j]] = [array[j]!, array[i]!];
+    const ai = array[i];
+    const aj = array[j];
+
+    if (ai !== undefined && aj !== undefined) {
+      array[i] = aj;
+      array[j] = ai;
+    }
   }
 
   return array;

@@ -1,4 +1,4 @@
-import { getAllMusics, getAllFolders } from "~/file";
+import { getAllFolders, getAllMusics } from "~/file";
 
 import { accessToken } from "~/signals/access-token";
 

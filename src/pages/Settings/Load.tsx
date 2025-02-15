@@ -25,15 +25,17 @@ export const Load = (props: LoadProps) => {
     props
       .load()
       .then(() => setStatus("done"))
-      .catch((e: Error) => {
+      .catch((e: unknown) => {
         setStatus("error");
-        setMessage(e.message);
+        setMessage((e as Error).message);
       });
   };
 
   return (
     <div class={download}>
-      <button onClick={onclick}>{props.children}</button>
+      <button type="button" onClick={onclick}>
+        {props.children}
+      </button>
       <Switch>
         <Match when={status() === "loading"}>
           <IconLoading />

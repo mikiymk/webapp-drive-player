@@ -4,7 +4,7 @@ import { IconDotInfo } from "~/components/Icon";
 
 import { usePopMenu } from "~/components/PopUpMenu";
 
-import { itemMore, item, itemArtist } from "./style.css";
+import { item, itemArtist, itemMore } from "./style.css";
 
 import type { AudioInfo } from "~/audio/AudioInfo";
 
@@ -24,14 +24,16 @@ export const AudioListItem = (props: AudioListItemProps) => {
         selected: selected(),
       }}
       onClick={() => setSelected(true)}
-      // eslint-disable-next-line solid/event-handlers
-      onDblClick={() => props.play()}
+      onKeyPress={() => setSelected(true)}
+      onDblClick={() => {
+        props.play();
+      }}
       onContextMenu={popMenu}
     >
       <td>{props.audio.title}</td>
       <td class={itemArtist}>{props.audio.artists.join()}</td>
       <td class={itemMore}>
-        <button onClick={popMenu}>
+        <button type="button" onClick={popMenu}>
           <IconDotInfo />
         </button>
       </td>

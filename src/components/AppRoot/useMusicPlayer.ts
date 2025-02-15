@@ -39,13 +39,15 @@ const useMusicPlayer = () => {
     };
 
     manager.onChangeMusic = (id) => {
-      let info;
       currentID = id;
-      if (id !== undefined && (info = getAudio(id)) !== undefined) {
-        setInfo(AudioInfo.copyInfo(info));
-      } else {
-        setInfo(AudioInfo.getEmptyInfo());
+      if (id !== undefined) {
+        const info = getAudio(id);
+        if (info !== undefined) {
+          setInfo(AudioInfo.copyInfo(info));
+          return;
+        }
       }
+      setInfo(AudioInfo.getEmptyInfo());
     };
   });
 

@@ -1,10 +1,10 @@
 import {
-  boolToStr,
   addMessageEventListener,
+  boolToStr,
+  buildQueriedUri,
   getRedirectUri,
   openAuthWindow,
   uniqueKey,
-  buildQueriedUri,
   validateRedirectUrl,
 } from "./common";
 
@@ -150,7 +150,7 @@ const normalizeRedirect = (
   selectAccount: config.selectAccount,
   redirectUri:
     config.redirectUri ||
-    location.protocol + "//" + location.host + location.pathname,
+    `${location.protocol}//${location.host}${location.pathname}`,
 });
 
 const buildAuthUrl = (query: PopupCodeClientQuery): string =>

@@ -18,7 +18,12 @@ export const Breadcrumbs = (props: BreadcrumbsProps) => {
             <Show when={index() !== 0}>
               <li>{" > "}</li>
             </Show>
-            <Bread parent={parent} move={() => props.move(index())} />
+            <Bread
+              parent={parent}
+              move={() => {
+                props.move(index());
+              }}
+            />
           </>
         )}
       </For>
@@ -33,7 +38,15 @@ interface BreadProps {
 
 const Bread = (props: BreadProps) => {
   return (
-    <li class={bread} onClick={() => props.move()}>
+    <li
+      class={bread}
+      onClick={() => {
+        props.move();
+      }}
+      onKeyPress={() => {
+        props.move();
+      }}
+    >
       {props.parent.name}
     </li>
   );

@@ -18,7 +18,7 @@ const getFileListPart = async (
   accessToken: string,
   query: string,
   appData: boolean,
-  token?: string | undefined,
+  token?: string,
 ): Promise<GoogleFileList> => {
   const url: string = generateUrl("https://www.googleapis.com/drive/v3/files", [
     ["spaces", appData && "appDataFolder"],

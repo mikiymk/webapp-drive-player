@@ -16,15 +16,31 @@ export const Playlist = (props: PlaylistProps) => {
   return (
     <div class={plOne}>
       <h3>{props.name}</h3>
-      <button onClick={() => props.reset()}>back to list</button>
-      <button onClick={() => props.playsList(getPlaylist(props.name) ?? [], 0)}>
+      <button
+        type="button"
+        onClick={() => {
+          props.reset();
+        }}
+      >
+        back to list
+      </button>
+      <button
+        type="button"
+        onClick={() => {
+          props.playsList(getPlaylist(props.name) ?? [], 0);
+        }}
+      >
         play this playlist
       </button>
       <AudioList
         audios={getPlaylist(props.name) ?? []}
         play={props.playsList}
         extendMenu={(innerProps) => (
-          <MenuItem onClick={() => removeAudio(props.name, innerProps.index)}>
+          <MenuItem
+            onClick={() => {
+              removeAudio(props.name, innerProps.index);
+            }}
+          >
             remove from playlist
           </MenuItem>
         )}

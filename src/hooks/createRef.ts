@@ -1,6 +1,6 @@
 interface CreateRef {
   <T>(): [() => T | undefined, (value?: T) => void];
-  <T>(initialValue: T): [() => T, (value: T) => void];
+  <U>(initialValue: U): [() => U, (value: U) => void];
 }
 
 export const createRef: CreateRef = <T>(initialValue?: T) => {

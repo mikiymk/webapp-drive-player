@@ -26,7 +26,9 @@ export const MakePlaylistButton = (props: MakePlaylistButtonProps) => {
 
   return (
     <span class={makePlButton}>
-      <button onClick={addPlaylist}>add playlist</button>
+      <button type="button" onClick={addPlaylist}>
+        add playlist
+      </button>
       <input
         type="text"
         onInput={(event) => {

@@ -31,7 +31,7 @@ export const PlaylistListItem = (props: PlaylistListItemProps) => {
   return (
     <li onContextMenu={popMenu}>
       {props.name} {formatTime(playlistDuration())}
-      <button onClick={popMenu}>
+      <button type="button" onClick={popMenu}>
         <IconDotInfo />
       </button>
     </li>

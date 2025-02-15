@@ -59,11 +59,13 @@ export const MusicPlayer = () => {
       return true;
     }
     if (isAccountUpdated) {
-      void getSettingFile<AudioEntries>(token, "library.json").then(
-        (lib) => lib && addAudios(lib),
-      );
+      void getSettingFile<AudioEntries>(token, "library.json").then((lib) => {
+        if (lib) addAudios(lib);
+      });
       void getSettingFile<PlaylistEntries>(token, "playlists.json").then(
-        (lib) => lib && addPlaylists(lib),
+        (lib) => {
+          if (lib) addPlaylists(lib);
+        },
       );
     }
     return false;
@@ -71,7 +73,7 @@ export const MusicPlayer = () => {
 
   return (
     <ExclusiveMenuRoot>
-      <div class={stylePlayer + " " + themeClass}>
+      <div class={`${stylePlayer} ${themeClass}`}>
         <Menu defaultKey="playing">
           <MenuItem key="playing" icon={<IconPlay />} label="Now Playing">
             <Playing info={status.info()} />
@@ -101,13 +103,27 @@ export const MusicPlayer = () => {
           paused={status.paused()}
           repeat={status.repeat()}
           shuffle={status.shuffle()}
-          seek={(time) => player.seek(time)}
-          play={() => player.play()}
-          pause={() => player.pause()}
-          playNext={() => player.playToNext()}
-          playPrev={() => player.playToPrev()}
-          setRepeat={(repeat) => player.setRepeat(repeat)}
-          setShuffle={(shuffle) => player.setShuffle(shuffle)}
+          seek={(time) => {
+            player.seek(time);
+          }}
+          play={() => {
+            player.play();
+          }}
+          pause={() => {
+            player.pause();
+          }}
+          playNext={() => {
+            player.playToNext();
+          }}
+          playPrev={() => {
+            player.playToPrev();
+          }}
+          setRepeat={(repeat) => {
+            player.setRepeat(repeat);
+          }}
+          setShuffle={(shuffle) => {
+            player.setShuffle(shuffle);
+          }}
         />
       </div>
     </ExclusiveMenuRoot>

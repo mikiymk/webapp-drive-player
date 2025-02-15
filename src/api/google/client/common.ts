@@ -1,7 +1,7 @@
 import type { PromiseCallBack } from "./promise-callback";
 
 const validateScheme = (scheme: string, uri: string) =>
-  uri.slice(0, scheme.length + 1).toLowerCase() === scheme + ":";
+  uri.slice(0, scheme.length + 1).toLowerCase() === `${scheme}:`;
 
 const validSchemes = ["data", "http", "https", "mailto", "ftp"];
 
@@ -19,19 +19,15 @@ export const validateRedirectUrl = (uri: string) => {
   return invalidUrl;
 };
 
-export const pushIfDefined = (
-  array: string[],
-  key: string,
-  value?: string | undefined,
-) => {
-  value && array.push(key + "=" + encodeURIComponent(value.trim()));
+export const pushIfDefined = (array: string[], key: string, value?: string) => {
+  if (value) array.push(`${key}=${encodeURIComponent(value.trim())}`);
 };
 
 export const boolToStr = (bool: boolean | undefined) =>
   false === bool ? "false" : "true";
 
 export const uniqueKey = () => {
-  return `auth${Math.floor(1e6 * Math.random() + 1)}`;
+  return `auth${String(Math.floor(1e6 * Math.random() + 1))}`;
 };
 
 export const getRedirectUri = (a: string) => {
@@ -42,7 +38,7 @@ export const getRedirectUri = (a: string) => {
     c = c.substring(0, e);
   }
 
-  return ["storagerelay://", c, "/", d, "?", "id=" + a].join("");
+  return `storagerelay://${c}/${d}?id=${a}`;
 };
 
 const validUri = /^(?:(?:https?|mailto|ftp):|[^:/?#]*(?:[/?#]|$))/i;
@@ -52,21 +48,19 @@ const invalidUrl = "about:invalid#zClosurez";
 const validatePopUpUrl = (url: string) => {
   if (validUri.test(url)) {
     return url;
-  } else {
-    const noSpaceUrl = String(url).replace(/(%0A|%0D)/g, "");
-    return noSpaceUrl.match(validDataUri) ? noSpaceUrl : invalidUrl;
   }
+  const noSpaceUrl = String(url).replace(/(%0A|%0D)/g, "");
+  return validDataUri.exec(noSpaceUrl) ? noSpaceUrl : invalidUrl;
 };
 
 export const buildQueriedUri = (
   query: [key: string, value: string | undefined][],
 ) =>
-  "https://accounts.google.com/o/oauth2/auth?" +
-  query
+  `https://accounts.google.com/o/oauth2/auth?${query
     .flatMap(([key, value]) =>
-      value ? [key + "=" + encodeURIComponent(value.trim())] : [],
+      value ? [`${key}=${encodeURIComponent(value.trim())}`] : [],
     )
-    .join("&");
+    .join("&")}`;
 
 export const openAuthWindow = <T>(
   url: string,
@@ -84,17 +78,19 @@ export const openAuthWindow = <T>(
     "scrollbars=no",
     "resizable=no",
     "copyhistory=no",
-    `width=${width}`,
-    `height=${height}`,
-    `top=${screen.height / 2 - height / 2}`,
-    `left=${screen.width / 2 - width / 2}`,
+    `width=${String(width)}`,
+    `height=${String(height)}`,
+    `top=${String(screen.height / 2 - height / 2)}`,
+    `left=${String(screen.width / 2 - width / 2)}`,
   ].join();
 
   const authWindow = window.open(validatePopUpUrl(url), target, features);
   if (!authWindow || authWindow.closed) return undefined;
 
   authWindow.focus();
-  authWindow.onclose = () => promise.reject("window closed");
+  authWindow.onclose = () => {
+    promise.reject("window closed");
+  };
   return authWindow;
 };
 

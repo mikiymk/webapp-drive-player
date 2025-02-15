@@ -21,7 +21,10 @@ export const ExclusiveMenuRoot = (props: ExclusiveMenuRootProps) => {
   };
 
   const closeMenu = () => {
-    closeMenus.forEach((close) => close());
+    for (const close of closeMenus) {
+      close();
+    }
+
     close();
   };
 

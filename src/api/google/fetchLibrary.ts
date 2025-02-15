@@ -48,17 +48,16 @@ export const getSettingFile = async <T>(
  * @param data 送信するデータ
  * @returns 送信の結果
  */
-export const postSettingFile = async <T>(
+export const postSettingFile = async (
   token: string,
   fileName: string,
-  data: T,
+  data: unknown,
 ): Promise<Response> => {
   const id = await getCachedFileID(token, fileName);
   const jsonData = JSON.stringify(data);
 
   if (id !== undefined) {
     return uploadAppData(token, id, jsonData);
-  } else {
-    return createAppData(token, fileName, jsonData);
   }
+  return createAppData(token, fileName, jsonData);
 };

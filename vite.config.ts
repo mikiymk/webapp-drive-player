@@ -1,4 +1,4 @@
-import path from "path";
+import path from "node:path";
 
 import { vanillaExtractPlugin } from "@vanilla-extract/vite-plugin";
 import { visualizer } from "rollup-plugin-visualizer";
@@ -7,7 +7,7 @@ import eslintPlugin from "vite-plugin-eslint";
 import { VitePWA } from "vite-plugin-pwa";
 import solidPlugin from "vite-plugin-solid";
 
-import type { UserConfig } from "vitest/config";
+import type { ViteUserConfig as UserConfig } from "vitest/config";
 
 const config = defineConfig(({ mode, command }) => {
   const plugins: UserConfig["plugins"] = [];

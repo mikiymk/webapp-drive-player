@@ -18,7 +18,7 @@ export const body = style({
 });
 
 export const item = style({
-  borderBottom: "solid 1px " + vars.color.prim,
+  borderBottom: `solid 1px ${vars.color.prim}`,
 });
 
 export const itemArtist = style({
