@@ -1,4 +1,6 @@
 name: compile typescript
+permissions:
+  contents: read
 
 on:
   push:
@@ -16,8 +18,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@4bc047ad259df6fc24a6c9b0f9a0cb08cf17fbe5 # v2.0.1
         with:
           bun-version: latest
       - run: bun install --frozen-lockfile
